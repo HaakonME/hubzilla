@@ -152,6 +152,7 @@ function markdown_to_bb($s, $use_zrl = false, $options = []) {
 
 
 
+
 function bb_to_markdown($Text) {
 
 	/*
@@ -160,6 +161,7 @@ function bb_to_markdown($Text) {
 
 	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', 
 		create_function('$match', 'return \'#\'. str_replace(\' \', \'_\', $match[3]);'), $Text);
+
 
 	$Text = preg_replace('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
 
@@ -173,16 +175,13 @@ function bb_to_markdown($Text) {
 	$Text = bbcode($Text, $preserve_nl, false);
 
 	// Markdownify does not preserve previously escaped html entities such as <> and &.
-
 	$Text = str_replace(array('&lt;','&gt;','&amp;'),array('&_lt_;','&_gt_;','&_amp_;'),$Text);
 
 	// Now convert HTML to Markdown
 
-	$md = new HtmlConverter();
-	$Text = $md->convert($Text);
+	$Text = html2markdown($Text);
 
 	// It also adds backslashes to our attempt at getting around the html entity preservation for some weird reason.
-
 
 	$Text = str_replace(array('&\\_lt\\_;','&\\_gt\\_;','&\\_amp\\_;'),array('&lt;','&gt;','&amp;'),$Text);
 

@@ -787,6 +787,7 @@ return array(
     'Zotlabs\\Module\\Admin\\Themes' => $baseDir . '/Zotlabs/Module/Admin/Themes.php',
     'Zotlabs\\Module\\Api' => $baseDir . '/Zotlabs/Module/Api.php',
     'Zotlabs\\Module\\Appman' => $baseDir . '/Zotlabs/Module/Appman.php',
+    'Zotlabs\\Module\\Apporder' => $baseDir . '/Zotlabs/Module/Apporder.php',
     'Zotlabs\\Module\\Apps' => $baseDir . '/Zotlabs/Module/Apps.php',
     'Zotlabs\\Module\\Attach' => $baseDir . '/Zotlabs/Module/Attach.php',
     'Zotlabs\\Module\\Authtest' => $baseDir . '/Zotlabs/Module/Authtest.php',

@@ -2524,8 +2524,13 @@ function update_r1188() {
 function update_r1189() {
 
 	$r1 = q("alter table mail add mail_mimetype varchar(64) not null default 'text/bbcode' ");
-	$r2 = q("alter table mail add mail_raw int(4) not null default '0' ");
 
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r2 = q("alter table mail add mail_raw smallint not null default 0 ");
+	}
+	else {
+		$r2 = q("alter table mail add mail_raw tinyint(4) not null default 0 ");
+	}
 	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

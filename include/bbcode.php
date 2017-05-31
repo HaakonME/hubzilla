@@ -615,10 +615,7 @@ function bb_code_options($match) {
 }
 
 function bb_highlight($match) {
-	$lang = ((in_array(strtolower($match[1]),['php','css','mysql','sql','abap','diff','html','perl','ruby',
-		'vbscript','avrc','dtd','java','xml','cpp','python','javascript','js','json','sh']))
-		? strtolower($match[1]) : 'php' );
-	return text_highlight($match[2],$lang);
+	return text_highlight($match[2],strtolower($match[1]));
 }
 
 function bb_fixtable_lf($match) {

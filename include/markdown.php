@@ -204,3 +204,33 @@ function bb_to_markdown($Text) {
 	return $Text;
 
 }
+
+
+
+/**
+ * @brief Convert a HTML text into Markdown.
+ *
+ * This function uses the library league/html-to-markdown for this task.
+ *
+ * If the HTML text can not get parsed it will return an empty string.
+ *
+ * @see HTMLToMarkdown
+ *
+ * @param string $html The HTML code to convert
+ * @return string Markdown representation of the given HTML text, empty on error
+ */
+function html2markdown($html) {
+	$markdown = '';
+	$converter = new HtmlConverter();
+
+	try {
+		$markdown = $converter->convert($html);
+	} catch (InvalidArgumentException $e) {
+		logger("Invalid HTML. HTMLToMarkdown library threw an exception.");
+	}
+
+	// The old html 2 markdown library "pixel418/markdownify": "^2.2",
+	//$md = new HtmlConverter();
+	//$markdown = $md->convert($Text);
+	return $markdown;
+}

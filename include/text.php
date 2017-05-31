@@ -3065,6 +3065,14 @@ function create_table_from_array($table, $arr) {
 	return $r;
 }
 
+function share_shield($m) {
+	return str_replace($m[1],'!=+=+=!' . base64url_encode($m[1]) . '=+!=+!=',$m[0]);
+}
+
+function share_unshield($m) {
+	$x = str_replace(array('!=+=+=!','=+!=+!='),array('',''),$m[1]);
+	return str_replace($m[1], base64url_decode($x), $m[0]);
+}
 
 
 function cleanup_bbcode($body) {

@@ -467,7 +467,6 @@ function scopes_sql($uid,$observer) {
  */
 function public_permissions_sql($observer_hash) {
 
-	//$observer = App::get_observer();
 	$groups = init_groups_visitor($observer_hash);
 
 	$gs = '<<>>'; // should be impossible to match

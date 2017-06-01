@@ -737,14 +737,14 @@ function identity_basic_export($channel_id, $sections = null) {
 			$ret['conv'] = $r;
 		}
 
-		$r = q("select * from mail where mail.uid = %d",
+		$r = q("select * from mail where channel_id = %d",
 			intval($channel_id)
 		);
 		if($r) {
 			$m = array();
 			foreach($r as $rr) {
 				xchan_mail_query($rr);
-				$m[] = mail_encode($rr,true);
+				$m[] = encode_mail($rr,true);
 			}
 			$ret['mail'] = $m;
 		}

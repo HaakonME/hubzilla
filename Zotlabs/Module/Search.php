@@ -15,7 +15,7 @@ class Search extends \Zotlabs\Web\Controller {
 		if((get_config('system','block_public')) || (get_config('system','block_public_search'))) {
 			if ((! local_channel()) && (! remote_channel())) {
 				notice( t('Public access denied.') . EOL);
-			return;
+				return;
 			}
 		}
 	
@@ -144,7 +144,7 @@ class Search extends \Zotlabs\Web\Controller {
 	
 		}
 	
-		$item_normal = item_normal();
+		$item_normal = item_normal_search();
 		$pub_sql = public_permissions_sql($observer_hash);
 	
 		require_once('include/channel.php');

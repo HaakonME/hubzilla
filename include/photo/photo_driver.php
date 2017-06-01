@@ -252,11 +252,10 @@ abstract class photo_driver {
 		 */
 
 		if(! $this->is_valid())
-			return FALSE;
-
+			return false;
 
 		if((! function_exists('exif_read_data')) || ($this->getType() !== 'image/jpeg'))
-			return;
+			return false;
 
 		$exif = @exif_read_data($filename,null,true);
 

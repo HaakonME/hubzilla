@@ -492,15 +492,15 @@ function photos_albums_list($channel, $observer, $sort_key = 'display_path', $di
 		$ret['success'] = true;
 		$ret['albums'] = array();
 		foreach($albums as $k => $album) {
-			$entry = array(
-				'text' => (($album['album']) ? $album['album'] : '/'),
+			$entry = [
+				'text'      => (($album['album']) ? $album['album'] : '/'),
 				'shorttext' => (($album['album']) ? ellipsify($album['album'],28) : '/'),
-				'jstext' => (($album['album']) ? addslashes($album['album']) : '/'),
-				'total' => $album['total'],
-				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . $album['folder'],
+				'jstext'    => (($album['album']) ? addslashes($album['album']) : '/'),
+				'total'     => $album['total'],
+				'url'       => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . $album['folder'],
 				'urlencode' => urlencode($album['album']),
-				'bin2hex' => $album['folder']
-			);
+				'bin2hex'   => $album['folder']
+			];
 			$ret['albums'][] = $entry;
 		}
 	}

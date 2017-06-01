@@ -233,7 +233,7 @@ class Directory extends \Zotlabs\Web\Controller {
 	
 							$age = '';
 							if(strlen($rr['birthday'])) {
-								if(($years = age($rr['birthday'],'UTC','')) != 0)
+								if(($years = age($rr['birthday'],'UTC','')) > 0)
 									$age = $years;
 							}
 	

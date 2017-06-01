@@ -441,10 +441,12 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 			intval($channel_id)
 		);
 		if($z) {
-			q("delete from conv where guid = '%s' and uid = %d",
-				dbesc($x[0]['conv_guid']),
-				intval($channel_id)
-			);		
+			if($x[0]['conv_guid']) {
+				q("delete from conv where guid = '%s' and uid = %d",
+					dbesc($x[0]['conv_guid']),
+					intval($channel_id)
+				);
+			}		
 			$m['mail'] = array();
 			foreach($z as $zz) {
 				xchan_mail_query($zz);

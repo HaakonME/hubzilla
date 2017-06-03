@@ -1,5 +1,6 @@
-{{if $not_refresh}}<div id="wiki_page_list_container" {{if $hide}} style="display: none;" {{/if}}>{{/if}}
+{{if ! $refresh}}
 <div id="wiki_page_list" class="widget" >
+{{/if}}
 	<h3>{{$header}}</h3>
 	<ul class="nav nav-pills flex-column">
 		{{if $pages}}
@@ -8,7 +9,7 @@
 			{{if $page.resource_id && $candel}}
 			<i class="nav-link widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.url}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
 			{{/if}}
-			<a class="nav-link" href="/wiki/{{$channel}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>
+			<a class="nav-link" href="/wiki/{{$channel_address}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>
 		</li>
 		{{/foreach}}
 		{{/if}}
@@ -18,19 +19,21 @@
 	</ul>
 	{{if $canadd}}
 	<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
-		<form id="new-page-form" action="wiki/{{$channel}}/create/page" method="post" >
+		<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
 			<input type="hidden" name="resource_id" value="{{$resource_id}}">
 			{{include file="field_input.tpl" field=$pageName}}
 			<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
 		</form>
 	</div>
 	{{/if}}
+{{if ! $refresh}}
 </div>
-{{if $not_refresh}}</div>{{/if}}
+{{/if}}
 
+{{if $canadd}}
 <script>
 	$('#new-page-submit').click(function (ev) {
-		$.post("wiki/{{$channel}}/create/page", {pageName: $('#id_pageName').val(), resource_id: window.wiki_resource_id}, 
+		$.post("wiki/{{$channel_address}}/create/page", {pageName: $('#id_pageName').val(), resource_id: window.wiki_resource_id},
 		function(data) {
 			if(data.success) {
 				window.location = data.url;
@@ -45,7 +48,7 @@
 		if(!confirm('Are you sure you want to delete the page: ' + wiki_page_name)) {
 			return;
 		}
-		$.post("wiki/{{$channel}}/delete/page", {name: wiki_page_url, resource_id: wiki_resource_id},
+		$.post("wiki/{{$channel_address}}/delete/page", {name: wiki_page_url, resource_id: wiki_resource_id},
 		function (data) {
 			if (data.success) {
 				window.console.log('Page deleted successfully.');
@@ -74,3 +77,4 @@
 		return false;
 	}
 </script>
+{{/if}}

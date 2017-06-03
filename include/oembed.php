@@ -134,7 +134,7 @@ function oembed_fetch_url($embedurl){
 	$txt = null;
 
 	// we should try to cache this and avoid a lookup on each render
-	$zrl = is_matrix_url($embedurl);
+	$zrl = ((get_config('system','oembed_zrl')) ? is_matrix_url($embedurl) : false);
 
 	$furl = ((local_channel() && $zrl) ? zid($embedurl) : $embedurl);
 

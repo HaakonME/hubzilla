@@ -108,7 +108,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		$ret['type'] = 'rich';
 	
 		$w = (($maxwidth) ? $maxwidth : 640);
-		$h = (($maxheight) ? $maxheight : $w * 2 / 3);
+		$h = (($maxheight) ? $maxheight : intval($w * 2 / 3));
 	
 		$ret['html'] = '<div style="width: ' . $w . '; height: ' . $h . '; font-family: sans-serif,arial,freesans;" >' . $o . '</div>';
 		
@@ -167,7 +167,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		$ret['type'] = 'rich';
 	
 		$w = (($maxwidth) ? $maxwidth : 640);
-		$h = (($maxheight) ? $maxheight : $w * 2 / 3);
+		$h = (($maxheight) ? $maxheight : intval($w * 2 / 3));
 	
 		$ret['html'] = '<div style="width: ' . $w . '; height: ' . $h . '; font-family: sans-serif,arial,freesans;" >' . $o . '</div>';
 		

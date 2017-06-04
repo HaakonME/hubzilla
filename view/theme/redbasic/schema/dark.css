@@ -270,26 +270,20 @@ nav .dropdown-menu {
 	background: #999;
 }
 
-.nav-tabs{
+.nav-tabs {
 	border-bottom:1px solid #333;
 }
 
-.nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
-	border:1px solid #333;
-}
-
-.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus { 
+.nav-tabs .nav-link.active { 
 	color: #fff;
-	background-color: #111; 
+	background-color: #111;
+	border-color: #333;
 }
 
-.nav-tabs.nav-justified > li > a {
-	color: #ccc;
-}
-
-.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
-    text-decoration: underline;
-    background-color: #222;
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+	text-decoration: underline;
+	background-color: #222;
 	color: #ccc;
 	border-color: #333;
 }

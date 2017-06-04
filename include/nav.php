@@ -215,18 +215,6 @@ EOT;
 		 $nav['admin'] = array('admin/', t('Admin'), "", t('Site Setup and Configuration'),'admin_nav_btn');
 	 }
 
-
-	/**
-	 *
-	 * Provide a banner/logo/whatever
-	 *
-	 */
-
-	$banner = get_config('system','banner');
-
-	if($banner === false) 
-		$banner = get_config('system','sitename');
-
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
 
 	call_hooks('nav', $x);

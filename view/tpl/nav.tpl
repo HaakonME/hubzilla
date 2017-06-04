@@ -233,7 +233,7 @@
 		{{if $localuser}}
 		<div class="dropdown-divider"></div>
 		<a class="nav-link" href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$addapps}}</a>
-		<a class="dropdown-item" href="/apporder"><i class="generic-icons-nav fa fa-fw fa-sort"></i>{{$orderapps}}</a>
+		<a class="nav-link" href="/apporder"><i class="generic-icons-nav fa fa-fw fa-sort"></i>{{$orderapps}}</a>
 		{{/if}}
 	</div>
 </div>

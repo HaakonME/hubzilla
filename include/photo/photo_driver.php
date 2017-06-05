@@ -488,8 +488,10 @@ function guess_image_type($filename, $headers = '') {
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
-			foreach ($types as $m=>$e){
-				if ($ext==$e) $type = $m;
+			foreach($types as $m => $e) {
+				if($ext === $e) {
+					$type = $m;
+				}
 			}
 		}
 
@@ -501,7 +503,7 @@ function guess_image_type($filename, $headers = '') {
 		}
 
 	}
-	logger('Photo: guess_image_type: type='.$type, LOGGER_DEBUG);
+	logger('Photo: guess_image_type: type = ' . $type, LOGGER_DEBUG);
 	return $type;
 
 }

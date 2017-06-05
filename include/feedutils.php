@@ -1441,7 +1441,7 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $
 		foreach($compat_photos as $enc) {
 			$o .= '<link rel="enclosure" '
 			. (($enc['href']) ? 'href="' . $enc['href'] . '" ' : '')
-			. (($enc['length']) ? 'length="' . $enc['length'] . '" ' : '')
+			. ((array_key_exists('length',$enc)) ? 'length="' . $enc['length'] . '" ' : '')
 			. (($enc['type']) ? 'type="' . $enc['type'] . '" ' : '')
 			. ' />' . "\r\n";
 		}

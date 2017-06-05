@@ -27,22 +27,27 @@ set -e
 
 echo "Preparing for MySQL ..."
 
+if [[ "$MYSQL_VERSION" == "5.7" ]]; then
+	echo "Using MySQL 5.7 in Docker container, need to use TCP"
+	export PROTO="--protocol=TCP"
+fi
+
 # Print out some MySQL information
 mysql --version
-mysql -e "SELECT VERSION();"
-mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-mysql -e "SHOW VARIABLES LIKE 'collation_%';"
-mysql -e "SHOW VARIABLES LIKE 'character_set%';"
-mysql -e "SELECT @@sql_mode;"
+mysql $PROTO -e "SELECT VERSION();"
+mysql $PROTO -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
+mysql $PROTO -e "SHOW VARIABLES LIKE 'collation_%';"
+mysql $PROTO -e "SHOW VARIABLES LIKE 'character_set%';"
+mysql $PROTO -e "SELECT @@sql_mode;"
 
 # Create Hubzilla database
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS hubzilla;";
-mysql -u root -e "CREATE USER 'hubzilla'@'localhost' IDENTIFIED BY 'hubzilla';"
-mysql -u root -e "GRANT ALL ON hubzilla.* TO 'hubzilla'@'localhost';"
+mysql $PROTO -u root -e "CREATE DATABASE IF NOT EXISTS hubzilla;";
+mysql $PROTO -u root -e "CREATE USER 'hubzilla'@'localhost' IDENTIFIED BY 'hubzilla';"
+mysql $PROTO -u root -e "GRANT ALL ON hubzilla.* TO 'hubzilla'@'localhost';"
 
 # Import table structure
-mysql -u root hubzilla < ./install/schema_mysql.sql
+mysql $PROTO -u root hubzilla < ./install/schema_mysql.sql
 
 # Show databases and tables
-mysql -u root -e "SHOW DATABASES;"
-mysql -u root -e "USE hubzilla; SHOW TABLES;"
+mysql $PROTO -u root -e "SHOW DATABASES;"
+mysql $PROTO -u root -e "USE hubzilla; SHOW TABLES;"

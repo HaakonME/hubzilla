@@ -81,6 +81,12 @@ matrix:
       dist: precise
       services:
         - mysql
+    # MySQL 5.7 with Docker container
+    - php: '7.1'
+      env: DB=mysql MYSQL_VERSION=5.7
+      sudo: required
+      services:
+        - docker
    # Excludes from default matrix combinations
 #  exclude:
 #    - php: hhvm
@@ -100,6 +106,8 @@ cache:
 
 before_install:
   - travis_retry composer self-update
+  # Start MySQL 5.7 Docker container, needs some time to come up
+  - if [[ "$MYSQL_VERSION" == "5.7" ]]; then sudo service mysql stop; docker run -d -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:5.7 && sleep 25 && docker ps; fi
 
 # Install composer dev libs
 install:

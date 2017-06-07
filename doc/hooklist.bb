@@ -118,6 +118,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/connect_premium]connect_premium[/zrl]
 	Called when connecting to a premium channel
 
+[zrl=[baseurl]/help/hook/connection_remove]connection_remove[/zrl]
+	Called when deleting/removing a connection
+
 [zrl=[baseurl]/help/hook/connector_settings]connector_settings[/zrl]
 	Called when posting to the features/addon settings page
 

@@ -397,6 +397,9 @@ function get_atom_elements($feed, $item, &$author) {
 	}
 
 	$ostatus_protocol = (($item->get_item_tags(NAMESPACE_OSTATUS, 'conversation')) ? true : false);
+	$mastodon = (($item->get_item_tags('http://mastodon.social/schema/1.0','scope')) ? true : false);
+	if($mastodon)
+		$ostatus_protocol = true;
 
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET, 'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {

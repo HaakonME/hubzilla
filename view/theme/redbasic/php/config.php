@@ -5,10 +5,20 @@ namespace Zotlabs\Theme;
 class RedbasicConfig {
 
 	function get_schemas() {
-		$scheme_choices = array();
-		$scheme_choices["---"] = t("Focus (Hubzilla default)");
 		$files = glob('view/theme/redbasic/schema/*.php');
+
+		$scheme_choices = [];
+
 		if($files) {
+
+			if(in_array('view/theme/redbasic/schema/default.php', $files)) {
+				$scheme_choices['---'] = t('Default');
+				$scheme_choices['focus'] = t('Focus (Hubzilla default)');
+			}
+			else {
+				$scheme_choices['---'] = t('Focus (Hubzilla default)');
+			}
+
 			foreach($files as $file) {
 				$f = basename($file, ".php");
 				if($f != 'default') {
@@ -17,6 +27,7 @@ class RedbasicConfig {
 				}
 			}
 		}
+
 		return $scheme_choices;
 	}
 

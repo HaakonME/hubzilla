@@ -415,9 +415,9 @@ function random_profile() {
 
 	for($i = 0; $i < $retryrandom; $i++) {
 
-		$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where xchan_addr not like '%s' and xchan_hidden = 0 and hubloc_connected > %s - interval %s order by $randfunc limit 1",
-			dbesc('sys@%'),
-			db_utcnow(), db_quoteinterval('30 day')
+		$r = q("select xchan_url, xchan_hash from xchan left join hubloc on hubloc_hash = xchan_hash where xchan_hidden = 0 and xchan_system = 0 and hubloc_connected > %s - interval %s order by $randfunc limit 1",
+			db_utcnow(),
+			db_quoteinterval('30 day')
 		);
 
 		if(!$r) return ''; // Couldn't get a random channel
@@ -425,12 +425,12 @@ function random_profile() {
 		if($checkrandom) {
 			$x = z_fetch_url($r[0]['xchan_url']);
 			if($x['success'])
-				return $r[0]['xchan_url'];
+				return $r[0]['xchan_hash'];
 			else
 				logger('Random channel turned out to be bad.');
 		}
 		else {
-			return $r[0]['xchan_url'];
+			return $r[0]['xchan_hash'];
 		}
 
 	}

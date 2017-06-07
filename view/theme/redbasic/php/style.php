@@ -56,10 +56,9 @@ if (($schema) && ($schema != '---')) {
 
 }
 
-// If we haven't got a schema, load the default.  We shouldn't touch this - we
-// should leave it for admins to define for themselves.
-// default.php and default.css MUST be symlinks to existing schema files.
-if (! $schema) {
+// Allow admins to set a default schema for the hub.
+// default.php and default.css MUST be symlinks to existing schema files in view/theme/redbasic/schema
+if ((!$schema) || ($schema == '---')) {
 
 	if(file_exists('view/theme/redbasic/schema/default.php')) {
 		$schemefile = 'view/theme/redbasic/schema/default.php';

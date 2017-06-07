@@ -44,6 +44,36 @@ function term_query($table,$s,$type = TERM_UNKNOWN, $type2 = '') {
 }
 
 
+function term_item_parent_query($uid,$table,$s,$type = TERM_UNKNOWN, $type2 = '') {
+
+	if($type2) {
+		$r = q("select parent from item left join term on term.oid = item.id where term.ttype in (%d, %d) and term.term = '%s' and term.uid = %d and term.otype = 1",
+			intval($type),
+			intval($type2),
+			dbesc($s),
+			intval($uid)
+		);
+	}
+	else {
+		$r = q("select parent from item left join term on term.oid = item.id where term.ttype = %d and term.term = '%s' and term.uid = %d and term.otype = 1",
+			intval($type),
+			dbesc($s),
+			intval($uid)
+		);
+	}
+	if($r) {
+		$str = '';
+		foreach($r as $rv) {
+			if($str)
+				$str .= ',';
+			$str .= intval($rv['parent']);
+		}
+		return " AND " . (($table) ? dbesc($table) . '.' : '') . "id in ( $str ) ";
+	}
+	return " AND false ";
+}
+
+
 function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 	if(! $term) 
 		return false;

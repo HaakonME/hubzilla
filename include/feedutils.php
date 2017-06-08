@@ -1185,6 +1185,10 @@ function feed_meta($xml) {
 		}
 	}
 
+	if(! $author['author_photo'])
+		$author['author_photo'] = $feed->get_image_url();
+
+
 	if(substr($author['author_link'],-1,1) == '/')
 		$author['author_link'] = substr($author['author_link'],0,-1);
 

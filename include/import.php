@@ -1264,7 +1264,7 @@ function sync_files($channel, $files) {
 						$r = dbq("update photo set " . $str . " where id = " . intval($exists[0]['id']) );
 					}
 					else {
-						create_attach_from_array('photo',$p);
+						create_table_from_array('photo',$p);
 					}
 				}
 			}

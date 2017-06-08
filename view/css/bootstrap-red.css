@@ -46,6 +46,12 @@ nav .dropdown-menu {
 	overflow: auto;
 }
 
+/* this is a hack and needs fixing in bootstrap */
+nav .dropdown-menu-right {
+	right: 0;
+	left: auto !important;
+}
+
 #navbar-collapse-2 {
 	flex-basis: 100%;
 	max-height: 70vh;

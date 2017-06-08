@@ -115,7 +115,7 @@
 	});
 
 	$( "#rename-page-form" ).submit(function( event ) {
-		$.post("wiki/{{$channel}}/rename/page", 
+		$.post("wiki/{{$channel_address}}/rename/page",
 		{
 			oldName: window.wiki_page_name, 
 			newName: $('#id_pageRename').val(), 
@@ -177,7 +177,7 @@
 	});
 
 	$('#wiki-get-preview').click(function (ev) {
-		$.post("wiki/{{$channel}}/preview", {
+		$.post("wiki/{{$channel_address}}/preview", {
 			{{if !$mimeType || $mimeType == 'text/markdown'}}
 			content: editor.getValue(),
 			{{else}}
@@ -200,7 +200,7 @@
 	});
 
 	$('#wiki-get-history').click(function (ev) {
-		$.post("wiki/{{$channel}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
+		$.post("wiki/{{$channel_address}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
 			if (data.success) {
 				$('#page-history-list').html(data.historyHTML);
 				$('#page-tools').hide();
@@ -215,10 +215,9 @@
 		if (window.wiki_resource_id === '') {
 			return false;
 		}
-		$.post("wiki/{{$channel}}/get/page/list/", {resource_id: window.wiki_resource_id}, function (data) {
+		$.post("wiki/{{$channel_address}}/get/page/list/", {channel_id: '{{$channel_id}}', resource_id: window.wiki_resource_id}, function (data) {
 			if (data.success) {
-				$('#wiki_page_list_container').html(data.pages);
-				$('#wiki_page_list_container').show();
+				$('#wiki_page_list').html(data.pages);
 			} else {
 				alert('Error fetching page list!');
 				window.console.log('Error fetching page list!');
@@ -245,7 +244,7 @@
 			ev.preventDefault();
 			return false;
 		}
-		$.post("wiki/{{$channel}}/save/page", {
+		$.post("wiki/{{$channel_address}}/save/page", {
 			content: currentContent, 
 			commitMsg: $('#id_commitMsg').val(),
 			name: window.wiki_page_name, 
@@ -276,7 +275,7 @@
 			window.console.log('You must have a wiki page open in order to revert pages.');
 			return false;
 		}
-		$.post("wiki/{{$channel}}/revert/page", {commitHash: commitHash, name: window.wiki_page_name, resource_id: window.wiki_resource_id}, 
+		$.post("wiki/{{$channel_address}}/revert/page", {commitHash: commitHash, name: window.wiki_page_name, resource_id: window.wiki_resource_id},
 		function (data) {
 			if (data.success) {
 			$('button[id^=revert-]').removeClass('btn-success');
@@ -299,7 +298,7 @@
 			window.console.log('You must have a wiki page open in order to revert pages.');
 			return false;
 		}
-		$.post("wiki/{{$channel}}/compare/page", {
+		$.post("wiki/{{$channel_address}}/compare/page", {
 			compareCommit: compareCommit, 
 			currentCommit: window.wiki_page_commit, 
 			name: window.wiki_page_name, 
@@ -442,8 +441,6 @@
 	};
 
 	$(document).ready(function () {
-		wiki_refresh_page_list();
-
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
 		window.editor.on("input", function() {

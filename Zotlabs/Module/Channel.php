@@ -217,10 +217,10 @@ class Channel extends \Zotlabs\Web\Controller {
 		else {
 
 			if(x($category)) {
-				$sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
+				$sql_extra2 .= protect_sprintf(term_item_parent_query(\App::$profile['profile_uid'],'item', $category, TERM_CATEGORY));
 			}
 			if(x($hashtags)) {
-				$sql_extra .= protect_sprintf(term_query('item', $hashtags, TERM_HASHTAG, TERM_COMMUNITYTAG));
+				$sql_extra2 .= protect_sprintf(term_item_parent_query(\App::$profile['profile_uid'],'item', $hashtags, TERM_HASHTAG, TERM_COMMUNITYTAG));
 			}
 
 			if($datequery) {

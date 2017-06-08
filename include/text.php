@@ -2969,40 +2969,13 @@ function text_highlight($s, $lang) {
 			$s = jindent($s);
 	}
 
-	if(! strpos('Text_Highlighter', get_include_path())) {
-		set_include_path(get_include_path() . PATH_SEPARATOR . 'library/Text_Highlighter');
-	}
-	require_once('library/Text_Highlighter/Text/Highlighter.php');
-	require_once('library/Text_Highlighter/Text/Highlighter/Renderer/Html.php');
-	$options = array(
-		'numbers' => HL_NUMBERS_LI,
-		'tabsize' => 4,
-	);
-	$tag_added = false;
-	$s = trim(html_entity_decode($s, ENT_COMPAT));
-	$s = str_replace("    ", "\t", $s);
+	$arr = [ 'text' => $s, 'language' => $lang, 'success' => false ];
+	call_hooks('text_highlight',$arr);
 
-	// The highlighter library insists on an opening php tag for php code blocks. If
-	// it isn't present, nothing is highlighted. So we're going to see if it's present.
-	// If not, we'll add it, and then quietly remove it after we get the processed output back.
-
-	if($lang === 'php') {
-		if(strpos('<?php', $s) !== 0) {
-			$s = '<?php' . "\n" . $s;
-			$tag_added = true;
-		}
-	}
-	$renderer = new Text_Highlighter_Renderer_HTML($options);
-	$hl = Text_Highlighter::factory($lang);
-	$hl->setRenderer($renderer);
-	$o = $hl->highlight($s);
-	$o = str_replace(["    ", "\n"], ["&nbsp;&nbsp;&nbsp;&nbsp;", ''], $o);
-
-	if($tag_added) {
-		$b = substr($o, 0, strpos($o, '<li>'));
-		$e = substr($o, strpos($o, '</li>'));
-		$o = $b . $e;
-	}
+	if($arr['success'])
+		$o = $arr['text'];
+	else
+		$o = $s;
 
 	return('<code>' . $o . '</code>');
 }
@@ -3065,6 +3038,14 @@ function create_table_from_array($table, $arr) {
 	return $r;
 }
 
+function share_shield($m) {
+	return str_replace($m[1],'!=+=+=!' . base64url_encode($m[1]) . '=+!=+!=',$m[0]);
+}
+
+function share_unshield($m) {
+	$x = str_replace(array('!=+=+=!','=+!=+!='),array('',''),$m[1]);
+	return str_replace($m[1], base64url_decode($x), $m[0]);
+}
 
 
 function cleanup_bbcode($body) {

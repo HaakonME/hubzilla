@@ -6,7 +6,7 @@ By default author_is_pmable() returns true for 'zot' xchans, and false for all o
 
 The plugin is passed an array
 
-  [ 'xchan' => $author_xchan, 'result' => 'unset' ]
+  [ 'xchan' => $author_xchan, 'abook' => abook record, 'result' => 'unset' ]
 
 A plugin which sets the 'result' to something besides 'unset' will over-ride the default behaviour. A value of true will enable the 'send mail' link and the private mail recipient will be set to the author's xchan_hash.  A value of false will disable the 'send mail' link. 
 

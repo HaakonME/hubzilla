@@ -136,7 +136,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 				continue;
 
 			/** @BUG $owner is undefined in this call */
-			$atom .= atom_entry($item, $type, null, $owner, true);
+			$atom .= atom_entry($item, $type, null, $owner, true, '', $params['compat']);
 		}
 	}
 
@@ -397,6 +397,9 @@ function get_atom_elements($feed, $item, &$author) {
 	}
 
 	$ostatus_protocol = (($item->get_item_tags(NAMESPACE_OSTATUS, 'conversation')) ? true : false);
+	$mastodon = (($item->get_item_tags('http://mastodon.social/schema/1.0','scope')) ? true : false);
+	if($mastodon)
+		$ostatus_protocol = true;
 
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET, 'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
@@ -1306,6 +1309,28 @@ function atom_render_author($tag,$xchan) {
 
 }
 
+function compat_photos_list($s) {
+
+	$ret = [];
+
+	$found = preg_match_all('/\[[zi]mg(.*?)\](.*?)\[/ism',$s,$matches,PREG_SET_ORDER);
+
+	if($found) {
+		foreach($matches as $match) {
+			$ret[] = [
+				'href' => $match[2],
+				'length' => 0,
+				'type' => guess_image_type($match[2])
+			];
+
+		}
+	}
+
+	return $ret;
+}
+
+
+
 /**
  * @brief Create an item for the Atom feed.
  *
@@ -1319,7 +1344,8 @@ function atom_render_author($tag,$xchan) {
  * @param number $cid default 0
  * @return void|string
  */
-function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0) {
+function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $compat = false) {
+
 
 	if(! $item['parent'])
 		return;
@@ -1333,6 +1359,13 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0) {
 		$body = fix_private_photos($item['body'],$owner['uid'],$item,$cid);
 	else
 		$body = $item['body'];
+
+	if($compat) {
+		$compat_photos = compat_photos_list($body);
+	}
+	else {
+		$compat_photos = null;
+	}
 
 	$o = "\r\n\r\n<entry>\r\n";
 
@@ -1403,8 +1436,17 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0) {
 				. (($enc['href']) ? 'href="' . $enc['href'] . '" ' : '')
 				. (($enc['length']) ? 'length="' . $enc['length'] . '" ' : '')
 				. (($enc['type']) ? 'type="' . $enc['type'] . '" ' : '')
-				. ' />';
+				. ' />' . "\r\n";
 			}
+		}
+	}
+	if($compat_photos) {
+		foreach($compat_photos as $enc) {
+			$o .= '<link rel="enclosure" '
+			. (($enc['href']) ? 'href="' . $enc['href'] . '" ' : '')
+			. ((array_key_exists('length',$enc)) ? 'length="' . $enc['length'] . '" ' : '')
+			. (($enc['type']) ? 'type="' . $enc['type'] . '" ' : '')
+			. ' />' . "\r\n";
 		}
 	}
 

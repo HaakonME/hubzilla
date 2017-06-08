@@ -26,6 +26,9 @@
 			<td><code>[color=red]red[/color]</code></td><td><span style="color:  red;">red</span></td>
 		</tr>
 		<tr>
+			<td><code>[hl]highlighted[/hl]</code></td><td><span style="background-color: yellow;">highlighted</span></td>
+		</tr>
+		<tr>
 			<td><code>[font=courier]some text[/font] </code></td><td><span style="font-family: courier;">some text</span></td>
 		</tr>
 		<tr>
@@ -61,8 +64,10 @@ text</code></td><td>
 </table>
 
 <h3>Code blocks</h3>
-Code can be rendered generically in a block or inline format (depending on if there are new line characters in the text), or you can specify a supported language for enhanced syntax highlighting. Supported languages include <strong>php, css, mysql, sql, abap, diff, html, perl, ruby, vbscript, avrc, dtd, java, xml, cpp, python, javascript, js, json, sh </strong>.
+Code can be rendered generically in a block or inline format (depending on if there are new line characters in the text), or you can specify a supported language for enhanced syntax highlighting. Syntax highlighting requires a suitable rendering plugin such as <strong>hilite</strong>. Supported languages with the hilite plugin include <strong>php, css, mysql, sql, abap, diff, html, perl, ruby, vbscript, avrc, dtd, java, xml, cpp, python, javascript, js, json, sh </strong>. 
 <br><br>
+If a rendering plugin is not installed or an unsupported language is specified, the output for syntax highlighted code blocks is the same as the block format code tag.
+<br><br> 
 <table class="table table-responsive table-bordered">
 	<tbody>
 		<tr>

@@ -1084,11 +1084,12 @@ function sync_files($channel, $files) {
 						$ext = '';
 					}
 
-					$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' and hash != '%s' ",
+					$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' and hash != '%s' and uid = %d ",
 						dbesc($basename . $ext),
 						dbesc($basename . '(%)' . $ext),
 						dbesc($att['folder']),
-						dbesc($att['hash'])
+						dbesc($att['hash']),
+						intval($channel['channel_id'])
 					);
 
 					if($r) {

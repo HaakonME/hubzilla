@@ -243,7 +243,8 @@ class Connections extends \Zotlabs\Web\Controller {
 						((intval($rr['abook_archived'])) ? t('Archived') : ''),
 						((intval($rr['abook_hidden'])) ? t('Hidden') : ''),
 						((intval($rr['abook_ignored'])) ? t('Ignored') : ''),
-						((intval($rr['abook_blocked'])) ? t('Blocked') : '')
+						((intval($rr['abook_blocked'])) ? t('Blocked') : ''),
+						((intval($rr['abook_not_here'])) ? t('Not connected at this location') : '')
 					);
 	
 					foreach($status as $str) {
@@ -261,7 +262,7 @@ class Connections extends \Zotlabs\Web\Controller {
 						'id' => $rr['abook_id'],
 						'thumb' => $rr['xchan_photo_m'], 
 						'name' => $rr['xchan_name'],
-						'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
+						'classes' => ((intval($rr['abook_archived']) || intval($rr['abook_not_here'])) ? 'archived' : ''),
 						'link' => z_root() . '/connedit/' . $rr['abook_id'],
 						'deletelink' => z_root() . '/connedit/' . intval($rr['abook_id']) . '/drop',
 						'delete' => t('Delete'),

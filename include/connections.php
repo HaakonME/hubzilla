@@ -341,6 +341,11 @@ function contact_remove($channel_id, $abook_id) {
 
 	logger('removing contact ' . $abook_id . ' for channel ' . $channel_id,LOGGER_DEBUG);
 
+
+	$x = [ 'channel_id' => $channel_id, 'abook_id' => $abook_id ];
+	call_hooks('connection_remove',$x);
+
+
 	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
 		q("update abook set abook_archived = 1 where abook_id = %d and abook_channel = %d",

@@ -59,6 +59,11 @@
 				{{$loc_text}} {{$locstr}}
 			</div>
 			{{/if}}
+			{{if $not_here}}
+			<div>
+				<strong>{{$not_here}}</strong>
+			</div>
+			{{/if}}
 			{{if $last_update}}
 			<div>
 				{{$lastupdtext}} {{$last_update}}

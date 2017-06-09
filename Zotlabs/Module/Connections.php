@@ -19,7 +19,7 @@ class Connections extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$sort_type = 0;
 		$o = '';
@@ -63,8 +63,8 @@ class Connections extends \Zotlabs\Web\Controller {
 					$hidden = true;
 					break;
 				case 'archived':
-					$search_flags = " and abook_archived = 1 ";
-					$head = t('Archived');
+					$search_flags = " and ( abook_archived = 1 OR abook_not_here = 1) ";
+					$head = t('Archived/Unreachable');
 					$archived = true;
 					break;
 				case 'pending':
@@ -171,7 +171,7 @@ class Connections extends \Zotlabs\Web\Controller {
 				'label' => t('Archived'),
 				'url'   => z_root() . '/connections/archived',
 				'sel'   => ($archived) ? 'active' : '',
-				'title' => t('Only show archived connections'),
+				'title' => t('Only show archived/unreachable connections'),
 			),
 	
 			'hidden' => array(

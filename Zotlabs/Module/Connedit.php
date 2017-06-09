@@ -856,6 +856,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$addr_text'      => t('This connection\'s primary address is'),
 				'$loc_text'       => t('Available locations:'),
 				'$locstr'         => $locstr,
+				'$not_here'       => ((intval($contact['abook_not_here'])) ? t('Not connected at this location') : ''),
 				'$notself'        => (($self) ? '' : '1'),
 				'$self'           => (($self) ? '1' : ''),
 				'$autolbl'        => t('The permissions indicated on this page will be applied to all new connections.'),

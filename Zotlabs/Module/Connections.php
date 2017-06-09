@@ -168,7 +168,7 @@ class Connections extends \Zotlabs\Web\Controller {
 			),
 	
 			'archived' => array(
-				'label' => t('Archived'),
+				'label' => t('Archived/Unreachable'),
 				'url'   => z_root() . '/connections/archived',
 				'sel'   => ($archived) ? 'active' : '',
 				'title' => t('Only show archived/unreachable connections'),

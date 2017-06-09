@@ -59,10 +59,11 @@
 				{{$loc_text}} {{$locstr}}
 			</div>
 			{{/if}}
-			{{if $not_here}}
+			{{if $unclonable}}
 			<div>
-				<strong>{{$not_here}}</strong>
+				<br>{{$unclonable}}
 			</div>
+			<br>
 			{{/if}}
 			{{if $last_update}}
 			<div>

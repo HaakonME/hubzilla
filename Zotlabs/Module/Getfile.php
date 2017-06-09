@@ -35,6 +35,7 @@ class Getfile extends \Zotlabs\Web\Controller {
 		$sig      = $_POST['signature'];
 		$resource = $_POST['resource'];
 		$revision = intval($_POST['revision']);
+		$resolution = (-1);
 	
 		if(! $hash)
 			killme();
@@ -46,6 +47,11 @@ class Getfile extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
+		if(substr($resource,-2,1) == '-') {
+			$resolution = intval(substr($resource,-1,1));
+			$resource = substr($resource,0,-2);
+		}			
+
 		$slop = intval(get_pconfig($channel['channel_id'],'system','getfile_time_slop'));
 		if($slop < 1)
 			$slop = 3;
@@ -63,6 +69,35 @@ class Getfile extends \Zotlabs\Web\Controller {
 			killme();
 		}
 		
+
+		if($resolution > 0) {
+			$r = q("select * from photo where resource_id = '%s' and uid = %d limit 1",
+				dbesc($resource),
+				intval($channel['channel_id'])
+			);
+			if($r) {
+				header('Content-type: ' . $r[0]['mimetype']);
+
+				if(intval($r[0]['os_storage'])) {
+					$fname = dbunescbin($r[0]['content']);
+					if(strpos($fname,'store') !== false)
+						$istream = fopen($fname,'rb');
+					else
+						$istream = fopen('store/' . $channel['channel_address'] . '/' . $fname,'rb');
+					$ostream = fopen('php://output','wb');
+					if($istream && $ostream) {
+						pipe_streams($istream,$ostream);
+						fclose($istream);
+						fclose($ostream);
+					}
+				}
+				else {
+					echo dbunescbin($r[0]['content']);
+				}
+			}			
+			killme();
+		}
+
 		$r = attach_by_hash($resource,$channel['channel_hash'],$revision);
 	
 		if(! $r['success']) {

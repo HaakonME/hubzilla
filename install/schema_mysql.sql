@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_password` varchar(255) NOT NULL,
   `channel_salt` varchar(255) NOT NULL,
   PRIMARY KEY (`channel_id`),
-  UNIQUE KEY `channel_address_unique` (`channel_address`),
+  KEY `channel_address` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
   KEY `channel_primary` (`channel_primary`),
   KEY `channel_name` (`channel_name`),
@@ -392,8 +392,8 @@ CREATE TABLE IF NOT EXISTS `clients` (
 
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `cat` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `k` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `cat` char(191) NOT NULL DEFAULT '',
+  `k` char(191) NOT NULL DEFAULT '',
   `v` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`cat`,`k`)
@@ -589,11 +589,11 @@ CREATE TABLE IF NOT EXISTS `issue` (
 
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `mid` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `mid` char(191) NOT NULL DEFAULT '',
   `aid` int(10) unsigned NOT NULL DEFAULT 0 ,
   `uid` int(10) unsigned NOT NULL DEFAULT 0 ,
   `parent` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `parent_mid` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `parent_mid` char(191) NOT NULL DEFAULT '',
   `thr_parent` char(191) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -712,13 +712,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `item_unpublished` (`item_unpublished`),
   KEY `item_delayed` (`item_delayed`),
   KEY `item_pending_remove` (`item_pending_remove`),
-  KEY `item_blocked` (`item_blocked`),
-  FULLTEXT KEY `title` (`title`),
-  FULLTEXT KEY `body` (`body`),
-  FULLTEXT KEY `allow_cid` (`allow_cid`),
-  FULLTEXT KEY `allow_gid` (`allow_gid`),
-  FULLTEXT KEY `deny_cid` (`deny_cid`),
-  FULLTEXT KEY `deny_gid` (`deny_gid`)
+  KEY `item_blocked` (`item_blocked`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
@@ -923,13 +917,12 @@ CREATE TABLE IF NOT EXISTS `outq` (
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT 0 ,
-  `cat` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `k` char(191) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `cat` char(191) NOT NULL DEFAULT '',
+  `k` char(191) NOT NULL DEFAULT '',
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
-
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -23,7 +23,7 @@
 [*] friendica - Friendica (DFRN) protocol. Under development.
 [*] frphotos - import photo albums from Friendica
 [*] gnusoc - GNU-Social (OStatus) protocol. Under development. 
-[*] hexit - headecimal conversion tool
+[*] hexit - hexadecimal conversion tool
 [*] hubwall - send an admin email to all hub accounts
 [*] ijpost - crosspost to Insanejournal
 [*] irc - connect to IRC chatrooms

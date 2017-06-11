@@ -178,7 +178,9 @@ Connections in $Projectname can take on a great many different meanings. But let
 
 First, you need to find some channels to connect to. There are two primary ways of doing this. Firstly, setting the &quot;Can send me their channel stream and posts&quot; permission to &quot;Anybody in this network&quot; will bring posts from complete strangers to your matrix. This will give you a lot of public content and should hopefully help you find interesting, entertaing people, forums, and channels.
 
-The next thing you can do is look at the Directory. The directory is available on every $Projectname website which means searching from your own site will bring in results from the entire network. You can search by name, interest, location and keyword. This is incomplete, so we'll improve this paragraph later.
+The next thing you can do is look at the Directory. The directory is available on every $Projectname website which means searching from your own site will bring in results from the entire network. You can search by name, interest, location, and keyword.
+
+If you already know somebody's 'webbie' you can connect with them directly. A webbie looks just like an email address but refers to somebody in the open social web. In order to connect they must be using a compatible network protocol. By default, this software supports the 'zot' protocol, however additional protocols may be provided through plugins/addons. See below for more information on connecting to channels on other networks.    
 
 To connect with other $Projectname channels:
 

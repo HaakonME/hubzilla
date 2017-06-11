@@ -186,7 +186,15 @@ Visit their profile by clicking their photograph in the directory, matrix, or co
 
 You may also connect with any channel by visiting the &quot;Connections&quot; page of your site or the Directory and typing their &quot;webbie&quot; into the &quot;Add New Connection&quot; field. Use this method if somebody tells you their webbie and you wish to connect with them. A webbie looks like an email address; for example &quot;bob@example.com&quot;. The process is the same as connecting via the &quot;Connect&quot; button - you will then be taken to the connection editor to set permissions.
 
-[h4] Block/Ignore/Archive/Hide channels [/h4]
+To connect with channels on other networks:
+
+The process for connecting to channels on other networks (such as GNU-Social, Mastodon, and Diaspora) is similar - type their &quot;webbie&quot; into the &quot;Add New Connections&quot; box on the &quot;Connections&quot; page. Before you do this however, please visit your Settings page (Feature/Addon Settings) and ensure that the relevant protocol (Diaspora or GNU-Social) is provided on your hub and [b][i]activated[/i] for your channel[/b]. These networks/protocols do not support account migration and location independence so if you move location or clone your channel elsewhere, communications with these connections may fail. For this reason these protocols are not activated by default, but only through your consent. Activating these protocols involves an important decision between communicating with friends on these networks or providing fail-safe account resilience if your server fails.    
+
+To connect with RSS feeds:
+
+Your hub admin may allow connecting to RSS feeds. The process for connecting to an RSS feed is the same, exept type (or paste) the URL of the feed into the &quot;Add New Connection&quot; box. Feeds are only processed once or twice per day and your hub admin may impose limits on how many feeds you may add.  
+
+[h4]Block/Ignore/Archive/Hide channels [/h4]
 
 Channels in your address book can have statuses such as [i]blocked[/i], [i]ignored[/i], [i]archived[/i] and [i]hidden[/i]. From your connections page you can see tabs that display the channels with those statuses. From your edit connection pages you can change the statuses of a channel.
 

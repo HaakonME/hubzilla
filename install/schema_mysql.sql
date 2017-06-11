@@ -607,6 +607,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `resource_type` char(16) NOT NULL DEFAULT '',
   `attach` mediumtext NOT NULL,
   `sig` text NOT NULL,
+  `diaspora_meta` mediumtext NOT NULL,
   `location` char(191) NOT NULL DEFAULT '',
   `coord` char(191) NOT NULL DEFAULT '',
   `public_policy` char(191) NOT NULL DEFAULT '',
@@ -897,13 +898,12 @@ CREATE TABLE IF NOT EXISTS `outq` (
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT 0 ,
-  `cat` char(100) NOT NULL DEFAULT '',
-  `k` char(100) NOT NULL DEFAULT '',
+  `cat` char(191) NOT NULL DEFAULT '',
+  `k` char(191) NOT NULL DEFAULT '',
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
-
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

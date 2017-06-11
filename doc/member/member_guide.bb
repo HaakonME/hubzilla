@@ -289,7 +289,7 @@ We highly recommend that you use the "typical social network" settings when you 
 [i]Note:[/i]
 Plugins/addons may provide special permission settings, so you may be offered additional permission settings beyond what is described here.
 
-If you have set any of these permissions to &quot;only those I specifically allow&quot;, you may specify indivudal permissions on the connnection edit screen.
+If you have set any of these permissions to &quot;only those I specifically allow&quot;, you may specify individual permissions on the connnection edit screen.
 
 [h4]Affinity[/h4]
 

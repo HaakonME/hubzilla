@@ -608,7 +608,7 @@ Optional:
 
 	application or network name to display with item
 
-- categories
+- category
 
 	comma separated categories for this item
 

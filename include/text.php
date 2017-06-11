@@ -1562,7 +1562,12 @@ function prepare_body(&$item,$attach = false) {
 		}
 	}
 
-	$s .= prepare_text($item['body'],$item['mimetype'], false);
+	if($item['item_obscured']) {
+		$s .= prepare_binary($item);
+	}
+	else {
+		$s .= prepare_text($item['body'],$item['mimetype'], false);
+	}
 
 	$event = (($item['obj_type'] === ACTIVITY_OBJ_EVENT) ? format_event_obj($item['obj']) : false);
 
@@ -1624,6 +1629,17 @@ function prepare_body(&$item,$attach = false) {
 
 	return $prep_arr;
 }
+
+
+function prepare_binary($item) {
+	return replace_macros(get_markup_template('item_binary.tpl'), [
+		'$download'  => t('Download binary/encrypted content'),
+		'$url'       => z_root() . '/viewsrc/' . $item['id'] . '/download'
+	]);
+}
+
+
+
 
 /**
  * @brief Given a text string, convert from bbcode to html and add smilie icons.
@@ -2897,7 +2913,7 @@ function pdl_selector($uid, $current='') {
 
 	$sql_extra = item_permissions_sql($uid);
 
-	$r = q("select iconfig.*, mid from item_id left join item on iconfig.iid = item.id
+	$r = q("select iconfig.*, mid from iconfig left join item on iconfig.iid = item.id
 		where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'PDL' $sql_extra order by v asc",
 		intval($uid)
 	);

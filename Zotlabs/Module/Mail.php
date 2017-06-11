@@ -22,32 +22,40 @@ class Mail extends \Zotlabs\Web\Controller {
 		$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
 		$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
 		$preview   = ((x($_REQUEST,'preview'))      ? intval($_REQUEST['preview'])            : 0);
-		$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : NULL_DATE);
+		$expires   = ((x($_REQUEST,'expires'))      ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : NULL_DATE);
+		$raw       = ((x($_REQUEST,'raw'))          ? intval($_REQUEST['raw'])                : 0);
+		$mimetype  = ((x($_REQUEST,'mimetype'))     ? notags(trim($_REQUEST['mimetype']))     : 'text/bbcode');
 
 		if($preview) {
 
-			$body = cleanup_bbcode($body);
-			$results = linkify_tags($a, $body, local_channel());
+			if($raw) {
+				$body = mail_prepare_binary(['id' => 'M0']);
+				echo json_encode(['preview' => $body]);
+			}
+			else {
+				$body = cleanup_bbcode($body);
+				$results = linkify_tags($a, $body, local_channel());
 
-			if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
-				$attachments = array();
-				foreach($match[2] as $mtch) {
-					$hash = substr($mtch,0,strpos($mtch,','));
-					$rev = intval(substr($mtch,strpos($mtch,',')));
-					$r = attach_by_hash_nodata($hash,get_observer_hash(),$rev);
-					if($r['success']) {
-						$attachments[] = array(
-							'href'     => z_root() . '/attach/' . $r['data']['hash'],
-							'length'   =>  $r['data']['filesize'],
-							'type'     => $r['data']['filetype'],
-							'title'    => urlencode($r['data']['filename']),
-							'revision' => $r['data']['revision']
-						);
+				if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+					$attachments = array();
+					foreach($match[2] as $mtch) {
+						$hash = substr($mtch,0,strpos($mtch,','));
+						$rev = intval(substr($mtch,strpos($mtch,',')));
+						$r = attach_by_hash_nodata($hash,get_observer_hash(),$rev);
+						if($r['success']) {
+							$attachments[] = array(
+								'href'     => z_root() . '/attach/' . $r['data']['hash'],
+								'length'   =>  $r['data']['filesize'],
+								'type'     => $r['data']['filetype'],
+								'title'    => urlencode($r['data']['filename']),
+								'revision' => $r['data']['revision']
+							);
+						}
+						$body = trim(str_replace($match[1],'',$body));
 					}
-					$body = trim(str_replace($match[1],'',$body));
+					echo json_encode(['preview' => zidify_links(smilies(bbcode($body)))]);
 				}
 			}
-			echo json_encode(['preview' => zidify_links(smilies(bbcode($body)))]);
 			killme();
 		} 
 
@@ -102,36 +110,10 @@ class Mail extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-	//	if(feature_enabled(local_channel(),'richtext')) {
-	//		$body = fix_mce_lf($body);
-	//	}
-	
 		require_once('include/text.php');
 		linkify_tags($a, $body, local_channel());
 	
-		// I don't think this is used any more.
 
-		if($preview) {
-			$mail = [
-				'mailbox'     => 'outbox',
-				'id'          => 0,
-				'mid'         => 'M0',
-				'from_name'   => $channel['xchan_name'],
-				'from_url'    => $channel['xchan_url'],
-				'from_photo'  => $channel['xchan_photo_s'],
-				'subject'     => zidify_links(smilies(bbcode($subject))),
-				'body'        => zidify_links(smilies(bbcode($body))),
-				'attachments' => '',
-				'can_recall'  => false,
-				'is_recalled' => '',
-				'date'        => datetime_convert('UTC',date_default_timezone_get(),$message['created'], 'c')
-			];
-			
-			echo replace_macros(get_markup_template('mail_conv.tpl'), [ '$mail' => $mail ] );
-			killme();
-
-		}
-	
 		if(! $recipient) {
 			notice('No recipient found.');
 			\App::$argc = 2;
@@ -141,7 +123,7 @@ class Mail extends \Zotlabs\Web\Controller {
 	
 		// We have a local_channel, let send_message use the session channel and save a lookup
 		
-		$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires);
+		$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires, $mimetype, $raw);
 	
 		if($ret['success']) {
 			xchan_mail_query($ret['mail']);

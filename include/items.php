@@ -1359,6 +1359,8 @@ function encode_mail($item,$extended = false) {
 	$x['body']           = $item['body'];
 	$x['from']           = encode_item_xchan($item['from']);
 	$x['to']             = encode_item_xchan($item['to']);
+	$x['raw']            = $item['mail_raw'];
+	$x['mimetype']       = $item['mail_mimetype'];
 
 	if($item['attach'])
 		$x['attach']     = json_decode($item['attach'],true);
@@ -1392,9 +1394,16 @@ function get_mail_elements($x) {
 
 	$arr = array();
 
-	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8',false) : '');
-	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
+	if(intval($x['raw'])) {
+		$arr['mail_raw'] = intval($x['raw']);
+		$arr['body']     = $x['body'];
+	}
+	else {
+		$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8',false) : '');
+	}
 
+	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mail_mimetype'] = (($x['mimetype']) ? htmlspecialchars($x['mimetype'],ENT_COMPAT,'UTF-8',false) : 'text/bbcode');
 	$arr['conv_guid']    = (($x['conv_guid'])? htmlspecialchars($x['conv_guid'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
@@ -3032,8 +3041,10 @@ function mail_store($arr) {
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['sig']           = ((x($arr,'sig'))           ? trim($arr['sig'])                   : '');
 	$arr['conv_guid']     = ((x($arr,'conv_guid'))     ? trim($arr['conv_guid'])             : '');
+	$arr['mail_mimetype'] = ((x($arr,'mail_mimetype')) ? trim($arr['mail_mimetype'])         : 'text/bbcode');
 
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
+	$arr['mail_raw']      = ((x($arr,'mail_raw'))      ? intval($arr['mail_raw'])            : 0 );
 
 	if(! $arr['parent_mid']) {
 		logger('mail_store: missing parent');
@@ -4350,10 +4361,7 @@ function sync_an_item($channel_id,$item_id) {
 	if($r) {
 		xchan_query($r);
 		$sync_item = fetch_post_tags($r);
-		$rid = q("select * from item_id where iid = %d",
-			intval($item_id)
-		);
-		build_sync_packet($channel_d,array('item' => array(encode_item($sync_item[0],true)),'item_id' => $rid));
+		build_sync_packet($channel_d,array('item' => array(encode_item($sync_item[0],true))));
 	}
 }
 

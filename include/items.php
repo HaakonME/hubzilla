@@ -219,6 +219,11 @@ function can_comment_on_post($observer_xchan, $item) {
 
 //	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
 
+	$x = [ 'observer_hash' => $observer_xchan, 'item' => $item, 'allowed' => 'unset' ];
+	call_hooks('can_comment_on_post',$x);
+	if($x['allowed'] !== 'unset')
+		return $x['allowed'];
+
 	if(! $observer_xchan)
 		return false;
 

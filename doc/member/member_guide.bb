@@ -1005,7 +1005,7 @@ The saved search widget will provide autocompletion of channels (the results are
 
 [h4]Remove Channel[/h4]
 
-Go to the bottom of your channel settings page or visit the URL:
+Select the 'Remove Channel' link on your channel settings page or visit the URL:
 
 	[baseurl]/removeme 
 
@@ -1017,7 +1017,7 @@ If you have identity clones on other hubs this only removes  by default the chan
 
 [h4]Remove Account[/h4]
 
-Go to the bottom of your account settings page or visit the URL:
+Select 'Remove Account' from your account settings page or visit the URL:
 
 	[baseurl]/removeaccount
 	
@@ -1026,3 +1026,4 @@ You will need to confirm your password and the account you are currently logged 
 [hl][i][b]This is irreversible.[/b][/i][/hl]
 
 All your channels will be deleted. If you have identity clones on other hubs this only removes by default the channels instances which exists on this hub.
+

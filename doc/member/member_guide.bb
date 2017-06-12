@@ -358,7 +358,7 @@ Topical tags are indicated by preceding the tag name with the  # character. This
 Topical tags are also not linked if they are purely numeric, e.g. #1. If you wish to use a numeric hashtag, please add some descriptive text such as #2012-elections.
 
 [h4]Bookmarks[/h4]
-Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generatd automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
+Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generated automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
 
 [h4]Spaces in Tags and Mentions[/h4]
 Where possible please use the auto-complete window to select tag and mention recipients, because it will generate a coded tag which uniquely identifies one channel. Names are sometimes ambiguous. However, you can "manually" tag a channel by matching the channel name or address.

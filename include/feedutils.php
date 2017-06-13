@@ -386,7 +386,14 @@ function get_atom_elements($feed, $item, &$author) {
 		}
 	}
 
-	$ostatus_protocol = (($item->get_item_tags(NAMESPACE_OSTATUS, 'conversation')) ? true : false);
+	$rawcnv = $item->get_item_tags(NAMESPACE_OSTATUS, 'conversation');
+	if($rawcnv) {
+		$ostatus_conversation = unxmlify($rawcnv[0]['attribs']['']['ref']);
+		set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
+	}
+
+	$ostatus_protocol = (($ostatus_conversation) ? true : false);
+	
 	$mastodon = (($item->get_item_tags('http://mastodon.social/schema/1.0','scope')) ? true : false);
 	if($mastodon)
 		$ostatus_protocol = true;

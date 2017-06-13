@@ -996,11 +996,23 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					dbesc($parent_mid),
 					intval($importer['channel_id'])
 				);
-				if($x)
-					$parent_mid = $x[0]['mid'];
 
-				$datarray['parent_mid'] = $parent_mid;
+				if($x) {
+					$pmid = $x[0]['mid'];
+					$datarray['parent_mid'] = $pmid;
+				}
+				else {
 
+					// immediate parent wasn't found. Turn into a top-level post if permissions allow
+					// but save the thread_parent in case we need to refer to it later. We should probably
+					// also save the ostatus:conversation_id
+  
+					if(! post_is_importable($datarray, $contact))
+						continue;
+					$datarray['parent_mid'] = $datarray['mid'];
+					set_iconfig($datarray,'system','parent_mid',$parent_mid,true);
+				}
+				
 				$datarray['aid'] = $importer['channel_account_id'];
 				$datarray['uid'] = $importer['channel_id'];
 

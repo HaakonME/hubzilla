@@ -278,6 +278,23 @@ function get_atom_elements($feed, $item, &$author) {
 		$base_url = '';
 
 
+	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
+	if($rawcreated)
+		$res['created'] = unxmlify($rawcreated[0]['data']);
+
+	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'updated');
+	if($rawedited)
+		$res['edited'] = unxmlify($rawedited[0]['data']);
+
+	if((x($res,'edited')) && (! (x($res,'created'))))
+		$res['created'] = $res['edited'];
+
+	if(! $res['created'])
+		$res['created'] = $item->get_date('c');
+
+	if(! $res['edited'])
+		$res['edited'] = $item->get_date('c');
+
 	$rawverb = $item->get_item_tags(NAMESPACE_ACTIVITY, 'verb');
 
 	// select between supported verbs
@@ -288,108 +305,81 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// translate OStatus unfollow to activity streams if it happened to get selected
 
-	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow'))
+	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow')) {
 		$res['verb'] = ACTIVITY_UNFOLLOW;
+	}
 
 
-	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE) {
-		// For Mastodon shares ("boosts"), we need to parse the original author information
-		// from the activity:object -> author structure
-		$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
+	// look for a photo. We should check media size and find the best one,
+	// but for now let's just find any author photo
 
-		if($rawobj) {
-			$rawauthor = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
-			if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
-				$author['author_name'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
+	$rawauthor = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
+
+	if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+		$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+		foreach($base as $link) {
+			if(!x($author, 'author_photo') || ! $author['author_photo']) {
+				if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
+					$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 			}
+		}
+	}
+	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
 
-			if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']) {
-				$author['author_link'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']);
-			}
-			if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
-				$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
-				foreach($base as $link) {
-					if(!x($author, 'author_photo') || ! $author['author_photo']) {
-						if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-							$author['author_photo'] = unxmlify($link['attribs']['']['href']);
-					}
+	if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'], ACTIVITY_OBJ_PERSON)) {
+		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+		if($base && count($base)) {
+			foreach($base as $link) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
+					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+				if(!x($author, 'author_photo') || ! $author['author_photo']) {
+					if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
+						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
 	}
-	else {
-		// look for a photo. We should check media size and find the best one,
-		// but for now let's just find any author photo
 
-		$rawauthor = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+	// check for a yahoo media element (github etc.)
 
+	if(! $author['author_photo']) {
+		$rawmedia = $item->get_item_tags(NAMESPACE_YMEDIA,'thumbnail');
+		if($rawmedia && $rawmedia[0]['attribs']['']['url']) {
+			$author['author_photo'] = strip_tags(unxmlify($rawmedia[0]['attribs']['']['url']));
+		}
+	}
+
+
+	// No photo/profile-link on the item - look at the feed level
+
+	if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
+		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
 			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 			foreach($base as $link) {
-				if(!x($author, 'author_photo') || ! $author['author_photo']) {
+				if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
+					$author['author_link'] = unxmlify($link['attribs']['']['href']);
+					$author['author_is_feed'] = true;
+				}
+				if(! $author['author_photo']) {
 					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
 						$author['author_photo'] = unxmlify($link['attribs']['']['href']);
 				}
 			}
 		}
 
-		$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
+		$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
 
-		if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'], ACTIVITY_OBJ_PERSON)) {
+		if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
 			$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+
 			if($base && count($base)) {
 				foreach($base as $link) {
 					if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
 						$author['author_link'] = unxmlify($link['attribs']['']['href']);
-					if(!x($author, 'author_photo') || ! $author['author_photo']) {
+					if(! (x($author,'author_photo'))) {
 						if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
 							$author['author_photo'] = unxmlify($link['attribs']['']['href']);
-					}
-				}
-			}
-		}
-
-		// check for a yahoo media element (github etc.)
-
-		if(! $author['author_photo']) {
-			$rawmedia = $item->get_item_tags(NAMESPACE_YMEDIA,'thumbnail');
-			if($rawmedia && $rawmedia[0]['attribs']['']['url']) {
-				$author['author_photo'] = strip_tags(unxmlify($rawmedia[0]['attribs']['']['url']));
-			}
-		}
-
-
-		// No photo/profile-link on the item - look at the feed level
-
-		if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
-			$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
-			if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
-				$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
-				foreach($base as $link) {
-					if($link['attribs']['']['rel'] === 'alternate' && (! $author['author_link'])) {
-						$author['author_link'] = unxmlify($link['attribs']['']['href']);
-						$author['author_is_feed'] = true;
-					}
-					if(! $author['author_photo']) {
-						if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
-							$author['author_photo'] = unxmlify($link['attribs']['']['href']);
-					}
-				}
-			}
-
-			$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
-
-			if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'], ACTIVITY_OBJ_PERSON)) {
-				$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
-
-				if($base && count($base)) {
-					foreach($base as $link) {
-						if($link['attribs']['']['rel'] === 'alternate' && (! $res['author_link']))
-							$author['author_link'] = unxmlify($link['attribs']['']['href']);
-						if(! (x($author,'author_photo'))) {
-							if($link['attribs']['']['rel'] === 'avatar' || $link['attribs']['']['rel'] === 'photo')
-								$author['author_photo'] = unxmlify($link['attribs']['']['href']);
-						}
 					}
 				}
 			}
@@ -499,23 +489,6 @@ function get_atom_elements($feed, $item, &$author) {
 	if($rawlocation)
 		$res['location'] = unxmlify($rawlocation[0]['data']);
 
-	$rawcreated = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
-	if($rawcreated)
-		$res['created'] = unxmlify($rawcreated[0]['data']);
-
-	$rawedited = $item->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'updated');
-	if($rawedited)
-		$res['edited'] = unxmlify($rawedited[0]['data']);
-
-	if((x($res,'edited')) && (! (x($res,'created'))))
-		$res['created'] = $res['edited'];
-
-	if(! $res['created'])
-		$res['created'] = $item->get_date('c');
-
-	if(! $res['edited'])
-		$res['edited'] = $item->get_date('c');
-
 
 	// Disallow time travelling posts
 
@@ -597,6 +570,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	$attach = $item->get_enclosures();
 	if($attach) {
+
 		$res['attach'] = array();
 		foreach($attach as $att) {
 			$len   = intval($att->get_length());
@@ -616,6 +590,7 @@ function get_atom_elements($feed, $item, &$author) {
 			$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 		}
 	}
+	
 
 	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
 
@@ -693,6 +668,10 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
+	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE) {
+		feed_get_reshare($res,$item);
+	}
+
 	// build array to pass to hook
 	$arr = [
 			'feed'   => $feed,
@@ -708,6 +687,106 @@ function get_atom_elements($feed, $item, &$author) {
 
 	return $arr['result'];
 }
+
+function feed_get_reshare(&$res,$item) {
+
+	$share = [];
+
+	// For Mastodon shares ("boosts"), we need to parse the original author information
+	// from the activity:object -> author structure
+	$rawobj = $item->get_item_tags(NAMESPACE_ACTIVITY, 'object');
+
+	if($rawobj) {
+
+		$rawauthor = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+
+		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
+			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
+		}
+
+		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']) {
+			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']);
+		}
+
+		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
+			$base = $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
+			foreach($base as $link) {
+				if(! (array_key_exists('avatar',$share) && $share['avatar'])) {
+					if($link['attribs']['']['rel'] === 'photo' || $link['attribs']['']['rel'] === 'avatar')
+						$share['avatar'] = unxmlify($link['attribs']['']['href']);
+				}
+			}
+		}
+
+		if(! $share['author'])
+			$share['author'] = t('unknown');
+		if(! $share['avatar'])
+			$share['avatar'] = z_root() . '/' . get_default_profile_photo(80);
+		if(! $share['profile'])
+			$share['profile'] = z_root();
+	
+		$child = $rawobj[0]['child'];
+
+
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
+			$share['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
+
+		$rawcreated = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
+		if($rawcreated)
+			$share['created'] = unxmlify($rawcreated[0]['data']);
+		else
+			$share['created'] = $res['created'];
+
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
+			$share['message_id'] = unxmlify($child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data']);
+
+		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'content') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']) {
+			$body = unxmlify($child[SIMPLEPIE_NAMESPACE_ATOM_10]['content'][0]['data']);
+			if(! $body)
+				$body = unxmlify($child[SIMPLEPIE_NAMESPACE_ATOM_10]['summary'][0]['data']);
+
+			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
+				$body = purify_html($body);
+				$body = html2bbcode($body);
+			}
+		}
+	
+		$attach = $rawobj->get_enclosures();
+		if($attach) {
+			foreach($attach as $att) {
+				$len   = intval($att->get_length());
+				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
+				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
+				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+				if(strpos($type,';'))
+					$type = substr($type,0,strpos($type,';'));
+				if((! $link) || (strpos($link,'http') !== 0))
+					continue;
+
+				if(! $title)
+					$title = ' ';
+				if(! $type)
+					$type = 'application/octet-stream';
+
+				if((strpos($type,'image') === 0) && (strpos($body,$link) === false) && (strpos($link,'http') === 0)) {
+					$body .= "\n\n" . '[img]' . $link . '[/img]';
+				}
+			}
+		}
+	
+		$res['body'] = "[share author='" . urlencode($share['author']) . 
+			"' profile='"    . $share['profile'] .
+			"' avatar='"     . $share['avatar']  .
+			"' link='"       . $share['link']    .
+			"' posted='"     . $share['created'] . 
+			"' message_id='" . $share['message_id'] . "']";
+			$o .= $body;
+			$o .= "[/share]";
+	}
+
+}
+
+
 
 /**
  * @brief Encodes SimplePie_Item link arrays.

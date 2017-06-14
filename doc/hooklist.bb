@@ -82,6 +82,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/build_pagehead]build_pagehead[/zrl]
 	Called when creating the HTML page header
 
+[zrl=[baseurl]/help/hook/can_comment_on_post]can_comment_on_post[/zrl]
+	Called when deciding whether or not to present a comment box for a post
+
 [zrl=[baseurl]/help/hook/change_channel]change_channel[/zrl]
 	Called when logging in to a channel (either during login or afterward through the channel manager)
 

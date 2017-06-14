@@ -4,7 +4,20 @@ The API endpoints detailed below are relative to [code]api/z/1.0[/code], meaning
 
 [h3]channel/export/basic[/h3]
 
-Export channel data
+Export basic channel data
+
+Options:
+	- sections
+		comma-separated list of data types to export
+
+	- posts
+		if true, return default sections plus 3 months of posts
+
+	If no sections are requested, the following sections are returned:
+		channel, connections, config, apps, chatrooms, events, webpages, mail, wikis
+
+	Files and large collections of posts may run into memory limits; these must generally be
+	requested separately.
 
 
 [h3]channel/stream[/h3]
@@ -608,7 +621,7 @@ Optional:
 
 	application or network name to display with item
 
-- categories
+- category
 
 	comma separated categories for this item
 

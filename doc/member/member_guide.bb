@@ -174,19 +174,29 @@ You can also delegate control of your channels' posts and connections, but not i
 
 [h3]Connecting To Channels[/h3]
 
-Connections in $Projectname can take on a great many different meanings. But let's keep it simple, you want to be friends with somebody like you are familiar with from social networking. How do you do it?
+Connections in $Projectname can take on a great many different meanings. A connection is more accurately defined as a set of permissions that you have granted to somebody else. In traditional social network applications, all connections are granted the same permissions; or at most there two levels (friends and 'followers'). In $Projectname, a range of separate permissions may be set/adjusted depending on the siutation and relationship you have with the other channel. You can allow somebody to view your posts but not your photos. You can also deny them permission to comment on your posts or send private mail to you. But let's keep it simple, you want to be friends with somebody like you are familiar with from social networking. How do you do it?
 
 First, you need to find some channels to connect to. There are two primary ways of doing this. Firstly, setting the &quot;Can send me their channel stream and posts&quot; permission to &quot;Anybody in this network&quot; will bring posts from complete strangers to your matrix. This will give you a lot of public content and should hopefully help you find interesting, entertaing people, forums, and channels.
 
-The next thing you can do is look at the Directory. The directory is available on every $Projectname website which means searching from your own site will bring in results from the entire network. You can search by name, interest, location and keyword. This is incomplete, so we'll improve this paragraph later.
+The next thing you can do is look at the Directory. The directory is available on every $Projectname website which means searching from your own site will bring in results from the entire network. You can search by name, interest, location, and keyword.
+
+If you already know somebody's 'webbie' you can connect with them directly. A webbie looks just like an email address (for instance bob@example.com) but refers to somebody in the open social web. In order to connect they must be using a compatible network protocol. By default, this software supports the 'zot' protocol, however additional protocols may be provided through plugins/addons. See below for more information on connecting to channels on other networks.    
 
 To connect with other $Projectname channels:
 
-Visit their profile by clicking their photograph in the directory, matrix, or comments, and it will open their channel home page in the channel viewer. At the left hand side of the screen, you will usually see a link called &quot;connect&quot;. Click it, and you're done. Depending on the settings of the channel you are connecting to, you may need to wait for them to approve your connection, but no further action is needed on your part. Once you've initiated the connection, you will be taken to the connection editor. This allows you to assign specific permissions for this channel. If you don't allow any permissions, communication will be very limited. There are some quick links which you can use to avoid setting individual permissions. To provide a social network environment, &quot;Full Sharing&quot; is recommended. You may review the settings that are applied with the quick links to ensure they are suitable for the channel you are connecting with and adjust if necessary. Then scroll to the bottom of the page and click &quot;Submit&quot;.
+Visit their profile by clicking their photograph in the directory, matrix, or comments, and it will open their channel home page in the channel viewer. At the left hand side of the screen, you will usually see a link called &quot;connect&quot;. Click it, and you're done. Depending on the settings of the channel you are connecting to, you may need to wait for them to approve your connection, but no further action is needed on your part. Once you've initiated the connection, you will be taken to the connection editor. This allows you to assign specific permissions for this channel if you wish to make any changes. 
 
-You may also connect with any channel by visiting the &quot;Connections&quot; page of your site or the Directory and typing their &quot;webbie&quot; into the &quot;Add New Connection&quot; field. Use this method if somebody tells you their webbie and you wish to connect with them. A webbie looks like an email address; for example &quot;bob@example.com&quot;. The process is the same as connecting via the &quot;Connect&quot; button - you will then be taken to the connection editor to set permissions.
+You may also connect with any channel by visiting the &quot;Connections&quot; page of your site or the Directory and typing their &quot;webbie&quot; into the &quot;Add New Connection&quot; field. Use this method if somebody tells you their webbie and you wish to connect with them. The process is the same as connecting via the &quot;Connect&quot; button - you will then be taken to the connection editor to set permissions.
 
-[h4] Block/Ignore/Archive/Hide channels [/h4]
+To connect with channels on other networks:
+
+The process for connecting to channels on other networks (such as GNU-Social, Mastodon, and Diaspora) is similar - type their &quot;webbie&quot; into the &quot;Add New Connections&quot; box on the &quot;Connections&quot; page. Before you do this however, please visit your Settings page (Feature/Addon Settings) and ensure that the relevant protocol (Diaspora or GNU-Social) is provided on your hub and [b][i]activated[/i] for your channel[/b]. These networks/protocols do not support account migration and location independence so if you move location or clone your channel elsewhere, communications with these connections may fail. For this reason these protocols are not activated by default, but only through your consent. Activating these protocols involves an important decision between communicating with friends on these networks or providing fail-safe account resilience if your server fails.    
+
+To connect with RSS feeds:
+
+Your hub admin may allow connecting to RSS feeds. The process for connecting to an RSS feed is the same, exept type (or paste) the URL of the feed into the &quot;Add New Connection&quot; box. Feeds are only processed once or twice per day and your hub admin may impose limits on how many feeds you may add.  
+
+[h4]Block/Ignore/Archive/Hide channels [/h4]
 
 Channels in your address book can have statuses such as [i]blocked[/i], [i]ignored[/i], [i]archived[/i] and [i]hidden[/i]. From your connections page you can see tabs that display the channels with those statuses. From your edit connection pages you can change the statuses of a channel.
 
@@ -279,7 +289,7 @@ We highly recommend that you use the "typical social network" settings when you 
 [i]Note:[/i]
 Plugins/addons may provide special permission settings, so you may be offered additional permission settings beyond what is described here.
 
-If you have set any of these permissions to &quot;only those I specifically allow&quot;, you may specify indivudal permissions on the connnection edit screen.
+If you have set any of these permissions to &quot;only those I specifically allow&quot;, you may specify individual permissions on the connnection edit screen.
 
 [h4]Affinity[/h4]
 
@@ -348,7 +358,7 @@ Topical tags are indicated by preceding the tag name with the  # character. This
 Topical tags are also not linked if they are purely numeric, e.g. #1. If you wish to use a numeric hashtag, please add some descriptive text such as #2012-elections.
 
 [h4]Bookmarks[/h4]
-Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generatd automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
+Bookmarks indicate a link which can be saved to your bookmark folder. They use the sequence #^ followed by the link. Often these are generated automatically. If the 'bookmarker' addon is installed, this sequence will be converted to a bookmark icon when viewing the post or comment online and clicking the icon will save the bookmark. If the bookmarker addon is not installed, the post 'dropdown menu' contains a link for saving the bookmark or bookmarks. 
 
 [h4]Spaces in Tags and Mentions[/h4]
 Where possible please use the auto-complete window to select tag and mention recipients, because it will generate a coded tag which uniquely identifies one channel. Names are sometimes ambiguous. However, you can "manually" tag a channel by matching the channel name or address.
@@ -995,7 +1005,7 @@ The saved search widget will provide autocompletion of channels (the results are
 
 [h4]Remove Channel[/h4]
 
-Go to the bottom of your channel settings page or visit the URL:
+Select the 'Remove Channel' link on your channel settings page or visit the URL:
 
 	[baseurl]/removeme 
 
@@ -1007,7 +1017,7 @@ If you have identity clones on other hubs this only removes  by default the chan
 
 [h4]Remove Account[/h4]
 
-Go to the bottom of your account settings page or visit the URL:
+Select 'Remove Account' from your account settings page or visit the URL:
 
 	[baseurl]/removeaccount
 	
@@ -1016,3 +1026,4 @@ You will need to confirm your password and the account you are currently logged 
 [hl][i][b]This is irreversible.[/b][/i][/hl]
 
 All your channels will be deleted. If you have identity clones on other hubs this only removes by default the channels instances which exists on this hub.
+

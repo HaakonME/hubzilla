@@ -110,7 +110,7 @@ Posts and messages may be created with an expiration date, at which time they wi
 
 [h4]Service Federation[/h4]
 
-In addition to addon "cross-post connectors" to a variety of alternate networks, there is native support for importation of content from RSS/Atom feeds and using this to create special channels. Also, an experimental but working implementation of the Diaspora protocol allows communication with people on the Friendica and Diaspora decentralised social networks. This is currently marked experimental because these networks do not have the same level of privacy and encryption features and abilities as $Projectname and may present privacy risks.
+In addition to addon "cross-post connectors" to a variety of alternate networks, there is native support for importation of content from RSS/Atom feeds and using this to create special channels. Plugins are also available to communicate with others using the Diaspora and GNU-Social (OStatus) protocols. These networks do not support nomadic identity or cross-domain access control; however basic communications are supported to/from Diaspora, Friendica, GNU-Social, Mastodon and other providers which use these protocols.   
 
 There is also experimental support for OpenID authentication which may be used in Access Control Lists. This is a work in progress. Your $Projectname hub may be used as an OpenID provider to authenticate you to external services which use this technology. 
 
@@ -190,7 +190,7 @@ Any content created in $Projectname remains under the control of the member (or 
 Similar to any other modern blogging system, social network, or a micro-blogging service, $Projectname supports the uploading of files, embedding of videos, linking web pages.
 
 [h4]Previewing/Editing[/h4] 
-Post can be previewed prior to sending and edited after sending.
+Posts and comments can be previewed prior to sending and edited after sending.
 
 [h4]Voting/Consensus[/h4]
 Posts can be turned into "consensus" items which allows readers to offer feedback, which is collated into "agree", "disagree", and "abstain" counters. This lets you gauge interest for ideas and create informal surveys. 
@@ -201,4 +201,4 @@ $Projectname can be extended in a number of ways, through site customisation, pe
 
 [h4]API[/h4]
 
-An API is available for use by third-party services. This is based originally on the early Twitter API (for which hundreds of third-party tools exist). It is currently being extended to provide access to facilities and abilities which are specific to $Projectname. Access may be provided by login/password or OAuth and client registration of OAuth applications is provided.
+An API is available for use by third-party services. A plugin also provides a basic implementation of the Twitter API (for which hundreds of third-party tools exist). Access may be provided by login/password or OAuth, and client registration of OAuth applications is provided.

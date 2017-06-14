@@ -1003,20 +1003,35 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					continue;
 				}
 
-				$x = q("select mid from item where mid = '%s' and uid = %d limit 1",
-					dbesc($parent_mid),
-					intval($importer['channel_id'])
-				);
+				$pmid = '';
+				$conv_id = get_iconfig($datarray,'ostatus','conversation');
 
-				if($x) {
-					$pmid = $x[0]['mid'];
-					$datarray['parent_mid'] = $pmid;
+				if($conv_id) {
+					$c = q("select parent_mid from item left join iconfig on item.id = iconfig.iid where iconfig.cat = 'ostatus' and iconfig.k = 'conversation' and iconfig.v = '%s' and item.uid = %d order by item.id limit 1",
+						dbesc($conv_id),
+						intval($importer['channel_id'])
+					);
+					if($c) {
+						$pmid = $x[0]['parent_mid'];
+						$datarray['parent_mid'] = $pmid;
+					}
 				}
 				else {
+					$x = q("select mid from item where mid = '%s' and uid = %d limit 1",
+						dbesc($parent_mid),
+						intval($importer['channel_id'])
+					);
+				
+					if($x) {
+						$pmid = $x[0]['mid'];
+						$datarray['parent_mid'] = $pmid;
+					}
+				}
+
+				if(! $pmid) {
 
 					// immediate parent wasn't found. Turn into a top-level post if permissions allow
-					// but save the thread_parent in case we need to refer to it later. We should probably
-					// also save the ostatus:conversation_id
+					// but save the thread_parent in case we need to refer to it later.
   
 					if(! post_is_importable($datarray, $contact))
 						continue;

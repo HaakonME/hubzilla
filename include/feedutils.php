@@ -266,6 +266,8 @@ function get_atom_elements($feed, $item, &$author) {
 	$res['item_rss'] = 1;
 
 
+	$summary = unxmlify($item->get_description(true));
+
 	// removing the content of the title if its identically to the body
 	// This helps with auto generated titles e.g. from tumblr
 
@@ -485,6 +487,12 @@ function get_atom_elements($feed, $item, &$author) {
 			'term'  => $res['plink'],
 		);
 	}
+
+	// turn Mastodon content warning into a #nsfw hashtag
+	if($mastodon && $summary) {
+		$res['body'] .= "\n\n#nsfw\n";
+	}
+
 
 	$private = $item->get_item_tags(NAMESPACE_DFRN, 'private');
 	if($private && intval($private[0]['data']) > 0)

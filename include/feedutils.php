@@ -1025,13 +1025,13 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					}
 				}
 				else {
-					$x = q("select mid from item where mid = '%s' and uid = %d limit 1",
+					$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
 						dbesc($parent_mid),
 						intval($importer['channel_id'])
 					);
 				
 					if($x) {
-						$pmid = $x[0]['mid'];
+						$pmid = $x[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
 					}
 				}

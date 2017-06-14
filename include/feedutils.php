@@ -354,6 +354,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// No photo/profile-link on the item - look at the feed level
 
+
 	if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -1509,7 +1510,7 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$o .= '<thr:in-reply-to ref="' . 'X-ZOT:' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
 	if(activity_match($item['obj_type'],ACTIVITY_OBJ_EVENT) && activity_match($item['verb'],ACTIVITY_POST)) {

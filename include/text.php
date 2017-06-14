@@ -1552,13 +1552,13 @@ function prepare_body(&$item,$attach = false) {
 
 		// if original photo width is <= 640px prepend it to item body
 		if($object['link'][0]['width'] && $object['link'][0]['width'] <= 640) {
-			$s .= '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_blank"><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
+			$s .= '<div class="inline-photo-item-wrapper"><a href="' . zid(rawurldecode($object['id'])) . '" target="_blank" rel="nofollow noopener" ><img class="inline-photo-item" style="max-width:' . $object['link'][0]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][0]['href'])) . '"></a></div>' . $s;
 		}
 
 		// if original photo width is > 640px make it a cover photo
 		if($object['link'][0]['width'] && $object['link'][0]['width'] > 640) {
 			$scale = ((($object['link'][1]['width'] == 1024) || ($object['link'][1]['height'] == 1024)) ? 1 : 0);
-			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_blank"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
+			$photo = '<a href="' . zid(rawurldecode($object['id'])) . '" target="_blank" rel="nofollow noopener"><img style="max-width:' . $object['link'][$scale]['width'] . 'px; width:100%; height:auto;" src="' . zid(rawurldecode($object['link'][$scale]['href'])) . '"></a>';
 		}
 	}
 

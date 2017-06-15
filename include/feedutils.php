@@ -1505,6 +1505,10 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
+		// ensure it's a legal uri and not just a message-id
+		if(! strpos($parent_item,':'))
+			$parent_item = 'X-ZOT:' . $parent_item;
+
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 

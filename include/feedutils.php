@@ -259,7 +259,7 @@ function get_atom_elements($feed, $item, &$author) {
 	if(substr($author['author_link'],-1,1) == '/')
 		$author['author_link'] = substr($author['author_link'],0,-1);
 
-	$res['mid'] = unxmlify($item->get_id());
+	$res['mid'] = normalise_id(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -391,7 +391,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	$rawcnv = $item->get_item_tags(NAMESPACE_OSTATUS, 'conversation');
 	if($rawcnv) {
-		$ostatus_conversation = unxmlify($rawcnv[0]['attribs']['']['ref']);
+		$ostatus_conversation = normalise_id(unxmlify($rawcnv[0]['attribs']['']['ref']));
 		set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
 	}
 
@@ -943,7 +943,6 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
-			$item_id = normalise_id($item->get_id());
 
 			logger('processing ' . $item->get_id(), LOGGER_DEBUG);
 
@@ -960,12 +959,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				// Have we seen it? If not, import it.
 
-				$item_id  = normalise_id($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if($datarray['mid'])
-					$datarray['mid'] = normalise_id($item->get_id());
+				if(! $datarray['mid'])
+					continue;
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -992,7 +990,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray['owner_xchan'] = $contact['xchan_hash'];
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
-					dbesc($item_id),
+					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
 
@@ -1015,6 +1013,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$pmid = '';
 				$conv_id = get_iconfig($datarray,'ostatus','conversation');
 
+				// match conversations - first try ostatus:conversation
+				// next try thr:in_reply_to
+
 				if($conv_id) {
 					$c = q("select parent_mid from item left join iconfig on item.id = iconfig.iid where iconfig.cat = 'ostatus' and iconfig.k = 'conversation' and iconfig.v = '%s' and item.uid = %d order by item.id limit 1",
 						dbesc($conv_id),
@@ -1025,7 +1026,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						$datarray['parent_mid'] = $pmid;
 					}
 				}
-				else {
+				if(! $pmid) {
 					$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
 						dbesc($parent_mid),
 						intval($importer['channel_id'])
@@ -1061,12 +1062,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id  = normalise_id($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if($datarray['mid'])
-					$datarray['mid'] = normalise_id($item->get_id());
+				if(! $datarray['mid'])
+					continue;
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -1121,7 +1121,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
-					dbesc($item_id),
+					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
 
@@ -1141,7 +1141,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					continue;
 				}
 
-				$datarray['parent_mid'] = $item_id;
+				$datarray['parent_mid'] = $datarray['mid'];
 				$datarray['uid'] = $importer['channel_id'];
 				$datarray['aid'] = $importer['channel_account_id'];
 

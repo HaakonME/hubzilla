@@ -718,7 +718,7 @@ function feed_get_reshare(&$res,$item) {
 
 	if($rawobj) {
 
-		$rawauthor = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+		$rawauthor = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['author'];
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
 			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
@@ -751,7 +751,8 @@ function feed_get_reshare(&$res,$item) {
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
 			$share['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
 
-		$rawcreated = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
+		$rawcreated = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['published'];
+
 		if($rawcreated)
 			$share['created'] = unxmlify($rawcreated[0]['data']);
 		else
@@ -771,13 +772,15 @@ function feed_get_reshare(&$res,$item) {
 			}
 		}
 	
-		$attach = $rawobj->get_enclosures();
+		$attach = $share['link'];
 		if($attach) {
 			foreach($attach as $att) {
-				$len   = intval($att->get_length());
-				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
-				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
-				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+				if($att['rel'] !== 'enclosure')
+					continue;
+				$len   = intval($att['length']);
+				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['title']))));
+				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['type']))));
 				if(strpos($type,';'))
 					$type = substr($type,0,strpos($type,';'));
 				if((! $link) || (strpos($link,'http') !== 0))
@@ -823,6 +826,10 @@ function encode_rel_links($links) {
 		$l = array();
 		if($link['attribs']['']['rel'])
 			$l['rel'] =  $link['attribs']['']['rel'];
+		if($link['attribs']['']['length'])
+			$l['length'] =  $link['attribs']['']['length'];
+		if($link['attribs']['']['title'])
+			$l['title'] =  $link['attribs']['']['title'];
 		if($link['attribs']['']['type'])
 			$l['type'] =  $link['attribs']['']['type'];
 		if($link['attribs']['']['href'])

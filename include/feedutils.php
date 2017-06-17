@@ -688,7 +688,10 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
-	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE) {
+	
+
+	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE
+		&& array_key_exists('obj_type',$res) && $res['obj_type'] === ACTIVITY_OBJ_NOTE) {
 		feed_get_reshare($res,$item);
 	}
 
@@ -721,11 +724,11 @@ function feed_get_reshare(&$res,$item) {
 		$rawauthor = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['author'];
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
-			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
+			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']) {
-			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']);
+			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -749,7 +752,7 @@ function feed_get_reshare(&$res,$item) {
 
 
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$share['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
+			$share['links'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
 
 		$rawcreated = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['published'];
 
@@ -772,9 +775,13 @@ function feed_get_reshare(&$res,$item) {
 			}
 		}
 	
-		$attach = $share['link'];
+		$attach = $share['links'];
 		if($attach) {
 			foreach($attach as $att) {
+				if($att['rel'] === 'alternate') {
+					$share['alternate'] = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+					continue;
+				}
 				if($att['rel'] !== 'enclosure')
 					continue;
 				$len   = intval($att['length']);
@@ -800,11 +807,12 @@ function feed_get_reshare(&$res,$item) {
 		$res['body'] = "[share author='" . urlencode($share['author']) . 
 			"' profile='"    . $share['profile'] .
 			"' avatar='"     . $share['avatar']  .
-			"' link='"       . $share['link']    .
+			"' link='"       . $share['alternate']    .
 			"' posted='"     . $share['created'] . 
 			"' message_id='" . $share['message_id'] . "']";
-			$o .= $body;
-			$o .= "[/share]";
+
+		$res['body'] .= $body;
+		$res['body'] .= "[/share]";
 	}
 
 }

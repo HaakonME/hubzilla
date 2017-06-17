@@ -354,6 +354,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// No photo/profile-link on the item - look at the feed level
 
+
 	if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -602,6 +603,10 @@ function get_atom_elements($feed, $item, &$author) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
+			if(($ostatus_protocol) && (strpos($type,'image') === 0) && (strpos($res['body'],$link) === false) && (strpos($link,'http') === 0)) {
+				$res['body'] .= "\n\n" . '[img]' . $link . '[/img]';
+			}
+
 			$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 		}
 	}
@@ -683,7 +688,10 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
-	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE) {
+	
+
+	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE
+		&& array_key_exists('obj_type',$res) && $res['obj_type'] === ACTIVITY_OBJ_NOTE) {
 		feed_get_reshare($res,$item);
 	}
 
@@ -713,14 +721,14 @@ function feed_get_reshare(&$res,$item) {
 
 	if($rawobj) {
 
-		$rawauthor = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+		$rawauthor = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['author'];
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
-			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
+			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']) {
-			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']);
+			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -744,9 +752,10 @@ function feed_get_reshare(&$res,$item) {
 
 
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$share['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
+			$share['links'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
 
-		$rawcreated = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
+		$rawcreated = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['published'];
+
 		if($rawcreated)
 			$share['created'] = unxmlify($rawcreated[0]['data']);
 		else
@@ -766,13 +775,19 @@ function feed_get_reshare(&$res,$item) {
 			}
 		}
 	
-		$attach = $rawobj->get_enclosures();
+		$attach = $share['links'];
 		if($attach) {
 			foreach($attach as $att) {
-				$len   = intval($att->get_length());
-				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
-				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
-				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+				if($att['rel'] === 'alternate') {
+					$share['alternate'] = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+					continue;
+				}
+				if($att['rel'] !== 'enclosure')
+					continue;
+				$len   = intval($att['length']);
+				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['title']))));
+				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['type']))));
 				if(strpos($type,';'))
 					$type = substr($type,0,strpos($type,';'));
 				if((! $link) || (strpos($link,'http') !== 0))
@@ -792,11 +807,12 @@ function feed_get_reshare(&$res,$item) {
 		$res['body'] = "[share author='" . urlencode($share['author']) . 
 			"' profile='"    . $share['profile'] .
 			"' avatar='"     . $share['avatar']  .
-			"' link='"       . $share['link']    .
+			"' link='"       . $share['alternate']    .
 			"' posted='"     . $share['created'] . 
 			"' message_id='" . $share['message_id'] . "']";
-			$o .= $body;
-			$o .= "[/share]";
+
+		$res['body'] .= $body;
+		$res['body'] .= "[/share]";
 	}
 
 }
@@ -818,6 +834,10 @@ function encode_rel_links($links) {
 		$l = array();
 		if($link['attribs']['']['rel'])
 			$l['rel'] =  $link['attribs']['']['rel'];
+		if($link['attribs']['']['length'])
+			$l['length'] =  $link['attribs']['']['length'];
+		if($link['attribs']['']['title'])
+			$l['title'] =  $link['attribs']['']['title'];
 		if($link['attribs']['']['type'])
 			$l['type'] =  $link['attribs']['']['type'];
 		if($link['attribs']['']['href'])
@@ -1724,3 +1744,4 @@ function asencode_person($p) {
 
 	return $ret;
 }
+

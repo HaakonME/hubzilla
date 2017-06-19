@@ -533,6 +533,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 		$live_update_div = '<div id="live-search"></div>' . "\r\n";
 	}
 
+	elseif ($mode === 'moderate') {
+		$profile_owner = local_channel();
+	}
+
 	elseif ($mode === 'photos') {
 		$profile_onwer = App::$profile['profile_uid'];
 		$page_writeable = ($profile_owner == local_channel());
@@ -577,7 +581,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	if($items) {
 
-		if($mode === 'network-new' || $mode === 'search' || $mode === 'community') {
+		if(in_array($mode, [ 'network-new', 'search', 'community', 'moderate' ])) {
 
 			// "New Item View" on network page or search page results
 			// - just loop through the items and format them minimally for display
@@ -609,14 +613,14 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
 						&& ($item['id'] != $item['parent']))
 						continue;
-					$nickname = $item['nickname'];
+//					$nickname = $item['nickname'];
 				}
-				else
-					$nickname = App::$user['nickname'];
+//				else
+//					$nickname = App::$user['nickname'];
 
-				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
-				if($item['author-link'] && (! $item['author-name']))
-					$profile_name = $item['author-link'];
+//				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
+//				if($item['author-link'] && (! $item['author-name']))
+//					$profile_name = $item['author-link'];
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
@@ -625,7 +629,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				else
 					$profile_link = zid($profile_link);
 
-				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
+//				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 
 				$profile_name = $item['author']['xchan_name'];
 				$profile_link = $item['author']['xchan_url'];
@@ -679,6 +683,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
 					'mode' => $mode,
+					'approve' => t('Approve'),
+					'delete' => t('Delete'),
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,

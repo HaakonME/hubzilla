@@ -743,8 +743,12 @@ class ThreadItem {
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $conv->get_cipher(),
-			'$sourceapp' => \App::$sourcename
-
+			'$sourceapp' => \App::$sourcename,
+			'$observer' => get_observer_hash(),
+			'$anoncomments' => perm_is_allowed($conv->get_profile_owner(),'','post_comments'),
+			'$anonname' => [ 'anonname', t('Your full name (required)'),'','' ],
+			'$anonmail' => [ 'anonmail', t('Your email address (required)'),'','' ],
+			'$anonurl'  => [ 'anonurl',  t('Your website URL (optional)'),'','' ]
 		));
 
 		return $comment_box;

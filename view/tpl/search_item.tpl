@@ -102,6 +102,17 @@
 					<div class="dropdown-menu">{{$item.attachments}}</div>
 				</div>
 				{{/if}}
+				{{if $item.mode === 'moderate'}}
+
+				<div class="wall-item-tools-left btn-group">
+					<a href="moderate/{{$item.id}}/approve" class="btn btn-outline-secondary btn-small">{{$item.approve}}</a>
+					<a href="moderate/{{$item.id}}/drop" class="btn btn-outline-secondary btn-small">{{$item.delete}}</a>
+
+				</div>
+
+
+
+				{{/if}}
 			</div>
 		</div>
 		{{if $item.conv}}

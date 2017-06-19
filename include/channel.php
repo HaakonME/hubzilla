@@ -2335,28 +2335,31 @@ function anon_identity_init($reqvars) {
 	if(! $anon_url)
 		$anon_url = z_root();
 
+	$hash = hash('md5',$anon_email);
+
 	$x = q("select * from xchan where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' limit 1",
 		dbesc($anon_email),
-		dbesc($anon_email)
+		dbesc($hash)
 	);
 
 	if(! $x) {
 		xchan_store_lowlevel([ 
 			'xchan_guid'    => $anon_email,
-			'xchan_hash'    => $anon_email,
+			'xchan_hash'    => $hash,
 			'xchan_name'    => $anon_name,
 			'xchan_url'     => $anon_url,
 			'xchan_network' => 'unknown',
 			'xchan_name_date' => datetime_convert()
 		]);
 			
+
 		$x = q("select * from xchan where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' limit 1",
 			dbesc($anon_email),
-			dbesc($anon_email)
+			dbesc($hash)
 		);
 
 		$photo = z_root() . '/' . get_default_profile_photo(300);
-		$photos = import_xchan_photo($photo,$anon_email);
+		$photos = import_xchan_photo($photo,$hash);
 		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' ",
 			dbesc(datetime_convert()),
 			dbesc($photos[0]),
@@ -2364,7 +2367,7 @@ function anon_identity_init($reqvars) {
 			dbesc($photos[2]),
 			dbesc($photos[3]),
 			dbesc($anon_email),
-			dbesc($anon_email)
+			dbesc($hash)
 		);
 
 	}

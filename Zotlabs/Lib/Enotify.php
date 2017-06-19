@@ -170,6 +170,7 @@ class Enotify {
 
 		xchan_query($p);
 
+		$moderated = (($p[0]['item_blocked'] = ITEM_MODERATED) ? true : false);
 
 		$item_post_type = item_post_type($p[0]);
 //		$private = $p[0]['item_private'];
@@ -208,13 +209,21 @@ class Enotify {
 		// Before this we have the name of the replier on the subject rendering 
 		// differents subjects for messages on the same thread.
 
-		$subject = sprintf( t('[$Projectname:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
+		if($moderated)
+			$subject = sprintf( t('[$Projectname:Notify] Moderated Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
+		else
+			$subject = sprintf( t('[$Projectname:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
 		$preamble = sprintf( t('%1$s, %2$s commented on an item/conversation you have been following.'), $recip['channel_name'], $sender['xchan_name']); 
 		$epreamble = $dest_str; 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		if($moderated) {
+			$tsitelink .= "\n\n" . sprintf( t('Please visit %s to approve or reject this comment.'), z_root() . '/moderate' );
+			$hsitelink .= "\n\n" . sprintf( t('Please visit %s to approve or reject this comment.'), z_root() . '/moderate' );
+		}
+		
 	}
 
 	if ($params['type'] == NOTIFY_LIKE) {

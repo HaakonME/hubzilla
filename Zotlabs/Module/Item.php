@@ -33,7 +33,7 @@ class Item extends \Zotlabs\Web\Controller {
 		// This will change. Figure out who the observer is and whether or not
 		// they have permission to post here. Else ignore the post.
 	
-		if((! local_channel()) && (! remote_channel()) && (! x($_REQUEST,'commenter')))
+		if((! local_channel()) && (! remote_channel()) && (! x($_REQUEST,'anonname')))
 			return;
 
 		$uid = local_channel();
@@ -77,7 +77,7 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		call_hooks('post_local_start', $_REQUEST);
 	
-	//	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+		// logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 	
 		$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 	
@@ -205,10 +205,29 @@ class Item extends \Zotlabs\Web\Controller {
 			$route = $parent_item['route'];
 	
 		}
+
+		$moderated = false;
 	
-		if(! $observer)
+		if(! $observer) {
 			$observer = \App::get_observer();
+			if(! $observer) {
+				$observer = anon_identity_init($_REQUEST);
+				if($observer) {
+					$moderated = true;
+					$remote_xchan = $remote_observer = $observer;
+				}
+			}
+		} 			
 	
+		if(! $observer) {
+			notice( t('Permission denied.') . EOL) ;
+			if($api_source)
+				return ( [ 'success' => false, 'message' => 'permission denied' ] );	
+			if(x($_REQUEST,'return')) 
+				goaway(z_root() . "/" . $return_path );
+			killme();
+		}
+
 		if($parent) {
 			logger('mod_item: item_post parent=' . $parent);
 			$can_comment = false;
@@ -312,7 +331,7 @@ class Item extends \Zotlabs\Web\Controller {
 		$walltowall = false;
 		$walltowall_comment = false;
 	
-		if($remote_xchan)
+		if($remote_xchan && ! $moderated)
 			$observer = $remote_observer;
 	
 		if($observer) {
@@ -996,6 +1015,10 @@ class Item extends \Zotlabs\Web\Controller {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', $notify_type, $post_id));
 	
 		logger('post_complete');
+
+		if($moderated) {
+			info(t('Your comment is awaiting approval.') . EOL);
+		}
 	
 		// figure out how to return, depending on from whence we came
 	

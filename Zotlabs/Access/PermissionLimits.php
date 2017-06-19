@@ -10,7 +10,7 @@ class PermissionLimits {
 		$perms = Permissions::Perms();
 		$limits = array();
 		foreach($perms as $k => $v) {
-			if(strstr($k,'view'))
+			if(strstr($k,'view') || $k === 'post_comments')
 				$limits[$k] = PERMS_PUBLIC;
 			else
 				$limits[$k] = PERMS_SPECIFIC;

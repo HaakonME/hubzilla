@@ -11,9 +11,10 @@
 				<input type="hidden" name="jsreload" value="{{$jsreload}}" />
 				<input type="hidden" name="preview" id="comment-preview-inp-{{$id}}" value="0" />
 				{{if $anoncomments && ! $observer}}
-				<div id="comment-edit-anon-{{$id}}">
-					{{include file="field_input.tpl" field=$authorname}}
-					{{include file="field_input.tpl" field=$authormail}}
+				<div id="comment-edit-anon-{{$id}}" style="display: none;" >
+					{{include file="field_input.tpl" field=$anonname}}
+					{{include file="field_input.tpl" field=$anonmail}}
+					{{include file="field_input.tpl" field=$anonurl}}
 					{{$anon_extras}}
 				</div>
 				{{/if}}

@@ -1344,7 +1344,7 @@ main.fullscreen .section-content-wrapper-np {
 .form-control,
 .nav-pills .nav-link,
 .nav-tabs .nav-link {
-	border-radius: $radius !important;
+	border-radius: $radius;
 }
 
 blockquote {

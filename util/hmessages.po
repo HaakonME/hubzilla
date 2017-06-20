@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.3.5\n"
+"Project-Id-Version: 2.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-01 15:36+0200\n"
+"POT-Creation-Date: 2017-06-20 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,75 +17,75 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../Zotlabs/Access/Permissions.php:46
+#: ../../Zotlabs/Access/Permissions.php:53
 msgid "Can view my channel stream and posts"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:47 ../../include/permissions.php:42
+#: ../../Zotlabs/Access/Permissions.php:54 ../../include/permissions.php:42
 msgid "Can send me their channel stream and posts"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:48 ../../include/permissions.php:36
+#: ../../Zotlabs/Access/Permissions.php:55 ../../include/permissions.php:36
 msgid "Can view my default channel profile"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:49 ../../include/permissions.php:37
+#: ../../Zotlabs/Access/Permissions.php:56 ../../include/permissions.php:37
 msgid "Can view my connections"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:50 ../../include/permissions.php:38
+#: ../../Zotlabs/Access/Permissions.php:57 ../../include/permissions.php:38
 msgid "Can view my file storage and photos"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:51
+#: ../../Zotlabs/Access/Permissions.php:58
 msgid "Can upload/modify my file storage and photos"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:52
+#: ../../Zotlabs/Access/Permissions.php:59
 msgid "Can view my channel webpages"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:53
+#: ../../Zotlabs/Access/Permissions.php:60
 msgid "Can view my wiki pages"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:54
+#: ../../Zotlabs/Access/Permissions.php:61
 msgid "Can create/edit my channel webpages"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:55
+#: ../../Zotlabs/Access/Permissions.php:62
 msgid "Can write to my wiki pages"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:56
+#: ../../Zotlabs/Access/Permissions.php:63
 msgid "Can post on my channel (wall) page"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:57 ../../include/permissions.php:44
+#: ../../Zotlabs/Access/Permissions.php:64 ../../include/permissions.php:44
 msgid "Can comment on or like my posts"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:58 ../../include/permissions.php:45
+#: ../../Zotlabs/Access/Permissions.php:65 ../../include/permissions.php:45
 msgid "Can send me private mail messages"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:59
+#: ../../Zotlabs/Access/Permissions.php:66
 msgid "Can like/dislike profiles and profile things"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:60
+#: ../../Zotlabs/Access/Permissions.php:67
 msgid "Can forward to all my channel connections via @+ mentions in posts"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:61
+#: ../../Zotlabs/Access/Permissions.php:68
 msgid "Can chat with me"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:62 ../../include/permissions.php:53
+#: ../../Zotlabs/Access/Permissions.php:69 ../../include/permissions.php:53
 msgid "Can source my public posts in derived channels"
 msgstr ""
 
-#: ../../Zotlabs/Access/Permissions.php:63
+#: ../../Zotlabs/Access/Permissions.php:70
 msgid "Can administer my channel"
 msgstr ""
 
@@ -167,8 +167,8 @@ msgstr ""
 #: ../../addon/cdav/cdav.php:277 ../../addon/cdav/cdav.php:284
 #: ../../include/selectors.php:49 ../../include/selectors.php:66
 #: ../../include/selectors.php:104 ../../include/selectors.php:140
-#: ../../include/permissions.php:950 ../../include/connections.php:675
-#: ../../include/connections.php:682
+#: ../../include/permissions.php:950 ../../include/connections.php:681
+#: ../../include/connections.php:688
 msgid "Other"
 msgstr ""
 
@@ -182,7 +182,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Hcard.php:12 ../../Zotlabs/Module/Editblock.php:31
 #: ../../Zotlabs/Module/Profile.php:20 ../../Zotlabs/Module/Layouts.php:31
 #: ../../Zotlabs/Module/Editwebpage.php:32 ../../Zotlabs/Module/Webpages.php:33
-#: ../../Zotlabs/Module/Filestorage.php:59 ../../include/channel.php:945
+#: ../../Zotlabs/Module/Filestorage.php:59 ../../include/channel.php:959
 msgid "Requested profile is not available."
 msgstr ""
 
@@ -197,6 +197,7 @@ msgstr ""
 #: ../../Zotlabs/Module/New_channel.php:77
 #: ../../Zotlabs/Module/New_channel.php:104
 #: ../../Zotlabs/Module/Sharedwithme.php:11 ../../Zotlabs/Module/Setup.php:212
+#: ../../Zotlabs/Module/Moderate.php:13
 #: ../../Zotlabs/Module/Achievements.php:34 ../../Zotlabs/Module/Thing.php:274
 #: ../../Zotlabs/Module/Thing.php:294 ../../Zotlabs/Module/Thing.php:335
 #: ../../Zotlabs/Module/Api.php:24 ../../Zotlabs/Module/Editblock.php:67
@@ -204,18 +205,19 @@ msgstr ""
 #: ../../Zotlabs/Module/Mood.php:116 ../../Zotlabs/Module/Connections.php:29
 #: ../../Zotlabs/Module/Viewsrc.php:19 ../../Zotlabs/Module/Bookmarks.php:61
 #: ../../Zotlabs/Module/Photos.php:69 ../../Zotlabs/Module/Wiki.php:50
-#: ../../Zotlabs/Module/Wiki.php:216 ../../Zotlabs/Module/Wiki.php:315
+#: ../../Zotlabs/Module/Wiki.php:233 ../../Zotlabs/Module/Wiki.php:339
 #: ../../Zotlabs/Module/Pdledit.php:29 ../../Zotlabs/Module/Poke.php:137
 #: ../../Zotlabs/Module/Profile_photo.php:280
 #: ../../Zotlabs/Module/Profile_photo.php:293
-#: ../../Zotlabs/Module/Authtest.php:16 ../../Zotlabs/Module/Item.php:221
-#: ../../Zotlabs/Module/Item.php:231 ../../Zotlabs/Module/Item.php:1038
-#: ../../Zotlabs/Module/Page.php:35 ../../Zotlabs/Module/Page.php:91
-#: ../../Zotlabs/Module/Connedit.php:385 ../../Zotlabs/Module/Chat.php:98
-#: ../../Zotlabs/Module/Chat.php:103 ../../Zotlabs/Module/Menu.php:78
-#: ../../Zotlabs/Module/Layouts.php:71 ../../Zotlabs/Module/Layouts.php:78
-#: ../../Zotlabs/Module/Layouts.php:89 ../../Zotlabs/Module/Group.php:13
-#: ../../Zotlabs/Module/Profiles.php:198 ../../Zotlabs/Module/Profiles.php:635
+#: ../../Zotlabs/Module/Authtest.php:16 ../../Zotlabs/Module/Item.php:223
+#: ../../Zotlabs/Module/Item.php:240 ../../Zotlabs/Module/Item.php:250
+#: ../../Zotlabs/Module/Item.php:1071 ../../Zotlabs/Module/Page.php:35
+#: ../../Zotlabs/Module/Page.php:126 ../../Zotlabs/Module/Connedit.php:385
+#: ../../Zotlabs/Module/Chat.php:98 ../../Zotlabs/Module/Chat.php:103
+#: ../../Zotlabs/Module/Menu.php:78 ../../Zotlabs/Module/Layouts.php:71
+#: ../../Zotlabs/Module/Layouts.php:78 ../../Zotlabs/Module/Layouts.php:89
+#: ../../Zotlabs/Module/Group.php:13 ../../Zotlabs/Module/Profiles.php:198
+#: ../../Zotlabs/Module/Profiles.php:635
 #: ../../Zotlabs/Module/Editwebpage.php:68
 #: ../../Zotlabs/Module/Editwebpage.php:89
 #: ../../Zotlabs/Module/Editwebpage.php:107
@@ -224,7 +226,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Block.php:76 ../../Zotlabs/Module/Editpost.php:17
 #: ../../Zotlabs/Module/Sources.php:74 ../../Zotlabs/Module/Like.php:181
 #: ../../Zotlabs/Module/Suggest.php:28 ../../Zotlabs/Module/Message.php:18
-#: ../../Zotlabs/Module/Mail.php:164 ../../Zotlabs/Module/Register.php:77
+#: ../../Zotlabs/Module/Mail.php:146 ../../Zotlabs/Module/Register.php:77
 #: ../../Zotlabs/Module/Cover_photo.php:281
 #: ../../Zotlabs/Module/Cover_photo.php:294 ../../Zotlabs/Module/Network.php:15
 #: ../../Zotlabs/Module/Filestorage.php:23
@@ -245,7 +247,7 @@ msgstr ""
 #: ../../include/attach.php:344 ../../include/attach.php:358
 #: ../../include/attach.php:365 ../../include/attach.php:442
 #: ../../include/attach.php:909 ../../include/attach.php:983
-#: ../../include/attach.php:1148 ../../include/items.php:3470
+#: ../../include/attach.php:1148 ../../include/items.php:3495
 #: ../../include/photos.php:27
 msgid "Permission denied."
 msgstr ""
@@ -255,7 +257,7 @@ msgstr ""
 msgid "Block Name"
 msgstr ""
 
-#: ../../Zotlabs/Module/Blocks.php:154 ../../include/text.php:2267
+#: ../../Zotlabs/Module/Blocks.php:154 ../../include/text.php:2280
 msgid "Blocks"
 msgstr ""
 
@@ -264,13 +266,13 @@ msgid "Block Title"
 msgstr ""
 
 #: ../../Zotlabs/Module/Blocks.php:157 ../../Zotlabs/Module/Menu.php:114
-#: ../../Zotlabs/Module/Layouts.php:191 ../../Zotlabs/Module/Webpages.php:256
+#: ../../Zotlabs/Module/Layouts.php:191 ../../Zotlabs/Module/Webpages.php:258
 #: ../../include/page_widgets.php:47
 msgid "Created"
 msgstr ""
 
 #: ../../Zotlabs/Module/Blocks.php:158 ../../Zotlabs/Module/Menu.php:115
-#: ../../Zotlabs/Module/Layouts.php:192 ../../Zotlabs/Module/Webpages.php:257
+#: ../../Zotlabs/Module/Layouts.php:192 ../../Zotlabs/Module/Webpages.php:259
 #: ../../include/page_widgets.php:48
 msgid "Edited"
 msgstr ""
@@ -278,7 +280,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Blocks.php:159 ../../Zotlabs/Module/New_channel.php:147
 #: ../../Zotlabs/Module/Connedit.php:917 ../../Zotlabs/Module/Menu.php:118
 #: ../../Zotlabs/Module/Layouts.php:185 ../../Zotlabs/Module/Profiles.php:801
-#: ../../Zotlabs/Module/Webpages.php:244 ../../Zotlabs/Storage/Browser.php:228
+#: ../../Zotlabs/Module/Webpages.php:246 ../../Zotlabs/Storage/Browser.php:228
 #: ../../Zotlabs/Storage/Browser.php:332 ../../addon/cdav/Mod_Cdav.php:1151
 #: ../../addon/cdav/include/widgets.php:127
 #: ../../addon/cdav/include/widgets.php:164
@@ -291,24 +293,24 @@ msgstr ""
 #: ../../Zotlabs/Module/Thing.php:260 ../../Zotlabs/Module/Editblock.php:114
 #: ../../Zotlabs/Module/Connections.php:296
 #: ../../Zotlabs/Module/Connections.php:316 ../../Zotlabs/Module/Wiki.php:165
-#: ../../Zotlabs/Module/Wiki.php:275 ../../Zotlabs/Module/Menu.php:112
+#: ../../Zotlabs/Module/Wiki.php:298 ../../Zotlabs/Module/Menu.php:112
 #: ../../Zotlabs/Module/Layouts.php:193
 #: ../../Zotlabs/Module/Editwebpage.php:142
-#: ../../Zotlabs/Module/Webpages.php:245 ../../Zotlabs/Module/Editpost.php:80
+#: ../../Zotlabs/Module/Webpages.php:247 ../../Zotlabs/Module/Editpost.php:80
 #: ../../Zotlabs/Lib/Apps.php:367 ../../Zotlabs/Lib/ThreadItem.php:107
 #: ../../Zotlabs/Storage/Browser.php:238
 #: ../../addon/cdav/include/widgets.php:125
 #: ../../addon/cdav/include/widgets.php:161
 #: ../../addon/gitwiki/Mod_Gitwiki.php:151
-#: ../../addon/gitwiki/Mod_Gitwiki.php:252 ../../include/channel.php:1044
-#: ../../include/channel.php:1048 ../../include/menu.php:113
+#: ../../addon/gitwiki/Mod_Gitwiki.php:252 ../../include/channel.php:1058
+#: ../../include/channel.php:1062 ../../include/menu.php:113
 #: ../../include/page_widgets.php:9 ../../include/page_widgets.php:39
 msgid "Edit"
 msgstr ""
 
 #: ../../Zotlabs/Module/Blocks.php:161 ../../Zotlabs/Module/Photos.php:1042
-#: ../../Zotlabs/Module/Layouts.php:194 ../../Zotlabs/Module/Webpages.php:246
-#: ../../addon/cdav/include/widgets.php:123 ../../include/conversation.php:1311
+#: ../../Zotlabs/Module/Layouts.php:194 ../../Zotlabs/Module/Webpages.php:248
+#: ../../addon/cdav/include/widgets.php:123 ../../include/conversation.php:1309
 msgid "Share"
 msgstr ""
 
@@ -323,16 +325,16 @@ msgstr ""
 #: ../../Zotlabs/Module/Connedit.php:919 ../../Zotlabs/Module/Group.php:177
 #: ../../Zotlabs/Module/Profiles.php:803
 #: ../../Zotlabs/Module/Editwebpage.php:167
-#: ../../Zotlabs/Module/Webpages.php:247 ../../Zotlabs/Lib/Apps.php:368
+#: ../../Zotlabs/Module/Webpages.php:249 ../../Zotlabs/Lib/Apps.php:368
 #: ../../Zotlabs/Lib/ThreadItem.php:127 ../../Zotlabs/Storage/Browser.php:239
 #: ../../addon/cdav/Mod_Cdav.php:864 ../../addon/cdav/Mod_Cdav.php:1153
-#: ../../include/conversation.php:654
+#: ../../include/conversation.php:650 ../../include/conversation.php:687
 msgid "Delete"
 msgstr ""
 
 #: ../../Zotlabs/Module/Blocks.php:166 ../../Zotlabs/Module/Events.php:694
 #: ../../Zotlabs/Module/Wiki.php:167 ../../Zotlabs/Module/Layouts.php:198
-#: ../../Zotlabs/Module/Webpages.php:251 ../../Zotlabs/Module/Pubsites.php:59
+#: ../../Zotlabs/Module/Webpages.php:253 ../../Zotlabs/Module/Pubsites.php:59
 #: ../../addon/gitwiki/Mod_Gitwiki.php:153 ../../include/page_widgets.php:42
 msgid "View"
 msgstr ""
@@ -378,7 +380,7 @@ msgstr ""
 msgid "Enter email addresses, one per line:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Invite.php:138 ../../Zotlabs/Module/Mail.php:303
+#: ../../Zotlabs/Module/Invite.php:138 ../../Zotlabs/Module/Mail.php:285
 msgid "Your message:"
 msgstr ""
 
@@ -408,7 +410,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Invite.php:149 ../../Zotlabs/Module/Locs.php:121
 #: ../../Zotlabs/Module/Mitem.php:243 ../../Zotlabs/Module/Events.php:493
-#: ../../Zotlabs/Module/Appman.php:134
+#: ../../Zotlabs/Module/Appman.php:148
 #: ../../Zotlabs/Module/Import_items.php:129 ../../Zotlabs/Module/Setup.php:309
 #: ../../Zotlabs/Module/Setup.php:357 ../../Zotlabs/Module/Connect.php:98
 #: ../../Zotlabs/Module/Admin/Features.php:66
@@ -430,7 +432,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Settings/Display.php:203
 #: ../../Zotlabs/Module/Settings/Oauth.php:87
 #: ../../Zotlabs/Module/Thing.php:320 ../../Zotlabs/Module/Thing.php:370
-#: ../../Zotlabs/Module/Import.php:514 ../../Zotlabs/Module/Cal.php:343
+#: ../../Zotlabs/Module/Import.php:515 ../../Zotlabs/Module/Cal.php:343
 #: ../../Zotlabs/Module/Mood.php:139 ../../Zotlabs/Module/Photos.php:657
 #: ../../Zotlabs/Module/Photos.php:1022 ../../Zotlabs/Module/Photos.php:1062
 #: ../../Zotlabs/Module/Photos.php:1180 ../../Zotlabs/Module/Wiki.php:169
@@ -439,11 +441,11 @@ msgstr ""
 #: ../../Zotlabs/Module/Chat.php:240 ../../Zotlabs/Module/Pconfig.php:107
 #: ../../Zotlabs/Module/Group.php:85 ../../Zotlabs/Module/Profiles.php:726
 #: ../../Zotlabs/Module/Sources.php:114 ../../Zotlabs/Module/Sources.php:149
-#: ../../Zotlabs/Module/Xchan.php:15 ../../Zotlabs/Module/Mail.php:449
+#: ../../Zotlabs/Module/Xchan.php:15 ../../Zotlabs/Module/Mail.php:431
 #: ../../Zotlabs/Module/Filestorage.php:165 ../../Zotlabs/Module/Rate.php:166
 #: ../../Zotlabs/Lib/ThreadItem.php:732 ../../Zotlabs/Widget/Eventstools.php:16
-#: ../../view/theme/redbasic/php/config.php:84
-#: ../../addon/skeleton/skeleton.php:65 ../../addon/gnusoc/gnusoc.php:134
+#: ../../view/theme/redbasic/php/config.php:95
+#: ../../addon/skeleton/skeleton.php:65 ../../addon/gnusoc/gnusoc.php:185
 #: ../../addon/cdav/cdav.php:246 ../../addon/planets/planets.php:157
 #: ../../addon/openclipatar/openclipatar.php:53
 #: ../../addon/wppost/wppost.php:113 ../../addon/nsfw/nsfw.php:92
@@ -468,7 +470,7 @@ msgstr ""
 #: ../../addon/statusnet/statusnet.php:432
 #: ../../addon/statusnet/statusnet.php:899 ../../addon/twitter/twitter.php:217
 #: ../../addon/twitter/twitter.php:259
-#: ../../addon/smileybutton/smileybutton.php:281 ../../addon/piwik/piwik.php:95
+#: ../../addon/smileybutton/smileybutton.php:219 ../../addon/piwik/piwik.php:95
 #: ../../addon/pageheader/pageheader.php:48 ../../addon/xmpp/xmpp.php:69
 #: ../../addon/pumpio/pumpio.php:237 ../../addon/redfiles/redfiles.php:124
 #: ../../addon/hubwall/hubwall.php:95 ../../include/js_strings.php:22
@@ -499,7 +501,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Dreport.php:10 ../../Zotlabs/Module/Dreport.php:68
 #: ../../Zotlabs/Module/Like.php:283 ../../Zotlabs/Web/WebServer.php:130
 #: ../../addon/redphotos/redphotos.php:119 ../../addon/frphotos/frphotos.php:81
-#: ../../addon/redfiles/redfiles.php:109 ../../include/items.php:327
+#: ../../addon/redfiles/redfiles.php:109 ../../include/items.php:341
 msgid "Permission denied"
 msgstr ""
 
@@ -511,7 +513,7 @@ msgstr ""
 msgid "Profile Visibility Editor"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profperm.php:113 ../../include/channel.php:1362
+#: ../../Zotlabs/Module/Profperm.php:113 ../../include/channel.php:1376
 msgid "Profile"
 msgstr ""
 
@@ -699,6 +701,14 @@ msgstr ""
 msgid "Use this form to drop the location if the hub is no longer operating."
 msgstr ""
 
+#: ../../Zotlabs/Module/Apporder.php:34
+msgid "Change Order of Navigation Apps"
+msgstr ""
+
+#: ../../Zotlabs/Module/Apporder.php:35
+msgid "Use arrows to move the corresponding app up or down in the display list"
+msgstr ""
+
 #: ../../Zotlabs/Module/Mitem.php:28 ../../Zotlabs/Module/Menu.php:144
 msgid "Menu not found."
 msgstr ""
@@ -756,9 +766,9 @@ msgstr ""
 #: ../../Zotlabs/Module/Connedit.php:775 ../../Zotlabs/Module/Menu.php:100
 #: ../../Zotlabs/Module/Menu.php:157 ../../Zotlabs/Module/Profiles.php:681
 #: ../../Zotlabs/Module/Filestorage.php:160
-#: ../../Zotlabs/Module/Filestorage.php:168 ../../boot.php:1633
-#: ../../view/theme/redbasic/php/config.php:89
-#: ../../view/theme/redbasic/php/config.php:104 ../../addon/cdav/cdav.php:234
+#: ../../Zotlabs/Module/Filestorage.php:168 ../../boot.php:1635
+#: ../../view/theme/redbasic/php/config.php:100
+#: ../../view/theme/redbasic/php/config.php:115 ../../addon/cdav/cdav.php:234
 #: ../../addon/planets/planets.php:153 ../../addon/wppost/wppost.php:82
 #: ../../addon/wppost/wppost.php:105 ../../addon/wppost/wppost.php:109
 #: ../../addon/nsfw/nsfw.php:84 ../../addon/ijpost/ijpost.php:73
@@ -782,8 +792,8 @@ msgstr ""
 #: ../../addon/statusnet/statusnet.php:415
 #: ../../addon/statusnet/statusnet.php:424 ../../addon/twitter/twitter.php:242
 #: ../../addon/twitter/twitter.php:246 ../../addon/twitter/twitter.php:255
-#: ../../addon/smileybutton/smileybutton.php:273
-#: ../../addon/smileybutton/smileybutton.php:277 ../../addon/xmpp/xmpp.php:53
+#: ../../addon/smileybutton/smileybutton.php:211
+#: ../../addon/smileybutton/smileybutton.php:215 ../../addon/xmpp/xmpp.php:53
 #: ../../addon/pumpio/pumpio.php:219 ../../addon/pumpio/pumpio.php:223
 #: ../../addon/pumpio/pumpio.php:227 ../../addon/pumpio/pumpio.php:231
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
@@ -802,9 +812,9 @@ msgstr ""
 #: ../../Zotlabs/Module/Menu.php:100 ../../Zotlabs/Module/Menu.php:157
 #: ../../Zotlabs/Module/Profiles.php:681
 #: ../../Zotlabs/Module/Filestorage.php:160
-#: ../../Zotlabs/Module/Filestorage.php:168 ../../boot.php:1633
-#: ../../view/theme/redbasic/php/config.php:89
-#: ../../view/theme/redbasic/php/config.php:104 ../../addon/cdav/cdav.php:234
+#: ../../Zotlabs/Module/Filestorage.php:168 ../../boot.php:1635
+#: ../../view/theme/redbasic/php/config.php:100
+#: ../../view/theme/redbasic/php/config.php:115 ../../addon/cdav/cdav.php:234
 #: ../../addon/planets/planets.php:153 ../../addon/wppost/wppost.php:82
 #: ../../addon/wppost/wppost.php:105 ../../addon/wppost/wppost.php:109
 #: ../../addon/nsfw/nsfw.php:84 ../../addon/ijpost/ijpost.php:73
@@ -828,8 +838,8 @@ msgstr ""
 #: ../../addon/statusnet/statusnet.php:415
 #: ../../addon/statusnet/statusnet.php:424 ../../addon/twitter/twitter.php:242
 #: ../../addon/twitter/twitter.php:246 ../../addon/twitter/twitter.php:255
-#: ../../addon/smileybutton/smileybutton.php:273
-#: ../../addon/smileybutton/smileybutton.php:277 ../../addon/xmpp/xmpp.php:53
+#: ../../addon/smileybutton/smileybutton.php:211
+#: ../../addon/smileybutton/smileybutton.php:215 ../../addon/xmpp/xmpp.php:53
 #: ../../addon/pumpio/pumpio.php:219 ../../addon/pumpio/pumpio.php:223
 #: ../../addon/pumpio/pumpio.php:227 ../../addon/pumpio/pumpio.php:231
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
@@ -944,7 +954,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Events.php:260 ../../Zotlabs/Module/Tagger.php:51
 #: ../../Zotlabs/Module/Like.php:372 ../../include/conversation.php:119
-#: ../../include/text.php:1940 ../../include/event.php:1141
+#: ../../include/text.php:1954 ../../include/event.php:1141
 msgid "event"
 msgstr ""
 
@@ -957,7 +967,7 @@ msgid "Event title"
 msgstr ""
 
 #: ../../Zotlabs/Module/Events.php:460 ../../Zotlabs/Module/Events.php:465
-#: ../../Zotlabs/Module/Appman.php:122 ../../Zotlabs/Module/Appman.php:123
+#: ../../Zotlabs/Module/Appman.php:136 ../../Zotlabs/Module/Appman.php:137
 #: ../../Zotlabs/Module/Profiles.php:748 ../../Zotlabs/Module/Profiles.php:752
 #: ../../include/datetime.php:259
 msgid "Required"
@@ -1009,7 +1019,7 @@ msgstr ""
 msgid "Edit Description"
 msgstr ""
 
-#: ../../Zotlabs/Module/Events.php:473 ../../Zotlabs/Module/Appman.php:124
+#: ../../Zotlabs/Module/Events.php:473 ../../Zotlabs/Module/Appman.php:138
 #: ../../Zotlabs/Module/Rbmark.php:101
 #: ../../addon/rendezvous/rendezvous.php:173 ../../addon/cdav/Mod_Cdav.php:838
 msgid "Description"
@@ -1020,12 +1030,12 @@ msgid "Edit Location"
 msgstr ""
 
 #: ../../Zotlabs/Module/Events.php:478 ../../Zotlabs/Module/Photos.php:1063
-#: ../../Zotlabs/Module/Webpages.php:252 ../../Zotlabs/Lib/ThreadItem.php:741
-#: ../../include/conversation.php:1280 ../../include/page_widgets.php:43
+#: ../../Zotlabs/Module/Webpages.php:254 ../../Zotlabs/Lib/ThreadItem.php:741
+#: ../../include/conversation.php:1278 ../../include/page_widgets.php:43
 msgid "Preview"
 msgstr ""
 
-#: ../../Zotlabs/Module/Events.php:479 ../../include/conversation.php:1343
+#: ../../Zotlabs/Module/Events.php:479 ../../include/conversation.php:1341
 msgid "Permission settings"
 msgstr ""
 
@@ -1050,7 +1060,7 @@ msgid "Delete event"
 msgstr ""
 
 #: ../../Zotlabs/Module/Events.php:660 ../../Zotlabs/Module/Cal.php:313
-#: ../../include/text.php:1759
+#: ../../include/text.php:1773
 msgid "Link to Source"
 msgstr ""
 
@@ -1080,7 +1090,7 @@ msgid "Next"
 msgstr ""
 
 #: ../../Zotlabs/Module/Events.php:691 ../../Zotlabs/Module/Cal.php:339
-#: ../../include/channel.php:1365
+#: ../../include/channel.php:1379
 msgid "Export"
 msgstr ""
 
@@ -1117,47 +1127,47 @@ msgstr ""
 msgid "Malformed app."
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:111
+#: ../../Zotlabs/Module/Appman.php:125
 msgid "Embed code"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:117
+#: ../../Zotlabs/Module/Appman.php:131
 msgid "Edit App"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:117
+#: ../../Zotlabs/Module/Appman.php:131
 msgid "Create App"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:122
+#: ../../Zotlabs/Module/Appman.php:136
 msgid "Name of app"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:123
+#: ../../Zotlabs/Module/Appman.php:137
 msgid "Location (URL) of app"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:125
+#: ../../Zotlabs/Module/Appman.php:139
 msgid "Photo icon URL"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:125
+#: ../../Zotlabs/Module/Appman.php:139
 msgid "80 x 80 pixels - optional"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:126
+#: ../../Zotlabs/Module/Appman.php:140
 msgid "Categories (optional, comma separated list)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:127
+#: ../../Zotlabs/Module/Appman.php:141
 msgid "Version ID"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:128
+#: ../../Zotlabs/Module/Appman.php:142
 msgid "Price of app"
 msgstr ""
 
-#: ../../Zotlabs/Module/Appman.php:129
+#: ../../Zotlabs/Module/Appman.php:143
 msgid "Location (URL) to purchase app"
 msgstr ""
 
@@ -1172,14 +1182,14 @@ msgstr ""
 #: ../../Zotlabs/Module/Subthread.php:87 ../../Zotlabs/Module/Tagger.php:47
 #: ../../Zotlabs/Module/Like.php:370
 #: ../../addon/redphotos/redphotohelper.php:71
-#: ../../addon/diaspora/inbound.php:1783 ../../include/conversation.php:116
-#: ../../include/text.php:1937
+#: ../../addon/diaspora/inbound.php:1782 ../../include/conversation.php:116
+#: ../../include/text.php:1951
 msgid "photo"
 msgstr ""
 
 #: ../../Zotlabs/Module/Subthread.php:87 ../../Zotlabs/Module/Like.php:370
-#: ../../addon/diaspora/inbound.php:1783 ../../include/conversation.php:144
-#: ../../include/text.php:1943
+#: ../../addon/diaspora/inbound.php:1782 ../../include/conversation.php:144
+#: ../../include/text.php:1957
 msgid "status"
 msgstr ""
 
@@ -1224,7 +1234,7 @@ msgid "Use this form to import existing posts and content from an export file."
 msgstr ""
 
 #: ../../Zotlabs/Module/Import_items.php:127
-#: ../../Zotlabs/Module/Import.php:501
+#: ../../Zotlabs/Module/Import.php:502
 msgid "File to Upload"
 msgstr ""
 
@@ -1355,7 +1365,7 @@ msgid "NEW"
 msgstr ""
 
 #: ../../Zotlabs/Module/Sharedwithme.php:102
-#: ../../Zotlabs/Storage/Browser.php:235 ../../include/text.php:1409
+#: ../../Zotlabs/Storage/Browser.php:235 ../../include/text.php:1407
 msgid "Size"
 msgstr ""
 
@@ -1401,7 +1411,7 @@ msgid ""
 msgstr ""
 
 #: ../../Zotlabs/Module/Setup.php:201 ../../Zotlabs/Module/Setup.php:263
-#: ../../Zotlabs/Module/Setup.php:748
+#: ../../Zotlabs/Module/Setup.php:753
 msgid "Please see the file \"install/INSTALL.txt\"."
 msgstr ""
 
@@ -1616,168 +1626,176 @@ msgstr ""
 msgid "xml PHP module"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:514 ../../Zotlabs/Module/Setup.php:516
+#: ../../Zotlabs/Module/Setup.php:511
+msgid "zip PHP module"
+msgstr ""
+
+#: ../../Zotlabs/Module/Setup.php:515 ../../Zotlabs/Module/Setup.php:517
 msgid "Apache mod_rewrite module"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:514
+#: ../../Zotlabs/Module/Setup.php:515
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:520 ../../Zotlabs/Module/Setup.php:523
+#: ../../Zotlabs/Module/Setup.php:521 ../../Zotlabs/Module/Setup.php:524
 msgid "exec"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:520
+#: ../../Zotlabs/Module/Setup.php:521
 msgid ""
 "Error: exec is required but is either not installed or has been disabled in "
 "php.ini"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:526 ../../Zotlabs/Module/Setup.php:529
+#: ../../Zotlabs/Module/Setup.php:527 ../../Zotlabs/Module/Setup.php:530
 msgid "shell_exec"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:526
+#: ../../Zotlabs/Module/Setup.php:527
 msgid ""
 "Error: shell_exec is required but is either not installed or has been "
 "disabled in php.ini"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:534
+#: ../../Zotlabs/Module/Setup.php:535
 msgid "Error: libCURL PHP module required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:538
+#: ../../Zotlabs/Module/Setup.php:539
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:542
+#: ../../Zotlabs/Module/Setup.php:543
 msgid "Error: openssl PHP module required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:546
+#: ../../Zotlabs/Module/Setup.php:547
 msgid "Error: PDO database PHP module required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:550
+#: ../../Zotlabs/Module/Setup.php:551
 msgid "Error: mb_string PHP module required but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:554
+#: ../../Zotlabs/Module/Setup.php:555
 msgid "Error: xml PHP module required for DAV but not installed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:572
+#: ../../Zotlabs/Module/Setup.php:559
+msgid "Error: zip PHP module required but not installed."
+msgstr ""
+
+#: ../../Zotlabs/Module/Setup.php:577
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\" "
 "in the top folder of your web server and it is unable to do so."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:573
+#: ../../Zotlabs/Module/Setup.php:578
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:574
+#: ../../Zotlabs/Module/Setup.php:579
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
 "named .htconfig.php in your Red top folder."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:575
+#: ../../Zotlabs/Module/Setup.php:580
 msgid ""
 "You can alternatively skip this procedure and perform a manual installation. "
 "Please see the file \"install/INSTALL.txt\" for instructions."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:578
+#: ../../Zotlabs/Module/Setup.php:583
 msgid ".htconfig.php is writable"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:592
+#: ../../Zotlabs/Module/Setup.php:597
 msgid ""
 "This software uses the Smarty3 template engine to render its web views. "
 "Smarty3 compiles templates to PHP to speed up rendering."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:593
+#: ../../Zotlabs/Module/Setup.php:598
 #, php-format
 msgid ""
 "In order to store these compiled templates, the web server needs to have "
 "write access to the directory %s under the top level web folder."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:594 ../../Zotlabs/Module/Setup.php:615
+#: ../../Zotlabs/Module/Setup.php:599 ../../Zotlabs/Module/Setup.php:620
 msgid ""
 "Please ensure that the user that your web server runs as (e.g. www-data) has "
 "write access to this folder."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:595
+#: ../../Zotlabs/Module/Setup.php:600
 #, php-format
 msgid ""
 "Note: as a security measure, you should give the web server write access to "
 "%s only--not the template files (.tpl) that it contains."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:598
+#: ../../Zotlabs/Module/Setup.php:603
 #, php-format
 msgid "%s is writable"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:614
+#: ../../Zotlabs/Module/Setup.php:619
 msgid ""
 "This software uses the store directory to save uploaded files. The web "
 "server needs to have write access to the store directory under the top level "
 "web folder"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:618
+#: ../../Zotlabs/Module/Setup.php:623
 msgid "store is writable"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:650
+#: ../../Zotlabs/Module/Setup.php:655
 msgid ""
 "SSL certificate cannot be validated. Fix certificate or disable https access "
 "to this site."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:651
+#: ../../Zotlabs/Module/Setup.php:656
 msgid ""
 "If you have https access to your website or allow connections to TCP port "
 "443 (the https: port), you MUST use a browser-valid certificate. You MUST "
 "NOT use self-signed certificates!"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:652
+#: ../../Zotlabs/Module/Setup.php:657
 msgid ""
 "This restriction is incorporated because public posts from you may for "
 "example contain references to images on your own hub."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:653
+#: ../../Zotlabs/Module/Setup.php:658
 msgid ""
 "If your certificate is not recognized, members of other sites (who may "
 "themselves have valid certificates) will get a warning message on their own "
 "site complaining about security issues."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:654
+#: ../../Zotlabs/Module/Setup.php:659
 msgid ""
 "This can cause usability issues elsewhere (not just on your own site) so we "
 "must insist on this requirement."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:655
+#: ../../Zotlabs/Module/Setup.php:660
 msgid ""
 "Providers are available that issue free certificates which are browser-valid."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:657
+#: ../../Zotlabs/Module/Setup.php:662
 msgid ""
 "If you are confident that the certificate is valid and signed by a trusted "
 "authority, check to see if you have failed to install an intermediate cert. "
@@ -1785,37 +1803,37 @@ msgid ""
 "server communications."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:659
+#: ../../Zotlabs/Module/Setup.php:664
 msgid "SSL certificate validation"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:665
+#: ../../Zotlabs/Module/Setup.php:670
 msgid ""
 "Url rewrite in .htaccess is not working. Check your server configuration."
 "Test: "
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:668
+#: ../../Zotlabs/Module/Setup.php:673
 msgid "Url rewrite is working"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:682
+#: ../../Zotlabs/Module/Setup.php:687
 msgid ""
 "The database configuration file \".htconfig.php\" could not be written. "
 "Please use the enclosed text to create a configuration file in your web "
 "server root."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:706 ../../addon/rendezvous/rendezvous.php:401
+#: ../../Zotlabs/Module/Setup.php:711 ../../addon/rendezvous/rendezvous.php:401
 #: ../../addon/cdav/cdav.php:41
 msgid "Errors encountered creating database tables."
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:746
+#: ../../Zotlabs/Module/Setup.php:751
 msgid "<h1>What next</h1>"
 msgstr ""
 
-#: ../../Zotlabs/Module/Setup.php:747
+#: ../../Zotlabs/Module/Setup.php:752
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
 msgstr ""
@@ -1956,7 +1974,7 @@ msgstr ""
 #: ../../Zotlabs/Module/Admin/Themes.php:72 ../../Zotlabs/Module/Thing.php:89
 #: ../../Zotlabs/Module/Viewsrc.php:25 ../../Zotlabs/Module/Display.php:35
 #: ../../Zotlabs/Module/Filestorage.php:32 ../../Zotlabs/Module/Admin.php:60
-#: ../../include/items.php:3391
+#: ../../include/items.php:3416
 msgid "Item not found."
 msgstr ""
 
@@ -2075,15 +2093,15 @@ msgstr ""
 #: ../../Zotlabs/Module/Admin/Plugins.php:423
 #: ../../Zotlabs/Module/Settings/Oauth.php:88
 #: ../../Zotlabs/Module/Settings/Oauth.php:114
-#: ../../Zotlabs/Module/Wiki.php:265 ../../Zotlabs/Module/Wiki.php:290
+#: ../../Zotlabs/Module/Wiki.php:288 ../../Zotlabs/Module/Wiki.php:314
 #: ../../Zotlabs/Module/Connedit.php:920 ../../Zotlabs/Module/Fbrowser.php:66
 #: ../../Zotlabs/Module/Fbrowser.php:88 ../../Zotlabs/Module/Profiles.php:804
 #: ../../Zotlabs/Module/Filer.php:55 ../../Zotlabs/Module/Tagrm.php:15
 #: ../../Zotlabs/Module/Tagrm.php:138 ../../addon/cdav/Mod_Cdav.php:866
 #: ../../addon/cdav/Mod_Cdav.php:1154 ../../addon/js_upload/js_upload.php:46
 #: ../../addon/gitwiki/Mod_Gitwiki.php:244
-#: ../../addon/gitwiki/Mod_Gitwiki.php:267 ../../include/conversation.php:1327
-#: ../../include/conversation.php:1376
+#: ../../addon/gitwiki/Mod_Gitwiki.php:267 ../../include/conversation.php:1325
+#: ../../include/conversation.php:1374
 msgid "Cancel"
 msgstr ""
 
@@ -2183,7 +2201,7 @@ msgid "No registrations."
 msgstr ""
 
 #: ../../Zotlabs/Module/Admin/Accounts.php:171
-#: ../../Zotlabs/Module/Connections.php:281
+#: ../../Zotlabs/Module/Connections.php:281 ../../include/conversation.php:686
 msgid "Approve"
 msgstr ""
 
@@ -2340,7 +2358,7 @@ msgid "Disallow Code"
 msgstr ""
 
 #: ../../Zotlabs/Module/Admin/Channels.php:154
-#: ../../include/conversation.php:1760 ../../include/nav.php:369
+#: ../../include/conversation.php:1758 ../../include/nav.php:362
 msgid "Channel"
 msgstr ""
 
@@ -2389,7 +2407,8 @@ msgstr ""
 msgid "Site settings updated."
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:170 ../../include/text.php:2915
+#: ../../Zotlabs/Module/Admin/Site.php:170
+#: ../../view/theme/redbasic/php/config.php:15 ../../include/text.php:2928
 msgid "Default"
 msgstr ""
 
@@ -2432,27 +2451,27 @@ msgstr ""
 msgid "My site offers free accounts with optional paid upgrades"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:264 ../../Zotlabs/Lib/Techlevels.php:10
+#: ../../Zotlabs/Module/Admin/Site.php:264
 msgid "Beginner/Basic"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:265 ../../Zotlabs/Lib/Techlevels.php:11
+#: ../../Zotlabs/Module/Admin/Site.php:265
 msgid "Novice - not skilled but willing to learn"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:266 ../../Zotlabs/Lib/Techlevels.php:12
+#: ../../Zotlabs/Module/Admin/Site.php:266
 msgid "Intermediate - somewhat comfortable"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:267 ../../Zotlabs/Lib/Techlevels.php:13
+#: ../../Zotlabs/Module/Admin/Site.php:267
 msgid "Advanced - very comfortable"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:268 ../../Zotlabs/Lib/Techlevels.php:14
+#: ../../Zotlabs/Module/Admin/Site.php:268
 msgid "Expert - I can write computer code"
 msgstr ""
 
-#: ../../Zotlabs/Module/Admin/Site.php:269 ../../Zotlabs/Lib/Techlevels.php:15
+#: ../../Zotlabs/Module/Admin/Site.php:269
 msgid "Wizard - I probably know more than you do"
 msgstr ""
 
@@ -3005,6 +3024,14 @@ msgctxt "acl"
 msgid "Profile"
 msgstr ""
 
+#: ../../Zotlabs/Module/Moderate.php:39
+msgid "Comment approved"
+msgstr ""
+
+#: ../../Zotlabs/Module/Moderate.php:43
+msgid "Comment deleted"
+msgstr ""
+
 #: ../../Zotlabs/Module/Settings/Permcats.php:37
 msgid "Permission category saved."
 msgstr ""
@@ -3056,8 +3083,8 @@ msgstr ""
 #: ../../Zotlabs/Module/Settings/Channel.php:70
 #: ../../Zotlabs/Module/Settings/Channel.php:81
 #: ../../Zotlabs/Module/Connedit.php:707 ../../Zotlabs/Widget/Affinity.php:28
-#: ../../include/selectors.php:123 ../../include/channel.php:406
-#: ../../include/channel.php:407 ../../include/channel.php:414
+#: ../../include/selectors.php:123 ../../include/channel.php:407
+#: ../../include/channel.php:408 ../../include/channel.php:415
 msgid "Friends"
 msgstr ""
 
@@ -3132,7 +3159,7 @@ msgstr ""
 msgid "Basic Settings"
 msgstr ""
 
-#: ../../Zotlabs/Module/Settings/Channel.php:482 ../../include/channel.php:1250
+#: ../../Zotlabs/Module/Settings/Channel.php:482 ../../include/channel.php:1264
 msgid "Full Name:"
 msgstr ""
 
@@ -3785,21 +3812,22 @@ msgid "Remove authorization"
 msgstr ""
 
 #: ../../Zotlabs/Module/Embedphotos.php:140 ../../Zotlabs/Module/Photos.php:751
-#: ../../Zotlabs/Module/Photos.php:1290 ../../Zotlabs/Widget/Album.php:78
+#: ../../Zotlabs/Module/Photos.php:1290 ../../Zotlabs/Widget/Portfolio.php:78
+#: ../../Zotlabs/Widget/Album.php:78
 msgid "View Photo"
 msgstr ""
 
 #: ../../Zotlabs/Module/Embedphotos.php:146 ../../Zotlabs/Module/Photos.php:757
-#: ../../Zotlabs/Module/Photos.php:1213 ../../Zotlabs/Lib/Apps.php:571
-#: ../../Zotlabs/Lib/Apps.php:649 ../../Zotlabs/Storage/Browser.php:163
-#: ../../Zotlabs/Widget/Album.php:84 ../../addon/cdav/Mod_Cdav.php:745
-#: ../../addon/cdav/Mod_Cdav.php:746 ../../addon/cdav/Mod_Cdav.php:753
-#: ../../include/conversation.php:1110
+#: ../../Zotlabs/Module/Photos.php:1213 ../../Zotlabs/Lib/Apps.php:700
+#: ../../Zotlabs/Lib/Apps.php:778 ../../Zotlabs/Storage/Browser.php:163
+#: ../../Zotlabs/Widget/Portfolio.php:86 ../../Zotlabs/Widget/Album.php:84
+#: ../../addon/cdav/Mod_Cdav.php:745 ../../addon/cdav/Mod_Cdav.php:746
+#: ../../addon/cdav/Mod_Cdav.php:753 ../../include/conversation.php:1108
 msgid "Unknown"
 msgstr ""
 
 #: ../../Zotlabs/Module/Embedphotos.php:156 ../../Zotlabs/Module/Photos.php:782
-#: ../../Zotlabs/Widget/Album.php:95
+#: ../../Zotlabs/Widget/Portfolio.php:97 ../../Zotlabs/Widget/Album.php:95
 msgid "Edit Album"
 msgstr ""
 
@@ -3808,7 +3836,8 @@ msgstr ""
 #: ../../Zotlabs/Module/Profile_photo.php:423
 #: ../../Zotlabs/Module/Cover_photo.php:361
 #: ../../Zotlabs/Storage/Browser.php:229 ../../Zotlabs/Storage/Browser.php:334
-#: ../../Zotlabs/Widget/Album.php:97 ../../addon/cdav/include/widgets.php:132
+#: ../../Zotlabs/Widget/Portfolio.php:99 ../../Zotlabs/Widget/Album.php:97
+#: ../../addon/cdav/include/widgets.php:132
 #: ../../addon/cdav/include/widgets.php:168
 msgid "Upload"
 msgstr ""
@@ -3902,43 +3931,43 @@ msgstr ""
 msgid "No channel. Import failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:466
+#: ../../Zotlabs/Module/Import.php:467
 #: ../../addon/diaspora/import_diaspora.php:142
 msgid "Import completed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:494
+#: ../../Zotlabs/Module/Import.php:495
 msgid "You must be logged in to use this feature."
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:499
+#: ../../Zotlabs/Module/Import.php:500
 msgid "Import Channel"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:500
+#: ../../Zotlabs/Module/Import.php:501
 msgid ""
 "Use this form to import an existing channel from a different server/hub. You "
 "may retrieve the channel identity from the old server/hub via the network or "
 "provide an export file."
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:502
+#: ../../Zotlabs/Module/Import.php:503
 msgid "Or provide the old server/hub details"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:503
+#: ../../Zotlabs/Module/Import.php:504
 msgid "Your old identity address (xyz@example.com)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:504
+#: ../../Zotlabs/Module/Import.php:505
 msgid "Your old login email address"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:505
+#: ../../Zotlabs/Module/Import.php:506
 msgid "Your old login password"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:506
+#: ../../Zotlabs/Module/Import.php:507
 msgid ""
 "For either option, please choose whether to make this hub your new primary "
 "address, or whether your old location should continue this role. You will be "
@@ -3946,19 +3975,19 @@ msgid ""
 "location for files, photos, and media."
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:507
+#: ../../Zotlabs/Module/Import.php:508
 msgid "Make this hub my primary location"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:508
+#: ../../Zotlabs/Module/Import.php:509
 msgid "Move this channel (disable all previous locations)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:509
+#: ../../Zotlabs/Module/Import.php:510
 msgid "Import a few months of posts if possible (limited by available memory"
 msgstr ""
 
-#: ../../Zotlabs/Module/Import.php:510
+#: ../../Zotlabs/Module/Import.php:511
 msgid ""
 "This process may take several minutes to complete. Please submit the form "
 "only once and leave this page open until finished."
@@ -3968,20 +3997,20 @@ msgstr ""
 msgid "Authentication failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Rmagic.php:75 ../../include/channel.php:1984
+#: ../../Zotlabs/Module/Rmagic.php:75 ../../include/channel.php:1993
 msgid "Remote Authentication"
 msgstr ""
 
-#: ../../Zotlabs/Module/Rmagic.php:76 ../../include/channel.php:1985
+#: ../../Zotlabs/Module/Rmagic.php:76 ../../include/channel.php:1994
 msgid "Enter your channel address (e.g. channel@example.com)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Rmagic.php:77 ../../include/channel.php:1986
+#: ../../Zotlabs/Module/Rmagic.php:77 ../../include/channel.php:1995
 msgid "Authenticate"
 msgstr ""
 
 #: ../../Zotlabs/Module/Cal.php:62 ../../Zotlabs/Module/Chanview.php:96
-#: ../../Zotlabs/Module/Page.php:56 ../../Zotlabs/Module/Wall_upload.php:31
+#: ../../Zotlabs/Module/Page.php:76 ../../Zotlabs/Module/Wall_upload.php:31
 #: ../../Zotlabs/Module/Block.php:43
 msgid "Channel not found."
 msgstr ""
@@ -3990,7 +4019,7 @@ msgstr ""
 msgid "Permissions denied."
 msgstr ""
 
-#: ../../Zotlabs/Module/Cal.php:342 ../../include/text.php:2291
+#: ../../Zotlabs/Module/Cal.php:342 ../../include/text.php:2304
 msgid "Import"
 msgstr ""
 
@@ -4017,12 +4046,12 @@ msgid "Item not available."
 msgstr ""
 
 #: ../../Zotlabs/Module/Editblock.php:116 ../../Zotlabs/Module/Chat.php:205
-#: ../../Zotlabs/Module/Editwebpage.php:143 ../../Zotlabs/Module/Mail.php:306
-#: ../../Zotlabs/Module/Mail.php:448 ../../include/conversation.php:1228
+#: ../../Zotlabs/Module/Editwebpage.php:143 ../../Zotlabs/Module/Mail.php:288
+#: ../../Zotlabs/Module/Mail.php:430 ../../include/conversation.php:1226
 msgid "Insert web link"
 msgstr ""
 
-#: ../../Zotlabs/Module/Editblock.php:129 ../../include/conversation.php:1339
+#: ../../Zotlabs/Module/Editblock.php:129 ../../include/conversation.php:1337
 msgid "Title (optional)"
 msgstr ""
 
@@ -4086,7 +4115,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Connections.php:72
 #: ../../Zotlabs/Module/Connections.php:82 ../../Zotlabs/Module/Menu.php:116
-#: ../../include/conversation.php:1666
+#: ../../include/conversation.php:1664
 msgid "New"
 msgstr ""
 
@@ -4384,7 +4413,7 @@ msgid "I don't like this (toggle)"
 msgstr ""
 
 #: ../../Zotlabs/Module/Photos.php:1043 ../../Zotlabs/Lib/ThreadItem.php:412
-#: ../../include/conversation.php:739
+#: ../../include/conversation.php:737
 msgid "Please wait"
 msgstr ""
 
@@ -4398,42 +4427,42 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1077 ../../include/conversation.php:574
+#: ../../Zotlabs/Module/Photos.php:1077 ../../include/conversation.php:570
 msgctxt "title"
 msgid "Likes"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1077 ../../include/conversation.php:574
+#: ../../Zotlabs/Module/Photos.php:1077 ../../include/conversation.php:570
 msgctxt "title"
 msgid "Dislikes"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:571
 msgctxt "title"
 msgid "Agree"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:571
 msgctxt "title"
 msgid "Disagree"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:575
+#: ../../Zotlabs/Module/Photos.php:1078 ../../include/conversation.php:571
 msgctxt "title"
 msgid "Abstain"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:572
 msgctxt "title"
 msgid "Attending"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:572
 msgctxt "title"
 msgid "Not attending"
 msgstr ""
 
-#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:576
+#: ../../Zotlabs/Module/Photos.php:1079 ../../include/conversation.php:572
 msgctxt "title"
 msgid "Might attend"
 msgstr ""
@@ -4444,8 +4473,8 @@ msgid "View all"
 msgstr ""
 
 #: ../../Zotlabs/Module/Photos.php:1100 ../../Zotlabs/Lib/ThreadItem.php:191
-#: ../../include/conversation.php:1907 ../../include/channel.php:1268
-#: ../../include/taxonomy.php:403
+#: ../../include/conversation.php:1905 ../../include/channel.php:1282
+#: ../../include/taxonomy.php:433
 msgctxt "noun"
 msgid "Like"
 msgid_plural "Likes"
@@ -4453,7 +4482,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../Zotlabs/Module/Photos.php:1105 ../../Zotlabs/Lib/ThreadItem.php:196
-#: ../../include/conversation.php:1910
+#: ../../include/conversation.php:1908
 msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
@@ -4505,7 +4534,7 @@ msgid "Invalid channel"
 msgstr ""
 
 #: ../../Zotlabs/Module/Wiki.php:160 ../../addon/gitwiki/Mod_Gitwiki.php:146
-#: ../../include/conversation.php:1854 ../../include/nav.php:462
+#: ../../include/conversation.php:1852 ../../include/nav.php:455
 msgid "Wikis"
 msgstr ""
 
@@ -4536,127 +4565,127 @@ msgstr ""
 msgid "Create a status post for this wiki"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:205 ../../addon/gitwiki/Mod_Gitwiki.php:185
+#: ../../Zotlabs/Module/Wiki.php:222 ../../addon/gitwiki/Mod_Gitwiki.php:185
 msgid "Wiki not found"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:229 ../../addon/gitwiki/Mod_Gitwiki.php:210
+#: ../../Zotlabs/Module/Wiki.php:246 ../../addon/gitwiki/Mod_Gitwiki.php:210
 msgid "Rename page"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:233 ../../addon/gitwiki/Mod_Gitwiki.php:214
+#: ../../Zotlabs/Module/Wiki.php:256 ../../addon/gitwiki/Mod_Gitwiki.php:214
 msgid "Error retrieving page content"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:239
+#: ../../Zotlabs/Module/Wiki.php:262
 msgid "New page"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:263 ../../addon/gitwiki/Mod_Gitwiki.php:242
+#: ../../Zotlabs/Module/Wiki.php:286 ../../addon/gitwiki/Mod_Gitwiki.php:242
 msgid "Revision Comparison"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:264 ../../addon/gitwiki/Mod_Gitwiki.php:243
+#: ../../Zotlabs/Module/Wiki.php:287 ../../addon/gitwiki/Mod_Gitwiki.php:243
 msgid "Revert"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:268
+#: ../../Zotlabs/Module/Wiki.php:291
 msgid "Short description of your changes (optional)"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:275 ../../addon/gitwiki/Mod_Gitwiki.php:252
+#: ../../Zotlabs/Module/Wiki.php:298 ../../addon/gitwiki/Mod_Gitwiki.php:252
 msgid "Source"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:283 ../../addon/gitwiki/Mod_Gitwiki.php:260
+#: ../../Zotlabs/Module/Wiki.php:307 ../../addon/gitwiki/Mod_Gitwiki.php:260
 msgid "New page name"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:288 ../../addon/gitwiki/Mod_Gitwiki.php:265
-#: ../../include/conversation.php:1232
+#: ../../Zotlabs/Module/Wiki.php:312 ../../addon/gitwiki/Mod_Gitwiki.php:265
+#: ../../include/conversation.php:1230
 msgid "Embed image from photo albums"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:289 ../../addon/gitwiki/Mod_Gitwiki.php:266
-#: ../../include/conversation.php:1326
+#: ../../Zotlabs/Module/Wiki.php:313 ../../addon/gitwiki/Mod_Gitwiki.php:266
+#: ../../include/conversation.php:1324
 msgid "Embed an image from your albums"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:291 ../../addon/gitwiki/Mod_Gitwiki.php:268
-#: ../../include/conversation.php:1328 ../../include/conversation.php:1375
+#: ../../Zotlabs/Module/Wiki.php:315 ../../addon/gitwiki/Mod_Gitwiki.php:268
+#: ../../include/conversation.php:1326 ../../include/conversation.php:1373
 msgid "OK"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:292 ../../addon/gitwiki/Mod_Gitwiki.php:269
-#: ../../include/conversation.php:1268
+#: ../../Zotlabs/Module/Wiki.php:316 ../../addon/gitwiki/Mod_Gitwiki.php:269
+#: ../../include/conversation.php:1266
 msgid "Choose images to embed"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:293 ../../addon/gitwiki/Mod_Gitwiki.php:270
-#: ../../include/conversation.php:1269
+#: ../../Zotlabs/Module/Wiki.php:317 ../../addon/gitwiki/Mod_Gitwiki.php:270
+#: ../../include/conversation.php:1267
 msgid "Choose an album"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:294 ../../addon/gitwiki/Mod_Gitwiki.php:271
+#: ../../Zotlabs/Module/Wiki.php:318 ../../addon/gitwiki/Mod_Gitwiki.php:271
 msgid "Choose a different album"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:295 ../../addon/gitwiki/Mod_Gitwiki.php:272
-#: ../../include/conversation.php:1271
+#: ../../Zotlabs/Module/Wiki.php:319 ../../addon/gitwiki/Mod_Gitwiki.php:272
+#: ../../include/conversation.php:1269
 msgid "Error getting album list"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:296 ../../addon/gitwiki/Mod_Gitwiki.php:273
-#: ../../include/conversation.php:1272
+#: ../../Zotlabs/Module/Wiki.php:320 ../../addon/gitwiki/Mod_Gitwiki.php:273
+#: ../../include/conversation.php:1270
 msgid "Error getting photo link"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:297 ../../addon/gitwiki/Mod_Gitwiki.php:274
-#: ../../include/conversation.php:1273
+#: ../../Zotlabs/Module/Wiki.php:321 ../../addon/gitwiki/Mod_Gitwiki.php:274
+#: ../../include/conversation.php:1271
 msgid "Error getting album"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:364 ../../addon/gitwiki/Mod_Gitwiki.php:337
+#: ../../Zotlabs/Module/Wiki.php:388 ../../addon/gitwiki/Mod_Gitwiki.php:337
 msgid "Error creating wiki. Invalid name."
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:371
+#: ../../Zotlabs/Module/Wiki.php:395
 msgid "A wiki with this name already exists."
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:384 ../../addon/gitwiki/Mod_Gitwiki.php:348
+#: ../../Zotlabs/Module/Wiki.php:408 ../../addon/gitwiki/Mod_Gitwiki.php:348
 msgid "Wiki created, but error creating Home page."
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:391 ../../addon/gitwiki/Mod_Gitwiki.php:353
+#: ../../Zotlabs/Module/Wiki.php:415 ../../addon/gitwiki/Mod_Gitwiki.php:353
 msgid "Error creating wiki"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:403
+#: ../../Zotlabs/Module/Wiki.php:427
 msgid "Wiki delete permission denied."
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:413
+#: ../../Zotlabs/Module/Wiki.php:437
 msgid "Error deleting wiki"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:439 ../../addon/gitwiki/Mod_Gitwiki.php:400
+#: ../../Zotlabs/Module/Wiki.php:463 ../../addon/gitwiki/Mod_Gitwiki.php:400
 msgid "New page created"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:558
+#: ../../Zotlabs/Module/Wiki.php:584
 msgid "Cannot delete Home"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:622
+#: ../../Zotlabs/Module/Wiki.php:648
 msgid "Current Revision"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:622
+#: ../../Zotlabs/Module/Wiki.php:648
 msgid "Selected Revision"
 msgstr ""
 
-#: ../../Zotlabs/Module/Wiki.php:672
+#: ../../Zotlabs/Module/Wiki.php:698
 msgid "You must be authenticated."
 msgstr ""
 
@@ -4689,7 +4718,7 @@ msgid "Layout Help"
 msgstr ""
 
 #: ../../Zotlabs/Module/Poke.php:168 ../../Zotlabs/Lib/Apps.php:235
-#: ../../include/conversation.php:1042
+#: ../../include/conversation.php:1040
 msgid "Poke"
 msgstr ""
 
@@ -4724,7 +4753,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Profile_photo.php:115
 #: ../../Zotlabs/Module/Profile_photo.php:226
-#: ../../include/photo/photo_driver.php:647
+#: ../../include/photo/photo_driver.php:648
 msgid "Profile Photos"
 msgstr ""
 
@@ -4823,28 +4852,32 @@ msgstr ""
 msgid "Unable to locate original post."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:451
+#: ../../Zotlabs/Module/Item.php:470
 msgid "Empty post discarded."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:825
+#: ../../Zotlabs/Module/Item.php:844
 msgid "Duplicate post suppressed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:955
+#: ../../Zotlabs/Module/Item.php:984
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:1085
+#: ../../Zotlabs/Module/Item.php:1020
+msgid "Your comment is awaiting approval."
+msgstr ""
+
+#: ../../Zotlabs/Module/Item.php:1118
 msgid "Unable to obtain post information from database."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:1092
+#: ../../Zotlabs/Module/Item.php:1125
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr ""
 
-#: ../../Zotlabs/Module/Item.php:1099
+#: ../../Zotlabs/Module/Item.php:1132
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
@@ -4873,14 +4906,14 @@ msgstr ""
 msgid "Invalid item."
 msgstr ""
 
-#: ../../Zotlabs/Module/Page.php:94 ../../Zotlabs/Module/Block.php:79
+#: ../../Zotlabs/Module/Page.php:129 ../../Zotlabs/Module/Block.php:79
 #: ../../Zotlabs/Module/Display.php:122
 #: ../../Zotlabs/Lib/NativeWikiPage.php:500 ../../Zotlabs/Web/Router.php:146
 #: ../../include/help.php:68
 msgid "Page not found."
 msgstr ""
 
-#: ../../Zotlabs/Module/Page.php:131
+#: ../../Zotlabs/Module/Page.php:166
 msgid ""
 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
 "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
@@ -4930,7 +4963,7 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Connedit.php:590 ../../Zotlabs/Lib/Apps.php:228
 #: ../../addon/openclipatar/openclipatar.php:57
-#: ../../include/conversation.php:982 ../../include/nav.php:106
+#: ../../include/conversation.php:980 ../../include/nav.php:106
 msgid "View Profile"
 msgstr ""
 
@@ -5089,7 +5122,7 @@ msgstr ""
 msgid "Connection Default Permissions"
 msgstr ""
 
-#: ../../Zotlabs/Module/Connedit.php:847 ../../include/items.php:3955
+#: ../../Zotlabs/Module/Connedit.php:847 ../../include/items.php:3980
 #, php-format
 msgid "Connection: %s"
 msgstr ""
@@ -5225,19 +5258,19 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Connedit.php:911 ../../Zotlabs/Module/Profiles.php:795
 #: ../../addon/cdav/Mod_Cdav.php:1145 ../../addon/cdav/cdav.php:270
-#: ../../include/connections.php:668
+#: ../../include/connections.php:674
 msgid "Mobile"
 msgstr ""
 
 #: ../../Zotlabs/Module/Connedit.php:912 ../../Zotlabs/Module/Profiles.php:796
 #: ../../addon/cdav/Mod_Cdav.php:1146 ../../addon/cdav/cdav.php:271
-#: ../../include/connections.php:669
+#: ../../include/connections.php:675
 msgid "Home"
 msgstr ""
 
 #: ../../Zotlabs/Module/Connedit.php:913 ../../Zotlabs/Module/Profiles.php:797
 #: ../../addon/cdav/Mod_Cdav.php:1147 ../../addon/cdav/cdav.php:274
-#: ../../include/connections.php:672
+#: ../../include/connections.php:678
 msgid "Work"
 msgstr ""
 
@@ -5304,14 +5337,14 @@ msgstr ""
 msgid "Bookmark this room"
 msgstr ""
 
-#: ../../Zotlabs/Module/Chat.php:203 ../../Zotlabs/Module/Mail.php:259
-#: ../../Zotlabs/Module/Mail.php:380 ../../include/conversation.php:1263
+#: ../../Zotlabs/Module/Chat.php:203 ../../Zotlabs/Module/Mail.php:241
+#: ../../Zotlabs/Module/Mail.php:362 ../../include/conversation.php:1261
 msgid "Please enter a link URL:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Chat.php:204 ../../Zotlabs/Module/Mail.php:312
-#: ../../Zotlabs/Module/Mail.php:454 ../../Zotlabs/Lib/ThreadItem.php:744
-#: ../../include/conversation.php:1373
+#: ../../Zotlabs/Module/Chat.php:204 ../../Zotlabs/Module/Mail.php:294
+#: ../../Zotlabs/Module/Mail.php:436 ../../Zotlabs/Lib/ThreadItem.php:744
+#: ../../include/conversation.php:1371
 msgid "Encrypt text"
 msgstr ""
 
@@ -5345,13 +5378,13 @@ msgid "min"
 msgstr ""
 
 #: ../../Zotlabs/Module/Fbrowser.php:29 ../../Zotlabs/Lib/Apps.php:229
-#: ../../include/conversation.php:1783 ../../include/nav.php:392
+#: ../../include/conversation.php:1781 ../../include/nav.php:385
 msgid "Photos"
 msgstr ""
 
 #: ../../Zotlabs/Module/Fbrowser.php:85 ../../Zotlabs/Lib/Apps.php:224
-#: ../../Zotlabs/Storage/Browser.php:224 ../../include/conversation.php:1791
-#: ../../include/nav.php:400
+#: ../../Zotlabs/Storage/Browser.php:224 ../../include/conversation.php:1789
+#: ../../include/nav.php:393
 msgid "Files"
 msgstr ""
 
@@ -5391,7 +5424,7 @@ msgstr ""
 msgid "Submit and proceed"
 msgstr ""
 
-#: ../../Zotlabs/Module/Menu.php:107 ../../include/text.php:2268
+#: ../../Zotlabs/Module/Menu.php:107 ../../include/text.php:2281
 msgid "Menus"
 msgstr ""
 
@@ -5443,12 +5476,12 @@ msgstr ""
 msgid "Allow bookmarks"
 msgstr ""
 
-#: ../../Zotlabs/Module/Layouts.php:184 ../../include/text.php:2269
+#: ../../Zotlabs/Module/Layouts.php:184 ../../include/text.php:2282
 msgid "Layouts"
 msgstr ""
 
 #: ../../Zotlabs/Module/Layouts.php:186 ../../Zotlabs/Lib/Apps.php:232
-#: ../../include/nav.php:161 ../../include/nav.php:268
+#: ../../include/nav.php:161 ../../include/nav.php:258
 #: ../../include/help.php:55 ../../include/help.php:61
 msgid "Help"
 msgstr ""
@@ -5465,12 +5498,12 @@ msgstr ""
 msgid "Download PDL file"
 msgstr ""
 
-#: ../../Zotlabs/Module/Tagger.php:55 ../../include/bbcode.php:274
+#: ../../Zotlabs/Module/Tagger.php:55 ../../include/bbcode.php:334
 msgid "post"
 msgstr ""
 
 #: ../../Zotlabs/Module/Tagger.php:57 ../../include/conversation.php:146
-#: ../../include/text.php:1945
+#: ../../include/text.php:1959
 msgid "comment"
 msgstr ""
 
@@ -5503,7 +5536,7 @@ msgid "Could not create privacy group."
 msgstr ""
 
 #: ../../Zotlabs/Module/Group.php:42 ../../Zotlabs/Module/Group.php:141
-#: ../../include/items.php:3922
+#: ../../include/items.php:3947
 msgid "Privacy group not found."
 msgstr ""
 
@@ -5638,7 +5671,7 @@ msgid "View this profile"
 msgstr ""
 
 #: ../../Zotlabs/Module/Profiles.php:728 ../../Zotlabs/Module/Profiles.php:827
-#: ../../include/channel.php:1066
+#: ../../include/channel.php:1080
 msgid "Edit visibility"
 msgstr ""
 
@@ -5650,7 +5683,7 @@ msgstr ""
 msgid "Change cover photo"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:731 ../../include/channel.php:1037
+#: ../../Zotlabs/Module/Profiles.php:731 ../../include/channel.php:1051
 msgid "Change profile photo"
 msgstr ""
 
@@ -5670,7 +5703,7 @@ msgstr ""
 msgid "Add profile things"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:736 ../../include/conversation.php:1657
+#: ../../Zotlabs/Module/Profiles.php:736 ../../include/conversation.php:1655
 msgid "Personal"
 msgstr ""
 
@@ -5815,11 +5848,11 @@ msgstr ""
 msgid "Communications"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:823 ../../include/channel.php:1062
+#: ../../Zotlabs/Module/Profiles.php:823 ../../include/channel.php:1076
 msgid "Profile Image"
 msgstr ""
 
-#: ../../Zotlabs/Module/Profiles.php:833 ../../include/channel.php:1044
+#: ../../Zotlabs/Module/Profiles.php:833 ../../include/channel.php:1058
 #: ../../include/nav.php:109
 msgid "Edit Profiles"
 msgstr ""
@@ -5922,7 +5955,7 @@ msgid "No ratings"
 msgstr ""
 
 #: ../../Zotlabs/Module/Ratings.php:97 ../../Zotlabs/Module/Pubsites.php:35
-#: ../../include/conversation.php:1032
+#: ../../include/conversation.php:1030
 msgid "Ratings"
 msgstr ""
 
@@ -5954,40 +5987,40 @@ msgstr ""
 msgid "Export selected"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:242 ../../Zotlabs/Lib/Apps.php:225
-#: ../../include/conversation.php:1841 ../../include/nav.php:449
+#: ../../Zotlabs/Module/Webpages.php:244 ../../Zotlabs/Lib/Apps.php:225
+#: ../../include/conversation.php:1839 ../../include/nav.php:442
 msgid "Webpages"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:253 ../../include/page_widgets.php:44
+#: ../../Zotlabs/Module/Webpages.php:255 ../../include/page_widgets.php:44
 msgid "Actions"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:254 ../../include/page_widgets.php:45
+#: ../../Zotlabs/Module/Webpages.php:256 ../../include/page_widgets.php:45
 msgid "Page Link"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:255
+#: ../../Zotlabs/Module/Webpages.php:257
 msgid "Page Title"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:285
+#: ../../Zotlabs/Module/Webpages.php:287
 msgid "Invalid file type."
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:297
+#: ../../Zotlabs/Module/Webpages.php:299
 msgid "Error opening zip file"
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:308
+#: ../../Zotlabs/Module/Webpages.php:310
 msgid "Invalid folder path."
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:335
+#: ../../Zotlabs/Module/Webpages.php:337
 msgid "No webpage elements detected."
 msgstr ""
 
-#: ../../Zotlabs/Module/Webpages.php:410
+#: ../../Zotlabs/Module/Webpages.php:412
 msgid "Import complete."
 msgstr ""
 
@@ -6172,52 +6205,52 @@ msgstr ""
 msgid "Previous action reversed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:419 ../../addon/diaspora/inbound.php:1812
+#: ../../Zotlabs/Module/Like.php:423 ../../addon/diaspora/inbound.php:1811
 #: ../../include/conversation.php:160
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:421 ../../include/conversation.php:163
+#: ../../Zotlabs/Module/Like.php:425 ../../include/conversation.php:163
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:423
+#: ../../Zotlabs/Module/Like.php:427
 #, php-format
 msgid "%1$s agrees with %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:425
+#: ../../Zotlabs/Module/Like.php:429
 #, php-format
 msgid "%1$s doesn't agree with %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:427
+#: ../../Zotlabs/Module/Like.php:431
 #, php-format
 msgid "%1$s abstains from a decision on %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:429
+#: ../../Zotlabs/Module/Like.php:433
 #, php-format
 msgid "%1$s is attending %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:431
+#: ../../Zotlabs/Module/Like.php:435
 #, php-format
 msgid "%1$s is not attending %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:433
+#: ../../Zotlabs/Module/Like.php:437
 #, php-format
 msgid "%1$s may attend %2$s's %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:538
+#: ../../Zotlabs/Module/Like.php:542
 msgid "Action completed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Like.php:539
+#: ../../Zotlabs/Module/Like.php:543
 msgid "Thank you."
 msgstr ""
 
@@ -6240,12 +6273,12 @@ msgstr ""
 msgid "Homepage: "
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:309 ../../include/channel.php:1293
+#: ../../Zotlabs/Module/Directory.php:309 ../../include/channel.php:1307
 msgid "Age:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:314 ../../include/markdown.php:560
-#: ../../include/channel.php:1134 ../../include/event.php:52
+#: ../../Zotlabs/Module/Directory.php:314 ../../include/markdown.php:496
+#: ../../include/channel.php:1148 ../../include/event.php:52
 #: ../../include/event.php:84
 msgid "Location:"
 msgstr ""
@@ -6254,18 +6287,18 @@ msgstr ""
 msgid "Description:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:325 ../../include/channel.php:1309
+#: ../../Zotlabs/Module/Directory.php:325 ../../include/channel.php:1323
 msgid "Hometown:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Directory.php:327 ../../include/channel.php:1317
+#: ../../Zotlabs/Module/Directory.php:327 ../../include/channel.php:1331
 msgid "About:"
 msgstr ""
 
 #: ../../Zotlabs/Module/Directory.php:328 ../../Zotlabs/Module/Suggest.php:54
 #: ../../Zotlabs/Widget/Follow.php:32 ../../Zotlabs/Widget/Suggestions.php:44
-#: ../../include/conversation.php:1002 ../../include/channel.php:1119
-#: ../../include/connections.php:110
+#: ../../include/conversation.php:1000 ../../include/channel.php:1133
+#: ../../include/connections.php:111
 msgid "Connect"
 msgstr ""
 
@@ -6360,103 +6393,103 @@ msgstr ""
 msgid "Post successful."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:65
+#: ../../Zotlabs/Module/Mail.php:73
 msgid "Unable to lookup recipient."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:72
+#: ../../Zotlabs/Module/Mail.php:80
 msgid "Unable to communicate with requested channel."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:79
+#: ../../Zotlabs/Module/Mail.php:87
 msgid "Cannot verify requested channel."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:97
+#: ../../Zotlabs/Module/Mail.php:105
 msgid "Selected channel has private message restrictions. Send failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:178
+#: ../../Zotlabs/Module/Mail.php:160
 msgid "Messages"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:191
+#: ../../Zotlabs/Module/Mail.php:173
 msgid "message"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:232
+#: ../../Zotlabs/Module/Mail.php:214
 msgid "Message recalled."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:245
+#: ../../Zotlabs/Module/Mail.php:227
 msgid "Conversation removed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:260 ../../Zotlabs/Module/Mail.php:381
+#: ../../Zotlabs/Module/Mail.php:242 ../../Zotlabs/Module/Mail.php:363
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:288
+#: ../../Zotlabs/Module/Mail.php:270
 msgid "Requested channel is not in this network"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:296
+#: ../../Zotlabs/Module/Mail.php:278
 msgid "Send Private Message"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:297 ../../Zotlabs/Module/Mail.php:439
+#: ../../Zotlabs/Module/Mail.php:279 ../../Zotlabs/Module/Mail.php:421
 msgid "To:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:300 ../../Zotlabs/Module/Mail.php:441
+#: ../../Zotlabs/Module/Mail.php:282 ../../Zotlabs/Module/Mail.php:423
 msgid "Subject:"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:305 ../../Zotlabs/Module/Mail.php:447
-#: ../../include/conversation.php:1323
+#: ../../Zotlabs/Module/Mail.php:287 ../../Zotlabs/Module/Mail.php:429
+#: ../../include/conversation.php:1321
 msgid "Attach file"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:307
+#: ../../Zotlabs/Module/Mail.php:289
 msgid "Send"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:310 ../../Zotlabs/Module/Mail.php:452
-#: ../../include/conversation.php:1368
+#: ../../Zotlabs/Module/Mail.php:292 ../../Zotlabs/Module/Mail.php:434
+#: ../../include/conversation.php:1366
 msgid "Set expiration date"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:411
+#: ../../Zotlabs/Module/Mail.php:393
 msgid "Delete message"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:412
+#: ../../Zotlabs/Module/Mail.php:394
 msgid "Delivery report"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:413
+#: ../../Zotlabs/Module/Mail.php:395
 msgid "Recall message"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:415
+#: ../../Zotlabs/Module/Mail.php:397
 msgid "Message has been recalled."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:432
+#: ../../Zotlabs/Module/Mail.php:414
 msgid "Delete Conversation"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:434
+#: ../../Zotlabs/Module/Mail.php:416
 msgid ""
 "No secure communications available. You <strong>may</strong> be able to "
 "respond from the sender's profile page."
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:438
+#: ../../Zotlabs/Module/Mail.php:420
 msgid "Send Reply"
 msgstr ""
 
-#: ../../Zotlabs/Module/Mail.php:443
+#: ../../Zotlabs/Module/Mail.php:425
 #, php-format
 msgid "Your message for %s (%s):"
 msgstr ""
@@ -6498,19 +6531,19 @@ msgstr ""
 msgid "Rate"
 msgstr ""
 
-#: ../../Zotlabs/Module/Impel.php:41 ../../include/bbcode.php:203
+#: ../../Zotlabs/Module/Impel.php:41 ../../include/bbcode.php:263
 msgid "webpage"
 msgstr ""
 
-#: ../../Zotlabs/Module/Impel.php:46 ../../include/bbcode.php:209
+#: ../../Zotlabs/Module/Impel.php:46 ../../include/bbcode.php:269
 msgid "block"
 msgstr ""
 
-#: ../../Zotlabs/Module/Impel.php:51 ../../include/bbcode.php:206
+#: ../../Zotlabs/Module/Impel.php:51 ../../include/bbcode.php:266
 msgid "layout"
 msgstr ""
 
-#: ../../Zotlabs/Module/Impel.php:58 ../../include/bbcode.php:212
+#: ../../Zotlabs/Module/Impel.php:58 ../../include/bbcode.php:272
 msgid "menu"
 msgstr ""
 
@@ -6639,7 +6672,7 @@ msgstr ""
 msgid "Membership on this site is by invitation only."
 msgstr ""
 
-#: ../../Zotlabs/Module/Register.php:270 ../../boot.php:1610
+#: ../../Zotlabs/Module/Register.php:270 ../../boot.php:1612
 #: ../../include/nav.php:149
 msgid "Register"
 msgstr ""
@@ -6655,30 +6688,30 @@ msgstr ""
 msgid "Cover Photos"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:237 ../../include/items.php:4303
+#: ../../Zotlabs/Module/Cover_photo.php:237 ../../include/items.php:4328
 msgid "female"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:238 ../../include/items.php:4304
+#: ../../Zotlabs/Module/Cover_photo.php:238 ../../include/items.php:4329
 #, php-format
 msgid "%1$s updated her %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:239 ../../include/items.php:4305
+#: ../../Zotlabs/Module/Cover_photo.php:239 ../../include/items.php:4330
 msgid "male"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/items.php:4306
+#: ../../Zotlabs/Module/Cover_photo.php:240 ../../include/items.php:4331
 #, php-format
 msgid "%1$s updated his %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:242 ../../include/items.php:4308
+#: ../../Zotlabs/Module/Cover_photo.php:242 ../../include/items.php:4333
 #, php-format
 msgid "%1$s updated their %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Module/Cover_photo.php:244 ../../include/channel.php:1759
+#: ../../Zotlabs/Module/Cover_photo.php:244 ../../include/channel.php:1769
 msgid "cover photo"
 msgstr ""
 
@@ -6690,8 +6723,8 @@ msgstr ""
 msgid "Documentation Search"
 msgstr ""
 
-#: ../../Zotlabs/Module/Help.php:80 ../../include/conversation.php:1773
-#: ../../include/nav.php:382
+#: ../../Zotlabs/Module/Help.php:80 ../../include/conversation.php:1771
+#: ../../include/nav.php:375
 msgid "About"
 msgstr ""
 
@@ -6959,7 +6992,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Lostpass.php:91 ../../boot.php:1637
+#: ../../Zotlabs/Module/Lostpass.php:91 ../../boot.php:1639
 msgid "Password Reset"
 msgstr ""
 
@@ -7008,8 +7041,33 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: ../../Zotlabs/Module/Notifications.php:43 ../../include/nav.php:190
-msgid "Mark all system notifications seen"
+#: ../../Zotlabs/Module/Notifications.php:43
+#: ../../Zotlabs/Lib/ThreadItem.php:394
+msgid "Mark all seen"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:10
+msgid "0. Beginner/Basic"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:11
+msgid "1. Novice - not skilled but willing to learn"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:12
+msgid "2. Intermediate - somewhat comfortable"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:13
+msgid "3. Advanced - very comfortable"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:14
+msgid "4. Expert - I can write computer code"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Techlevels.php:15
+msgid "5. Wizard - I probably know more than you do"
 msgstr ""
 
 #: ../../Zotlabs/Lib/Apps.php:212
@@ -7040,7 +7098,7 @@ msgstr ""
 msgid "Suggest Channels"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:220 ../../boot.php:1629 ../../include/nav.php:117
+#: ../../Zotlabs/Lib/Apps.php:220 ../../boot.php:1631 ../../include/nav.php:117
 msgid "Login"
 msgstr ""
 
@@ -7048,8 +7106,8 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:226 ../../include/conversation.php:1857
-#: ../../include/features.php:99 ../../include/nav.php:465
+#: ../../Zotlabs/Lib/Apps.php:226 ../../include/conversation.php:1855
+#: ../../include/features.php:99 ../../include/nav.php:458
 msgid "Wiki"
 msgstr ""
 
@@ -7057,9 +7115,9 @@ msgstr ""
 msgid "Channel Home"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:230 ../../include/conversation.php:1802
-#: ../../include/conversation.php:1805 ../../include/nav.php:200
-#: ../../include/nav.php:411 ../../include/nav.php:414
+#: ../../Zotlabs/Lib/Apps.php:230 ../../include/conversation.php:1800
+#: ../../include/conversation.php:1803 ../../include/nav.php:200
+#: ../../include/nav.php:404 ../../include/nav.php:407
 msgid "Events"
 msgstr ""
 
@@ -7117,11 +7175,11 @@ msgstr ""
 msgid "Undelete"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:374
+#: ../../Zotlabs/Lib/Apps.php:375
 msgid "Add to app-tray"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Apps.php:375
+#: ../../Zotlabs/Lib/Apps.php:376
 msgid "Remove from app-tray"
 msgstr ""
 
@@ -7209,8 +7267,8 @@ msgid "Message"
 msgstr ""
 
 #: ../../Zotlabs/Lib/NativeWikiPage.php:578
-#: ../../addon/gitwiki/gitwiki_backend.php:579 ../../include/bbcode.php:610
-#: ../../include/bbcode.php:756
+#: ../../addon/gitwiki/gitwiki_backend.php:579 ../../include/bbcode.php:667
+#: ../../include/bbcode.php:813
 msgid "Different viewers will see this text differently"
 msgstr ""
 
@@ -7345,175 +7403,185 @@ msgstr ""
 msgid "Please visit %s to view and/or reply to your private messages."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:183
+#: ../../Zotlabs/Lib/Enotify.php:184
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:191
+#: ../../Zotlabs/Lib/Enotify.php:192
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:200
+#: ../../Zotlabs/Lib/Enotify.php:201
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:211
+#: ../../Zotlabs/Lib/Enotify.php:213
+#, php-format
+msgid "[$Projectname:Notify] Moderated Comment to conversation #%1$d by %2$s"
+msgstr ""
+
+#: ../../Zotlabs/Lib/Enotify.php:215
 #, php-format
 msgid "[$Projectname:Notify] Comment to conversation #%1$d by %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:212
+#: ../../Zotlabs/Lib/Enotify.php:216
 #, php-format
 msgid "%1$s, %2$s commented on an item/conversation you have been following."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:215 ../../Zotlabs/Lib/Enotify.php:292
-#: ../../Zotlabs/Lib/Enotify.php:309 ../../Zotlabs/Lib/Enotify.php:335
-#: ../../Zotlabs/Lib/Enotify.php:353 ../../Zotlabs/Lib/Enotify.php:367
+#: ../../Zotlabs/Lib/Enotify.php:219 ../../Zotlabs/Lib/Enotify.php:301
+#: ../../Zotlabs/Lib/Enotify.php:318 ../../Zotlabs/Lib/Enotify.php:344
+#: ../../Zotlabs/Lib/Enotify.php:362 ../../Zotlabs/Lib/Enotify.php:376
 #, php-format
 msgid "Please visit %s to view and/or reply to the conversation."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:273
+#: ../../Zotlabs/Lib/Enotify.php:223 ../../Zotlabs/Lib/Enotify.php:224
+#, php-format
+msgid "Please visit %s to approve or reject this comment."
+msgstr ""
+
+#: ../../Zotlabs/Lib/Enotify.php:282
 #, php-format
 msgid "%1$s, %2$s liked [zrl=%3$s]your %4$s[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:288
+#: ../../Zotlabs/Lib/Enotify.php:297
 #, php-format
 msgid "[$Projectname:Notify] Like received to conversation #%1$d by %2$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:289
+#: ../../Zotlabs/Lib/Enotify.php:298
 #, php-format
 msgid "%1$s, %2$s liked an item/conversation you created."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:300
+#: ../../Zotlabs/Lib/Enotify.php:309
 #, php-format
 msgid "[$Projectname:Notify] %s posted to your profile wall"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:302
+#: ../../Zotlabs/Lib/Enotify.php:311
 #, php-format
 msgid "%1$s, %2$s posted to your profile wall at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:304
+#: ../../Zotlabs/Lib/Enotify.php:313
 #, php-format
 msgid "%1$s, %2$s posted to [zrl=%3$s]your wall[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:328
+#: ../../Zotlabs/Lib/Enotify.php:337
 #, php-format
 msgid "[$Projectname:Notify] %s tagged you"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:329
+#: ../../Zotlabs/Lib/Enotify.php:338
 #, php-format
 msgid "%1$s, %2$s tagged you at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:330
+#: ../../Zotlabs/Lib/Enotify.php:339
 #, php-format
 msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:342
+#: ../../Zotlabs/Lib/Enotify.php:351
 #, php-format
 msgid "[$Projectname:Notify] %1$s poked you"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:343
+#: ../../Zotlabs/Lib/Enotify.php:352
 #, php-format
 msgid "%1$s, %2$s poked you at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:344
+#: ../../Zotlabs/Lib/Enotify.php:353
 #, php-format
 msgid "%1$s, %2$s [zrl=%2$s]poked you[/zrl]."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:360
+#: ../../Zotlabs/Lib/Enotify.php:369
 #, php-format
 msgid "[$Projectname:Notify] %s tagged your post"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:361
+#: ../../Zotlabs/Lib/Enotify.php:370
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:362
+#: ../../Zotlabs/Lib/Enotify.php:371
 #, php-format
 msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:374
+#: ../../Zotlabs/Lib/Enotify.php:383
 msgid "[$Projectname:Notify] Introduction received"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:375
+#: ../../Zotlabs/Lib/Enotify.php:384
 #, php-format
 msgid "%1$s, you've received an new connection request from '%2$s' at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:376
+#: ../../Zotlabs/Lib/Enotify.php:385
 #, php-format
 msgid ""
 "%1$s, you've received [zrl=%2$s]a new connection request[/zrl] from %3$s."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:380 ../../Zotlabs/Lib/Enotify.php:399
+#: ../../Zotlabs/Lib/Enotify.php:389 ../../Zotlabs/Lib/Enotify.php:408
 #, php-format
 msgid "You may visit their profile at %s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:382
+#: ../../Zotlabs/Lib/Enotify.php:391
 #, php-format
 msgid "Please visit %s to approve or reject the connection request."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:389
+#: ../../Zotlabs/Lib/Enotify.php:398
 msgid "[$Projectname:Notify] Friend suggestion received"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:390
+#: ../../Zotlabs/Lib/Enotify.php:399
 #, php-format
 msgid "%1$s, you've received a friend suggestion from '%2$s' at %3$s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:391
+#: ../../Zotlabs/Lib/Enotify.php:400
 #, php-format
 msgid ""
 "%1$s, you've received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from %4$s."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:397
+#: ../../Zotlabs/Lib/Enotify.php:406
 msgid "Name:"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:398
+#: ../../Zotlabs/Lib/Enotify.php:407
 msgid "Photo:"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:401
+#: ../../Zotlabs/Lib/Enotify.php:410
 #, php-format
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:620
+#: ../../Zotlabs/Lib/Enotify.php:629
 msgid "[$Projectname:Notify]"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:780
+#: ../../Zotlabs/Lib/Enotify.php:789
 msgid "created a new post"
 msgstr ""
 
-#: ../../Zotlabs/Lib/Enotify.php:781
+#: ../../Zotlabs/Lib/Enotify.php:790
 #, php-format
 msgid "commented on %s's post"
 msgstr ""
@@ -7532,11 +7600,11 @@ msgstr ""
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:96 ../../include/conversation.php:661
+#: ../../Zotlabs/Lib/ThreadItem.php:96 ../../include/conversation.php:657
 msgid "Private Message"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:133 ../../include/conversation.php:653
+#: ../../Zotlabs/Lib/ThreadItem.php:133 ../../include/conversation.php:649
 msgid "Select"
 msgstr ""
 
@@ -7580,11 +7648,11 @@ msgstr ""
 msgid "starred"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:240 ../../include/conversation.php:668
+#: ../../Zotlabs/Lib/ThreadItem.php:240 ../../include/conversation.php:664
 msgid "Message signature validated"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:241 ../../include/conversation.php:669
+#: ../../Zotlabs/Lib/ThreadItem.php:241 ../../include/conversation.php:665
 msgid "Message signature incorrect"
 msgstr ""
 
@@ -7592,11 +7660,11 @@ msgstr ""
 msgid "Add Tag"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:269 ../../include/taxonomy.php:316
+#: ../../Zotlabs/Lib/ThreadItem.php:269 ../../include/taxonomy.php:346
 msgid "like"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:270 ../../include/taxonomy.php:317
+#: ../../Zotlabs/Lib/ThreadItem.php:270 ../../include/taxonomy.php:347
 msgid "dislike"
 msgstr ""
 
@@ -7640,17 +7708,17 @@ msgstr ""
 msgid "via Wall-To-Wall:"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:350 ../../include/conversation.php:718
+#: ../../Zotlabs/Lib/ThreadItem.php:350 ../../include/conversation.php:716
 #, php-format
 msgid "from %s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:353 ../../include/conversation.php:721
+#: ../../Zotlabs/Lib/ThreadItem.php:353 ../../include/conversation.php:719
 #, php-format
 msgid "last edited: %s"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:354 ../../include/conversation.php:722
+#: ../../Zotlabs/Lib/ThreadItem.php:354 ../../include/conversation.php:720
 #, php-format
 msgid "Expires: %s"
 msgstr ""
@@ -7680,32 +7748,28 @@ msgstr ""
 msgid "Add to Calendar"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:394
-msgid "Mark all seen"
-msgstr ""
-
 #: ../../Zotlabs/Lib/ThreadItem.php:443 ../../include/js_strings.php:7
 #, php-format
 msgid "%s show all"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:733 ../../include/conversation.php:1318
+#: ../../Zotlabs/Lib/ThreadItem.php:733 ../../include/conversation.php:1316
 msgid "Bold"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:734 ../../include/conversation.php:1319
+#: ../../Zotlabs/Lib/ThreadItem.php:734 ../../include/conversation.php:1317
 msgid "Italic"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:735 ../../include/conversation.php:1320
+#: ../../Zotlabs/Lib/ThreadItem.php:735 ../../include/conversation.php:1318
 msgid "Underline"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:736 ../../include/conversation.php:1321
+#: ../../Zotlabs/Lib/ThreadItem.php:736 ../../include/conversation.php:1319
 msgid "Quote"
 msgstr ""
 
-#: ../../Zotlabs/Lib/ThreadItem.php:737 ../../include/conversation.php:1322
+#: ../../Zotlabs/Lib/ThreadItem.php:737 ../../include/conversation.php:1320
 msgid "Code"
 msgstr ""
 
@@ -7719,6 +7783,18 @@ msgstr ""
 
 #: ../../Zotlabs/Lib/ThreadItem.php:740
 msgid "Video"
+msgstr ""
+
+#: ../../Zotlabs/Lib/ThreadItem.php:749
+msgid "Your full name (required)"
+msgstr ""
+
+#: ../../Zotlabs/Lib/ThreadItem.php:750
+msgid "Your email address (required)"
+msgstr ""
+
+#: ../../Zotlabs/Lib/ThreadItem.php:751
+msgid "Your website URL (optional)"
 msgstr ""
 
 #: ../../Zotlabs/Zot/Auth.php:138
@@ -7737,7 +7813,7 @@ msgstr ""
 msgid "parent"
 msgstr ""
 
-#: ../../Zotlabs/Storage/Browser.php:130 ../../include/text.php:2679
+#: ../../Zotlabs/Storage/Browser.php:130 ../../include/text.php:2692
 msgid "Collection"
 msgstr ""
 
@@ -7808,7 +7884,7 @@ msgstr ""
 
 #: ../../Zotlabs/Widget/Appcategories.php:39
 #: ../../Zotlabs/Widget/Tagcloud.php:25 ../../include/contact_widgets.php:91
-#: ../../include/taxonomy.php:188 ../../include/taxonomy.php:270
+#: ../../include/taxonomy.php:218 ../../include/taxonomy.php:300
 msgid "Categories"
 msgstr ""
 
@@ -7854,8 +7930,8 @@ msgid "New Message"
 msgstr ""
 
 #: ../../Zotlabs/Widget/Chatroom_list.php:16
-#: ../../include/conversation.php:1816 ../../include/conversation.php:1819
-#: ../../include/nav.php:425 ../../include/nav.php:428
+#: ../../include/conversation.php:1814 ../../include/conversation.php:1817
+#: ../../include/nav.php:418 ../../include/nav.php:421
 msgid "Chatrooms"
 msgstr ""
 
@@ -7950,15 +8026,15 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: ../../Zotlabs/Widget/Wiki_pages.php:54 ../../addon/gitwiki/gitwiki.php:76
+#: ../../Zotlabs/Widget/Wiki_pages.php:52 ../../addon/gitwiki/gitwiki.php:76
 msgid "Wiki Pages"
 msgstr ""
 
-#: ../../Zotlabs/Widget/Wiki_pages.php:60 ../../addon/gitwiki/gitwiki.php:81
+#: ../../Zotlabs/Widget/Wiki_pages.php:58 ../../addon/gitwiki/gitwiki.php:81
 msgid "Add new page"
 msgstr ""
 
-#: ../../Zotlabs/Widget/Wiki_pages.php:61 ../../addon/gitwiki/gitwiki.php:82
+#: ../../Zotlabs/Widget/Wiki_pages.php:59 ../../addon/gitwiki/gitwiki.php:82
 msgid "Page name"
 msgstr ""
 
@@ -8055,156 +8131,157 @@ msgstr ""
 msgid "Source channel not found."
 msgstr ""
 
-#: ../../boot.php:1162 ../../addon/opensearch/opensearch.php:26
+#: ../../boot.php:1164 ../../addon/opensearch/opensearch.php:26
 #, php-format
 msgctxt "opensearch"
 msgid "Search %1$s (%2$s)"
 msgstr ""
 
-#: ../../boot.php:1162 ../../addon/opensearch/opensearch.php:28
+#: ../../boot.php:1164 ../../addon/opensearch/opensearch.php:28
 msgctxt "opensearch"
 msgid "$Projectname"
 msgstr ""
 
-#: ../../boot.php:1609
+#: ../../boot.php:1611
 msgid "Create an account to access services and applications"
 msgstr ""
 
-#: ../../boot.php:1628 ../../include/nav.php:103 ../../include/nav.php:127
+#: ../../boot.php:1630 ../../include/nav.php:103 ../../include/nav.php:127
 msgid "Logout"
 msgstr ""
 
-#: ../../boot.php:1631
+#: ../../boot.php:1633
 msgid "Login/Email"
 msgstr ""
 
-#: ../../boot.php:1632
+#: ../../boot.php:1634
 msgid "Password"
 msgstr ""
 
-#: ../../boot.php:1633
+#: ../../boot.php:1635
 msgid "Remember me"
 msgstr ""
 
-#: ../../boot.php:1636
+#: ../../boot.php:1638
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:2174
+#: ../../boot.php:2176
 msgid "toggle mobile"
 msgstr ""
 
-#: ../../boot.php:2327
+#: ../../boot.php:2329
 #, php-format
 msgid "[$Projectname] Website SSL error for %s"
 msgstr ""
 
-#: ../../boot.php:2332
+#: ../../boot.php:2334
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr ""
 
-#: ../../boot.php:2450
+#: ../../boot.php:2452
 #, php-format
 msgid "[$Projectname] Cron tasks not running on %s"
 msgstr ""
 
-#: ../../boot.php:2455
+#: ../../boot.php:2457
 msgid "Cron/Scheduled tasks not running."
 msgstr ""
 
-#: ../../boot.php:2456 ../../include/datetime.php:286
+#: ../../boot.php:2458 ../../include/datetime.php:286
 msgid "never"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:9
+#: ../../view/theme/redbasic/php/config.php:16
+#: ../../view/theme/redbasic/php/config.php:19
 msgid "Focus (Hubzilla default)"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:88
+#: ../../view/theme/redbasic/php/config.php:99
 msgid "Theme settings"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:89
+#: ../../view/theme/redbasic/php/config.php:100
 msgid "Narrow navbar"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:90
+#: ../../view/theme/redbasic/php/config.php:101
 msgid "Navigation bar background color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:91
+#: ../../view/theme/redbasic/php/config.php:102
 msgid "Navigation bar icon color "
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:92
+#: ../../view/theme/redbasic/php/config.php:103
 msgid "Navigation bar active icon color "
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:93
+#: ../../view/theme/redbasic/php/config.php:104
 msgid "Link color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:94
+#: ../../view/theme/redbasic/php/config.php:105
 msgid "Set font-color for banner"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:95
+#: ../../view/theme/redbasic/php/config.php:106
 msgid "Set the background color"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:96
+#: ../../view/theme/redbasic/php/config.php:107
 msgid "Set the background image"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:97
+#: ../../view/theme/redbasic/php/config.php:108
 msgid "Set the background color of items"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:98
+#: ../../view/theme/redbasic/php/config.php:109
 msgid "Set the background color of comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:99
+#: ../../view/theme/redbasic/php/config.php:110
 msgid "Set font-size for the entire application"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:99
+#: ../../view/theme/redbasic/php/config.php:110
 msgid "Examples: 1rem, 100%, 16px"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:100
+#: ../../view/theme/redbasic/php/config.php:111
 msgid "Set font-color for posts and comments"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:101
+#: ../../view/theme/redbasic/php/config.php:112
 msgid "Set radius of corners"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:101
+#: ../../view/theme/redbasic/php/config.php:112
 msgid "Example: 4px"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:102
+#: ../../view/theme/redbasic/php/config.php:113
 msgid "Set shadow depth of photos"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:103
+#: ../../view/theme/redbasic/php/config.php:114
 msgid "Set maximum width of content region in pixel"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:103
+#: ../../view/theme/redbasic/php/config.php:114
 msgid "Leave empty for default width"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:104
+#: ../../view/theme/redbasic/php/config.php:115
 msgid "Left align page content"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:105
+#: ../../view/theme/redbasic/php/config.php:116
 msgid "Set size of conversation author photo"
 msgstr ""
 
-#: ../../view/theme/redbasic/php/config.php:106
+#: ../../view/theme/redbasic/php/config.php:117
 msgid "Set size of followup author photos"
 msgstr ""
 
@@ -8345,23 +8422,23 @@ msgstr ""
 msgid "Skeleton Settings"
 msgstr ""
 
-#: ../../addon/gnusoc/gnusoc.php:119
+#: ../../addon/gnusoc/gnusoc.php:170
 msgid "GNU-Social Protocol Settings updated."
 msgstr ""
 
-#: ../../addon/gnusoc/gnusoc.php:130
+#: ../../addon/gnusoc/gnusoc.php:181
 msgid "Enable the GNU-Social protocol for this channel"
 msgstr ""
 
-#: ../../addon/gnusoc/gnusoc.php:134
+#: ../../addon/gnusoc/gnusoc.php:185
 msgid "GNU-Social Protocol Settings"
 msgstr ""
 
-#: ../../addon/gnusoc/gnusoc.php:324
+#: ../../addon/gnusoc/gnusoc.php:376
 msgid "Follow"
 msgstr ""
 
-#: ../../addon/gnusoc/gnusoc.php:327
+#: ../../addon/gnusoc/gnusoc.php:379
 #, php-format
 msgid "%1$s is now following %2$s"
 msgstr ""
@@ -8470,19 +8547,19 @@ msgstr ""
 msgid "CalDAV/CardDAV Settings"
 msgstr ""
 
-#: ../../addon/cdav/cdav.php:272 ../../include/connections.php:670
+#: ../../addon/cdav/cdav.php:272 ../../include/connections.php:676
 msgid "Home, Voice"
 msgstr ""
 
-#: ../../addon/cdav/cdav.php:273 ../../include/connections.php:671
+#: ../../addon/cdav/cdav.php:273 ../../include/connections.php:677
 msgid "Home, Fax"
 msgstr ""
 
-#: ../../addon/cdav/cdav.php:275 ../../include/connections.php:673
+#: ../../addon/cdav/cdav.php:275 ../../include/connections.php:679
 msgid "Work, Voice"
 msgstr ""
 
-#: ../../addon/cdav/cdav.php:276 ../../include/connections.php:674
+#: ../../addon/cdav/cdav.php:276 ../../include/connections.php:680
 msgid "Work, Fax"
 msgstr ""
 
@@ -8603,7 +8680,7 @@ msgstr ""
 msgid "Page to load after image selection."
 msgstr ""
 
-#: ../../addon/openclipatar/openclipatar.php:58 ../../include/channel.php:1048
+#: ../../addon/openclipatar/openclipatar.php:58 ../../include/channel.php:1062
 #: ../../include/nav.php:111
 msgid "Edit Profile"
 msgstr ""
@@ -9585,8 +9662,8 @@ msgstr ""
 msgid "Hubzilla to Friendica Post Settings"
 msgstr ""
 
-#: ../../addon/jappixmini/jappixmini.php:305 ../../include/channel.php:1139
-#: ../../include/channel.php:1296
+#: ../../addon/jappixmini/jappixmini.php:305 ../../include/channel.php:1153
+#: ../../include/channel.php:1310
 msgid "Status:"
 msgstr ""
 
@@ -10140,7 +10217,7 @@ msgstr ""
 msgid "Error creating new game."
 msgstr ""
 
-#: ../../addon/chess/chess.php:381 ../../include/channel.php:899
+#: ../../addon/chess/chess.php:381 ../../include/channel.php:913
 msgid "Requested channel is not available."
 msgstr ""
 
@@ -10215,15 +10292,15 @@ msgstr ""
 msgid "Twitter Post Settings"
 msgstr ""
 
-#: ../../addon/smileybutton/smileybutton.php:273
+#: ../../addon/smileybutton/smileybutton.php:211
 msgid "Deactivate the feature"
 msgstr ""
 
-#: ../../addon/smileybutton/smileybutton.php:277
+#: ../../addon/smileybutton/smileybutton.php:215
 msgid "Hide the button and show the smilies directly."
 msgstr ""
 
-#: ../../addon/smileybutton/smileybutton.php:281
+#: ../../addon/smileybutton/smileybutton.php:219
 msgid "Smileybutton Settings"
 msgstr ""
 
@@ -10997,277 +11074,277 @@ msgstr ""
 msgid "poked"
 msgstr ""
 
-#: ../../include/conversation.php:691
+#: ../../include/conversation.php:689
 #, php-format
 msgid "View %s's profile @ %s"
 msgstr ""
 
-#: ../../include/conversation.php:711
+#: ../../include/conversation.php:709
 msgid "Categories:"
 msgstr ""
 
-#: ../../include/conversation.php:712
+#: ../../include/conversation.php:710
 msgid "Filed under:"
 msgstr ""
 
-#: ../../include/conversation.php:737
+#: ../../include/conversation.php:735
 msgid "View in context"
 msgstr ""
 
-#: ../../include/conversation.php:834
+#: ../../include/conversation.php:832
 msgid "remove"
 msgstr ""
 
-#: ../../include/conversation.php:838 ../../include/nav.php:272
+#: ../../include/conversation.php:836 ../../include/nav.php:262
 msgid "Loading..."
 msgstr ""
 
-#: ../../include/conversation.php:839
+#: ../../include/conversation.php:837
 msgid "Delete Selected Items"
 msgstr ""
 
-#: ../../include/conversation.php:882
+#: ../../include/conversation.php:880
 msgid "View Source"
 msgstr ""
 
-#: ../../include/conversation.php:892
+#: ../../include/conversation.php:890
 msgid "Follow Thread"
 msgstr ""
 
-#: ../../include/conversation.php:901
+#: ../../include/conversation.php:899
 msgid "Unfollow Thread"
 msgstr ""
 
-#: ../../include/conversation.php:992
+#: ../../include/conversation.php:990
 msgid "Activity/Posts"
 msgstr ""
 
-#: ../../include/conversation.php:1012
+#: ../../include/conversation.php:1010
 msgid "Edit Connection"
 msgstr ""
 
-#: ../../include/conversation.php:1022
+#: ../../include/conversation.php:1020
 msgid "Message"
 msgstr ""
 
-#: ../../include/conversation.php:1156
+#: ../../include/conversation.php:1154
 #, php-format
 msgid "%s likes this."
 msgstr ""
 
-#: ../../include/conversation.php:1156
+#: ../../include/conversation.php:1154
 #, php-format
 msgid "%s doesn't like this."
 msgstr ""
 
-#: ../../include/conversation.php:1160
+#: ../../include/conversation.php:1158
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
 msgid_plural "<span  %1$s>%2$d people</span> like this."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1162
+#: ../../include/conversation.php:1160
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
 msgid_plural "<span  %1$s>%2$d people</span> don't like this."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1168
+#: ../../include/conversation.php:1166
 msgid "and"
 msgstr ""
 
-#: ../../include/conversation.php:1171
+#: ../../include/conversation.php:1169
 #, php-format
 msgid ", and %d other people"
 msgid_plural ", and %d other people"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1172
+#: ../../include/conversation.php:1170
 #, php-format
 msgid "%s like this."
 msgstr ""
 
-#: ../../include/conversation.php:1172
+#: ../../include/conversation.php:1170
 #, php-format
 msgid "%s don't like this."
 msgstr ""
 
-#: ../../include/conversation.php:1215
+#: ../../include/conversation.php:1213
 msgid "Set your location"
 msgstr ""
 
-#: ../../include/conversation.php:1216
+#: ../../include/conversation.php:1214
 msgid "Clear browser location"
 msgstr ""
 
-#: ../../include/conversation.php:1264
+#: ../../include/conversation.php:1262
 msgid "Tag term:"
 msgstr ""
 
-#: ../../include/conversation.php:1265
+#: ../../include/conversation.php:1263
 msgid "Where are you right now?"
 msgstr ""
 
-#: ../../include/conversation.php:1270
+#: ../../include/conversation.php:1268
 msgid "Choose a different album..."
 msgstr ""
 
-#: ../../include/conversation.php:1274
+#: ../../include/conversation.php:1272
 msgid "Comments enabled"
 msgstr ""
 
-#: ../../include/conversation.php:1275
+#: ../../include/conversation.php:1273
 msgid "Comments disabled"
 msgstr ""
 
-#: ../../include/conversation.php:1313
+#: ../../include/conversation.php:1311
 msgid "Page link name"
 msgstr ""
 
-#: ../../include/conversation.php:1316
+#: ../../include/conversation.php:1314
 msgid "Post as"
 msgstr ""
 
-#: ../../include/conversation.php:1330
+#: ../../include/conversation.php:1328
 msgid "Toggle voting"
 msgstr ""
 
-#: ../../include/conversation.php:1333
+#: ../../include/conversation.php:1331
 msgid "Disable comments"
 msgstr ""
 
-#: ../../include/conversation.php:1334
+#: ../../include/conversation.php:1332
 msgid "Toggle comments"
 msgstr ""
 
-#: ../../include/conversation.php:1342
+#: ../../include/conversation.php:1340
 msgid "Categories (optional, comma-separated list)"
 msgstr ""
 
-#: ../../include/conversation.php:1365
+#: ../../include/conversation.php:1363
 msgid "Other networks and post services"
 msgstr ""
 
-#: ../../include/conversation.php:1371
+#: ../../include/conversation.php:1369
 msgid "Set publish date"
 msgstr ""
 
-#: ../../include/conversation.php:1634
+#: ../../include/conversation.php:1632
 msgid "Discover"
 msgstr ""
 
-#: ../../include/conversation.php:1637
+#: ../../include/conversation.php:1635
 msgid "Imported public streams"
 msgstr ""
 
-#: ../../include/conversation.php:1642
+#: ../../include/conversation.php:1640
 msgid "Commented Order"
 msgstr ""
 
-#: ../../include/conversation.php:1645
+#: ../../include/conversation.php:1643
 msgid "Sort by Comment Date"
 msgstr ""
 
-#: ../../include/conversation.php:1649
+#: ../../include/conversation.php:1647
 msgid "Posted Order"
 msgstr ""
 
-#: ../../include/conversation.php:1652
+#: ../../include/conversation.php:1650
 msgid "Sort by Post Date"
 msgstr ""
 
-#: ../../include/conversation.php:1660
+#: ../../include/conversation.php:1658
 msgid "Posts that mention or involve you"
 msgstr ""
 
-#: ../../include/conversation.php:1669
+#: ../../include/conversation.php:1667
 msgid "Activity Stream - by date"
 msgstr ""
 
-#: ../../include/conversation.php:1675
+#: ../../include/conversation.php:1673
 msgid "Starred"
 msgstr ""
 
-#: ../../include/conversation.php:1678
+#: ../../include/conversation.php:1676
 msgid "Favourite Posts"
 msgstr ""
 
-#: ../../include/conversation.php:1685
+#: ../../include/conversation.php:1683
 msgid "Spam"
 msgstr ""
 
-#: ../../include/conversation.php:1688
+#: ../../include/conversation.php:1686
 msgid "Posts flagged as SPAM"
 msgstr ""
 
-#: ../../include/conversation.php:1763 ../../include/nav.php:372
+#: ../../include/conversation.php:1761 ../../include/nav.php:365
 msgid "Status Messages and Posts"
 msgstr ""
 
-#: ../../include/conversation.php:1776 ../../include/nav.php:385
+#: ../../include/conversation.php:1774 ../../include/nav.php:378
 msgid "Profile Details"
 msgstr ""
 
-#: ../../include/conversation.php:1786 ../../include/nav.php:395
+#: ../../include/conversation.php:1784 ../../include/nav.php:388
 #: ../../include/photos.php:528
 msgid "Photo Albums"
 msgstr ""
 
-#: ../../include/conversation.php:1794 ../../include/nav.php:403
+#: ../../include/conversation.php:1792 ../../include/nav.php:396
 msgid "Files and Storage"
 msgstr ""
 
-#: ../../include/conversation.php:1830 ../../include/nav.php:438
+#: ../../include/conversation.php:1828 ../../include/nav.php:431
 msgid "Bookmarks"
 msgstr ""
 
-#: ../../include/conversation.php:1833 ../../include/nav.php:441
+#: ../../include/conversation.php:1831 ../../include/nav.php:434
 msgid "Saved Bookmarks"
 msgstr ""
 
-#: ../../include/conversation.php:1844 ../../include/nav.php:452
+#: ../../include/conversation.php:1842 ../../include/nav.php:445
 msgid "View Webpages"
 msgstr ""
 
-#: ../../include/conversation.php:1913
+#: ../../include/conversation.php:1911
 msgctxt "noun"
 msgid "Attending"
 msgid_plural "Attending"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1916
+#: ../../include/conversation.php:1914
 msgctxt "noun"
 msgid "Not Attending"
 msgid_plural "Not Attending"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1919
+#: ../../include/conversation.php:1917
 msgctxt "noun"
 msgid "Undecided"
 msgid_plural "Undecided"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1922
+#: ../../include/conversation.php:1920
 msgctxt "noun"
 msgid "Agree"
 msgid_plural "Agrees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1925
+#: ../../include/conversation.php:1923
 msgctxt "noun"
 msgid "Disagree"
 msgid_plural "Disagrees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/conversation.php:1928
+#: ../../include/conversation.php:1926
 msgctxt "noun"
 msgid "Abstain"
 msgid_plural "Abstains"
@@ -11517,183 +11594,187 @@ msgstr ""
 msgid "surprised"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:70
+#: ../../include/text.php:1333 ../../include/js_strings.php:70
 msgid "Monday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:71
+#: ../../include/text.php:1333 ../../include/js_strings.php:71
 msgid "Tuesday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:72
+#: ../../include/text.php:1333 ../../include/js_strings.php:72
 msgid "Wednesday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:73
+#: ../../include/text.php:1333 ../../include/js_strings.php:73
 msgid "Thursday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:74
+#: ../../include/text.php:1333 ../../include/js_strings.php:74
 msgid "Friday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:75
+#: ../../include/text.php:1333 ../../include/js_strings.php:75
 msgid "Saturday"
 msgstr ""
 
-#: ../../include/text.php:1335 ../../include/js_strings.php:69
+#: ../../include/text.php:1333 ../../include/js_strings.php:69
 msgid "Sunday"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:45
+#: ../../include/text.php:1337 ../../include/js_strings.php:45
 msgid "January"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:46
+#: ../../include/text.php:1337 ../../include/js_strings.php:46
 msgid "February"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:47
+#: ../../include/text.php:1337 ../../include/js_strings.php:47
 msgid "March"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:48
+#: ../../include/text.php:1337 ../../include/js_strings.php:48
 msgid "April"
 msgstr ""
 
-#: ../../include/text.php:1339
+#: ../../include/text.php:1337
 msgid "May"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:50
+#: ../../include/text.php:1337 ../../include/js_strings.php:50
 msgid "June"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:51
+#: ../../include/text.php:1337 ../../include/js_strings.php:51
 msgid "July"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:52
+#: ../../include/text.php:1337 ../../include/js_strings.php:52
 msgid "August"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:53
+#: ../../include/text.php:1337 ../../include/js_strings.php:53
 msgid "September"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:54
+#: ../../include/text.php:1337 ../../include/js_strings.php:54
 msgid "October"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:55
+#: ../../include/text.php:1337 ../../include/js_strings.php:55
 msgid "November"
 msgstr ""
 
-#: ../../include/text.php:1339 ../../include/js_strings.php:56
+#: ../../include/text.php:1337 ../../include/js_strings.php:56
 msgid "December"
 msgstr ""
 
-#: ../../include/text.php:1403 ../../include/text.php:1407
+#: ../../include/text.php:1401 ../../include/text.php:1405
 msgid "Unknown Attachment"
 msgstr ""
 
-#: ../../include/text.php:1409
+#: ../../include/text.php:1407 ../../include/feedutils.php:745
 msgid "unknown"
 msgstr ""
 
-#: ../../include/text.php:1445
+#: ../../include/text.php:1443
 msgid "remove category"
 msgstr ""
 
-#: ../../include/text.php:1519
+#: ../../include/text.php:1517
 msgid "remove from file"
 msgstr ""
 
-#: ../../include/text.php:1781 ../../include/language.php:367
+#: ../../include/text.php:1636 ../../include/message.php:12
+msgid "Download binary/encrypted content"
+msgstr ""
+
+#: ../../include/text.php:1795 ../../include/language.php:367
 msgid "default"
 msgstr ""
 
-#: ../../include/text.php:1789
+#: ../../include/text.php:1803
 msgid "Page layout"
 msgstr ""
 
-#: ../../include/text.php:1789
+#: ../../include/text.php:1803
 msgid "You can create your own with the layouts tool"
 msgstr ""
 
-#: ../../include/text.php:1817
+#: ../../include/text.php:1831
 msgid "Page content type"
 msgstr ""
 
-#: ../../include/text.php:1950
+#: ../../include/text.php:1964
 msgid "activity"
 msgstr ""
 
-#: ../../include/text.php:2264
+#: ../../include/text.php:2277
 msgid "Design Tools"
 msgstr ""
 
-#: ../../include/text.php:2270
+#: ../../include/text.php:2283
 msgid "Pages"
 msgstr ""
 
-#: ../../include/text.php:2292
+#: ../../include/text.php:2305
 msgid "Import website..."
 msgstr ""
 
-#: ../../include/text.php:2293
+#: ../../include/text.php:2306
 msgid "Select folder to import"
 msgstr ""
 
-#: ../../include/text.php:2294
+#: ../../include/text.php:2307
 msgid "Import from a zipped folder:"
 msgstr ""
 
-#: ../../include/text.php:2295
+#: ../../include/text.php:2308
 msgid "Import from cloud files:"
 msgstr ""
 
-#: ../../include/text.php:2296
+#: ../../include/text.php:2309
 msgid "/cloud/channel/path/to/folder"
 msgstr ""
 
-#: ../../include/text.php:2297
+#: ../../include/text.php:2310
 msgid "Enter path to website files"
 msgstr ""
 
-#: ../../include/text.php:2298
+#: ../../include/text.php:2311
 msgid "Select folder"
 msgstr ""
 
-#: ../../include/text.php:2299
+#: ../../include/text.php:2312
 msgid "Export website..."
 msgstr ""
 
-#: ../../include/text.php:2300
+#: ../../include/text.php:2313
 msgid "Export to a zip file"
 msgstr ""
 
-#: ../../include/text.php:2301
+#: ../../include/text.php:2314
 msgid "website.zip"
 msgstr ""
 
-#: ../../include/text.php:2302
+#: ../../include/text.php:2315
 msgid "Enter a name for the zip file."
 msgstr ""
 
-#: ../../include/text.php:2303
+#: ../../include/text.php:2316
 msgid "Export to cloud files"
 msgstr ""
 
-#: ../../include/text.php:2304
+#: ../../include/text.php:2317
 msgid "/path/to/export/folder"
 msgstr ""
 
-#: ../../include/text.php:2305
+#: ../../include/text.php:2318
 msgid "Enter a path to a cloud files destination."
 msgstr ""
 
-#: ../../include/text.php:2306
+#: ../../include/text.php:2319
 msgid "Specify folder"
 msgstr ""
 
@@ -11743,25 +11824,25 @@ msgstr[1] ""
 msgid "show more"
 msgstr ""
 
-#: ../../include/markdown.php:444
+#: ../../include/markdown.php:377
 msgid "Attachments:"
 msgstr ""
 
-#: ../../include/markdown.php:538 ../../include/event.php:22
+#: ../../include/markdown.php:474 ../../include/event.php:22
 #: ../../include/event.php:69
 msgid "l F d, Y \\@ g:i A"
 msgstr ""
 
-#: ../../include/markdown.php:540
+#: ../../include/markdown.php:476
 msgid "$Projectname event notification:"
 msgstr ""
 
-#: ../../include/markdown.php:544 ../../include/event.php:30
+#: ../../include/markdown.php:480 ../../include/event.php:30
 #: ../../include/event.php:73
 msgid "Starts:"
 msgstr ""
 
-#: ../../include/markdown.php:552 ../../include/event.php:40
+#: ../../include/markdown.php:488 ../../include/event.php:40
 #: ../../include/event.php:77
 msgid "Finishes:"
 msgstr ""
@@ -12041,19 +12122,19 @@ msgctxt "calendar"
 msgid "All day"
 msgstr ""
 
-#: ../../include/message.php:30
+#: ../../include/message.php:40
 msgid "Unable to determine sender."
 msgstr ""
 
-#: ../../include/message.php:69
+#: ../../include/message.php:79
 msgid "No recipient provided."
 msgstr ""
 
-#: ../../include/message.php:74
+#: ../../include/message.php:84
 msgid "[no subject]"
 msgstr ""
 
-#: ../../include/message.php:227
+#: ../../include/message.php:238
 msgid "Stored post could not be verified."
 msgstr ""
 
@@ -12146,77 +12227,77 @@ msgstr ""
 msgid "guest:"
 msgstr ""
 
-#: ../../include/security.php:532
+#: ../../include/security.php:531
 msgid ""
 "The form security token was not correct. This probably happened because the "
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/items.php:869 ../../include/items.php:916
+#: ../../include/items.php:883 ../../include/items.php:930
 msgid "(Unknown)"
 msgstr ""
 
-#: ../../include/items.php:1110
+#: ../../include/items.php:1124
 msgid "Visible to anybody on the internet."
 msgstr ""
 
-#: ../../include/items.php:1112
+#: ../../include/items.php:1126
 msgid "Visible to you only."
 msgstr ""
 
-#: ../../include/items.php:1114
+#: ../../include/items.php:1128
 msgid "Visible to anybody in this network."
 msgstr ""
 
-#: ../../include/items.php:1116
+#: ../../include/items.php:1130
 msgid "Visible to anybody authenticated."
 msgstr ""
 
-#: ../../include/items.php:1118
+#: ../../include/items.php:1132
 #, php-format
 msgid "Visible to anybody on %s."
 msgstr ""
 
-#: ../../include/items.php:1120
+#: ../../include/items.php:1134
 msgid "Visible to all connections."
 msgstr ""
 
-#: ../../include/items.php:1122
+#: ../../include/items.php:1136
 msgid "Visible to approved connections."
 msgstr ""
 
-#: ../../include/items.php:1124
+#: ../../include/items.php:1138
 msgid "Visible to specific connections."
 msgstr ""
 
-#: ../../include/items.php:3938
+#: ../../include/items.php:3963
 msgid "Privacy group is empty."
 msgstr ""
 
-#: ../../include/items.php:3945
+#: ../../include/items.php:3970
 #, php-format
 msgid "Privacy group: %s"
 msgstr ""
 
-#: ../../include/items.php:3957
+#: ../../include/items.php:3982
 msgid "Connection not found."
 msgstr ""
 
-#: ../../include/items.php:4310
+#: ../../include/items.php:4335
 msgid "profile photo"
 msgstr ""
 
-#: ../../include/items.php:4506
+#: ../../include/items.php:4528
 #, php-format
 msgid "[Edited %s]"
 msgstr ""
 
-#: ../../include/items.php:4506
+#: ../../include/items.php:4528
 msgctxt "edit_activity"
 msgid "Post"
 msgstr ""
 
-#: ../../include/items.php:4506
+#: ../../include/items.php:4528
 msgctxt "edit_activity"
 msgid "Comment"
 msgstr ""
@@ -12225,149 +12306,149 @@ msgstr ""
 msgid "Unable to obtain identity information from database"
 msgstr ""
 
-#: ../../include/channel.php:67
+#: ../../include/channel.php:68
 msgid "Empty name"
 msgstr ""
 
-#: ../../include/channel.php:70
+#: ../../include/channel.php:71
 msgid "Name too long"
 msgstr ""
 
-#: ../../include/channel.php:181
+#: ../../include/channel.php:182
 msgid "No account identifier"
 msgstr ""
 
-#: ../../include/channel.php:193
+#: ../../include/channel.php:194
 msgid "Nickname is required."
 msgstr ""
 
-#: ../../include/channel.php:207
+#: ../../include/channel.php:208
 msgid "Reserved nickname. Please choose another."
 msgstr ""
 
-#: ../../include/channel.php:212
+#: ../../include/channel.php:213
 msgid ""
 "Nickname has unsupported characters or is already being used on this site."
 msgstr ""
 
-#: ../../include/channel.php:270
+#: ../../include/channel.php:271
 msgid "Unable to retrieve created identity"
 msgstr ""
 
-#: ../../include/channel.php:342
+#: ../../include/channel.php:343
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/channel.php:1045
+#: ../../include/channel.php:1059
 msgid "Create New Profile"
 msgstr ""
 
-#: ../../include/channel.php:1065
+#: ../../include/channel.php:1079
 msgid "Visible to everybody"
 msgstr ""
 
-#: ../../include/channel.php:1138 ../../include/channel.php:1252
+#: ../../include/channel.php:1152 ../../include/channel.php:1266
 msgid "Gender:"
 msgstr ""
 
-#: ../../include/channel.php:1140 ../../include/channel.php:1307
+#: ../../include/channel.php:1154 ../../include/channel.php:1321
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/channel.php:1141
+#: ../../include/channel.php:1155
 msgid "Online Now"
 msgstr ""
 
-#: ../../include/channel.php:1257
+#: ../../include/channel.php:1271
 msgid "Like this channel"
 msgstr ""
 
-#: ../../include/channel.php:1281
+#: ../../include/channel.php:1295
 msgid "j F, Y"
 msgstr ""
 
-#: ../../include/channel.php:1282
+#: ../../include/channel.php:1296
 msgid "j F"
 msgstr ""
 
-#: ../../include/channel.php:1289
+#: ../../include/channel.php:1303
 msgid "Birthday:"
 msgstr ""
 
-#: ../../include/channel.php:1302
+#: ../../include/channel.php:1316
 #, php-format
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/channel.php:1305
+#: ../../include/channel.php:1319
 msgid "Sexual Preference:"
 msgstr ""
 
-#: ../../include/channel.php:1311
+#: ../../include/channel.php:1325
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/channel.php:1313
+#: ../../include/channel.php:1327
 msgid "Political Views:"
 msgstr ""
 
-#: ../../include/channel.php:1315
+#: ../../include/channel.php:1329
 msgid "Religion:"
 msgstr ""
 
-#: ../../include/channel.php:1319
+#: ../../include/channel.php:1333
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/channel.php:1321
+#: ../../include/channel.php:1335
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/channel.php:1323
+#: ../../include/channel.php:1337
 msgid "Dislikes:"
 msgstr ""
 
-#: ../../include/channel.php:1325
+#: ../../include/channel.php:1339
 msgid "Contact information and Social Networks:"
 msgstr ""
 
-#: ../../include/channel.php:1327
+#: ../../include/channel.php:1341
 msgid "My other channels:"
 msgstr ""
 
-#: ../../include/channel.php:1329
+#: ../../include/channel.php:1343
 msgid "Musical interests:"
 msgstr ""
 
-#: ../../include/channel.php:1331
+#: ../../include/channel.php:1345
 msgid "Books, literature:"
 msgstr ""
 
-#: ../../include/channel.php:1333
+#: ../../include/channel.php:1347
 msgid "Television:"
 msgstr ""
 
-#: ../../include/channel.php:1335
+#: ../../include/channel.php:1349
 msgid "Film/dance/culture/entertainment:"
 msgstr ""
 
-#: ../../include/channel.php:1337
+#: ../../include/channel.php:1351
 msgid "Love/Romance:"
 msgstr ""
 
-#: ../../include/channel.php:1339
+#: ../../include/channel.php:1353
 msgid "Work/employment:"
 msgstr ""
 
-#: ../../include/channel.php:1341
+#: ../../include/channel.php:1355
 msgid "School/education:"
 msgstr ""
 
-#: ../../include/channel.php:1364
+#: ../../include/channel.php:1378
 msgid "Like this thing"
 msgstr ""
 
-#: ../../include/channel.php:2139
+#: ../../include/channel.php:2148
 #, php-format
 msgid "User '%s' deleted"
 msgstr ""
@@ -12486,46 +12567,46 @@ msgstr ""
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr ""
 
-#: ../../include/bbcode.php:134 ../../include/bbcode.php:1040
-#: ../../include/bbcode.php:1043 ../../include/bbcode.php:1048
-#: ../../include/bbcode.php:1051 ../../include/bbcode.php:1054
-#: ../../include/bbcode.php:1057 ../../include/bbcode.php:1062
-#: ../../include/bbcode.php:1065 ../../include/bbcode.php:1070
-#: ../../include/bbcode.php:1073 ../../include/bbcode.php:1076
-#: ../../include/bbcode.php:1079
+#: ../../include/bbcode.php:194 ../../include/bbcode.php:1097
+#: ../../include/bbcode.php:1100 ../../include/bbcode.php:1105
+#: ../../include/bbcode.php:1108 ../../include/bbcode.php:1111
+#: ../../include/bbcode.php:1114 ../../include/bbcode.php:1119
+#: ../../include/bbcode.php:1122 ../../include/bbcode.php:1127
+#: ../../include/bbcode.php:1130 ../../include/bbcode.php:1133
+#: ../../include/bbcode.php:1136
 msgid "Image/photo"
 msgstr ""
 
-#: ../../include/bbcode.php:173 ../../include/bbcode.php:1090
+#: ../../include/bbcode.php:233 ../../include/bbcode.php:1147
 msgid "Encrypted content"
 msgstr ""
 
-#: ../../include/bbcode.php:189
+#: ../../include/bbcode.php:249
 #, php-format
 msgid "Install %s element: "
 msgstr ""
 
-#: ../../include/bbcode.php:193
+#: ../../include/bbcode.php:253
 #, php-format
 msgid ""
 "This post contains an installable %s element, however you lack permissions "
 "to install it on this site."
 msgstr ""
 
-#: ../../include/bbcode.php:272
+#: ../../include/bbcode.php:332
 #, php-format
 msgid "%1$s wrote the following %2$s %3$s"
 msgstr ""
 
-#: ../../include/bbcode.php:349 ../../include/bbcode.php:357
+#: ../../include/bbcode.php:409 ../../include/bbcode.php:417
 msgid "Click to open/close"
 msgstr ""
 
-#: ../../include/bbcode.php:357
+#: ../../include/bbcode.php:417
 msgid "spoiler"
 msgstr ""
 
-#: ../../include/bbcode.php:1028
+#: ../../include/bbcode.php:1085
 msgid "$1 wrote:"
 msgstr ""
 
@@ -12850,35 +12931,35 @@ msgid ""
 "channel"
 msgstr ""
 
-#: ../../include/taxonomy.php:228 ../../include/taxonomy.php:249
+#: ../../include/taxonomy.php:258 ../../include/taxonomy.php:279
 msgid "Tags"
 msgstr ""
 
-#: ../../include/taxonomy.php:293
+#: ../../include/taxonomy.php:323
 msgid "Keywords"
 msgstr ""
 
-#: ../../include/taxonomy.php:314
+#: ../../include/taxonomy.php:344
 msgid "have"
 msgstr ""
 
-#: ../../include/taxonomy.php:314
+#: ../../include/taxonomy.php:344
 msgid "has"
 msgstr ""
 
-#: ../../include/taxonomy.php:315
+#: ../../include/taxonomy.php:345
 msgid "want"
 msgstr ""
 
-#: ../../include/taxonomy.php:315
+#: ../../include/taxonomy.php:345
 msgid "wants"
 msgstr ""
 
-#: ../../include/taxonomy.php:316
+#: ../../include/taxonomy.php:346
 msgid "likes"
 msgstr ""
 
-#: ../../include/taxonomy.php:317
+#: ../../include/taxonomy.php:347
 msgid "dislikes"
 msgstr ""
 
@@ -13119,6 +13200,10 @@ msgstr ""
 msgid "View all notifications"
 msgstr ""
 
+#: ../../include/nav.php:190
+msgid "Mark all system notifications seen"
+msgstr ""
+
 #: ../../include/nav.php:192
 msgid "Private mail"
 msgstr ""
@@ -13155,16 +13240,24 @@ msgstr ""
 msgid "Site Setup and Configuration"
 msgstr ""
 
-#: ../../include/nav.php:277
+#: ../../include/nav.php:267
 msgid "@name, #tag, ?doc, content"
 msgstr ""
 
-#: ../../include/nav.php:278
+#: ../../include/nav.php:268
 msgid "Please wait..."
 msgstr ""
 
-#: ../../include/nav.php:280
+#: ../../include/nav.php:271
 msgid "Add Apps"
+msgstr ""
+
+#: ../../include/nav.php:272
+msgid "Arrange Apps"
+msgstr ""
+
+#: ../../include/nav.php:273
+msgid "Toggle System Apps"
 msgstr ""
 
 #: ../../include/photos.php:115
@@ -13207,7 +13300,7 @@ msgstr ""
 msgid "Unable to verify site signature for %s"
 msgstr ""
 
-#: ../../include/zot.php:3764
+#: ../../include/zot.php:3762
 msgid "invalid target signature"
 msgstr ""
 
@@ -13238,11 +13331,11 @@ msgstr ""
 msgid "Channels not in any privacy group"
 msgstr ""
 
-#: ../../include/connections.php:127
+#: ../../include/connections.php:128
 msgid "New window"
 msgstr ""
 
-#: ../../include/connections.php:128
+#: ../../include/connections.php:129
 msgid "Open the selected location in a different window or browser tab"
 msgstr ""
 

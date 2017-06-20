@@ -1339,6 +1339,14 @@ main.fullscreen .section-content-wrapper-np {
 }
 /* bootstrap overrides */
 
+.btn,
+.rounded-top,
+.form-control,
+.nav-pills .nav-link,
+.nav-tabs .nav-link {
+	border-radius: $radius !important;
+}
+
 blockquote {
 	font-size: 1rem;
 	font-style: italic;
@@ -1350,10 +1358,6 @@ blockquote {
 .dropdown-menu {
 	color: $font_colour;
 	font-size: 0.9rem;
-	border-radius: $radius;
-}
-
-.dropdown-menu img {
 	border-radius: $radius;
 }
 
@@ -1491,7 +1495,7 @@ dl.bb-dl > dd > li {
 .form-group.checkbox > div label {
     display: block; overflow: hidden; cursor: pointer;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: $radius;
     margin:0px;
 	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
 	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;

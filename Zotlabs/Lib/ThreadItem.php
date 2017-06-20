@@ -745,7 +745,7 @@ class ThreadItem {
 			'$cipher' => $conv->get_cipher(),
 			'$sourceapp' => \App::$sourcename,
 			'$observer' => get_observer_hash(),
-			'$anoncomments' => perm_is_allowed($conv->get_profile_owner(),'','post_comments'),
+			'$anoncomments' => (($conv->get_mode() === 'channel' && perm_is_allowed($conv->get_profile_owner(),'','post_comments')) ? true : false),
 			'$anonname' => [ 'anonname', t('Your full name (required)'),'','' ],
 			'$anonmail' => [ 'anonmail', t('Your email address (required)'),'','' ],
 			'$anonurl'  => [ 'anonurl',  t('Your website URL (optional)'),'','' ]

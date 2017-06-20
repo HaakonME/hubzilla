@@ -270,7 +270,8 @@ class Notifier {
 
 			// Check for non published items, but allow an exclusion for transmitting hidden file activities
 
-			if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed']) || 
+			if(intval($target_item['item_unpublished']) || intval($target_item['item_delayed']) ||
+				intval($target_item['item_blocked']) || 
 				( intval($target_item['item_hidden']) && ($target_item['obj_type'] !== ACTIVITY_OBJ_FILE))) {
 				logger('notifier: target item not published, so not forwardable', LOGGER_DEBUG);
 				return;

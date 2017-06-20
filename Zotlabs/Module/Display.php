@@ -308,12 +308,12 @@ class Display extends \Zotlabs\Web\Controller {
 	
 	
 		if ($checkjs->disabled()) {
-			$o .= conversation($a, $items, 'display', $update, 'traditional');
+			$o .= conversation($items, 'display', $update, 'traditional');
 			if ($items[0]['title'])
 				\App::$page['title'] = $items[0]['title'] . " - " . \App::$page['title'];
 		} 
 		else {
-			$o .= conversation($a, $items, 'display', $update, 'client');
+			$o .= conversation($items, 'display', $update, 'client');
 		}
 	
 		if($updateable) {

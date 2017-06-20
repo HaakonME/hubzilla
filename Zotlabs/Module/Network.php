@@ -551,7 +551,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 		$mode = (($nouveau) ? 'network-new' : 'network');
 	
-		$o .= conversation($a,$items,$mode,$update,$page_mode);
+		$o .= conversation($items,$mode,$update,$page_mode);
 	
 		if(($items) && (! $update))
 			$o .= alt_pager($a,count($items));

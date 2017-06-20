@@ -68,7 +68,7 @@ class Moderate extends \Zotlabs\Web\Controller {
 			$items = array();
 		}
 
-		$o = conversation($a,$items,'moderate',false,'traditional');
+		$o = conversation($items,'moderate',false,'traditional');
 
 		return $o;
 

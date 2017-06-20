@@ -153,7 +153,7 @@ class ThreadItem {
 			$response_verbs[] = 'attendyes';
 			$response_verbs[] = 'attendno';
 			$response_verbs[] = 'attendmaybe';
-			if($this->is_commentable()) {
+			if($this->is_commentable() && $observer) {
 				$isevent = true;
 				$attend = array( t('I will attend'), t('I will not attend'), t('I might attend'));
 			}
@@ -164,7 +164,7 @@ class ThreadItem {
 			$response_verbs[] = 'agree';
 			$response_verbs[] = 'disagree';
 			$response_verbs[] = 'abstain';
-			if($this->is_commentable()) {
+			if($this->is_commentable() && $observer) {
 				$conlabels = array( t('I agree'), t('I disagree'), t('I abstain'));
 				$canvote = true;
 			}
@@ -265,7 +265,7 @@ class ThreadItem {
 		if(($item['obj_type'] === ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_channel())
 			$has_event = true;
 
-		if($this->is_commentable()) {
+		if($this->is_commentable() && $observer) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 		}
@@ -371,7 +371,7 @@ class ThreadItem {
 			'has_tags' => $has_tags,
 			'reactions' => $this->reactions,
 // Item toolbar buttons
-			'emojis'   => (($this->is_toplevel() && $this->is_commentable() && feature_enabled($conv->get_profile_owner(),'emojis')) ? '1' : ''),
+			'emojis'   => (($this->is_toplevel() && $this->is_commentable() && $observer && feature_enabled($conv->get_profile_owner(),'emojis')) ? '1' : ''),
 			'like'      => $like,
 			'dislike'   => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike : ''),
 			'share'     => $share,

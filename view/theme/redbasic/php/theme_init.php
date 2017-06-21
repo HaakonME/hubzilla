@@ -8,7 +8,7 @@ head_add_css('/library/datetimepicker/jquery.datetimepicker.css');
 head_add_css('/library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css');
 require_once('view/php/theme_init.php');
 
-head_add_js('/library/popper/popper.js');
+head_add_js('/library/popper/popper.min.js');
 head_add_js('/library/bootstrap/js/bootstrap.min.js');
 head_add_js('/library/bootbox/bootbox.min.js');
 head_add_js('/library/bootstrap-tagsinput/bootstrap-tagsinput.js');

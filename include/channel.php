@@ -2373,5 +2373,6 @@ function anon_identity_init($reqvars) {
 	}
 
 	return $x[0];
-
 }
+
+

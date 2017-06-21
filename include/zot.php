@@ -3584,6 +3584,11 @@ function import_author_zot($x) {
 
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
 
+	if(array_key_exists('url',$x)) {
+		$m = parse_url($x['url']);
+		$desturl = $m['scheme'] . '://' . $m['host'];
+	}
+
 	$r1 = q("select hubloc_url, hubloc_updated, site_dead from hubloc left join site on
 		hubloc_url = site_url where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_primary = 1 limit 1",
 		dbesc($x['guid']),
@@ -3625,14 +3630,16 @@ function import_author_zot($x) {
 		);
 		if($r) {
 			logger('found another site that is not dead: ' . $r[0]['hubloc_url'], LOGGER_DEBUG,LOG_INFO);
-			$x['url'] = $r[0]['hubloc_url'];
+			$desturl = $r[0]['hubloc_url'];
 		}
 		else {
 			return $hash;
 		}
 	} 
 
-	$them = array('hubloc_url' => $x['url'], 'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
+
+
+	$them = array('hubloc_url' => $desturl, 'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
 	if(zot_refresh($them))
 		return $hash;
 

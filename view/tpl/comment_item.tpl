@@ -10,6 +10,14 @@
 				<input type="hidden" name="return" value="{{$return_path}}" />
 				<input type="hidden" name="jsreload" value="{{$jsreload}}" />
 				<input type="hidden" name="preview" id="comment-preview-inp-{{$id}}" value="0" />
+				{{if $anoncomments && ! $observer}}
+				<div id="comment-edit-anon-{{$id}}" style="display: none;" >
+					{{include file="field_input.tpl" field=$anonname}}
+					{{include file="field_input.tpl" field=$anonmail}}
+					{{include file="field_input.tpl" field=$anonurl}}
+					{{$anon_extras}}
+				</div>
+				{{/if}}
 				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpenUI(this,{{$id}});" onBlur="commentCloseUI(this,{{$id}});" ondragenter="linkdropper(event);" ondragleave="linkdropexit(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >{{$comment}}</textarea>
 				{{if $qcomment}}
 					<select id="qcomment-select-{{$id}}" name="qcomment-{{$id}}" class="qcomment" onchange="qCommentInsert(this,{{$id}});" >

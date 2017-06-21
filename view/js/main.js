@@ -13,6 +13,7 @@ function commentOpenUI(obj, id) {
 			$("#comment-edit-text-" + id).attr('tabindex','9');
 			$("#comment-edit-submit-" + id).attr('tabindex','10');
 			$("#comment-tools-" + id).show();
+			$("#comment-edit-anon-" + id).show();
 		}
 	};
 
@@ -41,6 +42,7 @@ function commentOpen(obj, id) {
 		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 		$("#mod-cmnt-wrap-" + id).show();
+		$("#comment-edit-anon-" + id).show();
 		openMenu("comment-tools-" + id);
 		return true;
 	}

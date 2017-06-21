@@ -50,7 +50,7 @@ require_once('include/attach.php');
 
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '2.5.3' );
+define ( 'STD_VERSION',             '2.5.4' );
 define ( 'ZOT_REVISION',            '1.2' );
 
 define ( 'DB_UPDATE_VERSION',       1191  );
@@ -499,6 +499,7 @@ define ( 'ACTIVITY_POKE',        NAMESPACE_ZOT . '/activity/poke' );
 define ( 'ACTIVITY_MOOD',        NAMESPACE_ZOT . '/activity/mood' );
 
 define ( 'ACTIVITY_OBJ_COMMENT', NAMESPACE_ACTIVITY_SCHEMA . 'comment' );
+define ( 'ACTIVITY_OBJ_ACTIVITY',NAMESPACE_ACTIVITY_SCHEMA . 'activity' );
 define ( 'ACTIVITY_OBJ_NOTE',    NAMESPACE_ACTIVITY_SCHEMA . 'note' );
 define ( 'ACTIVITY_OBJ_PERSON',  NAMESPACE_ACTIVITY_SCHEMA . 'person' );
 define ( 'ACTIVITY_OBJ_PHOTO',   NAMESPACE_ACTIVITY_SCHEMA . 'photo' );

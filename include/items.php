@@ -938,7 +938,7 @@ function import_author_unknown($x) {
 		$photos = import_xchan_photo($x['photo']['src'],$x['url']);
 
 		if($photos) {
-			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'unknown'",
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' and xchan_network = 'unknown'",
 				dbesc(datetime_convert()),
 				dbesc($photos[0]),
 				dbesc($photos[1]),

@@ -2323,3 +2323,73 @@ function channel_codeallowed($channel_id) {
 
 	return false;
 }
+
+function anon_identity_init($reqvars) {
+
+	$x = [ 'request_vars' => $reqvars, 'xchan' => null, 'success' => 'unset' ];
+	call_hooks('anon_identity_init',$x);
+	if($x['success'] !== 'unset' && intval($x['success']) && $x['xchan'])
+		return $x['xchan'];
+
+	// allow a captcha handler to over-ride 
+	if($x['success'] !== 'unset' && (intval($x['success']) === 0))
+		return false;	
+	
+
+	$anon_name  = strip_tags(trim($reqvars['anonname']));
+	$anon_email = strip_tags(trim($reqvars['anonmail']));
+	$anon_url   = strip_tags(trim($reqvars['anonurl']));
+
+	if(! ($anon_name && $anon_email)) {
+		logger('anonymous commenter did not complete form');
+		return false;
+	}
+
+	if(! validate_email($anon_email)) {
+		logger('enonymous email not valid');
+		return false;
+	}
+
+	if(! $anon_url)
+		$anon_url = z_root();
+
+	$hash = hash('md5',$anon_email);
+
+	$x = q("select * from xchan where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' limit 1",
+		dbesc($anon_email),
+		dbesc($hash)
+	);
+
+	if(! $x) {
+		xchan_store_lowlevel([ 
+			'xchan_guid'    => $anon_email,
+			'xchan_hash'    => $hash,
+			'xchan_name'    => $anon_name,
+			'xchan_url'     => $anon_url,
+			'xchan_network' => 'unknown',
+			'xchan_name_date' => datetime_convert()
+		]);
+			
+
+		$x = q("select * from xchan where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' limit 1",
+			dbesc($anon_email),
+			dbesc($hash)
+		);
+
+		$photo = z_root() . '/' . get_default_profile_photo(300);
+		$photos = import_xchan_photo($photo,$hash);
+		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_guid = '%s' and xchan_hash = '%s' and xchan_network = 'unknown' ",
+			dbesc(datetime_convert()),
+			dbesc($photos[0]),
+			dbesc($photos[1]),
+			dbesc($photos[2]),
+			dbesc($photos[3]),
+			dbesc($anon_email),
+			dbesc($hash)
+		);
+
+	}
+
+	return $x[0];
+
+}

@@ -259,7 +259,7 @@ function get_atom_elements($feed, $item, &$author) {
 	if(substr($author['author_link'],-1,1) == '/')
 		$author['author_link'] = substr($author['author_link'],0,-1);
 
-	$res['mid'] = unxmlify($item->get_id());
+	$res['mid'] = normalise_id(unxmlify($item->get_id()));
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -354,6 +354,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// No photo/profile-link on the item - look at the feed level
 
+
 	if((! (x($author,'author_link'))) || (! (x($author,'author_photo')))) {
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10,'author');
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -390,7 +391,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	$rawcnv = $item->get_item_tags(NAMESPACE_OSTATUS, 'conversation');
 	if($rawcnv) {
-		$ostatus_conversation = unxmlify($rawcnv[0]['attribs']['']['ref']);
+		$ostatus_conversation = normalise_id(unxmlify($rawcnv[0]['attribs']['']['ref']));
 		set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
 	}
 
@@ -602,6 +603,10 @@ function get_atom_elements($feed, $item, &$author) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
+			if(($ostatus_protocol) && (strpos($type,'image') === 0) && (strpos($res['body'],$link) === false) && (strpos($link,'http') === 0)) {
+				$res['body'] .= "\n\n" . '[img]' . $link . '[/img]';
+			}
+
 			$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 		}
 	}
@@ -683,7 +688,10 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['target'] = $obj;
 	}
 
-	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE) {
+	
+
+	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE
+		&& array_key_exists('obj_type',$res) && $res['obj_type'] === ACTIVITY_OBJ_NOTE) {
 		feed_get_reshare($res,$item);
 	}
 
@@ -713,14 +721,14 @@ function feed_get_reshare(&$res,$item) {
 
 	if($rawobj) {
 
-		$rawauthor = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+		$rawauthor = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['author'];
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']) {
-			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name']);
+			$share['author'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['name'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']) {
-			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri']);
+			$share['profile'] = unxmlify($rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['uri'][0]['data']);
 		}
 
 		if($rawauthor && $rawauthor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link']) {
@@ -744,9 +752,10 @@ function feed_get_reshare(&$res,$item) {
 
 
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'link') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['link'])
-			$share['link'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
+			$share['links'] = encode_rel_links($child[SIMPLEPIE_NAMESPACE_ATOM_10]['link']);
 
-		$rawcreated = $rawobj->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'published');
+		$rawcreated = $rawobj[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['published'];
+
 		if($rawcreated)
 			$share['created'] = unxmlify($rawcreated[0]['data']);
 		else
@@ -766,13 +775,19 @@ function feed_get_reshare(&$res,$item) {
 			}
 		}
 	
-		$attach = $rawobj->get_enclosures();
+		$attach = $share['links'];
 		if($attach) {
 			foreach($attach as $att) {
-				$len   = intval($att->get_length());
-				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_link()))));
-				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_title()))));
-				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att->get_type()))));
+				if($att['rel'] === 'alternate') {
+					$share['alternate'] = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+					continue;
+				}
+				if($att['rel'] !== 'enclosure')
+					continue;
+				$len   = intval($att['length']);
+				$link  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['href']))));
+				$title = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['title']))));
+				$type  = str_replace(array(',','"'),array('%2D','%22'),notags(trim(unxmlify($att['type']))));
 				if(strpos($type,';'))
 					$type = substr($type,0,strpos($type,';'));
 				if((! $link) || (strpos($link,'http') !== 0))
@@ -792,11 +807,12 @@ function feed_get_reshare(&$res,$item) {
 		$res['body'] = "[share author='" . urlencode($share['author']) . 
 			"' profile='"    . $share['profile'] .
 			"' avatar='"     . $share['avatar']  .
-			"' link='"       . $share['link']    .
+			"' link='"       . $share['alternate']    .
 			"' posted='"     . $share['created'] . 
 			"' message_id='" . $share['message_id'] . "']";
-			$o .= $body;
-			$o .= "[/share]";
+
+		$res['body'] .= $body;
+		$res['body'] .= "[/share]";
 	}
 
 }
@@ -818,6 +834,10 @@ function encode_rel_links($links) {
 		$l = array();
 		if($link['attribs']['']['rel'])
 			$l['rel'] =  $link['attribs']['']['rel'];
+		if($link['attribs']['']['length'])
+			$l['length'] =  $link['attribs']['']['length'];
+		if($link['attribs']['']['title'])
+			$l['title'] =  $link['attribs']['']['title'];
 		if($link['attribs']['']['type'])
 			$l['type'] =  $link['attribs']['']['type'];
 		if($link['attribs']['']['href'])
@@ -938,7 +958,6 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
-			$item_id = normalise_id($item->get_id());
 
 			logger('processing ' . $item->get_id(), LOGGER_DEBUG);
 
@@ -955,12 +974,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				// Have we seen it? If not, import it.
 
-				$item_id  = normalise_id($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if($datarray['mid'])
-					$datarray['mid'] = normalise_id($item->get_id());
+				if(! $datarray['mid'])
+					continue;
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -987,7 +1005,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray['owner_xchan'] = $contact['xchan_hash'];
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
-					dbesc($item_id),
+					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
 
@@ -1010,6 +1028,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$pmid = '';
 				$conv_id = get_iconfig($datarray,'ostatus','conversation');
 
+				// match conversations - first try ostatus:conversation
+				// next try thr:in_reply_to
+
 				if($conv_id) {
 					$c = q("select parent_mid from item left join iconfig on item.id = iconfig.iid where iconfig.cat = 'ostatus' and iconfig.k = 'conversation' and iconfig.v = '%s' and item.uid = %d order by item.id limit 1",
 						dbesc($conv_id),
@@ -1020,14 +1041,14 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						$datarray['parent_mid'] = $pmid;
 					}
 				}
-				else {
-					$x = q("select mid from item where mid = '%s' and uid = %d limit 1",
+				if(! $pmid) {
+					$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
 						dbesc($parent_mid),
 						intval($importer['channel_id'])
 					);
 				
 					if($x) {
-						$pmid = $x[0]['mid'];
+						$pmid = $x[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
 					}
 				}
@@ -1056,12 +1077,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				// Head post of a conversation. Have we seen it? If not, import it.
 
-				$item_id  = normalise_id($item->get_id());
 				$author = array();
 				$datarray = get_atom_elements($feed,$item,$author);
 
-				if($datarray['mid'])
-					$datarray['mid'] = normalise_id($item->get_id());
+				if(! $datarray['mid'])
+					continue;
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
@@ -1116,7 +1136,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 
 				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
-					dbesc($item_id),
+					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
 
@@ -1136,7 +1156,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					continue;
 				}
 
-				$datarray['parent_mid'] = $item_id;
+				$datarray['parent_mid'] = $datarray['mid'];
 				$datarray['uid'] = $importer['channel_id'];
 				$datarray['aid'] = $importer['channel_account_id'];
 
@@ -1505,6 +1525,10 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
+		// ensure it's a legal uri and not just a message-id
+		if(! strpos($parent_item,':'))
+			$parent_item = 'X-ZOT:' . $parent_item;
+
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
@@ -1720,3 +1744,4 @@ function asencode_person($p) {
 
 	return $ret;
 }
+

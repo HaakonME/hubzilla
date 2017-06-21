@@ -3584,6 +3584,9 @@ function import_author_zot($x) {
 
 	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
 
+	// also - this function may get passed a profile url as 'url' and zot_refresh wants a hubloc_url (site baseurl),
+	// so deconstruct the url (if we have one) and rebuild it with just the baseurl components.
+
 	if(array_key_exists('url',$x)) {
 		$m = parse_url($x['url']);
 		$desturl = $m['scheme'] . '://' . $m['host'];

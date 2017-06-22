@@ -1340,11 +1340,15 @@ main.fullscreen .section-content-wrapper-np {
 /* bootstrap overrides */
 
 .btn,
-.rounded-top,
 .form-control,
 .nav-pills .nav-link,
 .nav-tabs .nav-link {
 	border-radius: $radius;
+}
+
+.rounded-top {
+	border-top-left-radius: $radius !important;
+	border-top-right-radius: $radius !important;
 }
 
 blockquote {

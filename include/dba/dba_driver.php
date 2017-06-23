@@ -442,6 +442,20 @@ function db_getfunc($f) {
 	return $f;
 }
 
+function db_load_file($f) {
+	// db errors should get logged to the logfile
+	$str = @file_get_contents($f);
+	$arr = explode(';', $str);
+	if($arr) {
+		foreach($arr as $a) {
+			if(strlen(trim($a))) {
+				$r = dbq(trim($a));
+			}
+		}
+	}
+}
+
+
 // The logger function may make DB calls internally to query the system logging parameters.
 // This can cause a recursion if database debugging is enabled.
 // So this function preserves the current database debugging state and then turns it off

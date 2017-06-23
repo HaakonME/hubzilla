@@ -12,10 +12,6 @@ class Conversations {
 		if(argc() > 1) {
 
 			switch(argv(1)) {
-				case 'combined':
-					$mailbox = 'combined';
-					$header = t('Conversations');
-					break;
 				case 'inbox':
 					$mailbox = 'inbox';
 					$header = t('Received Messages');

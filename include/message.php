@@ -104,38 +104,9 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 
 		// create a new conversation
 
-		$conv_guid = random_string();
-
-		$recip = q("select * from xchan where xchan_hash = '%s' limit 1",
-			dbesc($recipient)
-		);
-		if($recip)
-			$recip_handle = $recip[0]['xchan_addr'];
-
-		$sender_handle = channel_reddress($channel);
-
-		$handles = $recip_handle . ';' . $sender_handle;
-
-		if($subject)
-			$nsubject = str_rot47(base64url_encode($subject));
-
-		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
-			intval(local_channel()),
-			dbesc($conv_guid),
-			dbesc($sender_handle),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($nsubject),
-			dbesc($handles)
-		);
-
-		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
-			dbesc($conv_guid),
-			intval(local_channel())
-		);
-		if($r) {
-			$retconv = $r[0];
-			$retconv['subject'] = base64url_decode(str_rot47($retconv['subject']));
+		$retconv = create_conversation($channel,$recipient,$subject);	
+		if($retconv) {
+			$conv_guid = $retconv['guid'];
 		}
 	}
 
@@ -146,7 +117,6 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 		);
 		if($r) {
 			$retconv = $r[0];
-			$retconv['subject'] = base64url_decode(str_rot47($retconv['subject']));
 		}
 	}
 
@@ -154,6 +124,12 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 		$ret['message'] = 'conversation not found';
 		return $ret;
 	}
+
+	$c = q("update conv set updated = '%s' where guid = '%s' and uid = %d",
+		dbesc(datetime_convert()),
+		dbesc($conv_guid),
+		intval(local_channel())
+	);
 
 	// generate a unique message_id
 
@@ -284,6 +260,49 @@ function send_message($uid = 0, $recipient = '', $body = '', $subject = '', $rep
 
 }
 
+function create_conversation($channel,$recipient,$subject) {
+
+	// create a new conversation
+
+	$conv_guid = random_string();
+
+	$recip = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($recipient)
+	);
+	if($recip)
+		$recip_handle = $recip[0]['xchan_addr'];
+
+	$sender_handle = channel_reddress($channel);
+
+	$handles = $recip_handle . ';' . $sender_handle;
+
+	if($subject)
+		$nsubject = str_rot47(base64url_encode($subject));
+
+	$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
+		intval($channel['channel_id']),
+		dbesc($conv_guid),
+		dbesc($sender_handle),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc($nsubject),
+		dbesc($handles)
+	);
+
+	$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
+		dbesc($conv_guid),
+		intval($channel['channel_id'])
+	);
+	
+	return $r[0];
+
+}
+
+
+
+
+
+
 function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 
 	$where = '';
@@ -315,6 +334,8 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 				break;
 
 			case 'combined':
+			default:
+
 				$parents = q("SELECT parent_mid FROM mail WHERE mid = parent_mid AND channel_id = %d ORDER BY created DESC",
 					dbesc($local_channel)
 				);
@@ -326,15 +347,21 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 
 	}
 
+	$r = null;
+
 	if($parents) {
 		foreach($parents as $parent) {
-			$all[] = q("SELECT * FROM mail WHERE parent_mid = '%s' AND channel_id = %d ORDER BY created DESC",
+			$all = q("SELECT * FROM mail WHERE parent_mid = '%s' AND channel_id = %d ORDER BY created DESC limit 1",
 				dbesc($parent['parent_mid']),
 				dbesc($local_channel)
 			);
+
+			if($all) {
+				foreach($all as $single) {
+					$r[] = $single;
+				}
+			}
 		}
-		foreach($all as $single)
-			$r[] = $single[0];
 	}
 	else {
 		$r = q($sql);

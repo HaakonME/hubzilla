@@ -8,6 +8,7 @@ use Zotlabs\Lib as Zlib;
 require_once('include/bbcode.php');
 require_once('include/oembed.php');
 require_once('include/crypto.php');
+require_once('include/message.php');
 require_once('include/feedutils.php');
 require_once('include/photo/photo_driver.php');
 require_once('include/permissions.php');
@@ -2932,6 +2933,8 @@ function mail_store($arr) {
 		return 0;
 	}
 
+	$channel = channelx_by_n($arr['channel_id']);
+
 	if(! $arr['mail_obscured']) {
 		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false))
 			$arr['body'] = escape_tags($arr['body']);
@@ -2962,10 +2965,33 @@ function mail_store($arr) {
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 	$arr['mail_raw']      = ((x($arr,'mail_raw'))      ? intval($arr['mail_raw'])            : 0 );
 
-	if(! $arr['parent_mid']) {
+	
+
+	if($arr['parent_mid']) {
+		$parent_item = q("select * from mail where mid = '%s' and channel_id = %d limit 1",
+			dbesc($arr['parent_mid']),
+			intval($arr['channel_id'])
+		);
+		if(($parent_item) && (! $arr['conv_guid'])) {
+			$arr['conv_guid'] = $parent_item[0]['conv_guid']; 
+		}
+	}
+	else {
 		logger('mail_store: missing parent');
 		$arr['parent_mid'] = $arr['mid'];
 	}
+
+	if($arr['from_xchan'] === $channel['channel_hash'])
+		$conversant = $arr['to_xchan'];
+	else
+		$conversant = $arr['from_xchan'];
+
+
+	if(! $arr['conv_guid']) {
+		$x = create_conversation($channel,$conversant,(($arr['title']) ? base64url_decode(str_rot47($arr['title'])) : ''));
+		$arr['conv_guid'] = (($x) ? $x['guid'] : '');
+	}
+
 
 	$r = q("SELECT id FROM mail WHERE mid = '%s' AND channel_id = %d LIMIT 1",
 		dbesc($arr['mid']),
@@ -3029,6 +3055,14 @@ function mail_store($arr) {
 		);
 
 		Zlib\Enotify::submit($notif_params);
+	}
+
+	if($arr['conv_guid']) {
+		$c = q("update conv set updated = '%s' where guid = '%s' and uid = %d",
+			dbesc(datetime_convert()),
+			dbesc($arr['conv_guid']),
+			intval($arr['channel_id'])
+		);
 	}
 
 	call_hooks('post_mail_end',$arr);

@@ -54,7 +54,7 @@ class Conversations {
 					'body'         => $rr['body'],
 					'date'         => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], 'c'),
 					'seen'         => $rr['seen'],
-					'selected'     => ((argv(2)) ? (argv(2) == $rr['id']) : ($r[0]['id'] == $rr['id']))
+					'selected'     => ((argc() == 2) ? (intval(argv(1)) == intval($rr['id'])) : ($r[0]['id'] == $rr['id']))
 				);
 			}
 

@@ -1,6 +1,7 @@
 <?php
-
 namespace Zotlabs\Module;
+
+require_once('include/event.php');
 
 class Cdav extends \Zotlabs\Web\Controller {
 
@@ -762,7 +763,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 
 		require_once 'vendor/autoload.php';
 
-		head_add_css('/addon/cdav/view/css/cdav.css');
+		head_add_css('cdav.css');
 
 		if(argv(1) === 'calendar') {
 			$caldavBackend = new \Sabre\CalDAV\Backend\PDO($pdo);
@@ -773,7 +774,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 		if(argc() == 2 && argv(1) === 'calendar') {
 
 			head_add_css('/library/fullcalendar/fullcalendar.css');
-			head_add_css('/addon/cdav/view/css/cdav_calendar.css');
+			head_add_css('cdav_calendar.css');
 
 			head_add_js('/library/moment/moment.min.js', 1);
 			head_add_js('/library/fullcalendar/fullcalendar.min.js', 1);
@@ -811,7 +812,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 			$description = ['description', t('Description')];
 			$location = ['location', t('Location')];
 
-			$o .= replace_macros(get_markup_template('cdav_calendar.tpl', 'addon/cdav'), [
+			$o .= replace_macros(get_markup_template('cdav_calendar.tpl'), [
 				'$sources' => $sources,
 				'$color' => $color,
 				'$lang' => \App::$language,
@@ -979,7 +980,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 			if(!$displayname)
 				return;
 
-			head_add_css('/addon/cdav/view/css/cdav_addressbook.css');
+			head_add_css('cdav_addressbook.css');
 
 			$o = '';
 
@@ -1102,7 +1103,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 				usort($cards, function($a, $b) { return strcasecmp($a['fn'], $b['fn']); });
 			}
 
-			$o .= replace_macros(get_markup_template('cdav_addressbook.tpl', 'addon/cdav'), [
+			$o .= replace_macros(get_markup_template('cdav_addressbook.tpl'), [
 				'$id' => $id,
 				'$cards' => $cards,
 				'$displayname' => $displayname,

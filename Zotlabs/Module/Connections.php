@@ -258,6 +258,7 @@ class Connections extends \Zotlabs\Web\Controller {
 					$contacts[] = array(
 						'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 						'edit_hover' => t('Edit connection'),
+						'edit' => t('Edit'),
 						'delete_hover' => t('Delete connection'),
 						'id' => $rr['abook_id'],
 						'thumb' => $rr['xchan_photo_m'], 

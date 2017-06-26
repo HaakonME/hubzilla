@@ -495,7 +495,7 @@ function guess_image_type($filename, $headers = '') {
 			}
 		}
 
-		if(is_null($type) && (strpos($filename,'http:') === false)) {
+		if(is_null($type) && (strpos($filename,'http') === false)) {
 			$size = getimagesize($filename);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();

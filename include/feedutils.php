@@ -691,7 +691,7 @@ function get_atom_elements($feed, $item, &$author) {
 	
 
 	if(array_key_exists('verb',$res) && $res['verb'] === ACTIVITY_SHARE
-		&& array_key_exists('obj_type',$res) && $res['obj_type'] === ACTIVITY_OBJ_NOTE) {
+		&& array_key_exists('obj_type',$res) && in_array($res['obj_type'], [ ACTIVITY_OBJ_NOTE, ACTIVITY_OBJ_COMMENT ] )) {
 		feed_get_reshare($res,$item);
 	}
 

@@ -495,11 +495,21 @@ function guess_image_type($filename, $headers = '') {
 			}
 		}
 
-		if(is_null($type)) {
+		if(is_null($type) && (strpos($filename,'http:') === false)) {
 			$size = getimagesize($filename);
 			$ph = photo_factory('');
 			$types = $ph->supportedTypes();
 			$type = ((array_key_exists($size['mime'], $types)) ? $size['mime'] : 'image/jpeg');
+		}
+		if(is_null($type)) {
+			if(strpos(strtolower($filename),'jpg') !== false)
+				$type = 'image/jpeg';
+			elseif(strpos(strtolower($filename),'jpeg') !== false)
+				$type = 'image/jpeg';
+			elseif(strpos(strtolower($filename),'gif') !== false)
+				$type = 'image/gif';
+			elseif(strpos(strtolower($filename),'png') !== false)
+				$type = 'image/png';
 		}
 
 	}

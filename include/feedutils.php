@@ -603,7 +603,7 @@ function get_atom_elements($feed, $item, &$author) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
-			if(($ostatus_protocol) && (strpos($type,'image') === 0) && (strpos($res['body'],$link) === false) && (strpos($link,'http') === 0)) {
+			if(($ostatus_protocol) && (strpos($type,'image') === 0) && (strpos($res['body'], ']' . $link . '[/img]') === false) && (strpos($link,'http') === 0)) {
 				$res['body'] .= "\n\n" . '[img]' . $link . '[/img]';
 			}
 

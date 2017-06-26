@@ -91,7 +91,8 @@ class Cloud extends \Zotlabs\Web\Controller {
 		$server->exec();
 
 //		ob_end_flush();
-
+		if($browser->build_page)
+			construct_page();
 		killme();
 	}
 

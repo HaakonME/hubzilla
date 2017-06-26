@@ -116,7 +116,7 @@ class Chanview extends \Zotlabs\Web\Controller {
 				);
 				if($c)
 					$connected = true;
-
+			}
 		}
 		
 		// We will load the chanview template if it's a foreign network, 

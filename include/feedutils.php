@@ -603,10 +603,17 @@ function get_atom_elements($feed, $item, &$author) {
 			if(! $type)
 				$type = 'application/octet-stream';
 
-			if(($ostatus_protocol) && (strpos($type,'image') === 0) && (strpos($res['body'], ']' . $link . '[/img]') === false) && (strpos($link,'http') === 0)) {
-				$res['body'] .= "\n\n" . '[img]' . $link . '[/img]';
+			if($ostatus_protocol)  {
+				if((strpos($type,'image') === 0) && (strpos($res['body'], ']' . $link . '[/img]') === false) && (strpos($link,'http') === 0)) {
+					$res['body'] .= "\n\n" . '[img]' . $link . '[/img]';
+				}
+				if((strpos($type,'video') === 0) && (strpos($res['body'], ']' . $link . '[/video]') === false) && (strpos($link,'http') === 0)) {
+					$res['body'] .= "\n\n" . '[video]' . $link . '[/video]';
+				}
+				if((strpos($type,'audio') === 0) && (strpos($res['body'], ']' . $link . '[/audio]') === false) && (strpos($link,'http') === 0)) {
+					$res['body'] .= "\n\n" . '[audio]' . $link . '[/audio]';
+				}
 			}
-
 			$res['attach'][] = array('href' => $link, 'length' => $len, 'type' => $type, 'title' => $title );
 		}
 	}
@@ -798,8 +805,14 @@ function feed_get_reshare(&$res,$item) {
 				if(! $type)
 					$type = 'application/octet-stream';
 
-				if((strpos($type,'image') === 0) && (strpos($body,$link) === false) && (strpos($link,'http') === 0)) {
+				if((strpos($type,'image') === 0) && (strpos($body, ']' . $link . '[/img]') === false) && (strpos($link,'http') === 0)) {
 					$body .= "\n\n" . '[img]' . $link . '[/img]';
+				}
+				if((strpos($type,'video') === 0) && (strpos($body, ']' . $link . '[/video]') === false) && (strpos($link,'http') === 0)) {
+					$body .= "\n\n" . '[video]' . $link . '[/video]';
+				}
+				if((strpos($type,'audio') === 0) && (strpos($body, ']' . $link . '[/audio]') === false) && (strpos($link,'http') === 0)) {
+					$body .= "\n\n" . '[audio]' . $link . '[/audio]';
 				}
 			}
 		}

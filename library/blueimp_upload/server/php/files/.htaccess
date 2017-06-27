@@ -1,8 +1,16 @@
-# The following directives force the content-type application/octet-stream
-# and force browsers to display a download dialog for non-image files.
-# This prevents the execution of script files in the context of the website:
+# To enable the Headers module, execute the following command and reload Apache:
+# sudo a2enmod headers
+
+# The following directives prevent the execution of script files
+# in the context of the website.
+# They also force the content-type application/octet-stream and
+# force browsers to display a download dialog for non-image files.
+SetHandler default-handler
 ForceType application/octet-stream
 Header set Content-Disposition attachment
+
+# The following unsets the forced type and Content-Disposition headers
+# for known image files:
 <FilesMatch "(?i)\.(gif|jpe?g|png)$">
 	ForceType none
 	Header unset Content-Disposition

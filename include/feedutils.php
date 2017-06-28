@@ -1216,11 +1216,13 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 function feed_conversation_fetch($importer,$contact,$parent_link) {
 
+	logger('parent_link: ' . $parent_link, LOGGER_DEBUG, LOG_INFO);
+
 	$link = '';
 
 	// GNU-Social flavoured feeds
 	if(strpos($parent_link,'/notice/')) {
-		$link = str_replace('/notice/','/api/statuses/show',$link) . '.atom';
+		$link = str_replace('/notice/','/api/statuses/show/',$link) . '.atom';
 	} 
 
 	// Mastodon flavoured feeds

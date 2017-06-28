@@ -9,6 +9,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 	function init() {
 	
 		$uri = urldecode(notags(trim($_GET['uri'])));
+		$subject = $uri;
 		logger('xrd: ' . $uri,LOGGER_DEBUG);
 	
 		$resource = $uri;
@@ -47,6 +48,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 		$o = replace_macros(get_markup_template('xrd_person.tpl'), array(
 			'$nick'        => $r[0]['channel_address'],
 			'$accturi'     => $resource,
+			'$subject'     => $subject,
 			'$aliases'     => $aliases,
 			'$profile_url' => z_root() . '/channel/'       . $r[0]['channel_address'],
 			'$hcard_url'   => z_root() . '/hcard/'         . $r[0]['channel_address'],

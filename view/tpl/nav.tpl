@@ -83,7 +83,7 @@
 			</a>
 			<div id="nav-network-menu" class="dropdown-menu" rel="network">
 				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>
-				<a class="dropdown-item" id="nav-network-mark-all"href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a>
+				<a class="dropdown-item" id="nav-network-mark-all" href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a>
 				{{$emptynotifications}}
 			</div>
 		</li>

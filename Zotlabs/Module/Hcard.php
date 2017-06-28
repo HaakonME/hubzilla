@@ -14,6 +14,8 @@ class Hcard extends \Zotlabs\Web\Controller {
 	        return;
 	    }
 	
+		logger('hcard_request: ' . $which, LOGGER_DEBUG);
+
 	    $profile = '';
 	    $channel = \App::get_channel();
 	

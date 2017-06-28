@@ -971,6 +971,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
+			$parent_link = '';
 
 			logger('processing ' . $item->get_id(), LOGGER_DEBUG);
 
@@ -978,6 +979,9 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
 				$parent_mid = normalise_id($rawthread[0]['attribs']['']['ref']);
+			}
+			if(isset($rawthread[0]['attribs']['']['href'])) {
+				$parent_link = $rawthread[0]['attribs']['']['href'];
 			}
 
 			if($is_reply) {
@@ -1050,7 +1054,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						intval($importer['channel_id'])
 					);
 					if($c) {
-						$pmid = $x[0]['parent_mid'];
+						$pmid = $c[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
 					}
 				}
@@ -1063,6 +1067,20 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					if($x) {
 						$pmid = $x[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
+					}
+				}
+				if((! $pmid) && $parent_link !== '') {
+					$f = feed_conversation_fetch($importer,$contact,$parent_link);
+					if($f) {
+						$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
+							dbesc($parent_mid),
+							intval($importer['channel_id'])
+						);
+				
+						if($x) {
+							$pmid = $x[0]['parent_mid'];
+							$datarray['parent_mid'] = $pmid;
+						}
 					}
 				}
 
@@ -1193,6 +1211,34 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 			}
 		}
 	}
+}
+
+
+function feed_conversation_fetch($importer,$contact,$parent_link) {
+
+	$link = '';
+
+	// GNU-Social flavoured feeds
+	if(strpos($parent_link,'/notice/')) {
+		$link = str_replace('/notice/','/api/statuses/show',$link) . '.atom';
+	} 
+
+	// Mastodon flavoured feeds
+	if(strpos($parent_link,'/users/') && strpos($parent_link,'/updates/')) {
+		$link = $parent_link . '.xml';
+	} 
+
+	if(! $link)
+		return false;
+
+	$fetch = z_fetch_url($link);
+
+	if(! $fetch['success'])
+		return false;
+
+	consume_feed($fetch['body'],$importer,$contact,1);
+	consume_feed($fetch['body'],$importer,$contact,2);
+	
 }
 
 /**

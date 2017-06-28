@@ -305,12 +305,6 @@ function get_atom_elements($feed, $item, &$author) {
 		$res['verb'] = unxmlify($rawverb[0]['data']);
 	}
 
-	// translate OStatus unfollow to activity streams if it happened to get selected
-
-	if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow')) {
-		$res['verb'] = ACTIVITY_UNFOLLOW;
-	}
-
 
 	// look for a photo. We should check media size and find the best one,
 	// but for now let's just find any author photo
@@ -404,6 +398,21 @@ function get_atom_elements($feed, $item, &$author) {
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET, 'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
 		$res['app'] = strip_tags(unxmlify($apps[0]['attribs']['']['source']));
+	}
+
+	if($ostatus_protocol) {
+
+		// translate OStatus unfollow to activity streams if it happened to get selected
+
+		if((x($res,'verb')) && ($res['verb'] === 'http://ostatus.org/schema/1.0/unfollow')) {
+			$res['verb'] = ACTIVITY_UNFOLLOW;
+		}
+
+		// And OStatus 'favorite' is pretty much what we call 'like' on other networks
+
+		if((x($res,'verb')) && ($res['verb'] === ACTIVITY_FAVORITE)) {
+			$res['verb'] = ACTIVITY_LIKE;
+		}
 	}
 
 	/*

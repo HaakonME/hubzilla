@@ -1220,7 +1220,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 function gender_icon($gender) {
 
-	logger('gender: ' . $gender);
+//	logger('gender: ' . $gender);
 
 	// This can easily get throw off if the observer language is different 
 	// than the channel owner language.

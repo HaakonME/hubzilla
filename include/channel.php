@@ -1162,6 +1162,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		$location = $reddress = $pdesc = $gender = $marital = $homepage = False;
 	}
 
+	if($profile['gender']) {
+		$profile['gender_icon'] = gender_icon($profile['gender']);
+	}
+
 	$firstname = ((strpos($profile['channel_name'],' '))
 		? trim(substr($profile['channel_name'],0,strpos($profile['channel_name'],' '))) : $profile['channel_name']);
 	$lastname = (($firstname === $profile['channel_name']) ? '' : trim(substr($profile['channel_name'],strlen($firstname))));
@@ -1212,6 +1216,27 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 
 	return $arr['entry'];
 
+}
+
+function gender_icon($gender) {
+
+	logger('gender: ' . $gender);
+
+	// This can easily get throw off if the observer language is different 
+	// than the channel owner language.
+
+	if(strpos(strtolower($gender),strtolower(t('Female'))) !== false)
+		return 'venus';
+	if(strpos(strtolower($gender),strtolower(t('Male'))) !== false)
+		return 'mars';
+	if(strpos(strtolower($gender),strtolower(t('Trans'))) !== false)
+		return 'transgender';
+	if(strpos(strtolower($gender),strtolower(t('Neuter'))) !== false)
+		return 'neuter';
+	if(strpos(strtolower($gender),strtolower(t('Non-specific'))) !== false)
+		return 'genderless';
+
+	return '';
 }
 
 

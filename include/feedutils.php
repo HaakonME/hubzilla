@@ -1236,7 +1236,7 @@ function feed_conversation_fetch($importer,$contact,$parent_link) {
 
 	// Mastodon flavoured feeds
 	if(strpos($parent_link,'/users/') && strpos($parent_link,'/updates/')) {
-		$link = $parent_link . '.xml';
+		$link = $parent_link . '.atom';
 	} 
 
 	if(! $link)

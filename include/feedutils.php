@@ -1231,7 +1231,7 @@ function feed_conversation_fetch($importer,$contact,$parent_link) {
 
 	// GNU-Social flavoured feeds
 	if(strpos($parent_link,'/notice/')) {
-		$link = str_replace('/notice/','/api/statuses/show/',$link) . '.atom';
+		$link = str_replace('/notice/','/api/statuses/show/',$parent_link) . '.atom';
 	} 
 
 	// Mastodon flavoured feeds

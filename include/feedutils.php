@@ -1081,14 +1081,27 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if((! $pmid) && $parent_link !== '') {
 					$f = feed_conversation_fetch($importer,$contact,$parent_link);
 					if($f) {
-						$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
-							dbesc($parent_mid),
-							intval($importer['channel_id'])
-						);
+						// check both potential conversation parents again
+						if($conv_id) {
+							$c = q("select parent_mid from item left join iconfig on item.id = iconfig.iid where iconfig.cat = 'ostatus' and iconfig.k = 'conversation' and iconfig.v = '%s' and item.uid = %d order by item.id limit 1",
+								dbesc($conv_id),
+								intval($importer['channel_id'])
+							);
+							if($c) {
+								$pmid = $c[0]['parent_mid'];
+								$datarray['parent_mid'] = $pmid;
+							}
+						}
+						if(! $pmid) {
+							$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
+								dbesc($parent_mid),
+								intval($importer['channel_id'])
+							);
 				
-						if($x) {
-							$pmid = $x[0]['parent_mid'];
-							$datarray['parent_mid'] = $pmid;
+							if($x) {
+								$pmid = $x[0]['parent_mid'];
+								$datarray['parent_mid'] = $pmid;
+							}
 						}
 					}
 				}

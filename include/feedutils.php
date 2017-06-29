@@ -1249,9 +1249,19 @@ function feed_conversation_fetch($importer,$contact,$parent_link) {
 	if(! $fetch['success'])
 		return false;
 
+	$data = $fetch['body'];
 
-	consume_feed($fetch['body'],$importer,$contact,1);
-	consume_feed($fetch['body'],$importer,$contact,2);
+	// We will probably receive an atom 'entry' and not an atom 'feed'. Unfortunately
+	// our parser is a bit strict about compliance so we'll insert just enough of a feed 
+	// tag to trick it into believing it's a compliant feed. 
+
+	if(! strstr($data,'<feed')) {
+		$data = str_replace('<entry ','<feed xmlns="http://www.w3.org/2005/Atom"><entry ',$data); 
+		$data .= '</feed>';
+	} 
+ 
+	consume_feed($data,$importer,$contact,1);
+	consume_feed($data,$importer,$contact,2);
 	
 }
 

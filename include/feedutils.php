@@ -387,6 +387,7 @@ function get_atom_elements($feed, $item, &$author) {
 	if($rawcnv) {
 		$ostatus_conversation = normalise_id(unxmlify($rawcnv[0]['attribs']['']['ref']));
 		set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
+		logger('ostatus_conversation: ' . $ostatus_conversation, LOGGER_DATA, LOG_INFO);
 	}
 
 	$ostatus_protocol = (($ostatus_conversation) ? true : false);

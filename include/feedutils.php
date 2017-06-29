@@ -1242,10 +1242,13 @@ function feed_conversation_fetch($importer,$contact,$parent_link) {
 	if(! $link)
 		return false;
 
+	logger('fetching: ' . $link, LOGGER_DEBUG, LOG_INFO);
+
 	$fetch = z_fetch_url($link);
 
 	if(! $fetch['success'])
 		return false;
+
 
 	consume_feed($fetch['body'],$importer,$contact,1);
 	consume_feed($fetch['body'],$importer,$contact,2);

@@ -3929,6 +3929,7 @@ function zotinfo($arr) {
 	$ret['photo_updated']  = $e['xchan_photo_date'];
 	$ret['url']            = $e['xchan_url'];
 	$ret['connections_url']= (($e['xchan_connurl']) ? $e['xchan_connurl'] : z_root() . '/poco/' . $e['channel_address']);
+	$ret['follow_url']     = $e['xchan_follow'];
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
@@ -3936,19 +3937,22 @@ function zotinfo($arr) {
 	$ret['public_forum']   = $public_forum;
 	if($deleted)
 		$ret['deleted']        = $deleted;
+
 	if(intval($e['channel_removed']))
 		$ret['deleted_locally'] = true;
+
+
 
 	// premium or other channel desiring some contact with potential followers before connecting.
 	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
 
-	if($special_channel)
-		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'];
-
+	if($special_channel) {
+		$ret['connect_url'] = (($e['xchan_connpage']) ? $e['xchan_connpage'] : z_root() . '/connect/' . $e['channel_address']);
+	}
 	// This is a template for our follow url, %s will be replaced with a webbie
 
-	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
-
+	if(! $ret['follow_url'])
+		$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
 	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);
 

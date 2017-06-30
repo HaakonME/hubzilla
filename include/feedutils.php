@@ -1122,6 +1122,17 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 							}
 						}
 					}
+
+					// the conversation parent might just be the post we are trying to import.
+					// check existence again in case it was just delivered.
+
+					$r = q("SELECT id FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
+						dbesc($datarray['mid']),
+						intval($importer['channel_id'])
+					);
+					if($r) {
+						continue;
+					}
 				}
 
 				if(! $pmid) {

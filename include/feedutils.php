@@ -246,9 +246,17 @@ function get_atom_elements($feed, $item, &$author) {
 
 	$found_author = $item->get_author();
 	if($found_author) {
+		if($rawauthor) {
+			if($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data'])
+				$author['full_name'] = unxmlify($rawauthor[0]['child'][NAMESPACE_POCO]['displayName'][0]['data']);
+		}
 		$author['author_name'] = unxmlify($found_author->get_name());
 		$author['author_link'] = unxmlify($found_author->get_link());
 		$author['author_is_feed'] = false;
+
+		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+		logger('rawauthor: ' . print_r($rawauthor, true));
+
 	}
 	else {
 		$author['author_name'] = unxmlify($feed->get_title());
@@ -1022,7 +1030,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$datarray['author_xchan'] = '';
 
 				if($author['author_link'] != $contact['xchan_url']) {
-					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					$name = '';
+					if($author['full_name']) {
+						$name = $author['full_name'];
+						if($author['author_name'])
+							$name .= ' (' . $author['author_name'] . ')';
+					}
+					else {
+						$name = $author['author_name'];
+					}
+					$x = import_author_unknown(array('name' => $name,'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
 					if($x)
 						$datarray['author_xchan'] = $x;
 				}
@@ -1170,7 +1187,16 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 				if($author['author_link'] != $contact['xchan_url']) {
-					$x = import_author_unknown(array('name' => $author['author_name'],'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
+					$name = '';
+					if($author['full_name']) {
+						$name = $author['full_name'];
+						if($author['author_name'])
+							$name .= ' (' . $author['author_name'] . ')';
+					}
+					else {
+						$name = $author['author_name'];
+					}
+					$x = import_author_unknown(array('name' => $name,'url' => $author['author_link'],'photo' => array('src' => $author['author_photo'])));
 					if($x)
 						$datarray['author_xchan'] = $x;
 				}

@@ -1276,6 +1276,8 @@ function feed_conversation_fetch($importer,$contact,$parent_link) {
  
 	consume_feed($data,$importer,$contact,1);
 	consume_feed($data,$importer,$contact,2);
+
+	return true;
 	
 }
 

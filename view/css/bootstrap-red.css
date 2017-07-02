@@ -66,10 +66,6 @@ nav .dropdown-menu {
 }
 /* nav overrides end */
 
-.btn-outline-secondary {
-	color: #aaa;
-}
-
 .wall-item-tools .dropdown-menu {
 	min-width: auto;
 }

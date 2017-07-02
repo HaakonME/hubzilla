@@ -7,7 +7,7 @@
 </head>
 <body>
 	<header><?php if(x($page,'header')) echo $page['header']; ?></header>
-	<nav class="navbar fixed-top navbar-expand-md navbar-inverse bg-inverse"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
+	<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
 	<section><?php if(x($page,'content')) echo $page['content']; ?>
 		<div id="page-footer"></div>
 	</section>

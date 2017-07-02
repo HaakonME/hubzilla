@@ -87,7 +87,7 @@ class Forums {
 			foreach($r1 as $rr) {
 				if($unseen && (! intval($rr['unseen'])))
 					continue;
-				$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge badge-default float-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img class ="menu-img-1" src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a></li>';
+				$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&pf=1&cid=' . $rr['abook_id'] . '" ><span class="badge badge-secondary float-right">' . ((intval($rr['unseen'])) ? intval($rr['unseen']) : '') . '</span><img class ="menu-img-1" src="' . $rr['xchan_photo_s'] . '" /> ' . $rr['xchan_name'] . '</a></li>';
 			}
 			$o .= '</ul></div>';
 		}

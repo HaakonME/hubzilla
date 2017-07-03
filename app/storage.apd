@@ -3,4 +3,4 @@ url: $baseurl/cloud/$nick
 requires: local_channel
 name: Files
 photo: icon:folder-open
-categories: Productivity
+categories: nav_featured_app, Productivity

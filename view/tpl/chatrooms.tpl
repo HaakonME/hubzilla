@@ -27,7 +27,7 @@
 					<ul id="panel-{{$room.cr_id}}" class="lockview-panel dropdown-menu"></ul>
 					{{/if}}
 				</td>
-				<td><span class="badge badge-default">{{$room.cr_inroom}}</span></td>
+				<td><span class="badge badge-secondary">{{$room.cr_inroom}}</span></td>
 			</tr>
 			{{/foreach}}
 		</table>

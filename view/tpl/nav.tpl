@@ -79,7 +79,7 @@
 		<li class="nav-item dropdown net-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
 				<i class="fa fa-fw fa-th"></i>
-				<span class="badge badge-pill badge-default net-update"></span>
+				<span class="badge badge-pill badge-secondary net-update"></span>
 			</a>
 			<div id="nav-network-menu" class="dropdown-menu" rel="network">
 				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>
@@ -118,7 +118,7 @@
 		<li class="nav-item dropdown all_events-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#nav-all_events-menu">
 				<i class="fa fa-fw fa-calendar"></i>
-				<span class="badge badge-pill badge-default all_events-update"></span>
+				<span class="badge badge-pill badge-secondary all_events-update"></span>
 			</a>
 			<div id="nav-all_events-menu" class="dropdown-menu" rel="all_events">
 				<a class="dropdown-item" id="nav-all_events-see-all" href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a>

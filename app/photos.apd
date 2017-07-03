@@ -3,4 +3,4 @@ url: $baseurl/photos/$nick
 requires: local_channel
 name: Photos
 photo: icon:photo
-categories: Multimedia
+categories: nav_featured_app, Multimedia

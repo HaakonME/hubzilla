@@ -50,7 +50,7 @@ class Activity {
 			$o .= '<h3>' . t('Activity','widget') . '</h3><ul class="nav nav-pills flex-column">';
 
 			foreach($arr as $rv) {
-				$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&xchan=' . urlencode($rv['author_xchan']) . '" ><span class="badge badge-default float-right">' . ((intval($rv['total'])) ? intval($rv['total']) : '') . '</span><img src="' . $rv['author']['xchan_photo_s'] . '" class="menu-img-1" /> ' . $rv['author']['xchan_name'] . '</a></li>';
+				$o .= '<li class="nav-item"><a class="nav-link" href="network?f=&xchan=' . urlencode($rv['author_xchan']) . '" ><span class="badge badge-secondary float-right">' . ((intval($rv['total'])) ? intval($rv['total']) : '') . '</span><img src="' . $rv['author']['xchan_photo_s'] . '" class="menu-img-1" /> ' . $rv['author']['xchan_name'] . '</a></li>';
 			}
 			$o .= '</ul></div>';
 		}

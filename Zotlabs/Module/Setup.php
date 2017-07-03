@@ -73,9 +73,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$phpath = trim($_POST['phpath']);
 				$adminmail = trim($_POST['adminmail']);
 				$siteurl = trim($_POST['siteurl']);
-				$server_role = trim($_POST['server_role']);
-				if(! $server_role)
-					$server_role = 'standard';
 
 				// $siteurl should not have a trailing slash
 
@@ -103,9 +100,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$timezone = trim($_POST['timezone']);
 				$adminmail = trim($_POST['adminmail']);
 				$siteurl = trim($_POST['siteurl']);
-				$server_role = trim($_POST['server_role']);
-				if(! $server_role)
-					$server_role = 'standard';
 
 				if($siteurl != z_root()) {
 					$test = z_fetch_url($siteurl."/setup/testrewrite");
@@ -134,7 +128,7 @@ class Setup extends \Zotlabs\Web\Controller {
 					'$dbpass'      => $dbpass,
 					'$dbdata'      => $dbdata,
 					'$dbtype'      => $dbtype,
-					'$server_role' => $server_role,
+					'$server_role' => 'pro',
 					'$timezone'    => $timezone,
 					'$siteurl'     => $siteurl,
 					'$site_id'     => random_string(),
@@ -324,11 +318,6 @@ class Setup extends \Zotlabs\Web\Controller {
 				$siteurl = trim($_POST['siteurl']);
 				$timezone = ((x($_POST,'timezone')) ? ($_POST['timezone']) : 'America/Los_Angeles');
 
-				$server_roles = [
-					'basic'    => t('Basic/Minimal Social Networking'),
-					'standard' => t('Standard Configuration (default)'),
-					'pro'      => t('Professional')
-				];
 
 				$tpl = get_markup_template('install_settings.tpl');
 				$o .= replace_macros($tpl, array(
@@ -347,8 +336,6 @@ class Setup extends \Zotlabs\Web\Controller {
 					'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
 					'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
-
-					'$server_role' => array('server_role', t("Server Configuration/Role"), 'standard','',$server_roles),
 
 					'$timezone' => array('timezone', t('Please select a default timezone for your website'), $timezone, '', get_timezones()),
 

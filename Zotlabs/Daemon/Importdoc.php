@@ -21,12 +21,18 @@ class Importdoc {
 		$files = glob("$d/$f");
 		if($files) {
 			foreach($files as $fi) {
-				if($fi === 'doc/html')
+				if($fi === 'doc/html') {
 					continue;
-				if(is_dir($fi))
+				}
+				if(is_dir($fi)) {
 					self::update_docs_dir("$fi/*");
-				else
-					store_doc_file($fi);
+				}
+				else {
+					// don't update media content
+					if(strpos(z_mime_content_type($fi),'text') === 0) {
+						store_doc_file($fi);
+					}
+				}
 			}
 		}
 	}

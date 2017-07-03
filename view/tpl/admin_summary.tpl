@@ -12,7 +12,7 @@
 	</dl>
 	<dl>
 		<dt>{{$accounts.0}}</dt>
-		<dd>{{foreach from=$accounts.1 item=acc name=account}}<span title="{{$acc.label}}">{{$acc.val}}</span>{{if !$smarty.foreach.account.last}} / {{/if}}{{/foreach}}</dd>
+		<dd>{{foreach from=$accounts.1 item=acc name=account}}<span title="{{$acc.label}}">{{$acc.val}} {{$acc.label}}</span>{{if !$smarty.foreach.account.last}} / {{/if}}{{/foreach}}</dd>
 	</dl>
 	<dl>
 		<dt>{{$pending.0}}</dt>
@@ -20,7 +20,7 @@
 	</dl>
 	<dl>
 		<dt>{{$channels.0}}</dt>
-		<dd>{{foreach from=$channels.1 item=ch name=chan}}<span title="{{$ch.label}}">{{$ch.val}}</span>{{if !$smarty.foreach.chan.last}} / {{/if}}{{/foreach}}</dd>
+		<dd>{{foreach from=$channels.1 item=ch name=chan}}<span title="{{$ch.label}}">{{$ch.val}} {{$ch.label}}</span>{{if !$smarty.foreach.chan.last}} / {{/if}}{{/foreach}}</dd>
 	</dl>
 	<dl>
 		<dt>{{$plugins.0}}</dt>

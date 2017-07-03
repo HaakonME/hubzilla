@@ -194,15 +194,25 @@ require_once('include/api_zot.php');
 		else
 			$redirect = trim($_REQUEST['redirect_uris']);
 		$icon = trim($_REQUEST['logo_uri']);
-		$r = q("INSERT INTO clients (client_id, pw, clname, redirect_uri, icon, uid)
-			VALUES ('%s','%s','%s','%s','%s',%d)",
-			dbesc($key),
-			dbesc($secret),
-			dbesc($name),
-			dbesc($redirect),
-			dbesc($icon),
-			intval(0)
-		);
+		if($oauth2) {
+			$r = q("INSERT INTO oauth_clients (client_id, client_secret, redirect_uri, grant_types, scope, user_id)
+				VALUES ( '%s', '%s', '%s', null, null, null ) ",
+				dbesc($key),
+				dbesc($secret),
+				dbesc($redirect)
+			);  
+		}
+		else {
+			$r = q("INSERT INTO clients (client_id, pw, clname, redirect_uri, icon, uid)
+				VALUES ('%s','%s','%s','%s','%s',%d)",
+				dbesc($key),
+				dbesc($secret),
+				dbesc($name),
+				dbesc($redirect),
+				dbesc($icon),
+				intval(0)
+			);
+		}
 
 		$ret['client_id'] = $key;
 		$ret['client_secret'] = $secret;

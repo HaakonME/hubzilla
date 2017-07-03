@@ -43,18 +43,15 @@
 		</dl>
 	{{/if}}
 
-	{{if $gender}}<dl class="mf"><dt class="gender-label">{{$gender}}</dt> <dd class="p-gender">{{$profile.gender}}</dd></dl>{{/if}}
+	{{if $gender}}<dl class="mf"><dt class="gender-label">{{$gender}}</dt> <dd class="p-gender">{{if $profile.gender_icon}}<i class="fa fa-{{$profile.gender_icon}}"></i>&nbsp;{{/if}}{{$profile.gender}}</dd></dl>{{/if}}
 
 	{{if $marital}}<dl class="marital"><dt class="marital-label"><span class="heart"><i class="fa fa-heart"></i>&nbsp;</span>{{$marital}}</dt><dd class="marital-text">{{$profile.marital}}</dd></dl>{{/if}}
 
 	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url u-url">{{$profile.homepage}}</dd></dl>{{/if}}
 
-	{{if $diaspora}}
-	{{include file="diaspora_vcard.tpl"}}
-	{{/if}}
-
+<div class="hcard-addon"></div>
 </div>
-<div id="clear"></div>
+<div class="clear"></div>
 
 {{$rating}}
 

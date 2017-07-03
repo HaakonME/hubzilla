@@ -210,6 +210,10 @@ function format_event_bbcode($ev) {
 
 	$o = '';
 
+	if($ev['event_vdata']) {
+		$o .= '[event]' . $ev['event_vdata'] . '[/event]';
+	}
+
 	if($ev['summary'])
 		$o .= '[event-summary]' . $ev['summary'] . '[/event-summary]';
 
@@ -1231,4 +1235,72 @@ function tasks_fetch($arr) {
 
 	return $ret;
 
+}
+
+function cdav_principal($uri) {
+	$r = q("SELECT uri FROM principals WHERE uri = '%s' LIMIT 1",
+		dbesc($uri)
+	);
+
+	if($r[0]['uri'] === $uri)
+		return true;
+	else
+		return false;
+}
+
+function cdav_perms($needle, $haystack, $check_rw = false) {
+	foreach ($haystack as $item) {
+		if($check_rw) {
+			if(is_array($item['id'])) {
+				if ($item['id'][0] == $needle && $item['share-access'] != 2) {
+					return $item['{DAV:}displayname'];
+				}
+			}
+			else {
+				if ($item['id'] == $needle && $item['share-access'] != 2) {
+					return $item['{DAV:}displayname'];
+				}
+			}
+		}
+		else {
+			if(is_array($item['id'])) {
+				if ($item['id'][0] == $needle) {
+					return $item['{DAV:}displayname'];
+				}
+			}
+			else {
+				if ($item['id'] == $needle) {
+					return $item['{DAV:}displayname'];
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
+function translate_type($type) {
+
+	if(!$type)
+		return;
+
+	$type = strtoupper($type);
+
+	$map = [
+		'CELL' => t('Mobile'),
+		'HOME' => t('Home'),
+		'HOME,VOICE' => t('Home, Voice'),
+		'HOME,FAX' => t('Home, Fax'),
+		'WORK' => t('Work'),
+		'WORK,VOICE' => t('Work, Voice'),
+		'WORK,FAX' => t('Work, Fax'),
+		'OTHER' => t('Other')
+	];
+
+	if (array_key_exists($type, $map)) {
+		return [$type, $map[$type]];
+	}
+	else {
+		return [$type, t('Other') . ' (' . $type . ')'];
+	}
 }

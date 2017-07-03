@@ -154,7 +154,9 @@ class Photo extends \Zotlabs\Web\Controller {
 					intval($resolution)
 				);
 
-				if($r && $r[0]['photo_usage'] == PHOTO_COVER)
+				// viewing cover photos is allowed unless a plugin chooses to block it. 
+
+				if($r && intval($r[0]['photo_usage']) === PHOTO_COVER && $resolution >= PHOTO_RES_COVER_1200)
 					$allowed = 1;
  
 				$d = [ 'imgscale' => $resolution, 'resource_id' => $photo, 'photo' => $r, 'allowed' => $allowed ];

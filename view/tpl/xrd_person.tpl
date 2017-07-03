@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
  
-    <Subject>{{$accturi}}</Subject>
+    <Subject>{{$subject}}</Subject>
 	{{if $aliases}}{{foreach $aliases as $a}}
 	<Alias>{{$a}}</Alias>   
 	{{/foreach}}{{/if}}
@@ -22,10 +22,7 @@
           href="{{$hcard_url}}" />
     <Link rel="http://ostatus.org/schema/1.0/subscribe"
           template="{{$subscribe}}" />
-
-   <Link rel="magic-public-key"
+    <Link rel="magic-public-key"
           href="{{$modexp}}" />
-
-	{{$dspr}}
 
 </XRD>

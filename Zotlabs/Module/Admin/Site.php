@@ -17,7 +17,6 @@ class Site {
 		check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
 
 		$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
-		$server_role 		=	((x($_POST,'server_role'))		? notags(trim($_POST['server_role']))		: 'standard');
 
 		$banner				=	((x($_POST,'banner'))			? trim($_POST['banner'])				: false);
 
@@ -68,7 +67,6 @@ class Site {
 		if(array_key_exists('techlevel', $_POST))
 			$techlevel = intval($_POST['techlevel']);
 
-		set_config('system', 'server_role', $server_role);
 		set_config('system', 'feed_contacts', $feed_contacts);
 		set_config('system', 'delivery_interval', $delivery_interval);
 		set_config('system', 'delivery_batch_count', $delivery_batch_count);
@@ -254,12 +252,6 @@ class Site {
 		// now invert the logic for the setting.
 		$discover_tab = (1 - $discover_tab);
 
-		$server_roles = [
-			'basic'    => t('Basic/Minimal Social Networking'),
-			'standard' => t('Standard Configuration (default)'),
-			'pro'      => t('Professional')
-		];
-
 		$techlevels = [
 			'0' => t('Beginner/Basic'),
 			'1' => t('Novice - not skilled but willing to learn'),
@@ -285,8 +277,6 @@ class Site {
 			'$baseurl' => z_root(),
 			// name, label, value, help string, extra data...
 			'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
-
-			'$server_role' 		=> array('server_role', t("Server Configuration/Role"), get_config('system','server_role'),'',$server_roles),
 
 			'$techlevel' => [ 'techlevel', t('Site default technical skill level'), get_config('system','techlevel'), t('Used to provide a member experience matched to technical comfort level'), $techlevels ],
 

@@ -442,7 +442,6 @@ function is_edit_activity($item) {
  * figures out how to determine page owner and other contextual items
  * that are based on unique features of the calling module.
  *
- * @param App &$a
  * @param array $items
  * @param string $mode
  * @param boolean $update
@@ -450,7 +449,7 @@ function is_edit_activity($item) {
  * @param string $prepared_item
  * @return string
  */
-function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $prepared_item = '') {
+function conversation($items, $mode, $update, $page_mode = 'traditional', $prepared_item = '') {
 
 	$content_html = '';
 	$o = '';

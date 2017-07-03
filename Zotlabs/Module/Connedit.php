@@ -842,6 +842,22 @@ class Connedit extends \Zotlabs\Web\Controller {
 			}
 			else
 				$locstr = t('none');
+
+			$clone_warn = '';
+			$clonable = (in_array($contact['xchan_network'],['zot','rss']) ? true : false);
+			if(! $clonable) {
+				$clone_warn = '<strong>';
+				$clone_warn .= ((intval($contact['abook_not_here'])) 
+					? t('This connection is unreachable from this location.')
+					: t('This connection may be unreachable from other channel locations.')
+				);
+				$clone_warn .= '</strong><br>' . t('Location independence is not supported by their network.');
+			}
+					
+
+
+			if(intval($contact['abook_not_here']) && $unclonable)
+				$not_here = t('This connection is unreachable from this location. Location independence is not supported by their network.');
 	
 			$o .= replace_macros($tpl, [
 				'$header'         => (($self) ? t('Connection Default Permissions') : sprintf( t('Connection: %s'),$contact['xchan_name'])),
@@ -856,6 +872,7 @@ class Connedit extends \Zotlabs\Web\Controller {
 				'$addr_text'      => t('This connection\'s primary address is'),
 				'$loc_text'       => t('Available locations:'),
 				'$locstr'         => $locstr,
+				'$unclonable'     => $clone_warn,
 				'$notself'        => (($self) ? '' : '1'),
 				'$self'           => (($self) ? '1' : ''),
 				'$autolbl'        => t('The permissions indicated on this page will be applied to all new connections.'),

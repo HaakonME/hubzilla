@@ -139,6 +139,10 @@ option {
     background-color: #111;
 }
 
+.nav-link.active {
+	color:#000 !important;
+}
+
 a.btn, aside a {
 	font-weight: 400 !important;
 }

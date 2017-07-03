@@ -427,6 +427,10 @@ footer {
 	right: 5px;
 }
 
+.contact-delete-btn {
+	margin-right: 32px;
+}
+
 #contact-block {
 	width: 100%;
 }

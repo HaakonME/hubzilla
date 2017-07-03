@@ -11,27 +11,7 @@ use Zotlabs\Tests\Unit\UnitTestCase;
  */
 class TextTest extends UnitTestCase {
 
-	/**
-	 * @covers ::valid_email_regex
-	 */
-	public function testGoodEmail() {
-		$this->assertTrue(valid_email_regex('ken@spaz.org'));
-		$this->assertTrue(valid_email_regex('ken@restivo.org'));
-		$this->assertTrue(valid_email_regex('nobody@hubzilla.org'));
-		$this->assertTrue(valid_email_regex('foo+nobody@hubzilla.org'));
-	}
 
-	/**
-	 * @covers ::valid_email_regex
-	 */
-	public function testBadEmail() {
-		$this->assertFalse(valid_email_regex('nobody!uses!these!any.more'));
-		$this->assertFalse(valid_email_regex('foo@bar@hubzilla.org'));
-	}
-
-	/**
-	 * @covers ::purify_html
-	 */
 	public function testPurifyHTML() {
 		// linebreaks
 		$htmlbr = 'first line<br />

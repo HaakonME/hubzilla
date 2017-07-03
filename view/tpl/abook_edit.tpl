@@ -59,6 +59,12 @@
 				{{$loc_text}} {{$locstr}}
 			</div>
 			{{/if}}
+			{{if $unclonable}}
+			<div>
+				<br>{{$unclonable}}
+			</div>
+			<br>
+			{{/if}}
 			{{if $last_update}}
 			<div>
 				{{$lastupdtext}} {{$last_update}}

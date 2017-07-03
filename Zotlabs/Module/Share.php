@@ -76,7 +76,7 @@ class Share extends \Zotlabs\Web\Controller {
 		$observer = \App::get_observer();
 		$parsed = $observer['xchan_url'];
 		if($parsed) {
-			$post_url = $parsed['scheme'] . ':' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '')
+			$post_url = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '')
 				. '/rpost';
 	
 			/**

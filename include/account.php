@@ -31,7 +31,7 @@ function check_account_email($email) {
 	if(! strlen($email))
 		return $result;
 
-	if((! valid_email($email)) || (! validate_email($email)))
+	if(! validate_email($email))
 		$result['message'] .= t('Not a valid email address') . EOL;
 	elseif(! allowed_email($email))
 		$result['message'] = t('Your email domain is not among those allowed on this site');
@@ -102,6 +102,33 @@ function account_total() {
 	if(is_array($r))
 		return count($r);
 	return false;
+}
+
+
+function account_store_lowlevel($arr) {
+
+    $store = [
+        'account_parent'           => ((array_key_exists('account_parent',$arr))           ? $arr['account_parent']           : '0'),
+        'account_default_channel'  => ((array_key_exists('account_default_channel',$arr))  ? $arr['account_default_channel']  : '0'),
+        'account_salt'             => ((array_key_exists('account_salt',$arr))             ? $arr['account_salt']             : ''),
+        'account_password'         => ((array_key_exists('account_password',$arr))         ? $arr['account_password']         : ''),
+        'account_email'            => ((array_key_exists('account_email',$arr))            ? $arr['account_email']            : ''),
+        'account_external'         => ((array_key_exists('account_external',$arr))         ? $arr['account_external']         : ''),
+        'account_language'         => ((array_key_exists('account_language',$arr))         ? $arr['account_language']         : 'en'),
+        'account_created'          => ((array_key_exists('account_created',$arr))          ? $arr['account_created']          : '0001-01-01 00:00:00'),
+        'account_lastlog'          => ((array_key_exists('account_lastlog',$arr))          ? $arr['account_lastlog']          : '0001-01-01 00:00:00'),
+        'account_flags'            => ((array_key_exists('account_flags',$arr))            ? $arr['account_flags']            : '0'),
+        'account_roles'            => ((array_key_exists('account_roles',$arr))            ? $arr['account_roles']            : '0'),
+        'account_reset'            => ((array_key_exists('account_reset',$arr))            ? $arr['account_reset']            : ''),
+        'account_expires'          => ((array_key_exists('account_expires',$arr))          ? $arr['account_expires']          : '0001-01-01 00:00:00'),
+        'account_expire_notified'  => ((array_key_exists('account_expire_notified',$arr))  ? $arr['account_expire_notified']  : '0001-01-01 00:00:00'),
+        'account_service_class'    => ((array_key_exists('account_service_class',$arr))    ? $arr['account_service_class']    : ''),
+        'account_level'            => ((array_key_exists('account_level',$arr))            ? $arr['account_level']            : '0'),
+        'account_password_changed' => ((array_key_exists('account_password_changed',$arr)) ? $arr['account_password_changed'] : '0001-01-01 00:00:00')
+	];
+
+	return create_table_from_array('account',$store);
+
 }
 
 
@@ -177,21 +204,20 @@ function create_account($arr) {
 	$salt = random_string(32);
 	$password_encoded = hash('whirlpool', $salt . $password);
 
-	$r = q("INSERT INTO account 
-			( account_parent,  account_salt,  account_password, account_email,   account_language, 
-			  account_created, account_flags, account_roles,  account_level,  account_expires, account_service_class )
-		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s' )",
-		intval($parent),
-		dbesc($salt),
-		dbesc($password_encoded),
-		dbesc($email),
-		dbesc(get_best_language()),
-		dbesc(datetime_convert()),
-		intval($flags),
-		intval($roles),
-		intval($techlevel),
-		dbesc($expires),
-		dbesc($default_service_class)
+	$r = account_store_lowlevel(
+		[
+			'account_parent'        => intval($parent),
+			'account_salt'          => $salt,
+			'account_password'      => $password_encoded,
+			'account_email'         => $email,
+			'account_language'      => get_best_language(),
+			'account_created'       => datetime_convert(),
+			'account_flags'         => intval($flags),
+			'account_roles'         => intval($roles),
+			'account_level'         => intval($techlevel),
+			'account_expires'       => $expires,
+			'account_service_class' => $default_service_class
+		]
 	);
 	if(! $r) {
 		logger('create_account: DB INSERT failed.');
@@ -246,16 +272,18 @@ function verify_email_address($arr) {
 		dbesc($arr['account']['account_language'])
 	);
 
-//@fixme - get correct language template
+	push_lang(($arr['account']['account_language']) ? $arr['account']['account_language'] : 'en');
 
-	$email_msg = replace_macros(get_intltext_template('register_verify_member.tpl'), array(
-		'$sitename' => get_config('system','sitename'),
-		'$siteurl'  => z_root(),
-		'$email'    => $arr['email'],
-		'$uid'      => $arr['account']['account_id'],
-		'$hash'     => $hash,
-		'$details'  => $details
-	 ));
+	$email_msg = replace_macros(get_intltext_template('register_verify_member.tpl'),
+		[
+			'$sitename' => get_config('system','sitename'),
+			'$siteurl'  => z_root(),
+			'$email'    => $arr['email'],
+			'$uid'      => $arr['account']['account_id'],
+			'$hash'     => $hash,
+			'$details'  => $details
+	 	]
+	);
 
 	$res = z_mail(
 		[ 
@@ -265,10 +293,12 @@ function verify_email_address($arr) {
 		]
 	);
 
+	pop_lang();
+
 	if($res)
 		$delivered ++;
 	else
-		logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
+		logger('send_reg_approval_email: failed to account_id: ' . $arr['account']['account_id']);
 
 	return $res;
 }
@@ -354,9 +384,9 @@ function send_register_success_email($email,$password) {
 
 	$res = z_mail(
 		[ 
-		'toEmail' => $email,
-		'messageSubject' => sprintf( t('Registration details for %s'), get_config('system','sitename')),
-		'textVersion' => $email_msg,
+			'toEmail' => $email,
+			'messageSubject' => sprintf( t('Registration details for %s'), get_config('system','sitename')),
+			'textVersion' => $email_msg,
 		]
 	);
 
@@ -424,7 +454,7 @@ function account_allow($hash) {
 
 	pop_lang();
 
-	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
+	if(get_config('system','auto_channel_create'))
 		auto_channel_create($register[0]['uid']);
 
 	if ($res) {
@@ -525,18 +555,12 @@ function account_approve($hash) {
 	if(! $account)
 		return $ret;
 
-
-
-
-	if(get_config('system','auto_channel_create') || get_config('system','server_role') === 'basic')
+	if(get_config('system','auto_channel_create'))
 		auto_channel_create($register[0]['uid']);
 	else {
 		$_SESSION['login_return_url'] = 'new_channel';
 		authenticate_success($account[0],null,true,true,false,true);
 	}	
-
-
-	// info( t('Account verified. Please login.') . EOL );
 
 	return true;
 }
@@ -771,12 +795,6 @@ function upgrade_bool_message($bbcode = false) {
 
 
 function get_account_techlevel($account_id = 0) {
-
-	$role = \Zotlabs\Lib\System::get_server_role();
-	if($role == 'basic')
-		return 0;
-	if($role == 'standard')
-		return 5;
 
 	if(! $account_id) {
 		$x = \App::get_account();

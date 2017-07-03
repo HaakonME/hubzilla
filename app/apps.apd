@@ -1,0 +1,5 @@
+version: 2
+url: $baseurl/apps
+name: Apps
+photo: icon:bars
+categories: System

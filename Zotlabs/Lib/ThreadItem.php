@@ -251,8 +251,6 @@ class ThreadItem {
 			);
 		}
 
-		$server_role = get_config('system','server_role');
-
 		$has_bookmarks = false;
 		if(is_array($item['term'])) {
 			foreach($item['term'] as $t) {

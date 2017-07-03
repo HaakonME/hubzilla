@@ -44,14 +44,6 @@ App::$config['system']['sitename'] = "Hubzilla";
 App::$config['system']['location_hash'] = 'if the auto install failed, put a unique random string here';
 
 
-// Choices are 'basic', 'standard', and 'pro'.
-// basic sets up the sevrer for basic social networking and removes "complicated" features
-// standard provides most desired features except e-commerce
-// pro gives you access to everything, but removes cross-platform federation/emulation
-
-App::$config['system']['server_role'] = 'standard';
-
-
 // These lines set additional security headers to be sent with all responses
 // You may wish to set transport_security_header to 0 if your server already sends
 // this header. content_security_policy may need to be disabled if you wish to

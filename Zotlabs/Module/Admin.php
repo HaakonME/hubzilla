@@ -91,10 +91,10 @@ class Admin extends \Zotlabs\Web\Controller {
 			intval(ACCOUNT_BLOCKED)
 		);
 		if ($r) {
-			$accounts['total']    = array('label' => t('# Accounts'), 'val' => $r[0]['total']);
-			$accounts['blocked']  = array('label' => t('# blocked accounts'), 'val' => $r[0]['blocked']);
-			$accounts['expired']  = array('label' => t('# expired accounts'), 'val' => $r[0]['expired']);
-			$accounts['expiring'] = array('label' => t('# expiring accounts'), 'val' => $r[0]['expiring']);
+			$accounts['total']    = array('label' => t('Accounts'), 'val' => $r[0]['total']);
+			$accounts['blocked']  = array('label' => t('Blocked accounts'), 'val' => $r[0]['blocked']);
+			$accounts['expired']  = array('label' => t('Expired accounts'), 'val' => $r[0]['expired']);
+			$accounts['expiring'] = array('label' => t('Expiring accounts'), 'val' => $r[0]['expiring']);
 		}
 
 		// pending registrations
@@ -105,9 +105,9 @@ class Admin extends \Zotlabs\Web\Controller {
 		$channels = array();
 		$r = q("SELECT COUNT(*) AS total, COUNT(CASE WHEN channel_primary = 1 THEN 1 ELSE NULL END) AS main, COUNT(CASE WHEN channel_primary = 0 THEN 1 ELSE NULL END) AS clones FROM channel WHERE channel_removed = 0");
 		if ($r) {
-			$channels['total']  = array('label' => t('# Channels'), 'val' => $r[0]['total']);
-			$channels['main']   = array('label' => t('# primary'), 'val' => $r[0]['main']);
-			$channels['clones'] = array('label' => t('# clones'), 'val' => $r[0]['clones']);
+			$channels['total']  = array('label' => t('Channels'), 'val' => $r[0]['total']);
+			$channels['main']   = array('label' => t('Primary'), 'val' => $r[0]['main']);
+			$channels['clones'] = array('label' => t('Clones'), 'val' => $r[0]['clones']);
 		}
 
 		// We can do better, but this is a quick queue status
@@ -118,14 +118,11 @@ class Admin extends \Zotlabs\Web\Controller {
 		// If no plugins active return 0, otherwise list of plugin names
 		$plugins = (count(\App::$plugins) == 0) ? count(\App::$plugins) : \App::$plugins;
 
+		if(is_array($plugins))
+			sort($plugins);
+
 		// Could be extended to provide also other alerts to the admin
 		$alertmsg = '';
-		// annoy admin about upcoming unsupported PHP version
-		if (version_compare(PHP_VERSION, '5.4', '<')) {
-			$alertmsg = 'Your PHP version ' . PHP_VERSION . ' will not be supported with the next major release of $Projectname. You are strongly urged to upgrade to a current version.'
-				. '<br>PHP 5.3 has reached its <a href="http://php.net/eol.php" class="alert-link">End of Life (EOL)</a> in August 2014.'
-				. ' A list about current PHP versions can be found <a href="http://php.net/supported-versions.php" class="alert-link">here</a>.';
-		}
 
 		$vmaster = get_repository_version('master');
 		$vdev = get_repository_version('dev');

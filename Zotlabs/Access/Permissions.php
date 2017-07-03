@@ -201,6 +201,7 @@ class Permissions {
 	 *   * \e array \b perms Permission array
 	 *   * \e int \b automatic 0 or 1
 	 */
+
 	static public function connect_perms($channel_id) {
 
 		$my_perms = [];

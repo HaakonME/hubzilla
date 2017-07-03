@@ -41,7 +41,10 @@ class Poke extends \Zotlabs\Web\Controller {
 		$activity = ACTIVITY_POKE . '#' . urlencode($verbs[$verb][0]);
 	
 		$contact_id = intval($_REQUEST['cid']);
-		if(! $contact_id)
+
+		$xchan = trim($_REQUEST['xchan']);
+
+		if(! ($contact_id || $xchan))
 			return;
 	
 		$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
@@ -49,13 +52,20 @@ class Poke extends \Zotlabs\Web\Controller {
 		logger('poke: verb ' . $verb . ' contact ' . $contact_id, LOGGER_DEBUG);
 	
 	
-		$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where abook_id = %d and abook_channel = %d LIMIT 1",
-			intval($contact_id),
-			intval($uid)
-		);
-	
+		if($contact_id) {
+			$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where abook_id = %d and abook_channel = %d LIMIT 1",
+				intval($contact_id),
+				intval($uid)
+			);
+		}
+		if($xchan) {
+			$r = q("SELECT * FROM xchan where xchan_hash like ( '%s' ) LIMIT 1",
+				dbesc($xchan . '%')
+			);
+		}
+			
 		if(! $r) {
-			logger('poke: no target ' . $contact_id);
+			logger('poke: no target.');
 			return;
 		}
 	
@@ -79,7 +89,7 @@ class Poke extends \Zotlabs\Web\Controller {
 				$deny_gid     = $r[0]['deny_gid'];
 			}
 		}
-		else {
+		elseif($contact_id) {
 	
 			$item_private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
 	
@@ -92,9 +102,11 @@ class Poke extends \Zotlabs\Web\Controller {
 	
 		$arr = array();
 	
+
+
 		$arr['item_wall']     = 1;
 		$arr['owner_xchan']   = (($parent_item) ? $parent_item['owner_xchan'] : $channel['channel_hash']);
-		$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
+		$arr['parent_mid']    = (($parent_mid) ? $parent_mid : '');
 		$arr['title']         = '';
 		$arr['allow_cid']     = $allow_cid;
 		$arr['allow_gid']     = $allow_gid;

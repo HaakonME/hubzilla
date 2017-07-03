@@ -79,11 +79,13 @@ class Settings_menu {
 			'selected' => ''
 		);
 
-		$tabs[] =	array(
-			'label' => t('Connected apps'),
-			'url' => z_root() . '/settings/oauth',
-			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
-		);
+		if(get_account_techlevel() > 0) {
+			$tabs[] =	array(
+				'label' => t('Connected apps'),
+				'url' => z_root() . '/settings/oauth',
+				'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
+			);
+		}
 
 		if(get_account_techlevel() > 2) {
 			$tabs[] =	array(

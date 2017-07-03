@@ -818,7 +818,7 @@ class Item extends \Zotlabs\Web\Controller {
 			$datarray['owner'] = $owner_xchan;
 			$datarray['author'] = $observer;
 			$datarray['attach'] = json_encode($datarray['attach']);
-			$o = conversation($a,array($datarray),'search',false,'preview');
+			$o = conversation(array($datarray),'search',false,'preview');
 	//		logger('preview: ' . $o, LOGGER_DEBUG);
 			echo json_encode(array('preview' => $o));
 			killme();

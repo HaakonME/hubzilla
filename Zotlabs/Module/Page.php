@@ -3,7 +3,6 @@ namespace Zotlabs\Module;
 
 require_once('include/items.php');
 require_once('include/conversation.php');
-require_once('include/page_widgets.php');
 
 
 class Page extends \Zotlabs\Web\Controller {

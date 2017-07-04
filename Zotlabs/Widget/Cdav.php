@@ -11,7 +11,7 @@ class Cdav {
 			return;
 
 		$channel = \App::get_channel();
-		$principalUri = 'principals/' . $channel['channel_hash'];
+		$principalUri = 'principals/' . $channel['channel_address'];
 
 		if(!cdav_principal($principalUri))
 			return;

@@ -146,7 +146,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 			return;
 
 		$channel = \App::get_channel();
-		$principalUri = 'principals/' . $channel['channel_hash'];
+		$principalUri = 'principals/' . $channel['channel_address'];
 
 		if(!cdav_principal($principalUri))
 			return;
@@ -358,7 +358,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 
 				$sharee = new \Sabre\DAV\Xml\Element\Sharee();
 
-				$sharee->href = 'mailto:' . $sharee_arr['channel_hash'];
+				$sharee->href = 'mailto:' . $sharee_arr['xchan_addr'];
 				$sharee->principal = 'principals/' . $sharee_arr['channel_address'];
 				$sharee->access = intval($_REQUEST['access']);
 				$sharee->properties = ['{DAV:}displayname' => $channel['channel_name']];
@@ -749,7 +749,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 			return;
 
 		$channel = \App::get_channel();
-		$principalUri = 'principals/' . $channel['channel_hash'];
+		$principalUri = 'principals/' . $channel['channel_address'];
 
 
 		if(!cdav_principal($principalUri)) {
@@ -956,7 +956,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 
 			$sharee = new \Sabre\DAV\Xml\Element\Sharee();
 
-			$sharee->href = 'mailto:' . $sharee_arr['channel_hash'];
+			$sharee->href = 'mailto:' . $sharee_arr['xchan_addr'];
 			$sharee->principal = 'principals/' . $sharee_arr['channel_address'];
 			$sharee->access = 4;
 			$caldavBackend->updateInvites($id, [$sharee]);
@@ -1156,7 +1156,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 		if(! $channel)
 			return;
 
-		$uri = 'principals/' . $channel['channel_hash'];
+		$uri = 'principals/' . $channel['channel_address'];
 		
 
 		$r = q("select * from principals where uri = '%s' limit 1",

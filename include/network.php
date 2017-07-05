@@ -1890,7 +1890,7 @@ function service_plink($contact, $guid) {
 
 	$plink = $url . '/channel/' . $handle . '?f=&mid=' . $guid;
 
-	$x = [ 'xchan' => $contact, 'guid' => $guid, '$url' => $url, 'plink' => $plink ];
+	$x = [ 'xchan' => $contact, 'guid' => $guid, 'url' => $url, 'plink' => $plink ];
 	call_hooks('service_plink', $x);
 
 	return $x['plink'];

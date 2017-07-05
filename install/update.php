@@ -2589,7 +2589,7 @@ function update_r1191() {
 
 		$r8 = q("ALTER TABLE ONLY addressbookchanges ADD CONSTRAINT addressbookchanges_pkey PRIMARY KEY (id);");
 
-		$r9 = q("CREATE INDEX addressbookchanges_addressbookid_synctoken_ix ON addressbookchanges USING btree (addressbookid, synctoken);")
+		$r9 = q("CREATE INDEX addressbookchanges_addressbookid_synctoken_ix ON addressbookchanges USING btree (addressbookid, synctoken);");
 
 		$r10 = q("CREATE TABLE calendarobjects (
 				id SERIAL NOT NULL,

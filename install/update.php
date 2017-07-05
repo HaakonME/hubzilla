@@ -2920,7 +2920,7 @@ function update_r1191() {
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
 		);
 
-		$r14 = q("CREATE UNIQUE INDEX path_property ON propertystorage (path(600), name(100));");
+		$r14 = q("CREATE UNIQUE INDEX if not exists path_property ON propertystorage (path(600), name(100));");
 
 		$r15 = q("CREATE TABLE if not exists users (
 				id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

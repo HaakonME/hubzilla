@@ -393,9 +393,16 @@ function get_atom_elements($feed, $item, &$author) {
 
 	$rawcnv = $item->get_item_tags(NAMESPACE_OSTATUS, 'conversation');
 	if($rawcnv) {
+		// new style
 		$ostatus_conversation = normalise_id(unxmlify($rawcnv[0]['attribs']['']['ref']));
-		set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
-		logger('ostatus_conversation: ' . $ostatus_conversation, LOGGER_DATA, LOG_INFO);
+		if(! $ostatus_conversation) {
+			// old style 
+			$ostatus_conversation = normalise_id(unxmlify($rawcnv[0]['data']));
+		}
+		if($ostatus_conversation) {
+			set_iconfig($res,'ostatus','conversation',$ostatus_conversation,true);
+			logger('ostatus_conversation: ' . $ostatus_conversation, LOGGER_DATA, LOG_INFO);
+		}
 	}
 
 	$ostatus_protocol = (($ostatus_conversation) ? true : false);

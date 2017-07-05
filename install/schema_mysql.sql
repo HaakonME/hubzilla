@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_account` (`abook_account`),
   KEY `abook_channel` (`abook_channel`),
   KEY `abook_xchan` (`abook_xchan`),
+  KEY `abook_my_perms` (`abook_my_perms`),
+  KEY `abook_their_perms` (`abook_their_perms`),
   KEY `abook_closeness` (`abook_closeness`),
   KEY `abook_created` (`abook_created`),
   KEY `abook_updated` (`abook_updated`),

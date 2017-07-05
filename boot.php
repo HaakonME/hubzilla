@@ -48,12 +48,11 @@ require_once('include/xchan.php');
 require_once('include/hubloc.php');
 require_once('include/attach.php');
 
-
-define ( 'PLATFORM_NAME',           'red' );
-define ( 'STD_VERSION',             '5.3' );
+define ( 'PLATFORM_NAME',           'hubzilla' );
+define ( 'STD_VERSION',             '2.5.8' );
 define ( 'ZOT_REVISION',            '1.2' );
 
-define ( 'DB_UPDATE_VERSION',       1191  );
+define ( 'DB_UPDATE_VERSION',       1192  );
 
 define ( 'PROJECT_BASE',   __DIR__ );
 

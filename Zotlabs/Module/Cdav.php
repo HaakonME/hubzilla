@@ -751,19 +751,18 @@ class Cdav extends \Zotlabs\Web\Controller {
 		$channel = \App::get_channel();
 		$principalUri = 'principals/' . $channel['channel_address'];
 
-
-		if(!cdav_principal($principalUri)) {
-			$this->activate($channel);
-			if(!cdav_principal($principalUri)) {
-				return;
-			}
-		}
-
 		$pdo = \DBA::$dba->db;
 
 		require_once 'vendor/autoload.php';
 
 		head_add_css('cdav.css');
+
+		if(!cdav_principal($principalUri)) {
+			$this->activate($pdo, $channel);
+			if(!cdav_principal($principalUri)) {
+				return;
+			}
+		}
 
 		if(argv(1) === 'calendar') {
 			$caldavBackend = new \Sabre\CalDAV\Backend\PDO($pdo);
@@ -1151,7 +1150,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 
 	}
 
-	function activate($channel) {
+	function activate($pdo, $channel) {
 
 		if(! $channel)
 			return;
@@ -1177,24 +1176,21 @@ class Cdav extends \Zotlabs\Web\Controller {
 			);
 
 			//create default calendar
-			$r = q("insert into calendars (components) values('%s') ",
-				dbesc('VEVENT,VTODO')
-			);
+			$caldavBackend = new \Sabre\CalDAV\Backend\PDO($pdo);
+			$properties = [
+				'{DAV:}displayname' => t('Default Calendar'),
+				'{http://apple.com/ns/ical/}calendar-color' => '#3a87ad',
+				'{urn:ietf:params:xml:ns:caldav}calendar-description' => $channel['channel_name']
+			];
 
-			$r = q("insert into calendarinstances (principaluri, displayname, uri, description, calendarcolor) values( '%s', '%s', '%s', '%s', '%s') ",
-				dbesc($uri),
-				dbesc(t('Default Calendar')),
-				dbesc('default'),
-				dbesc($channel['channel_name']),
-				dbesc('#3a87ad')
-			);
+			$id = $caldavBackend->createCalendar($uri, 'default', $properties);
+			set_pconfig(local_channel(), 'cdav_calendar' , $id[0], 1);
 
 			//create default addressbook
-			$r = q("insert into addressbooks (principaluri, displayname, uri) values('%s', '%s', '%s') ",
-				dbesc($uri),
-				dbesc(t('Default Addressbook')),
-				dbesc('default')
-			);
+			$carddavBackend = new \Sabre\CardDAV\Backend\PDO($pdo);
+			$properties = ['{DAV:}displayname' => t('Default Addressbook')];
+			$carddavBackend->createAddressBook($uri, $default, $properties);
+
 		}
 	}
 

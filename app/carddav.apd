@@ -1,0 +1,6 @@
+version: 1
+url: $baseurl/cdav/addressbook
+requires: local_channel
+name: CardDAV
+photo: icon:vcard-o
+categories: Productivity, Personal

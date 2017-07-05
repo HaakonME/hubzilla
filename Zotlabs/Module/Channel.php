@@ -365,10 +365,10 @@ class Channel extends \Zotlabs\Web\Controller {
 
 
 		if($checkjs->disabled()) {
-			$o .= conversation($a,$items,'channel',$update,'traditional');
+			$o .= conversation($items,'channel',$update,'traditional');
 		}
 		else {
-			$o .= conversation($a,$items,'channel',$update,$page_mode);
+			$o .= conversation($items,'channel',$update,$page_mode);
 		}
 
 		if((! $update) || ($checkjs->disabled())) {

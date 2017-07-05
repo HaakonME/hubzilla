@@ -34,15 +34,6 @@ App::$config['system']['baseurl'] = '{{$siteurl}}';
 App::$config['system']['sitename'] = "Hubzilla";
 App::$config['system']['location_hash'] = '{{$site_id}}';
 
-// Choices are 'basic', 'standard', and 'pro'.
-// basic sets up the server for basic social networking and removes "complicated" features
-// standard provides most desired features except e-commerce
-// pro disables protocol federation plugins and only supports the zot protocol
-// if you are in doubt or are unsure, it is strongly advised that you select 'standard'. 
-
-App::$config['system']['server_role'] = '{{$server_role}}';
-
-
 // These lines set additional security headers to be sent with all responses
 // You may wish to set transport_security_header to 0 if your server already sends
 // this header. content_security_policy may need to be disabled if you wish to

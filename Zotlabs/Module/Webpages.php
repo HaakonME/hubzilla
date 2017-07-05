@@ -179,11 +179,8 @@ class Webpages extends \Zotlabs\Web\Controller {
 		// so just list titles and an edit link.
 	
 	
-		/** @TODO - this should be replaced with pagelist_widget */
-	
 		$sql_extra = item_permissions_sql($owner);
 	
-
 		$r = q("select * from iconfig left join item on iconfig.iid = item.id 
 			where item.uid = %d and iconfig.cat = 'system' and iconfig.k = 'WEBPAGE' and item_type = %d 
 			$sql_extra order by item.created desc",
@@ -191,12 +188,6 @@ class Webpages extends \Zotlabs\Web\Controller {
 			intval(ITEM_TYPE_WEBPAGE)
 		);
 
-//		$r = q("select * from item_id left join item on item_id.iid = item.id 
-//			where item_id.uid = %d and service = 'WEBPAGE' and item_type = %d $sql_extra order by item.created desc",
-//			intval($owner),
-//			intval(ITEM_TYPE_WEBPAGE)
-//		);
-	
 		if(! $r)
 			$x['pagetitle'] = 'home';
 

@@ -648,12 +648,8 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 
 	$where = '';
 
-	// We require > 5.4 but leave the version check so that install issues (including version) can be logged
-
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
-	}
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 
 	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
@@ -687,16 +683,14 @@ function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 		@file_put_contents(BTLOGGER_DEBUG_FILE, $s, FILE_APPEND);
 	}
 
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		if($stack) {
-			for($x = 1; $x < count($stack); $x ++) {
-				$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
-				logger($s,$level, $priority);
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+	if($stack) {
+		for($x = 1; $x < count($stack); $x ++) {
+			$s = 'stack: ' . basename($stack[$x]['file']) . ':' . $stack[$x]['line'] . ':' . $stack[$x]['function'] . '()';
+			logger($s,$level, $priority);
 
-				if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
-					@file_put_contents(BTLOGGER_DEBUG_FILE, $s . PHP_EOL, FILE_APPEND);
-				}
+			if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
+				@file_put_contents(BTLOGGER_DEBUG_FILE, $s . PHP_EOL, FILE_APPEND);
 			}
 		}
 	}
@@ -751,10 +745,10 @@ function dlogger($msg, $level = 0) {
 		return;
 
 	$where = '';
-	if(version_compare(PHP_VERSION, '5.4.0') >= 0) {
-		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
-	}
+
+	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
+
 
 	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
 }
@@ -1042,19 +1036,6 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 	));
 }
 
-function valid_email_regex($x){
-	if(preg_match('/^[_a-zA-Z0-9\-\+]+(\.[_a-zA-Z0-9\-\+]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/',$x))
-		return true;
-	return false;
-}
-
-function valid_email($x){
-	if(get_config('system','disable_email_validation'))
-		return true;
-
-	return valid_email_regex($x);
-}
-
 /**
  * @brief Replace naked text hyperlink with HTML formatted hyperlink.
  *
@@ -1199,8 +1180,7 @@ function list_smilies($default_only = false) {
 		':coffee',
 		':facepalm',
 		':like',
-		':dislike',
-		':hubzilla'
+		':dislike'
 	);
 
 	$icons = array(
@@ -1234,8 +1214,7 @@ function list_smilies($default_only = false) {
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/coffee.gif" alt=":coffee" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . z_root() . '/images/emoticons/like.gif" alt=":like" />',
-		'<img class="smiley" src="' . z_root() . '/images/emoticons/dislike.gif" alt=":dislike" />',
-		'<img class="smiley" src="' . z_root() . '/images/hz-16.png" alt=":hubzilla" />',
+		'<img class="smiley" src="' . z_root() . '/images/emoticons/dislike.gif" alt=":dislike" />'
 
 	);
 
@@ -2008,23 +1987,44 @@ function legal_webbie($s) {
 	if(! strlen($s))
 		return '';
 
-	$x = $s;
-	do {
-		$s = $x;
-		$x = preg_replace('/^([^a-z])(.*?)/',"$2",$s);
-	} while($x != $s);
+	// WARNING: This regex will not work in a federated environment.
+	// You will probably want something like 
+	// preg_replace('/([^a-z0-9\_])/','',strtolower($s));
 
-	return preg_replace('/([^a-z0-9\-\_])/','',$x);
+	$r = preg_replace('/([^a-z0-9\-\_\.])/','',strtolower($s));
+
+	$x = [ 'input' => $s, 'output' => $r ];
+	call_hooks('legal_webbie',$x);
+	return $x['output'];
+
 }
+
+function legal_webbie_text() {
+
+	// WARNING: This will not work in a federated environment.
+
+	$s = t('a-z, 0-9, -, _, and . only');
+
+	$x = [ 'text' => $s ];
+	call_hooks('legal_webbie_text',$x);
+	return $x['text'];
+
+}
+
+
+
 
 
 function check_webbie($arr) {
 
+
+	// These names conflict with the CalDAV server
+	$taken = [ 'principals', 'addressbooks', 'calendars' ];
+
 	$reservechan = get_config('system','reserved_channels');
-	if(strlen($reservechan))
-		$taken = explode(',', $reservechan);
-	else
-		$taken = array('principals','addressbooks','calendars');
+	if(strlen($reservechan)) {
+		$taken = array_merge($taken,explode(',', $reservechan));
+	}
 
 	$str = '';
 	if(count($arr)) {
@@ -2274,13 +2274,13 @@ function design_tools() {
 	$who = $channel['channel_address'];
 
 	return replace_macros(get_markup_template('design_tools.tpl'), array(
-		'$title' => t('Design Tools'),
-		'$who' => $who,
-		'$sys' => $sys,
+		'$title'  => t('Design Tools'),
+		'$who'    => $who,
+		'$sys'    => $sys,
 		'$blocks' => t('Blocks'),
-		'$menus' => t('Menus'),
+		'$menus'  => t('Menus'),
 		'$layout' => t('Layouts'),
-		'$pages' => t('Pages')
+		'$pages'  => t('Pages')
 	));
 }
 
@@ -2301,21 +2301,21 @@ function website_portation_tools() {
 	}
 
 	return replace_macros(get_markup_template('website_portation_tools.tpl'), array(
-		'$title' => t('Import'),
-		'$import_label' => t('Import website...'),
-		'$import_placeholder' => t('Select folder to import'),
-		'$file_upload_text' => t('Import from a zipped folder:'),
-		'$file_import_text' => t('Import from cloud files:'),
-		'$desc' => t('/cloud/channel/path/to/folder'),
-		'$hint' => t('Enter path to website files'),
-		'$select' => t('Select folder'),
-		'$export_label' => t('Export website...'),
-		'$file_download_text' => t('Export to a zip file'),
-		'$filename_desc' => t('website.zip'),
-		'$filename_hint' => t('Enter a name for the zip file.'),
-		'$cloud_export_text' => t('Export to cloud files'),
-		'$cloud_export_desc' => t('/path/to/export/folder'),
-		'$cloud_export_hint' => t('Enter a path to a cloud files destination.'),
+		'$title'               => t('Import'),
+		'$import_label'        => t('Import website...'),
+		'$import_placeholder'  => t('Select folder to import'),
+		'$file_upload_text'    => t('Import from a zipped folder:'),
+		'$file_import_text'    => t('Import from cloud files:'),
+		'$desc'                => t('/cloud/channel/path/to/folder'),
+		'$hint'                => t('Enter path to website files'),
+		'$select'              => t('Select folder'),
+		'$export_label'        => t('Export website...'),
+		'$file_download_text'  => t('Export to a zip file'),
+		'$filename_desc'       => t('website.zip'),
+		'$filename_hint'       => t('Enter a name for the zip file.'),
+		'$cloud_export_text'   => t('Export to cloud files'),
+		'$cloud_export_desc'   => t('/path/to/export/folder'),
+		'$cloud_export_hint'   => t('Enter a path to a cloud files destination.'),
 		'$cloud_export_select' => t('Specify folder'),
 	));
 }
@@ -3022,7 +3022,8 @@ function array2XML($obj, $array) {
 		if(is_array($value)) {
 			$node = $obj->addChild($key);
 			array2XML($node, $value);
-		} else {
+		}
+		else {
 			$obj->addChild($key, htmlspecialchars($value));
 		}
 	}

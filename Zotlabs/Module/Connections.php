@@ -19,7 +19,7 @@ class Connections extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$sort_type = 0;
 		$o = '';
@@ -63,8 +63,8 @@ class Connections extends \Zotlabs\Web\Controller {
 					$hidden = true;
 					break;
 				case 'archived':
-					$search_flags = " and abook_archived = 1 ";
-					$head = t('Archived');
+					$search_flags = " and ( abook_archived = 1 OR abook_not_here = 1) ";
+					$head = t('Archived/Unreachable');
 					$archived = true;
 					break;
 				case 'pending':
@@ -168,10 +168,10 @@ class Connections extends \Zotlabs\Web\Controller {
 			),
 	
 			'archived' => array(
-				'label' => t('Archived'),
+				'label' => t('Archived/Unreachable'),
 				'url'   => z_root() . '/connections/archived',
 				'sel'   => ($archived) ? 'active' : '',
-				'title' => t('Only show archived connections'),
+				'title' => t('Only show archived/unreachable connections'),
 			),
 	
 			'hidden' => array(
@@ -243,7 +243,8 @@ class Connections extends \Zotlabs\Web\Controller {
 						((intval($rr['abook_archived'])) ? t('Archived') : ''),
 						((intval($rr['abook_hidden'])) ? t('Hidden') : ''),
 						((intval($rr['abook_ignored'])) ? t('Ignored') : ''),
-						((intval($rr['abook_blocked'])) ? t('Blocked') : '')
+						((intval($rr['abook_blocked'])) ? t('Blocked') : ''),
+						((intval($rr['abook_not_here'])) ? t('Not connected at this location') : '')
 					);
 	
 					foreach($status as $str) {
@@ -257,11 +258,12 @@ class Connections extends \Zotlabs\Web\Controller {
 					$contacts[] = array(
 						'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 						'edit_hover' => t('Edit connection'),
+						'edit' => t('Edit'),
 						'delete_hover' => t('Delete connection'),
 						'id' => $rr['abook_id'],
 						'thumb' => $rr['xchan_photo_m'], 
 						'name' => $rr['xchan_name'],
-						'classes' => (intval($rr['abook_archived']) ? 'archived' : ''),
+						'classes' => ((intval($rr['abook_archived']) || intval($rr['abook_not_here'])) ? 'archived' : ''),
 						'link' => z_root() . '/connedit/' . $rr['abook_id'],
 						'deletelink' => z_root() . '/connedit/' . intval($rr['abook_id']) . '/drop',
 						'delete' => t('Delete'),

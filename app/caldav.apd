@@ -1,0 +1,6 @@
+version: 1
+url: $baseurl/cdav/calendar
+requires: local_channel
+name: CalDAV
+photo: icon:calendar
+categories: Productivity, Personal

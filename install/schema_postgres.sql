@@ -1,6 +1,6 @@
 CREATE TABLE "abconfig" (
   "id" serial  NOT NULL,
-  "chan" bigint NOT NULL DEFAULT 0,
+  "chan" bigint NOT NULL DEFAULT '0',
   "xchan" text NOT NULL,
   "cat" text NOT NULL,
   "k" text NOT NULL,
@@ -16,23 +16,23 @@ CREATE TABLE "abook" (
   "abook_account" bigint  NOT NULL,
   "abook_channel" bigint  NOT NULL,
   "abook_xchan" text NOT NULL DEFAULT '',
-  "abook_my_perms" bigint NOT NULL DEFAULT 0,
-  "abook_their_perms" bigint NOT NULL DEFAULT 0,
-  "abook_closeness" numeric(3)  NOT NULL DEFAULT 99,
+  "abook_my_perms" bigint NOT NULL,
+  "abook_their_perms" bigint NOT NULL,
+  "abook_closeness" numeric(3)  NOT NULL DEFAULT '99',
   "abook_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "abook_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "abook_connected" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "abook_dob" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "abook_flags" bigint NOT NULL DEFAULT 0 ,
-  "abook_blocked" smallint NOT NULL DEFAULT 0 ,
-  "abook_ignored" smallint NOT NULL DEFAULT 0 ,
-  "abook_hidden" smallint NOT NULL DEFAULT 0 ,
-  "abook_archived" smallint NOT NULL DEFAULT 0 ,
-  "abook_pending" smallint NOT NULL DEFAULT 0 ,
-  "abook_unconnected" smallint NOT NULL DEFAULT 0 ,
-  "abook_self" smallint NOT NULL DEFAULT 0 ,
-  "abook_feed" smallint NOT NULL DEFAULT 0 ,
-  "abook_not_here" smallint NOT NULL DEFAULT 0 ,
+  "abook_flags" bigint NOT NULL DEFAULT '0',
+  "abook_blocked" smallint NOT NULL DEFAULT '0',
+  "abook_ignored" smallint NOT NULL DEFAULT '0',
+  "abook_hidden" smallint NOT NULL DEFAULT '0',
+  "abook_archived" smallint NOT NULL DEFAULT '0',
+  "abook_pending" smallint NOT NULL DEFAULT '0',
+  "abook_unconnected" smallint NOT NULL DEFAULT '0',
+  "abook_self" smallint NOT NULL DEFAULT '0',
+  "abook_feed" smallint NOT NULL DEFAULT '0',
+  "abook_not_here" smallint NOT NULL DEFAULT '0',
   "abook_profile" varchar(64) NOT NULL DEFAULT '',
   "abook_incl" TEXT NOT NULL DEFAULT '',
   "abook_excl" TEXT NOT NULL DEFAULT '',
@@ -42,8 +42,8 @@ CREATE TABLE "abook" (
   create index  "abook_account" on abook ("abook_account");
   create index  "abook_channel" on abook  ("abook_channel");
   create index  "abook_xchan"  on abook ("abook_xchan");
-  create index  "abook_my_perms" on abook  ("abook_my_perms");
-  create index  "abook_their_perms" on abook  ("abook_their_perms");
+  create index  "abook_my_perms"  on abook ("abook_my_perms");
+  create index  "abook_their_perms"  on abook ("abook_their_perms");
   create index  "abook_closeness" on abook  ("abook_closeness");
   create index  "abook_created"  on abook ("abook_created");
   create index  "abook_updated"  on abook ("abook_updated");
@@ -64,8 +64,8 @@ CREATE TABLE "abook" (
 
 CREATE TABLE "account" (
   "account_id" serial  NOT NULL,
-  "account_parent" bigint  NOT NULL DEFAULT 0 ,
-  "account_default_channel" bigint  NOT NULL DEFAULT 0 ,
+  "account_parent" bigint  NOT NULL DEFAULT '0',
+  "account_default_channel" bigint  NOT NULL DEFAULT '0',
   "account_salt" varchar(32) NOT NULL DEFAULT '',
   "account_password" text NOT NULL DEFAULT '',
   "account_email" text NOT NULL DEFAULT '',
@@ -73,13 +73,13 @@ CREATE TABLE "account" (
   "account_language" varchar(16) NOT NULL DEFAULT 'en',
   "account_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "account_lastlog" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "account_flags" bigint  NOT NULL DEFAULT 0 ,
-  "account_roles" bigint  NOT NULL DEFAULT 0 ,
+  "account_flags" bigint  NOT NULL DEFAULT '0',
+  "account_roles" bigint  NOT NULL DEFAULT '0',
   "account_reset" text NOT NULL DEFAULT '',
   "account_expires" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "account_expire_notified" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "account_service_class" varchar(32) NOT NULL DEFAULT '',
-  "account_level" bigint  NOT NULL DEFAULT 0 ,
+  "account_level" bigint  NOT NULL DEFAULT '0',
   "account_password_changed" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("account_id")
 );
@@ -97,11 +97,11 @@ create index "account_password_changed"  on account ("account_password_changed")
 CREATE TABLE "addon" (
   "id" serial NOT NULL,
   "aname" text NOT NULL,
-  "version" text NOT NULL DEFAULT 0 ,
-  "installed" numeric(1) NOT NULL DEFAULT 0 ,
-  "hidden" numeric(1) NOT NULL DEFAULT 0 ,
-  "tstamp" numeric(20) NOT NULL DEFAULT 0 ,
-  "plugin_admin" numeric(1) NOT NULL DEFAULT 0 ,
+  "version" text NOT NULL DEFAULT '0',
+  "installed" numeric(1) NOT NULL DEFAULT '0',
+  "hidden" numeric(1) NOT NULL DEFAULT '0',
+  "tstamp" numeric(20) NOT NULL DEFAULT '0',
+  "plugin_admin" numeric(1) NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")
 );
 create index "addon_hidden_idx" on addon ("hidden");
@@ -117,13 +117,13 @@ CREATE TABLE "app" (
   "app_url" text NOT NULL DEFAULT '',
   "app_photo" text NOT NULL DEFAULT '',
   "app_version" text NOT NULL DEFAULT '',
-  "app_channel" bigint NOT NULL DEFAULT 0 ,
+  "app_channel" bigint NOT NULL DEFAULT '0',
   "app_addr" text NOT NULL DEFAULT '',
   "app_price" text NOT NULL DEFAULT '',
   "app_page" text NOT NULL DEFAULT '',
   "app_requires" text NOT NULL DEFAULT '',
-  "app_deleted" smallint NOT NULL DEFAULT 0 ,
-  "app_system" smallint NOT NULL DEFAULT 0 ,
+  "app_deleted" smallint NOT NULL DEFAULT '0',
+  "app_system" smallint NOT NULL DEFAULT '0',
   "app_plugin" text NOT NULL DEFAULT '',
   "app_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "app_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -158,19 +158,19 @@ create index atoken_expires on atoken (atoken_expires);
 
 CREATE TABLE "attach" (
   "id" serial  NOT NULL,
-  "aid" bigint  NOT NULL DEFAULT 0 ,
-  "uid" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
+  "uid" bigint  NOT NULL DEFAULT '0',
   "hash" varchar(64) NOT NULL DEFAULT '',
   "creator" varchar(128) NOT NULL DEFAULT '',
   "filename" text NOT NULL DEFAULT '',
   "filetype" varchar(64) NOT NULL DEFAULT '',
-  "filesize" bigint  NOT NULL DEFAULT 0 ,
-  "revision" bigint  NOT NULL DEFAULT 0 ,
+  "filesize" bigint  NOT NULL DEFAULT '0',
+  "revision" bigint  NOT NULL DEFAULT '0',
   "folder" varchar(64) NOT NULL DEFAULT '',
-  "flags" bigint  NOT NULL DEFAULT 0 ,
-  "is_dir" smallint NOT NULL DEFAULT 0 ,
-  "is_photo" smallint NOT NULL DEFAULT 0 ,
-  "os_storage" smallint NOT NULL DEFAULT 0 ,
+  "flags" bigint  NOT NULL DEFAULT '0',
+  "is_dir" smallint NOT NULL DEFAULT '0',
+  "is_photo" smallint NOT NULL DEFAULT '0',
+  "os_storage" smallint NOT NULL DEFAULT '0',
   "os_path" text NOT NULL,
   "display_path" text NOT NULL,
   "content" bytea NOT NULL,
@@ -214,8 +214,8 @@ CREATE TABLE "cache" (
 );
 CREATE TABLE "cal" (
   "cal_id" serial  NOT NULL,
-  "cal_aid" bigint NOT NULL DEFAULT 0 ,
-  "cal_uid" bigint NOT NULL DEFAULT 0 ,
+  "cal_aid" bigint NOT NULL DEFAULT '0',
+  "cal_uid" bigint NOT NULL DEFAULT '0',
   "cal_hash" text NOT NULL,
   "cal_name" text NOT NULL,
   "uri" text NOT NULL,
@@ -223,7 +223,7 @@ CREATE TABLE "cal" (
   "pass" text NOT NULL,
   "ctag" text NOT NULL,
   "synctoken" text NOT NULL,
-  "cal_types" text NOT NULL DEFAULT 0 ,
+  "cal_types" text NOT NULL DEFAULT '0',
   PRIMARY KEY ("cal_id")
 );
 create index "cal_hash_idx" on cal ("cal_hash");
@@ -234,8 +234,8 @@ create index "cal_uid_idx" on cal ("cal_uid");
 
 CREATE TABLE "channel" (
   "channel_id" serial  NOT NULL,
-  "channel_account_id" bigint  NOT NULL DEFAULT 0 ,
-  "channel_primary" numeric(1)  NOT NULL DEFAULT 0 ,
+  "channel_account_id" bigint  NOT NULL DEFAULT '0',
+  "channel_primary" numeric(1)  NOT NULL DEFAULT '0',
   "channel_name" text NOT NULL DEFAULT '',
   "channel_address" text NOT NULL DEFAULT '',
   "channel_guid" text NOT NULL DEFAULT '',
@@ -247,40 +247,22 @@ CREATE TABLE "channel" (
   "channel_startpage" text NOT NULL DEFAULT '',
   "channel_pubkey" text NOT NULL,
   "channel_prvkey" text NOT NULL,
-  "channel_notifyflags" bigint  NOT NULL DEFAULT 65535,
-  "channel_pageflags" bigint  NOT NULL DEFAULT 0 ,
+  "channel_notifyflags" bigint  NOT NULL DEFAULT '65535',
+  "channel_pageflags" bigint  NOT NULL DEFAULT '0',
   "channel_dirdate" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "channel_lastpost" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "channel_deleted" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "channel_max_anon_mail" bigint  NOT NULL DEFAULT 10,
-  "channel_max_friend_req" bigint  NOT NULL DEFAULT 10,
-  "channel_expire_days" bigint NOT NULL DEFAULT 0 ,
+  "channel_max_anon_mail" bigint  NOT NULL DEFAULT '10',
+  "channel_max_friend_req" bigint  NOT NULL DEFAULT '10',
+  "channel_expire_days" bigint NOT NULL DEFAULT '0',
   "channel_passwd_reset" text NOT NULL DEFAULT '',
   "channel_default_group" text NOT NULL DEFAULT '',
   "channel_allow_cid" text ,
   "channel_allow_gid" text ,
   "channel_deny_cid" text ,
   "channel_deny_gid" text ,
-  "channel_r_stream" bigint  NOT NULL DEFAULT 0,
-  "channel_r_profile" bigint  NOT NULL DEFAULT 0,
-  "channel_r_photos" bigint  NOT NULL DEFAULT 0,
-  "channel_r_abook" bigint  NOT NULL DEFAULT 0,
-  "channel_w_stream" bigint  NOT NULL DEFAULT 0,
-  "channel_w_wall" bigint  NOT NULL DEFAULT 0,
-  "channel_w_tagwall" bigint  NOT NULL DEFAULT 0,
-  "channel_w_comment" bigint  NOT NULL DEFAULT 0,
-  "channel_w_mail" bigint  NOT NULL DEFAULT 0,
-  "channel_w_photos" bigint  NOT NULL DEFAULT 0,
-  "channel_w_chat" bigint  NOT NULL DEFAULT 0,
-  "channel_a_delegate" bigint  NOT NULL DEFAULT 0 ,
-  "channel_r_storage" bigint  NOT NULL DEFAULT 0,
-  "channel_w_storage" bigint  NOT NULL DEFAULT 0,
-  "channel_r_pages" bigint  NOT NULL DEFAULT 0,
-  "channel_w_pages" bigint  NOT NULL DEFAULT 0,
-  "channel_a_republish" bigint  NOT NULL DEFAULT 0,
-  "channel_w_like" bigint  NOT NULL DEFAULT 0,
-  "channel_removed" smallint NOT NULL DEFAULT 0 ,
-  "channel_system" smallint NOT NULL DEFAULT 0 ,
+  "channel_removed" smallint NOT NULL DEFAULT '0',
+  "channel_system" smallint NOT NULL DEFAULT '0',
   "channel_moved" text NOT NULL DEFAULT '',
   "channel_password" varchar(255) NOT NULL,
   "channel_salt" varchar(255) NOT NULL,
@@ -298,28 +280,10 @@ create index "channel_pageflags" on channel ("channel_pageflags");
 create index "channel_max_anon_mail" on channel ("channel_max_anon_mail");
 create index "channel_max_friend_req" on channel ("channel_max_friend_req");
 create index "channel_default_gid" on channel ("channel_default_group");
-create index "channel_r_stream" on channel ("channel_r_stream");
-create index "channel_r_profile" on channel ("channel_r_profile");
-create index "channel_r_photos" on channel ("channel_r_photos");
-create index "channel_r_abook" on channel ("channel_r_abook");
-create index "channel_w_stream" on channel ("channel_w_stream");
-create index "channel_w_wall" on channel ("channel_w_wall");
-create index "channel_w_tagwall" on channel ("channel_w_tagwall");
-create index "channel_w_comment" on channel ("channel_w_comment");
-create index "channel_w_mail" on channel ("channel_w_mail");
-create index "channel_w_photos" on channel ("channel_w_photos");
-create index "channel_w_chat" on channel ("channel_w_chat");
 create index "channel_guid" on channel ("channel_guid");
 create index "channel_hash" on channel ("channel_hash");
 create index "channel_expire_days" on channel ("channel_expire_days");
-create index "channel_a_delegate" on channel ("channel_a_delegate");
-create index "channel_r_storage" on channel ("channel_r_storage");
-create index "channel_w_storage" on channel ("channel_w_storage");
-create index "channel_r_pages" on channel ("channel_r_pages");
-create index "channel_w_pages" on channel ("channel_w_pages");
 create index "channel_deleted" on channel ("channel_deleted");
-create index "channel_a_republish" on channel ("channel_a_republish");
-create index "channel_w_like" on channel ("channel_w_like");
 create index "channel_dirdate" on channel ("channel_dirdate");
 create index "channel_lastpost" on channel ("channel_lastpost");
 create index "channel_removed" on channel ("channel_removed");
@@ -327,7 +291,7 @@ create index "channel_system" on channel ("channel_system");
 create index "channel_moved" on channel ("channel_moved");
 CREATE TABLE "chat" (
   "chat_id" serial  NOT NULL,
-  "chat_room" bigint  NOT NULL DEFAULT 0 ,
+  "chat_room" bigint  NOT NULL DEFAULT '0',
   "chat_xchan" text NOT NULL DEFAULT '',
   "chat_text" text NOT NULL,
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -338,7 +302,7 @@ create index "chat_xchan_idx" on chat ("chat_xchan");
 create index "chat_created_idx" on chat ("created");
 CREATE TABLE "chatpresence" (
   "cp_id" serial  NOT NULL,
-  "cp_room" bigint  NOT NULL DEFAULT 0 ,
+  "cp_room" bigint  NOT NULL DEFAULT '0',
   "cp_xchan" text NOT NULL DEFAULT '',
   "cp_last" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "cp_status" text NOT NULL,
@@ -352,12 +316,12 @@ create index "cp_status" on chatpresence ("cp_status");
 
 CREATE TABLE "chatroom" (
   "cr_id" serial  NOT NULL,
-  "cr_aid" bigint  NOT NULL DEFAULT 0 ,
-  "cr_uid" bigint  NOT NULL DEFAULT 0 ,
+  "cr_aid" bigint  NOT NULL DEFAULT '0',
+  "cr_uid" bigint  NOT NULL DEFAULT '0',
   "cr_name" text NOT NULL DEFAULT '',
   "cr_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "cr_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "cr_expire" bigint  NOT NULL DEFAULT 0 ,
+  "cr_expire" bigint  NOT NULL DEFAULT '0',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -376,7 +340,7 @@ CREATE TABLE "clients" (
   "redirect_uri" varchar(200) NOT NULL,
   "clname" text,
   "icon" text,
-  "uid" bigint NOT NULL DEFAULT 0 ,
+  "uid" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("client_id")
 );
 CREATE TABLE "config" (
@@ -403,7 +367,7 @@ create index "conv_updated_idx" on conv ("updated");
 
 CREATE TABLE IF NOT EXISTS "dreport" (
   "dreport_id" serial NOT NULL,
-  "dreport_channel" int NOT NULL DEFAULT 0 ,
+  "dreport_channel" int NOT NULL DEFAULT '0',
   "dreport_mid" varchar(255) NOT NULL DEFAULT '',
   "dreport_site" varchar(255) NOT NULL DEFAULT '',
   "dreport_recip" varchar(255) NOT NULL DEFAULT '',
@@ -423,9 +387,9 @@ create index "dreport_channel" on dreport ("dreport_channel");
 
 CREATE TABLE "event" (
   "id" serial NOT NULL,
-  "aid" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
   "uid" bigint NOT NULL,
-  "cal_id" bigint NOT NULL DEFAULT 0 ,
+  "cal_id" bigint NOT NULL DEFAULT '0',
   "event_xchan" text NOT NULL DEFAULT '',
   "event_hash" text NOT NULL DEFAULT '',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -436,19 +400,19 @@ CREATE TABLE "event" (
   "description" text NOT NULL,
   "location" text NOT NULL,
   "etype" text NOT NULL,
-  "nofinish" numeric(1) NOT NULL DEFAULT 0 ,
-  "adjust" numeric(1) NOT NULL DEFAULT 1,
-  "dismissed" numeric(1) NOT NULL DEFAULT 0 ,
+  "nofinish" numeric(1) NOT NULL DEFAULT '0',
+  "adjust" numeric(1) NOT NULL DEFAULT '1',
+  "dismissed" numeric(1) NOT NULL DEFAULT '0',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
   "deny_gid" text NOT NULL,
   "event_status" varchar(255) NOT NULL DEFAULT '',
   "event_status_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "event_percent" smallint NOT NULL DEFAULT 0 ,
+  "event_percent" smallint NOT NULL DEFAULT '0',
   "event_repeat" text NOT NULL,
-  "event_sequence" smallint NOT NULL DEFAULT 0 ,
-  "event_priority" smallint NOT NULL DEFAULT 0 ,
+  "event_sequence" smallint NOT NULL DEFAULT '0',
+  "event_priority" smallint NOT NULL DEFAULT '0',
   "event_vdata" text NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -482,8 +446,8 @@ CREATE TABLE "groups" (
   "id" serial  NOT NULL,
   "hash" text NOT NULL DEFAULT '',
   "uid" bigint  NOT NULL,
-  "visible" numeric(1) NOT NULL DEFAULT 0 ,
-  "deleted" numeric(1) NOT NULL DEFAULT 0 ,
+  "visible" numeric(1) NOT NULL DEFAULT '0',
+  "deleted" numeric(1) NOT NULL DEFAULT '0',
   "gname" text NOT NULL,
   PRIMARY KEY ("id")
 
@@ -498,8 +462,8 @@ CREATE TABLE "hook" (
   "hook" text NOT NULL,
   "file" text NOT NULL,
   "fn" text NOT NULL,
-  "priority" smallint  NOT NULL DEFAULT 0 ,
-  "hook_version" smallint NOT NULL DEFAULT 0 ,
+  "priority" smallint  NOT NULL DEFAULT '0',
+  "hook_version" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("id")
 
 );
@@ -514,8 +478,8 @@ CREATE TABLE "hubloc" (
   "hubloc_hash" text NOT NULL,
   "hubloc_addr" text NOT NULL DEFAULT '',
   "hubloc_network" text NOT NULL DEFAULT '',
-  "hubloc_flags" bigint  NOT NULL DEFAULT 0 ,
-  "hubloc_status" bigint  NOT NULL DEFAULT 0 ,
+  "hubloc_flags" bigint  NOT NULL DEFAULT '0',
+  "hubloc_status" bigint  NOT NULL DEFAULT '0',
   "hubloc_url" text NOT NULL DEFAULT '',
   "hubloc_url_sig" text NOT NULL DEFAULT '',
   "hubloc_host" text NOT NULL DEFAULT '',
@@ -524,10 +488,10 @@ CREATE TABLE "hubloc" (
   "hubloc_sitekey" text NOT NULL DEFAULT '',
   "hubloc_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "hubloc_connected" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "hubloc_primary" smallint NOT NULL DEFAULT 0 ,
-  "hubloc_orphancheck" smallint NOT NULL DEFAULT 0 ,
-  "hubloc_error" smallint NOT NULL DEFAULT 0 ,
-  "hubloc_deleted" smallint NOT NULL DEFAULT 0 ,
+  "hubloc_primary" smallint NOT NULL DEFAULT '0',
+  "hubloc_orphancheck" smallint NOT NULL DEFAULT '0',
+  "hubloc_error" smallint NOT NULL DEFAULT '0',
+  "hubloc_deleted" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("hubloc_id")
 );
 create index "hubloc_url" on hubloc ("hubloc_url");
@@ -546,11 +510,11 @@ create index "hubloc_error" on hubloc ("hubloc_error");
 create index "hubloc_deleted" on hubloc ("hubloc_deleted");
 CREATE TABLE "iconfig" (
   "id" serial NOT NULL,
-  "iid" bigint NOT NULL DEFAULT 0 ,
+  "iid" bigint NOT NULL DEFAULT '0',
   "cat" text NOT NULL DEFAULT '',
   "k" text NOT NULL DEFAULT '',
   "v" text NOT NULL DEFAULT '',
-  "sharing" int NOT NULL DEFAULT 0 ,
+  "sharing" int NOT NULL DEFAULT '0',
   PRIMARY KEY("id")
 );
 create index "iconfig_iid" on iconfig ("iid");
@@ -577,9 +541,9 @@ create index "issue_component" on issue ("issue_component");
 CREATE TABLE "item" (
   "id" serial  NOT NULL,
   "mid" text  NOT NULL DEFAULT '',
-  "aid" bigint  NOT NULL DEFAULT 0 ,
-  "uid" bigint  NOT NULL DEFAULT 0 ,
-  "parent" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
+  "uid" bigint  NOT NULL DEFAULT '0',
+  "parent" bigint  NOT NULL DEFAULT '0',
   "parent_mid" text  NOT NULL DEFAULT '',
   "thr_parent" text NOT NULL DEFAULT '',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -598,7 +562,7 @@ CREATE TABLE "item" (
   "html" text NOT NULL,
   "app" text NOT NULL DEFAULT '',
   "lang" varchar(64) NOT NULL DEFAULT '',
-  "revision" bigint  NOT NULL DEFAULT 0 ,
+  "revision" bigint  NOT NULL DEFAULT '0',
   "verb" text NOT NULL DEFAULT '',
   "obj_type" text NOT NULL DEFAULT '',
   "obj" text NOT NULL,
@@ -613,7 +577,6 @@ CREATE TABLE "item" (
   "resource_type" varchar(16) NOT NULL DEFAULT '',
   "attach" text NOT NULL,
   "sig" text NOT NULL DEFAULT '',
-  "diaspora_meta" text NOT NULL DEFAULT '',
   "location" text NOT NULL DEFAULT '',
   "coord" text NOT NULL DEFAULT '',
   "public_policy" text NOT NULL DEFAULT '',
@@ -622,32 +585,32 @@ CREATE TABLE "item" (
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
   "deny_gid" text NOT NULL,
-  "item_restrict" bigint NOT NULL DEFAULT 0 ,
-  "item_flags" bigint NOT NULL DEFAULT 0 ,
-  "item_private" numeric(4) NOT NULL DEFAULT 0 ,
-  "item_unseen" smallint NOT NULL DEFAULT 0 ,
-  "item_wall" smallint NOT NULL DEFAULT 0 ,
-  "item_origin" smallint NOT NULL DEFAULT 0 ,
-  "item_starred" smallint NOT NULL DEFAULT 0 ,
-  "item_uplink" smallint NOT NULL DEFAULT 0 ,
-  "item_consensus" smallint NOT NULL DEFAULT 0 ,
-  "item_thread_top" smallint NOT NULL DEFAULT 0 ,
-  "item_notshown" smallint NOT NULL DEFAULT 0 ,
-  "item_nsfw" smallint NOT NULL DEFAULT 0 ,
-  "item_relay" smallint NOT NULL DEFAULT 0 ,
-  "item_mentionsme" smallint NOT NULL DEFAULT 0 ,
-  "item_nocomment" smallint NOT NULL DEFAULT 0 ,
-  "item_obscured" smallint NOT NULL DEFAULT 0 ,
-  "item_verified" smallint NOT NULL DEFAULT 0 ,
-  "item_retained" smallint NOT NULL DEFAULT 0 ,
-  "item_rss" smallint NOT NULL DEFAULT 0 ,
-  "item_deleted" smallint NOT NULL DEFAULT 0 ,
-  "item_type" int NOT NULL DEFAULT 0 ,
-  "item_hidden" smallint NOT NULL DEFAULT 0 ,
-  "item_unpublished" smallint NOT NULL DEFAULT 0 ,
-  "item_delayed" smallint NOT NULL DEFAULT 0 ,
-  "item_pending_remove" smallint NOT NULL DEFAULT 0 ,
-  "item_blocked" smallint NOT NULL DEFAULT 0 ,
+  "item_restrict" bigint NOT NULL DEFAULT '0',
+  "item_flags" bigint NOT NULL DEFAULT '0',
+  "item_private" numeric(4) NOT NULL DEFAULT '0',
+  "item_unseen" smallint NOT NULL DEFAULT '0',
+  "item_wall" smallint NOT NULL DEFAULT '0',
+  "item_origin" smallint NOT NULL DEFAULT '0',
+  "item_starred" smallint NOT NULL DEFAULT '0',
+  "item_uplink" smallint NOT NULL DEFAULT '0',
+  "item_consensus" smallint NOT NULL DEFAULT '0',
+  "item_thread_top" smallint NOT NULL DEFAULT '0',
+  "item_notshown" smallint NOT NULL DEFAULT '0',
+  "item_nsfw" smallint NOT NULL DEFAULT '0',
+  "item_relay" smallint NOT NULL DEFAULT '0',
+  "item_mentionsme" smallint NOT NULL DEFAULT '0',
+  "item_nocomment" smallint NOT NULL DEFAULT '0',
+  "item_obscured" smallint NOT NULL DEFAULT '0',
+  "item_verified" smallint NOT NULL DEFAULT '0',
+  "item_retained" smallint NOT NULL DEFAULT '0',
+  "item_rss" smallint NOT NULL DEFAULT '0',
+  "item_deleted" smallint NOT NULL DEFAULT '0',
+  "item_type" int NOT NULL DEFAULT '0',
+  "item_hidden" smallint NOT NULL DEFAULT '0',
+  "item_unpublished" smallint NOT NULL DEFAULT '0',
+  "item_delayed" smallint NOT NULL DEFAULT '0',
+  "item_pending_remove" smallint NOT NULL DEFAULT '0',
+  "item_blocked" smallint NOT NULL DEFAULT '0',
   "item_search_vector" tsvector,
   PRIMARY KEY ("id")
 );
@@ -725,10 +688,10 @@ create index "itemid_service" on item_id ("service");
 create index "itemid_iid" on item_id ("iid");
 CREATE TABLE "likes" (
   "id" serial  NOT NULL,
-  "channel_id" bigint  NOT NULL DEFAULT 0 ,
+  "channel_id" bigint  NOT NULL DEFAULT '0',
   "liker" varchar(128) NOT NULL DEFAULT '',
   "likee" varchar(128) NOT NULL DEFAULT '',
-  "iid" bigint  NOT NULL DEFAULT 0 ,
+  "iid" bigint  NOT NULL DEFAULT '0',
   "i_mid" varchar(255) NOT NULL DEFAULT '',
   "verb" text NOT NULL DEFAULT '',
   "target_type" text NOT NULL DEFAULT '',
@@ -746,27 +709,27 @@ create index "likes_target_type" on likes ("target_type");
 create index "likes_target_id" on likes ("target_id");
 CREATE TABLE "mail" (
   "id" serial  NOT NULL,
-  "convid" bigint  NOT NULL DEFAULT 0 ,
+  "convid" bigint  NOT NULL DEFAULT '0',
   "conv_guid" text NOT NULL,
-  "mail_flags" bigint  NOT NULL DEFAULT 0 ,
+  "mail_flags" bigint  NOT NULL DEFAULT '0',
   "from_xchan" text NOT NULL DEFAULT '',
   "to_xchan" text NOT NULL DEFAULT '',
-  "account_id" bigint  NOT NULL DEFAULT 0 ,
-  "channel_id" bigint  NOT NULL DEFAULT 0 ,
-  "mail_mimetype" varchar(64) NOT NULL DEFAULT 'text/bbcode',
+  "account_id" bigint  NOT NULL DEFAULT '0',
+  "channel_id" bigint  NOT NULL DEFAULT '0',
+  "mail_mimetype" varchar(64) NOT NULL DEFAULT '0',
   "title" text NOT NULL,
   "body" text NOT NULL,
   "sig" text NOT NULL,
   "attach" text NOT NULL DEFAULT '',
   "mid" text NOT NULL,
   "parent_mid" text NOT NULL,
-  "mail_deleted" smallint NOT NULL DEFAULT 0 ,
-  "mail_replied" smallint NOT NULL DEFAULT 0 ,
-  "mail_isreply" smallint NOT NULL DEFAULT 0 ,
-  "mail_seen" smallint NOT NULL DEFAULT 0 ,
-  "mail_recalled" smallint NOT NULL DEFAULT 0 ,
-  "mail_obscured" smallint NOT NULL DEFAULT 0 ,
-  "mail_raw" smallint NOT NULL DEFAULT 0 ,
+  "mail_deleted" smallint NOT NULL DEFAULT '0',
+  "mail_replied" smallint NOT NULL DEFAULT '0',
+  "mail_isreply" smallint NOT NULL DEFAULT '0',
+  "mail_seen" smallint NOT NULL DEFAULT '0',
+  "mail_recalled" smallint NOT NULL DEFAULT '0',
+  "mail_obscured" smallint NOT NULL DEFAULT '0',
+  "mail_raw" smallint NOT NULL DEFAULT '0',
   "created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "expires" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("id")
@@ -790,10 +753,10 @@ create index "mail_recalled" on mail ("mail_recalled");
 create index "mail_obscured" on mail ("mail_obscured");
 CREATE TABLE "menu" (
   "menu_id" serial  NOT NULL,
-  "menu_channel_id" bigint  NOT NULL DEFAULT 0 ,
+  "menu_channel_id" bigint  NOT NULL DEFAULT '0',
   "menu_name" text NOT NULL DEFAULT '',
   "menu_desc" text NOT NULL DEFAULT '',
-  "menu_flags" bigint NOT NULL DEFAULT 0 ,
+  "menu_flags" bigint NOT NULL DEFAULT '0',
   "menu_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "menu_edited" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   PRIMARY KEY ("menu_id")
@@ -807,14 +770,14 @@ CREATE TABLE "menu_item" (
   "mitem_id" serial  NOT NULL,
   "mitem_link" text NOT NULL DEFAULT '',
   "mitem_desc" text NOT NULL DEFAULT '',
-  "mitem_flags" bigint NOT NULL DEFAULT 0 ,
+  "mitem_flags" bigint NOT NULL DEFAULT '0',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
   "deny_gid" text NOT NULL,
   "mitem_channel_id" bigint  NOT NULL,
-  "mitem_menu_id" bigint  NOT NULL DEFAULT 0 ,
-  "mitem_order" bigint NOT NULL DEFAULT 0 ,
+  "mitem_menu_id" bigint  NOT NULL DEFAULT '0',
+  "mitem_order" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("mitem_id")
 
 );
@@ -833,7 +796,7 @@ CREATE TABLE "notify" (
   "uid" bigint NOT NULL,
   "link" text NOT NULL,
   "parent" text NOT NULL DEFAULT '',
-  "seen" numeric(1) NOT NULL DEFAULT 0 ,
+  "seen" numeric(1) NOT NULL DEFAULT '0',
   "ntype" bigint NOT NULL,
   "verb" text NOT NULL,
   "otype" varchar(16) NOT NULL,
@@ -882,18 +845,18 @@ create index "obj_quantity" on obj ("obj_quantity");
 
 CREATE TABLE "outq" (
   "outq_hash" text NOT NULL,
-  "outq_account" bigint  NOT NULL DEFAULT 0 ,
-  "outq_channel" bigint  NOT NULL DEFAULT 0 ,
+  "outq_account" bigint  NOT NULL DEFAULT '0',
+  "outq_channel" bigint  NOT NULL DEFAULT '0',
   "outq_driver" varchar(32) NOT NULL DEFAULT '',
   "outq_posturl" text NOT NULL DEFAULT '',
-  "outq_async" numeric(1) NOT NULL DEFAULT 0 ,
-  "outq_delivered" numeric(1) NOT NULL DEFAULT 0 ,
+  "outq_async" numeric(1) NOT NULL DEFAULT '0',
+  "outq_delivered" numeric(1) NOT NULL DEFAULT '0',
   "outq_created" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_scheduled" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "outq_notify" text NOT NULL,
   "outq_msg" text NOT NULL,
-  "outq_priority" smallint NOT NULL DEFAULT 0 ,
+  "outq_priority" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("outq_hash")
 );
 create index "outq_account" on outq ("outq_account");
@@ -908,7 +871,7 @@ create index "outq_priority" on outq ("outq_priority");
 
 CREATE TABLE "pconfig" (
   "id" serial NOT NULL,
-  "uid" bigint NOT NULL DEFAULT 0 ,
+  "uid" bigint NOT NULL DEFAULT '0',
   "cat" text  NOT NULL,
   "k" text  NOT NULL,
   "v" text NOT NULL,
@@ -918,7 +881,7 @@ CREATE TABLE "pconfig" (
 
 CREATE TABLE "photo" (
   "id" serial  NOT NULL,
-  "aid" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
   "uid" bigint  NOT NULL,
   "xchan" text NOT NULL DEFAULT '',
   "resource_id" text NOT NULL,
@@ -931,16 +894,16 @@ CREATE TABLE "photo" (
   "mimetype" varchar(128) NOT NULL DEFAULT 'image/jpeg',
   "height" numeric(6) NOT NULL,
   "width" numeric(6) NOT NULL,
-  "filesize" bigint  NOT NULL DEFAULT 0 ,
+  "filesize" bigint  NOT NULL DEFAULT '0',
   "content" bytea NOT NULL,
-  "imgscale" numeric(3) NOT NULL DEFAULT 0 ,
-  "profile" numeric(1) NOT NULL DEFAULT 0 ,
-  "photo_usage" smallint NOT NULL DEFAULT 0 ,
-  "is_nsfw" smallint NOT NULL DEFAULT 0 ,
-  "os_storage" smallint NOT NULL DEFAULT 0 ,
+  "imgscale" numeric(3) NOT NULL DEFAULT '0',
+  "profile" numeric(1) NOT NULL DEFAULT '0',
+  "photo_usage" smallint NOT NULL DEFAULT '0',
+  "is_nsfw" smallint NOT NULL DEFAULT '0',
+  "os_storage" smallint NOT NULL DEFAULT '0',
   "os_path" text NOT NULL,
   "display_path" text NOT NULL,
-  "photo_flags" bigint  NOT NULL DEFAULT 0 ,
+  "photo_flags" bigint  NOT NULL DEFAULT '0',
   "allow_cid" text NOT NULL,
   "allow_gid" text NOT NULL,
   "deny_cid" text NOT NULL,
@@ -963,10 +926,10 @@ create index "photo_os_storage" on photo ("os_storage");
 
 CREATE TABLE "poll" (
   "poll_id" serial  NOT NULL,
-  "poll_channel" bigint  NOT NULL DEFAULT 0 ,
+  "poll_channel" bigint  NOT NULL DEFAULT '0',
   "poll_desc" text NOT NULL,
-  "poll_flags" bigint NOT NULL DEFAULT 0 ,
-  "poll_votes" bigint NOT NULL DEFAULT 0 ,
+  "poll_flags" bigint NOT NULL DEFAULT '0',
+  "poll_votes" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("poll_id")
 
 );
@@ -975,10 +938,10 @@ create index "poll_flags" on poll ("poll_flags");
 create index "poll_votes" on poll ("poll_votes");
 CREATE TABLE "poll_elm" (
   "pelm_id" serial  NOT NULL,
-  "pelm_poll" bigint  NOT NULL DEFAULT 0 ,
+  "pelm_poll" bigint  NOT NULL DEFAULT '0',
   "pelm_desc" text NOT NULL,
-  "pelm_flags" bigint NOT NULL DEFAULT 0 ,
-  "pelm_result" float NOT NULL DEFAULT 0 ,
+  "pelm_flags" bigint NOT NULL DEFAULT '0',
+  "pelm_result" float NOT NULL DEFAULT '0',
   PRIMARY KEY ("pelm_id")
 );
 create index "pelm_poll" on poll_elm ("pelm_poll");
@@ -996,7 +959,7 @@ CREATE TABLE "profdef" (
 create index "profdef_field_name" on profdef ("field_name");
 CREATE TABLE "profext" (
   "id" serial  NOT NULL,
-  "channel_id" bigint  NOT NULL DEFAULT 0 ,
+  "channel_id" bigint  NOT NULL DEFAULT '0',
   "hash" text NOT NULL DEFAULT '',
   "k" text NOT NULL DEFAULT '',
   "v" text NOT NULL,
@@ -1009,11 +972,11 @@ create index "profext_k" on profext ("k");
 CREATE TABLE "profile" (
   "id" serial NOT NULL,
   "profile_guid" varchar(64) NOT NULL DEFAULT '',
-  "aid" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
   "uid" bigint NOT NULL,
   "profile_name" text NOT NULL,
-  "is_default" numeric(1) NOT NULL DEFAULT 0 ,
-  "hide_friends" numeric(1) NOT NULL DEFAULT 0 ,
+  "is_default" numeric(1) NOT NULL DEFAULT '0',
+  "hide_friends" numeric(1) NOT NULL DEFAULT '0',
   "fullname" text NOT NULL,
   "pdesc" text NOT NULL DEFAULT '',
   "chandesc" text NOT NULL DEFAULT '',
@@ -1050,7 +1013,7 @@ CREATE TABLE "profile" (
   "homepage" text NOT NULL DEFAULT '',
   "photo" text NOT NULL,
   "thumb" text NOT NULL,
-  "publish" numeric(1) NOT NULL DEFAULT 0 ,
+  "publish" numeric(1) NOT NULL DEFAULT '0',
   "profile_vcard" text NOT NULL DEFAULT '',
   PRIMARY KEY ("id"),
   UNIQUE ("profile_guid","uid")
@@ -1072,7 +1035,7 @@ create index "profile_guid" on profile ("profile_guid");
 CREATE TABLE "profile_check" (
   "id" serial  NOT NULL,
   "uid" bigint  NOT NULL,
-  "cid" bigint  NOT NULL DEFAULT 0 ,
+  "cid" bigint  NOT NULL DEFAULT '0',
   "dfrn_id" text NOT NULL,
   "sec" text NOT NULL,
   "expire" bigint NOT NULL,
@@ -1107,8 +1070,8 @@ create index "session_sid" on session ("sid");
 create index "session_expire" on session ("expire");
 CREATE TABLE "shares" (
   "share_id" serial  NOT NULL,
-  "share_type" bigint NOT NULL DEFAULT 0 ,
-  "share_target" bigint  NOT NULL DEFAULT 0 ,
+  "share_type" bigint NOT NULL DEFAULT '0',
+  "share_target" bigint  NOT NULL DEFAULT '0',
   "share_xchan" text NOT NULL DEFAULT '',
   PRIMARY KEY ("share_id")
 );
@@ -1118,8 +1081,8 @@ create index "share_xchan" on shares ("share_xchan");
 
 CREATE TABLE "sign" (
   "id" serial  NOT NULL,
-  "iid" bigint  NOT NULL DEFAULT 0 ,
-  "retract_iid" bigint  NOT NULL DEFAULT 0 ,
+  "iid" bigint  NOT NULL DEFAULT '0',
+  "retract_iid" bigint  NOT NULL DEFAULT '0',
   "signed_text" text NOT NULL,
   "signature" text NOT NULL,
   "signer" text NOT NULL,
@@ -1130,19 +1093,19 @@ create index "sign_retract_iid" on "sign" ("retract_iid");
 
 CREATE TABLE "site" (
   "site_url" text NOT NULL,
-  "site_access" bigint NOT NULL DEFAULT 0 ,
-  "site_flags" bigint NOT NULL DEFAULT 0 ,
+  "site_access" bigint NOT NULL DEFAULT '0',
+  "site_flags" bigint NOT NULL DEFAULT '0',
   "site_update" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "site_pull" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "site_sync" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "site_directory" text NOT NULL DEFAULT '',
-  "site_register" bigint NOT NULL DEFAULT 0 ,
+  "site_register" bigint NOT NULL DEFAULT '0',
   "site_sellpage" text NOT NULL DEFAULT '',
   "site_location" text NOT NULL DEFAULT '',
   "site_realm" text NOT NULL DEFAULT '',
-  "site_valid" smallint NOT NULL DEFAULT 0 ,
-  "site_dead" smallint NOT NULL DEFAULT 0 ,
-  "site_type" smallint NOT NULL DEFAULT 0 ,
+  "site_valid" smallint NOT NULL DEFAULT '0',
+  "site_dead" smallint NOT NULL DEFAULT '0',
+  "site_type" smallint NOT NULL DEFAULT '0',
   "site_project" text NOT NULL DEFAULT '',
   "site_version" text NOT NULL DEFAULT '',
   "site_crypto" text NOT NULL DEFAULT '',
@@ -1162,7 +1125,7 @@ create index "site_project" on site ("site_project");
 
 CREATE TABLE "source" (
   "src_id" serial  NOT NULL,
-  "src_channel_id" bigint  NOT NULL DEFAULT 0 ,
+  "src_channel_id" bigint  NOT NULL DEFAULT '0',
   "src_channel_xchan" text NOT NULL DEFAULT '',
   "src_xchan" text NOT NULL DEFAULT '',
   "src_patt" text NOT NULL DEFAULT '',
@@ -1182,8 +1145,8 @@ CREATE TABLE "sys_perms" (
 );
 CREATE TABLE "term" (
   "tid" serial  NOT NULL,
-  "aid" bigint  NOT NULL DEFAULT 0 ,
-  "uid" bigint  NOT NULL DEFAULT 0 ,
+  "aid" bigint  NOT NULL DEFAULT '0',
+  "uid" bigint  NOT NULL DEFAULT '0',
   "oid" bigint  NOT NULL,
   "otype" numeric(3)  NOT NULL,
   "ttype" numeric(3)  NOT NULL,
@@ -1222,7 +1185,7 @@ CREATE TABLE "updates" (
   "ud_guid" text NOT NULL DEFAULT '',
   "ud_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "ud_last" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "ud_flags" bigint NOT NULL DEFAULT 0 ,
+  "ud_flags" bigint NOT NULL DEFAULT '0',
   "ud_addr" text NOT NULL DEFAULT '',
   PRIMARY KEY ("ud_id")
 );
@@ -1234,7 +1197,7 @@ create index "ud_addr" on updates ("ud_addr");
 create index "ud_last" on updates ("ud_last");
 CREATE TABLE "verify" (
   "id" serial  NOT NULL,
-  "channel" bigint  NOT NULL DEFAULT 0 ,
+  "channel" bigint  NOT NULL DEFAULT '0',
   "vtype" varchar(32) NOT NULL DEFAULT '',
   "token" text NOT NULL DEFAULT '',
   "meta" text NOT NULL DEFAULT '',
@@ -1248,8 +1211,8 @@ create index "verify_meta" on verify ("meta");
 create index "verify_created" on verify ("created");
 CREATE TABLE "vote" (
   "vote_id" serial  NOT NULL,
-  "vote_poll" bigint NOT NULL DEFAULT 0 ,
-  "vote_element" bigint NOT NULL DEFAULT 0 ,
+  "vote_poll" bigint NOT NULL DEFAULT '0',
+  "vote_element" bigint NOT NULL DEFAULT '0',
   "vote_result" text NOT NULL,
   "vote_xchan" text NOT NULL DEFAULT '',
   PRIMARY KEY ("vote_id"),
@@ -1274,16 +1237,16 @@ CREATE TABLE "xchan" (
   "xchan_name" text NOT NULL DEFAULT '',
   "xchan_network" text NOT NULL DEFAULT '',
   "xchan_instance_url" text NOT NULL DEFAULT '',
-  "xchan_flags" bigint  NOT NULL DEFAULT 0 ,
+  "xchan_flags" bigint  NOT NULL DEFAULT '0',
   "xchan_photo_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
   "xchan_name_date" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "xchan_hidden" smallint NOT NULL DEFAULT 0 ,
-  "xchan_orphan" smallint NOT NULL DEFAULT 0 ,
-  "xchan_censored" smallint NOT NULL DEFAULT 0 ,
-  "xchan_selfcensored" smallint NOT NULL DEFAULT 0 ,
-  "xchan_system" smallint NOT NULL DEFAULT 0 ,
-  "xchan_pubforum" smallint NOT NULL DEFAULT 0 ,
-  "xchan_deleted" smallint NOT NULL DEFAULT 0 ,
+  "xchan_hidden" smallint NOT NULL DEFAULT '0',
+  "xchan_orphan" smallint NOT NULL DEFAULT '0',
+  "xchan_censored" smallint NOT NULL DEFAULT '0',
+  "xchan_selfcensored" smallint NOT NULL DEFAULT '0',
+  "xchan_system" smallint NOT NULL DEFAULT '0',
+  "xchan_pubforum" smallint NOT NULL DEFAULT '0',
+  "xchan_deleted" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY ("xchan_hash")
 );
 create index "xchan_guid" on xchan ("xchan_guid");
@@ -1328,7 +1291,7 @@ create index "xconfig_cat" on xconfig ("cat");
 create index "xconfig_k" on xconfig ("k");
 CREATE TABLE "xign" (
   "id" serial  NOT NULL,
-  "uid" bigint NOT NULL DEFAULT 0 ,
+  "uid" bigint NOT NULL DEFAULT '0',
   "xchan" text NOT NULL DEFAULT '',
   PRIMARY KEY ("id")
 );
@@ -1338,10 +1301,10 @@ CREATE TABLE "xlink" (
   "xlink_id" serial  NOT NULL,
   "xlink_xchan" text NOT NULL DEFAULT '',
   "xlink_link" text NOT NULL DEFAULT '',
-  "xlink_rating" bigint NOT NULL DEFAULT 0 ,
+  "xlink_rating" bigint NOT NULL DEFAULT '0',
   "xlink_rating_text" TEXT NOT NULL DEFAULT '',
   "xlink_updated" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
-  "xlink_static" numeric(1) NOT NULL DEFAULT 0 ,
+  "xlink_static" numeric(1) NOT NULL DEFAULT '0',
   "xlink_sig" text NOT NULL DEFAULT '',
   PRIMARY KEY ("xlink_id")
 );
@@ -1353,7 +1316,7 @@ create index "xlink_static" on xlink ("xlink_static");
 CREATE TABLE "xperm" (
   "xp_id" serial NOT NULL,
   "xp_client" varchar( 20 ) NOT NULL DEFAULT '',
-  "xp_channel" bigint NOT NULL DEFAULT 0 ,
+  "xp_channel" bigint NOT NULL DEFAULT '0',
   "xp_perm" varchar( 64 ) NOT NULL DEFAULT '',
   PRIMARY KEY ("xp_id")
 );
@@ -1362,7 +1325,7 @@ create index "xp_channel" on xperm ("xp_channel");
 create index "xp_perm" on xperm ("xp_perm");
 CREATE TABLE "xprof" (
   "xprof_hash" text NOT NULL,
-  "xprof_age" numeric(3)  NOT NULL DEFAULT 0 ,
+  "xprof_age" numeric(3)  NOT NULL DEFAULT '0',
   "xprof_desc" text NOT NULL DEFAULT '',
   "xprof_dob" varchar(12) NOT NULL DEFAULT '',
   "xprof_gender" text NOT NULL DEFAULT '',
@@ -1393,9 +1356,231 @@ CREATE TABLE "xtag" (
   "xtag_id" serial  NOT NULL,
   "xtag_hash" text NOT NULL,
   "xtag_term" text NOT NULL DEFAULT '',
-  "xtag_flags" bigint NOT NULL DEFAULT 0 ,
+  "xtag_flags" bigint NOT NULL DEFAULT '0',
   PRIMARY KEY ("xtag_id")
 );
 create index "xtag_term" on xtag ("xtag_term");
 create index "xtag_hash" on xtag ("xtag_hash");
 create index "xtag_flags" on xtag ("xtag_flags");
+
+CREATE TABLE addressbooks (
+    id SERIAL NOT NULL,
+    principaluri VARCHAR(255),
+    displayname VARCHAR(255),
+    uri VARCHAR(200),
+    description TEXT,
+    synctoken INTEGER NOT NULL DEFAULT 1
+);
+
+ALTER TABLE ONLY addressbooks
+    ADD CONSTRAINT addressbooks_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX addressbooks_ukey
+    ON addressbooks USING btree (principaluri, uri);
+
+CREATE TABLE cards (
+    id SERIAL NOT NULL,
+    addressbookid INTEGER NOT NULL,
+    carddata BYTEA,
+    uri VARCHAR(200),
+    lastmodified INTEGER,
+    etag VARCHAR(32),
+    size INTEGER NOT NULL
+);
+
+ALTER TABLE ONLY cards
+    ADD CONSTRAINT cards_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX cards_ukey
+    ON cards USING btree (addressbookid, uri);
+
+CREATE TABLE addressbookchanges (
+    id SERIAL NOT NULL,
+    uri VARCHAR(200) NOT NULL,
+    synctoken INTEGER NOT NULL,
+    addressbookid INTEGER NOT NULL,
+    operation SMALLINT NOT NULL
+);
+
+ALTER TABLE ONLY addressbookchanges
+    ADD CONSTRAINT addressbookchanges_pkey PRIMARY KEY (id);
+
+CREATE INDEX addressbookchanges_addressbookid_synctoken_ix
+    ON addressbookchanges USING btree (addressbookid, synctoken);
+
+CREATE TABLE calendarobjects (
+    id SERIAL NOT NULL,
+    calendardata BYTEA,
+    uri VARCHAR(200),
+    calendarid INTEGER NOT NULL,
+    lastmodified INTEGER,
+    etag VARCHAR(32),
+    size INTEGER NOT NULL,
+    componenttype VARCHAR(8),
+    firstoccurence INTEGER,
+    lastoccurence INTEGER,
+    uid VARCHAR(200)
+);
+
+ALTER TABLE ONLY calendarobjects
+    ADD CONSTRAINT calendarobjects_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX calendarobjects_ukey
+    ON calendarobjects USING btree (calendarid, uri);
+
+
+CREATE TABLE calendars (
+    id SERIAL NOT NULL,
+    synctoken INTEGER NOT NULL DEFAULT 1,
+    components VARCHAR(21)
+);
+
+ALTER TABLE ONLY calendars
+    ADD CONSTRAINT calendars_pkey PRIMARY KEY (id);
+
+
+CREATE TABLE calendarinstances (
+    id SERIAL NOT NULL,
+    calendarid INTEGER NOT NULL,
+    principaluri VARCHAR(100),
+    access SMALLINT NOT NULL DEFAULT '1', -- '1 = owner, 2 = read, 3 = readwrite'
+    displayname VARCHAR(100),
+    uri VARCHAR(200),
+    description TEXT,
+    calendarorder INTEGER NOT NULL DEFAULT 0,
+    calendarcolor VARCHAR(10),
+    timezone TEXT,
+    transparent SMALLINT NOT NULL DEFAULT '0',
+    share_href VARCHAR(100),
+    share_displayname VARCHAR(100),
+    share_invitestatus SMALLINT NOT NULL DEFAULT '2' --  '1 = noresponse, 2 = accepted, 3 = declined, 4 = invalid'
+);
+
+ALTER TABLE ONLY calendarinstances
+    ADD CONSTRAINT calendarinstances_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX calendarinstances_principaluri_uri
+    ON calendarinstances USING btree (principaluri, uri);
+
+
+CREATE UNIQUE INDEX calendarinstances_principaluri_calendarid
+    ON calendarinstances USING btree (principaluri, calendarid);
+
+CREATE UNIQUE INDEX calendarinstances_principaluri_share_href
+    ON calendarinstances USING btree (principaluri, share_href);
+
+CREATE TABLE calendarsubscriptions (
+    id SERIAL NOT NULL,
+    uri VARCHAR(200) NOT NULL,
+    principaluri VARCHAR(100) NOT NULL,
+    source TEXT,
+    displayname VARCHAR(100),
+    refreshrate VARCHAR(10),
+    calendarorder INTEGER NOT NULL DEFAULT 0,
+    calendarcolor VARCHAR(10),
+    striptodos SMALLINT NULL,
+    stripalarms SMALLINT NULL,
+    stripattachments SMALLINT NULL,
+    lastmodified INTEGER
+);
+
+ALTER TABLE ONLY calendarsubscriptions
+    ADD CONSTRAINT calendarsubscriptions_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX calendarsubscriptions_ukey
+    ON calendarsubscriptions USING btree (principaluri, uri);
+
+CREATE TABLE calendarchanges (
+    id SERIAL NOT NULL,
+    uri VARCHAR(200) NOT NULL,
+    synctoken INTEGER NOT NULL,
+    calendarid INTEGER NOT NULL,
+    operation SMALLINT NOT NULL DEFAULT 0
+);
+
+ALTER TABLE ONLY calendarchanges
+    ADD CONSTRAINT calendarchanges_pkey PRIMARY KEY (id);
+
+CREATE INDEX calendarchanges_calendarid_synctoken_ix
+    ON calendarchanges USING btree (calendarid, synctoken);
+
+CREATE TABLE schedulingobjects (
+    id SERIAL NOT NULL,
+    principaluri VARCHAR(255),
+    calendardata BYTEA,
+    uri VARCHAR(200),
+    lastmodified INTEGER,
+    etag VARCHAR(32),
+    size INTEGER NOT NULL
+);
+
+CREATE TABLE locks (
+    id SERIAL NOT NULL,
+    owner VARCHAR(100),
+    timeout INTEGER,
+    created INTEGER,
+    token VARCHAR(100),
+    scope SMALLINT,
+    depth SMALLINT,
+    uri TEXT
+);
+
+ALTER TABLE ONLY locks
+    ADD CONSTRAINT locks_pkey PRIMARY KEY (id);
+
+CREATE INDEX locks_token_ix
+    ON locks USING btree (token);
+
+CREATE INDEX locks_uri_ix
+    ON locks USING btree (uri);
+
+CREATE TABLE principals (
+    id SERIAL NOT NULL,
+    uri VARCHAR(200) NOT NULL,
+    email VARCHAR(80),
+    displayname VARCHAR(80)
+);
+
+ALTER TABLE ONLY principals
+    ADD CONSTRAINT principals_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX principals_ukey
+    ON principals USING btree (uri);
+
+CREATE TABLE groupmembers (
+    id SERIAL NOT NULL,
+    principal_id INTEGER NOT NULL,
+    member_id INTEGER NOT NULL
+);
+
+ALTER TABLE ONLY groupmembers
+    ADD CONSTRAINT groupmembers_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX groupmembers_ukey
+    ON groupmembers USING btree (principal_id, member_id);
+
+CREATE TABLE propertystorage (
+    id SERIAL NOT NULL,
+    path VARCHAR(1024) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    valuetype INT,
+    value BYTEA
+);
+
+ALTER TABLE ONLY propertystorage
+    ADD CONSTRAINT propertystorage_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX propertystorage_ukey
+    ON propertystorage (path, name);
+
+CREATE TABLE users (
+    id SERIAL NOT NULL,
+    username VARCHAR(50),
+    digesta1 VARCHAR(32)
+);
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+CREATE UNIQUE INDEX users_ukey
+    ON users USING btree (username);

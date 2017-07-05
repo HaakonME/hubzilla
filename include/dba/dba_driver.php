@@ -344,11 +344,8 @@ function q($sql) {
 	if(\DBA::$dba && \DBA::$dba->connected) {
 		$stmt = vsprintf($sql, $args);
 		if($stmt === false) {
-			if(version_compare(PHP_VERSION, '5.4.0') >= 0)
-				db_logger('dba: vsprintf error: ' .
-					print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1), true),LOGGER_NORMAL,LOG_CRIT);
-			else
-				db_logger('dba: vsprintf error: ' . print_r(debug_backtrace(), true),LOGGER_NORMAL,LOG_CRIT);
+			db_logger('dba: vsprintf error: ' .
+				print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1), true),LOGGER_NORMAL,LOG_CRIT);
 		}
 		if(\DBA::$dba->debug)
 			db_logger('Sql: ' . $stmt, LOGGER_DEBUG, LOG_INFO);
@@ -444,6 +441,20 @@ function db_getfunc($f) {
 	db_logger('Unable to abstract DB function "'. $f . '" for dbtype ' . ACTIVE_DBTYPE, LOGGER_DEBUG, LOG_ERR);
 	return $f;
 }
+
+function db_load_file($f) {
+	// db errors should get logged to the logfile
+	$str = @file_get_contents($f);
+	$arr = explode(';', $str);
+	if($arr) {
+		foreach($arr as $a) {
+			if(strlen(trim($a))) {
+				$r = dbq(trim($a));
+			}
+		}
+	}
+}
+
 
 // The logger function may make DB calls internally to query the system logging parameters.
 // This can cause a recursion if database debugging is enabled.

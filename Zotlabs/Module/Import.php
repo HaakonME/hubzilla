@@ -121,8 +121,7 @@ class Import extends \Zotlabs\Web\Controller {
 				$t = sprintf( t('Warning: Database versions differ by %1$d updates.'), $v2 - $v1 );
 				notice($t);
 			}
-			if(array_key_exists('server_role',$data['compatibility']) && $data['compatibility']['server_role'] == 'basic')
-				$moving = true;
+
 		}
 
 		if($moving)
@@ -332,6 +331,10 @@ class Import extends \Zotlabs\Web\Controller {
 					$abook['abook_self']        = (($abook['abook_flags'] & 0x0080 ) ? 1 : 0);
 					$abook['abook_feed']        = (($abook['abook_flags'] & 0x0100 ) ? 1 : 0);
 				}
+
+				if(array_key_exists('abook_instance',$abook) && $abook['abook_instance'] && strpos($abook['abook_instance'],z_root()) === false) {
+					$abook['abook_not_here'] = 1;
+				} 
 
 				if($abook['abook_self']) {
 					$role = get_pconfig($channel['channel_id'],'system','permissions_role');

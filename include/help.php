@@ -57,7 +57,7 @@ function get_help_content($tocpath = false) {
 		if(! $text) {
 			$doctype = 'bbcode';
 			$text = load_doc_file('doc/main.bb');
-			goaway('/help/about/about_hubzilla');
+			goaway('/help/about/about');
 			\App::$page['title'] = t('Help');
 		}
 
@@ -116,9 +116,11 @@ function load_doc_file($s) {
 	$b = basename($s);
 	$d = dirname($s);
 
-	$c = find_doc_file("$d/$lang/$b");
-	if($c)
-		return $c;
+	if($dirname !== '-') {
+		$c = find_doc_file("$d/$lang/$b");
+		if($c)
+			return $c;
+	}
 	$c = find_doc_file($s);
 	if($c)
 		return $c;
@@ -140,8 +142,8 @@ function find_doc_file($s) {
  */
 function search_doc_files($s) {
 
-	$itemspage = get_pconfig(local_channel(),'system','itemspage');
-	\App::set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
+
+	\App::set_pager_itemspage(60);
 	$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']), intval(\App::$pager['start']));
 
 	$regexop = db_getfunc('REGEXP');
@@ -198,6 +200,7 @@ function doc_rank_sort($s1, $s2) {
  *
  * @return string
  */
+
 function load_context_help() {
 
 	$path = App::$cmd;

@@ -41,12 +41,9 @@
     <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
 	{{include file="field_input.tpl" field=$sitename}}
-	{{include file="field_select.tpl" field=$server_role}}
 
-	{{if $z_server_role == 'pro'}}
 	{{include file="field_select.tpl" field=$techlevel}}
     {{include file="field_checkbox.tpl" field=$techlock}}
-	{{/if}}
 
 	{{include file="field_textarea.tpl" field=$banner}}
 	{{include file="field_textarea.tpl" field=$siteinfo}}

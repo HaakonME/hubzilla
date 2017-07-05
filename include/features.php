@@ -45,10 +45,6 @@ function feature_level($feature,$def) {
 
 function get_features($filtered = true) {
 
-	$server_role = \Zotlabs\Lib\System::get_server_role();
-
-	if($server_role === 'basic' && $filtered)
-		return array();
 
 	$arr = [
 
@@ -424,16 +420,15 @@ function get_features($filtered = true) {
 	];
 
 
-	if($server_role === 'pro') {
-		$arr['general'][] = [
-			'premium_channel', 
-			t('Premium Channel'), 
-			t('Allows you to set restrictions and terms on those that connect with your channel'),
-			false,
-			get_config('feature_lock','premium_channel'),
-			feature_level('premium_channel',4),
-		];
-	}
+	$arr['general'][] = [
+		'premium_channel', 
+		t('Premium Channel'), 
+		t('Allows you to set restrictions and terms on those that connect with your channel'),
+		false,
+		get_config('feature_lock','premium_channel'),
+		feature_level('premium_channel',4),
+	];
+
 
 	$techlevel = get_account_techlevel();
 

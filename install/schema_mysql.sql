@@ -147,8 +147,8 @@ CREATE TABLE IF NOT EXISTS `app` (
 
 CREATE TABLE IF NOT EXISTS `atoken` (
   `atoken_id` int(11) NOT NULL AUTO_INCREMENT,
-  `atoken_aid` int(11) NOT NULL DEFAULT 0,
-  `atoken_uid` int(11) NOT NULL DEFAULT 0,
+  `atoken_aid` int(11) NOT NULL DEFAULT 0 ,
+  `atoken_uid` int(11) NOT NULL DEFAULT 0 ,
   `atoken_name` char(191) NOT NULL DEFAULT '',
   `atoken_token` char(191) NOT NULL DEFAULT '',
   `atoken_expires` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -165,13 +165,13 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT 0 ,
   `uid` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `hash` char(64) NOT NULL DEFAULT '',
-  `creator` char(128) NOT NULL DEFAULT '',
+  `hash` char(191) NOT NULL DEFAULT '',
+  `creator` char(191) NOT NULL DEFAULT '',
   `filename` char(191) NOT NULL DEFAULT '',
-  `filetype` char(64) NOT NULL DEFAULT '',
+  `filetype` char(191) NOT NULL DEFAULT '',
   `filesize` int(10) unsigned NOT NULL DEFAULT 0 ,
   `revision` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `folder` char(64) NOT NULL DEFAULT '',
+  `folder` char(191) NOT NULL DEFAULT '',
   `flags` int(10) unsigned NOT NULL DEFAULT 0 ,
   `is_dir` tinyint(1) NOT NULL DEFAULT 0 ,
   `is_photo` tinyint(1) NOT NULL DEFAULT 0 ,
@@ -223,14 +223,14 @@ CREATE TABLE IF NOT EXISTS `cal` (
   `cal_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cal_aid` int(10) unsigned NOT NULL DEFAULT 0 ,
   `cal_uid` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `cal_hash` varchar(255) NOT NULL DEFAULT '',
-  `cal_name` varchar(255) NOT NULL DEFAULT '',
-  `uri` varchar(255) NOT NULL DEFAULT '',
-  `logname` varchar(255) NOT NULL DEFAULT '',
-  `pass` varchar(255) NOT NULL DEFAULT '',
-  `ctag` varchar(255) NOT NULL DEFAULT '',
-  `synctoken` varchar(255) NOT NULL DEFAULT '',
-  `cal_types` varchar(255) NOT NULL DEFAULT '',
+  `cal_hash` varchar(191) NOT NULL DEFAULT '',
+  `cal_name` varchar(191) NOT NULL DEFAULT '',
+  `uri` varchar(191) NOT NULL DEFAULT '',
+  `logname` varchar(191) NOT NULL DEFAULT '',
+  `pass` varchar(191) NOT NULL DEFAULT '',
+  `ctag` varchar(191) NOT NULL DEFAULT '',
+  `synctoken` varchar(191) NOT NULL DEFAULT '',
+  `cal_types` varchar(191) NOT NULL DEFAULT '',
   PRIMARY KEY (`cal_id`),
   KEY `cal_aid` (`cal_aid`),
   KEY `cal_uid` (`cal_uid`),
@@ -289,8 +289,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_removed` tinyint(1) NOT NULL DEFAULT 0 ,
   `channel_system` tinyint(1) NOT NULL DEFAULT 0 ,
   `channel_moved` char(191) NOT NULL DEFAULT '',
-  `channel_password` varchar(255) NOT NULL,
-  `channel_salt` varchar(255) NOT NULL,
+  `channel_password` varchar(191) NOT NULL,
+  `channel_salt` varchar(191) NOT NULL,
   PRIMARY KEY (`channel_id`),
   KEY `channel_address` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
@@ -304,29 +304,11 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
   KEY `channel_max_friend_req` (`channel_max_friend_req`),
   KEY `channel_default_gid` (`channel_default_group`),
-  KEY `channel_r_stream` (`channel_r_stream`),
-  KEY `channel_r_profile` (`channel_r_profile`),
-  KEY `channel_r_photos` (`channel_r_photos`),
-  KEY `channel_r_abook` (`channel_r_abook`),
-  KEY `channel_w_stream` (`channel_w_stream`),
-  KEY `channel_w_wall` (`channel_w_wall`),
-  KEY `channel_w_tagwall` (`channel_w_tagwall`),
-  KEY `channel_w_comment` (`channel_w_comment`),
-  KEY `channel_w_mail` (`channel_w_mail`),
-  KEY `channel_w_photos` (`channel_w_photos`),
-  KEY `channel_w_chat` (`channel_w_chat`),
   KEY `channel_guid` (`channel_guid`),
   KEY `channel_hash` (`channel_hash`),
   KEY `channel_expire_days` (`channel_expire_days`),
-  KEY `channel_a_delegate` (`channel_a_delegate`),
-  KEY `channel_r_storage` (`channel_r_storage`),
-  KEY `channel_w_storage` (`channel_w_storage`),
-  KEY `channel_r_pages` (`channel_r_pages`),
-  KEY `channel_w_pages` (`channel_w_pages`),
   KEY `channel_deleted` (`channel_deleted`),
-  KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_dirdate` (`channel_dirdate`),
-  KEY `channel_w_like` (`channel_w_like`),
   KEY `channel_removed` (`channel_removed`),
   KEY `channel_system` (`channel_system`),
   KEY `channel_lastpost` (`channel_lastpost`),
@@ -381,8 +363,8 @@ CREATE TABLE IF NOT EXISTS `chatroom` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `clients` (
-  `client_id` varchar(20) NOT NULL DEFAULT '',
-  `pw` varchar(20) NOT NULL DEFAULT '',
+  `client_id` varchar(191) NOT NULL DEFAULT '',
+  `pw` varchar(191) NOT NULL DEFAULT '',
   `redirect_uri` varchar(200) NOT NULL DEFAULT '',
   `clname` text,
   `icon` text,
@@ -541,6 +523,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   PRIMARY KEY (`hubloc_id`),
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
+  KEY `hubloc_hash` (`hubloc_hash`),
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
@@ -731,13 +714,13 @@ CREATE TABLE IF NOT EXISTS `item_id` (
 CREATE TABLE IF NOT EXISTS `likes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel_id` int(10) unsigned NOT NULL DEFAULT 0 ,
-  `liker` char(128) NOT NULL DEFAULT '',
-  `likee` char(128) NOT NULL DEFAULT '',
+  `liker` char(191) NOT NULL DEFAULT '',
+  `likee` char(191) NOT NULL DEFAULT '',
   `iid` int(11) unsigned NOT NULL DEFAULT 0 ,
   `i_mid` char(191) NOT NULL DEFAULT '',
   `verb` char(191) NOT NULL DEFAULT '',
   `target_type` char(191) NOT NULL DEFAULT '',
-  `target_id` char(128) NOT NULL DEFAULT '',
+  `target_id` char(191) NOT NULL DEFAULT '',
   `target` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `liker` (`liker`),
@@ -831,7 +814,7 @@ CREATE TABLE IF NOT EXISTS `menu_item` (
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hash` char(64) NOT NULL DEFAULT '',
+  `hash` char(191) NOT NULL DEFAULT '',
   `xname` char(191) NOT NULL DEFAULT '',
   `url` char(191) NOT NULL DEFAULT '',
   `photo` char(191) NOT NULL DEFAULT '',
@@ -1219,9 +1202,9 @@ CREATE TABLE IF NOT EXISTS `term` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
-  `id` varchar(40) NOT NULL DEFAULT '',
+  `id` varchar(191) NOT NULL DEFAULT '',
   `secret` text NOT NULL,
-  `client_id` varchar(20) NOT NULL DEFAULT '',
+  `client_id` varchar(191) NOT NULL DEFAULT '',
   `expires` bigint(20) unsigned NOT NULL DEFAULT 0 ,
   `auth_scope` varchar(512) NOT NULL DEFAULT '',
   `uid` int(11) NOT NULL DEFAULT 0 ,
@@ -1233,7 +1216,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 
 CREATE TABLE IF NOT EXISTS `updates` (
   `ud_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ud_hash` char(128) NOT NULL DEFAULT '',
+  `ud_hash` char(191) NOT NULL DEFAULT '',
   `ud_guid` char(191) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
   `ud_last` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -1423,3 +1406,174 @@ CREATE TABLE IF NOT EXISTS `xtag` (
   KEY `xtag_hash` (`xtag_hash`),
   KEY `xtag_flags` (`xtag_flags`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists addressbooks (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    principaluri VARBINARY(255),
+    displayname VARCHAR(255),
+    uri VARBINARY(200),
+    description TEXT,
+    synctoken INT(11) UNSIGNED NOT NULL DEFAULT '1',
+    UNIQUE(principaluri(100), uri(100))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists cards (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    addressbookid INT(11) UNSIGNED NOT NULL,
+    carddata MEDIUMBLOB,
+    uri VARBINARY(200),
+    lastmodified INT(11) UNSIGNED,
+    etag VARBINARY(32),
+    size INT(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists addressbookchanges (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    uri VARBINARY(200) NOT NULL,
+    synctoken INT(11) UNSIGNED NOT NULL,
+    addressbookid INT(11) UNSIGNED NOT NULL,
+    operation TINYINT(1) NOT NULL,
+    INDEX addressbookid_synctoken (addressbookid, synctoken)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendarobjects (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    calendardata MEDIUMBLOB,
+    uri VARBINARY(200),
+    calendarid INTEGER UNSIGNED NOT NULL,
+    lastmodified INT(11) UNSIGNED,
+    etag VARBINARY(32),
+    size INT(11) UNSIGNED NOT NULL,
+    componenttype VARBINARY(8),
+    firstoccurence INT(11) UNSIGNED,
+    lastoccurence INT(11) UNSIGNED,
+    uid VARBINARY(200),
+    UNIQUE(calendarid, uri),
+    INDEX calendarid_time (calendarid, firstoccurence)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendars (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    synctoken INTEGER UNSIGNED NOT NULL DEFAULT '1',
+    components VARBINARY(21)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendarinstances (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    calendarid INTEGER UNSIGNED NOT NULL,
+    principaluri VARBINARY(100),
+    access TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1 = owner, 2 = read, 3 = readwrite',
+    displayname VARCHAR(100),
+    uri VARBINARY(200),
+    description TEXT,
+    calendarorder INT(11) UNSIGNED NOT NULL DEFAULT '0',
+    calendarcolor VARBINARY(10),
+    timezone TEXT,
+    transparent TINYINT(1) NOT NULL DEFAULT '0',
+    share_href VARBINARY(100),
+    share_displayname VARCHAR(100),
+    share_invitestatus TINYINT(1) NOT NULL DEFAULT '2' COMMENT '1 = noresponse, 2 = accepted, 3 = declined, 4 = invalid',
+    UNIQUE(principaluri, uri),
+    UNIQUE(calendarid, principaluri),
+    UNIQUE(calendarid, share_href)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendarchanges (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    uri VARBINARY(200) NOT NULL,
+    synctoken INT(11) UNSIGNED NOT NULL,
+    calendarid INT(11) UNSIGNED NOT NULL,
+    operation TINYINT(1) NOT NULL,
+    INDEX calendarid_synctoken (calendarid, synctoken)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendarsubscriptions (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    uri VARBINARY(200) NOT NULL,
+    principaluri VARBINARY(100) NOT NULL,
+    source TEXT,
+    displayname VARCHAR(100),
+    refreshrate VARCHAR(10),
+    calendarorder INT(11) UNSIGNED NOT NULL DEFAULT '0',
+    calendarcolor VARBINARY(10),
+    striptodos TINYINT(1) NULL,
+    stripalarms TINYINT(1) NULL,
+    stripattachments TINYINT(1) NULL,
+    lastmodified INT(11) UNSIGNED,
+    UNIQUE(principaluri, uri)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists schedulingobjects (
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    principaluri VARBINARY(255),
+    calendardata MEDIUMBLOB,
+    uri VARBINARY(200),
+    lastmodified INT(11) UNSIGNED,
+    etag VARBINARY(32),
+    size INT(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists locks (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    owner VARCHAR(100),
+    timeout INTEGER UNSIGNED,
+    created INTEGER,
+    token VARBINARY(100),
+    scope TINYINT,
+    depth TINYINT,
+    uri VARBINARY(1000),
+    INDEX(token),
+    INDEX(uri(100))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists principals (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    uri VARBINARY(200) NOT NULL,
+    email VARBINARY(80),
+    displayname VARCHAR(80),
+    UNIQUE(uri)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists groupmembers (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    principal_id INTEGER UNSIGNED NOT NULL,
+    member_id INTEGER UNSIGNED NOT NULL,
+    UNIQUE(principal_id, member_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists propertystorage (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    path VARBINARY(1024) NOT NULL,
+    name VARBINARY(100) NOT NULL,
+    valuetype INT UNSIGNED,
+    value MEDIUMBLOB
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE UNIQUE INDEX path_property ON propertystorage (path(600), name(100));
+
+CREATE TABLE if not exists users (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username VARBINARY(50),
+    digesta1 VARBINARY(32),
+    UNIQUE(username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists calendarinstances (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    calendarid INTEGER UNSIGNED NOT NULL,
+    principaluri VARBINARY(100),
+    access TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1 = owner, 2 = read, 3 = readwrite',
+    displayname VARCHAR(100),
+    uri VARBINARY(200),
+    description TEXT,
+    calendarorder INT(11) UNSIGNED NOT NULL DEFAULT '0',
+    calendarcolor VARBINARY(10),
+    timezone TEXT,
+    transparent TINYINT(1) NOT NULL DEFAULT '0',
+    share_href VARBINARY(100),
+    share_displayname VARCHAR(100),
+    share_invitestatus TINYINT(1) NOT NULL DEFAULT '2' COMMENT '1 = noresponse, 2 = accepted, 3 = declined, 4 = invalid',
+    UNIQUE(principaluri, uri),
+    UNIQUE(calendarid, principaluri),
+    UNIQUE(calendarid, share_href)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

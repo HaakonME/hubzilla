@@ -16,7 +16,7 @@ class Account {
 
 		$account = \App::get_account();
 		if($email != $account['account_email']) {
-			if(! valid_email($email))
+			if(! validate_email($email))
 				$errs[] = t('Not valid email.');
 			$adm = trim(get_config('system','admin_email'));
 			if(($adm) && (strcasecmp($email,$adm) == 0)) {

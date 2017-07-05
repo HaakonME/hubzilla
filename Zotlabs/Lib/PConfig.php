@@ -119,7 +119,7 @@ class PConfig {
 		$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 		$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
 
-		if(get_pconfig($uid, $family, $key) === false) {
+		if(self::Get($uid, $family, $key) === false) {
 			if(! array_key_exists($uid, \App::$config))
 				\App::$config[$uid] = array();
 			if(! array_key_exists($family, \App::$config[$uid]))

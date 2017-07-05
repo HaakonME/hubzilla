@@ -102,27 +102,32 @@ class Chanview extends \Zotlabs\Web\Controller {
 		}
 
 		$is_zot = false;
+		$connected = false;
 	
 		if (\App::$poi) {
 			$url = \App::$poi['xchan_url'];
 			if(\App::$poi['xchan_network'] === 'zot') {
 				$is_zot = true;
 			}			
+			if(local_channel()) {
+				$c = q("select abook_id from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+					intval(local_channel()),
+					dbesc(\App::$poi['xchan_hash'])
+				);
+				if($c)
+					$connected = true;
+			}
 		}
-
+		
 		// We will load the chanview template if it's a foreign network, 
 		// just so that we can provide a connect button along with a profile
 		// photo. Chances are we can't load the remote profile into an iframe
 		// because of cross-domain security headers. So provide a link to
 		// the remote profile. 
-
+		// If we are already connected, just go to the profile.
 		// Zot channels will usually have a connect link.
-		// If it isn't zot, 'pro' members won't be able to use the connect
-		// button as it is a foreign network so just send them to the remote
-		// profile.  
-
 	
-		if($is_zot || \Zotlabs\Lib\System::get_server_role() === 'pro') {
+		if($is_zot || $connected) {
 			if($is_zot && $observer) {
 				$url = zid($url);
 			}

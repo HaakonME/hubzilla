@@ -34,13 +34,6 @@ App::$config['system']['baseurl'] = '{{$siteurl}}';
 App::$config['system']['sitename'] = "Hubzilla";
 App::$config['system']['location_hash'] = '{{$site_id}}';
 
-// Choices are 'basic', 'standard', and 'pro'.
-// basic sets up the sevrer for basic social networking and removes "complicated" features
-// standard provides most desired features except e-commerce
-// pro gives you access to everything
-
-App::$config['system']['server_role'] = '{{$server_role}}';
-
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
 // REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 

@@ -39,6 +39,11 @@ class Editpost extends \Zotlabs\Web\Controller {
 			return;
 		}
 
+		if($itm[0]['resource_type'] === 'photo' && $itm[0]['resource_id']) {
+			notice( t('Item is not editable') . EOL);
+			return;
+		}
+
 		if($itm[0]['resource_type'] === 'event' && $itm[0]['resource_id']) {
 			goaway(z_root() . '/events/' . $itm[0]['resource_id'] . '?expandform=1');
 		}

@@ -167,7 +167,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 		// fake it
 		$mode = ('network');
 	
-		$o .= conversation($a,$items,$mode,$update,$page_mode);
+		$o .= conversation($items,$mode,$update,$page_mode);
 	
 		if(($items) && (! $update))
 			$o .= alt_pager($a,count($items));

@@ -7,58 +7,8 @@ require_once('include/security.php');
  *
  * This file conntains functions to check and work with permissions.
  * 
- * Most of this file is obsolete and has been superceded by extensible permissions in v1.12; it is left here 
- * for reference and because we haven't yet checked that all functions have been replaced and are available 
- * elsewhere (typically Zotlabs/Access/*).
  */
 
-
-
-/**
- * @brief Return an array with all available permissions.
- *
- * These are channel specific permissions.
- * The list of available permissions can get manipulated by the <i>hook</i>
- * <b>global_permissions</b>.
- *
- * @return array associative array containing all permissions
- */
-function get_perms() {
-
-// thinking about making element[2] a bitmask instead of boolean so that we can provide a list of applicable selections
-// for any given permission. Currently we use the boolean to disallow write access to "everybody", but we also want to be
-// able to handle troublesome settings such as allowing channel_w_stream to anybody in the network. You can allow it, but 
-// there's no way to implement sending it. 
-
-	$global_perms = array(
-		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Can view my normal stream and posts'), ''),
-		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my default channel profile'), ''),
-		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my connections'), ''),
-		'view_storage'  => array('channel_r_storage', intval(PERMS_R_STORAGE), true, t('Can view my file storage and photos'), ''),
-		'view_pages'    => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my webpages'), ''),
-
-		// Write permissions
-		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
-		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false, t('Can post on my channel page ("wall")'), ''),
-		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on or like my posts'), ''),
-		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
-		'post_like'     => array('channel_w_like',    intval(PERMS_W_LIKE),    false, t('Can like/dislike stuff'), t('Profiles and things other than posts/comments')),
-
-		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
-		'write_storage' => array('channel_w_storage', intval(PERMS_W_STORAGE), false, t('Can write to my file storage and photos'), ''),
-		'write_pages'   => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my webpages'), ''),
-
-		'republish'     => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my public posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
-
-		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),   false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
-	);
-	$ret = array('global_permissions' => $global_perms);
-	call_hooks('global_permissions', $ret);
-
-	return $ret['global_permissions'];
-}
 
 
 /**
@@ -297,7 +247,6 @@ function get_all_perms($uid, $observer_xchan, $internal_use = true) {
  *
  * Checks if the given observer with the hash $observer_xchan has permission
  * $permission on channel_id $uid.
- * $permission is one defined in get_perms();
  *
  * @param int $uid The channel_id associated with the resource owner
  * @param string $observer_xchan The xchan_hash representing the observer
@@ -465,7 +414,7 @@ function perm_is_allowed($uid, $observer_xchan, $permission) {
 
 function get_all_api_perms($uid,$api) {	
 
-	$global_perms = get_perms();
+	$global_perms = \Zotlabs\Access\Permissions::Perms();
 
 	$ret = array();
 
@@ -568,6 +517,7 @@ function site_default_perms() {
 		'view_contacts' => PERMS_PUBLIC,
 		'view_storage'  => PERMS_PUBLIC,
 		'view_pages'    => PERMS_PUBLIC,
+		'view_wiki'     => PERMS_PUBLIC,
 		'send_stream'   => PERMS_SPECIFIC,
 		'post_wall'     => PERMS_SPECIFIC,
 		'post_comments' => PERMS_SPECIFIC,
@@ -576,16 +526,15 @@ function site_default_perms() {
 		'chat'          => PERMS_SPECIFIC,
 		'write_storage' => PERMS_SPECIFIC,
 		'write_pages'   => PERMS_SPECIFIC,
+		'write_wiki'    => PERMS_SPECIFIC,
 		'delegate'      => PERMS_SPECIFIC,
 		'post_like'     => PERMS_NETWORK
 	);
 
-	$global_perms = get_perms();
+	$global_perms = \Zotlabs\Access\Permissions::Perms();
 
 	foreach($global_perms as $perm => $v) {
-		$x = get_config('default_perms', $perm);
-		if($x === false)
-			$x = $typical[$perm];
+		$x = get_config('default_perms', $perm, $typical[$perm]);
 		$ret[$perm] = $x;
 	}
 
@@ -593,362 +542,3 @@ function site_default_perms() {
 }
 
 
-/**
- * @brief Return an array of all permissions for this role.
- *
- * Given a string for the channel role ('social','forum', etc)
- * return an array of all permission fields pre-filled for this role.
- * This includes the channel permission scope indicators (anything beginning with 'channel_') as well as
- *  * perms_auto:   true or false to create auto-permissions for this channel
- *  * perms_follow: The permissions to apply when initiating a connection request to another channel
- *  * perms_accept: The permissions to apply when accepting a connection request from another channel (not automatic)
- *  * default_collection: true or false to make the default ACL include the channel's default collection 
- *  * directory_publish: true or false to publish this channel in the directory
- * Any attributes may be extended (new roles defined) and modified (specific permissions altered) by plugins
- *
- * @param string $role
- * @return array
- */
-function get_role_perms($role) {
-
-	$ret = array();
-
-	$ret['role'] = $role;
-
-	switch($role) {
-		case 'social':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = false;
-			$ret['directory_publish'] = true;
-			$ret['online'] = true;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'send_stream', 'post_wall', 'post_comments', 
-				'post_mail', 'chat', 'post_like', 'republish' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'social_restricted':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = true;
-			$ret['directory_publish'] = true;
-			$ret['online'] = true;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'send_stream', 'post_wall', 'post_comments', 
-				'post_mail', 'chat', 'post_like' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-
-			break;
-
-		case 'social_private':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = true;
-			$ret['directory_publish'] = false;
-			$ret['online'] = false;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'send_stream', 'post_wall', 'post_comments', 
-				'post_mail', 'post_like' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_SPECIFIC,
-				'view_storage'   => PERMS_SPECIFIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'forum':
-			$ret['perms_auto'] = true;
-			$ret['default_collection'] = false;
-			$ret['directory_publish'] = true;
-			$ret['online'] = false;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'post_wall', 'post_comments', 'tag_deliver',
-				'post_mail', 'post_like' , 'republish', 'chat' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'forum_restricted':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = true;
-			$ret['directory_publish'] = true;
-			$ret['online'] = false;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'post_wall', 'post_comments', 'tag_deliver',
-				'post_mail', 'post_like' , 'chat' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'forum_private':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = true;
-			$ret['directory_publish'] = false;
-			$ret['online'] = false;
-
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'post_wall', 'post_comments',
-				'post_mail', 'post_like' , 'chat' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_SPECIFIC,
-				'view_contacts'  => PERMS_SPECIFIC,
-				'view_storage'   => PERMS_SPECIFIC,
-				'view_pages'     => PERMS_SPECIFIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'feed':
-			$ret['perms_auto'] = true;
-			$ret['default_collection'] = false;
-			$ret['directory_publish'] = true;
-			$ret['online'] = false;
-
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'send_stream', 'post_wall', 'post_comments', 
-				'post_mail', 'post_like' , 'republish' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'feed_restricted':
-			$ret['perms_auto'] = false;
-			$ret['default_collection'] = true;
-			$ret['directory_publish'] = false;
-			$ret['online'] = false;
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'send_stream', 'post_wall', 'post_comments', 
-				'post_mail', 'post_like' , 'republish' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'soapbox':
-			$ret['perms_auto'] = true;
-			$ret['default_collection'] = false;
-			$ret['directory_publish'] = true;
-			$ret['online'] = false;
-
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'post_like' , 'republish' ];
-
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-			break;
-
-		case 'repository':
-			$ret['perms_auto'] = true;
-			$ret['default_collection'] = false;
-			$ret['directory_publish'] = true;
-			$ret['online'] = false;
-
-			$ret['perms_connect'] = [ 
-				'view_stream', 'view_profile', 'view_contacts', 'view_storage',
-				'view_pages', 'write_storage', 'write_pages', 'post_wall', 'post_comments', 'tag_deliver',
-				'post_mail', 'post_like' , 'republish', 'chat' ];
-			$ret['limits'] = [
-				'view_stream'    => PERMS_PUBLIC,
-				'view_profile'   => PERMS_PUBLIC,
-				'view_contacts'  => PERMS_PUBLIC,
-				'view_storage'   => PERMS_PUBLIC,
-				'view_pages'     => PERMS_PUBLIC,
-				'send_stream'    => PERMS_SPECIFIC,
-				'post_wall'      => PERMS_SPECIFIC,
-				'post_comments'  => PERMS_SPECIFIC,
-				'post_mail'      => PERMS_SPECIFIC,
-				'post_like'      => PERMS_SPECIFIC,
-				'tag_deliver'    => PERMS_SPECIFIC,
-				'chat'           => PERMS_SPECIFIC,
-				'write_storage'  => PERMS_SPECIFIC,
-				'write_pages'    => PERMS_SPECIFIC,
-				'republish'      => PERMS_SPECIFIC,
-				'delegate'       => PERMS_SPECIFIC
-			];
-
-
-			break;
-
-		default:
-			break;
-	}
-
-	$x = get_config('system','role_perms');
-	// let system settings over-ride any or all 
-	if($x && is_array($x) && array_key_exists($role,$x))
-		$ret = array_merge($ret,$x[$role]);
-
-	call_hooks('get_role_perms',$ret);
-
-	return $ret;
-}
-
-/**
- * @brief Returns a list or roles, grouped by type.
- *
- * @return string Returns an array of roles, grouped by type
- */
-function get_roles() {
-	$roles = array(
-		t('Social Networking') => array('social' => t('Social - Mostly Public'), 'social_restricted' => t('Social - Restricted'), 'social_private' => t('Social - Private')),
-		t('Community Forum') => array('forum' => t('Forum - Mostly Public'), 'forum_restricted' => t('Forum - Restricted'), 'forum_private' => t('Forum - Private')),
-		t('Feed Republish') => array('feed' => t('Feed - Mostly Public'), 'feed_restricted' => t('Feed - Restricted')),
-		t('Special Purpose') => array('soapbox' => t('Special - Celebrity/Soapbox'), 'repository' => t('Special - Group Repository')),
-		t('Other') => array('custom' => t('Custom/Expert Mode'))
-	);
-
-	return $roles;
-}

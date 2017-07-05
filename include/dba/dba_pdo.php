@@ -74,19 +74,19 @@ class dba_pdo extends dba_driver {
 			return $result;
 		}
 
-		if($this->debug) {
-			db_logger('dba_pdo: DEBUG: ' . printable($sql) . ' returned ' . count($result) . ' results.', LOGGER_NORMAL, LOG_INFO); 
-		}
-
 		$r = array();
 		if($result) {
 			foreach($result as $x) {
 				$r[] = $x;
 			}
-			if($this->debug) {
-				db_logger('dba_pdo: ' . printable(print_r($r,true)), LOGGER_NORMAL, LOG_INFO);
-			}
 		}
+
+		if($this->debug) {
+			db_logger('dba_pdo: DEBUG: ' . printable($sql) . ' returned ' . count($r) . ' results.', LOGGER_NORMAL, LOG_INFO); 
+			db_logger('dba_pdo: ' . printable(print_r($r,true)), LOGGER_NORMAL, LOG_INFO);
+		}
+
+
 		return (($this->error) ? false : $r);
 	}
 

@@ -225,7 +225,7 @@ class Search extends \Zotlabs\Web\Controller {
 		else
 			$o .= '<h2>' . sprintf( t('Search results for: %s'),htmlspecialchars($search, ENT_COMPAT,'UTF-8')) . '</h2>';
 	
-		$o .= conversation($a,$items,'search',$update,'client');
+		$o .= conversation($items,'search',$update,'client');
 	
 		$o .= '</div>';
 	

@@ -150,7 +150,7 @@ web-based administrative tools to function:
 
 #### Official addons
 ##### Installation
-Navigate to your webThen you should clone the addon repository (separately). We'll give this repository a nickname of 'hzaddons'. You can pull in other hubzilla addon repositories by giving them different nicknames::
+Navigate to your website. Then you should clone the addon repository (separately). We'll give this repository a nickname of 'hzaddons'. You can pull in other hubzilla addon repositories by giving them different nicknames::
 
     cd mywebsite
     util/add_addon_repo https://github.com/redmatrix/hubzilla-addons.git hzaddons
@@ -162,7 +162,7 @@ For keeping the addon tree updated, you should be on your top level website dire
     util/update_addon_repo hzaddons
 
 Create searchable representations of the online documentation. You may do this 
-    any time that the documentation is updated :  
+any time that the documentation is updated :  
     
     cd mywebsite
     util/importdoc
@@ -196,58 +196,34 @@ The installation script was originally designed for a small hardware server behi
 1. `service apache2 reload`
 1. Open your domain with a browser and step throught the initial configuration of $Projectname.
 
-### Server Roles
+### Recommended Addons
 
-$Projectname can be configured in many different ways. One of the configurations available at installation is to select a 'server role'. There are currently three server roles. We highly recommend that you use 'standard' unless you have special needs. 
+We recommend the following addons be installed on all public sites:
+
+	nsfw - hide inappropriate posts/comments
+	superblock - block content from offensive channels
+
+### Federation Addons
+
+Several web communities have begun to converge using common protocols. The protocols involved are somewhat limited in their abilities. The GNU-Social protocol for instance offers no privacy modes, and the Diaspora protocol is somewhat restrictive in what kinds of communications are allowed. All comments must be signed in a very unique manner by the original author. The ActivityPub protocol is also being considered and may be supported at a future date. No other existing protocol supports nomadic location as used by this project. This presents some support challenges as some features work with some networks and don't work with others. Nevertheless the federation protocols allow connections to be made to a much larger community of people worldwide. They are provided as addons.
+
+> diaspora - The Diaspora Protocol used by Diaspora and Friendica. You should enable 'Diaspora Statistics' (statistics_json) first to enable all the available features. 
+
+> gnusoc - The GNU-Social Protocol, used by GNU-Social, Mastodon and several other communities. This addon requires you first install the 'pubsubhubbub' service (also an addon). 
+
+Each member of your site must choose whether or not to allow these protocols individually as they may conflict with several desirable core features and abilities of this software (such as channel migration and cloning). They do this from their 'Settings -> Feature/Addon Settings' page. The administrator may also set the following:
+
+	util/config system.diaspora_allowed 1
+	util/config system.gnusoc_allowed 1
+
+and enable these protocols automatically for all newly created channels. 
 
 
-#### Basic
 
-The 'basic' server role is designed to be relatively simple, and it doesn't present options 
-or complicated features. The hub admin may configure additional features at a site level. 
-This role is designed for simple social networking and social network federation. Many features 
-which do not federate easily have been removed, including (and this is somewhat important) 
-"nomadic identity". You may move a channel to or from a basic server, but you may not clone 
-it. Once moved, it becomes read-only on the origination site. No updates of any kind will be 
-provided. It is recommended that after the move, the original channel be deleted - as it is 
-no longer useable. The data remains only in case there are issues making a copy of the data. 
+  
 
-This role is supported by the hubzilla community.
-
-#### Standard
-
-
-The 'standard' server role is recommended for most sites. All features of the software are 
-available to everybody unless locked by the hub administrator. Some features will not federate 
-easily with other networks, so there is often an increased support burden explaining why 
-sharing events with Diaspora (for instance) presents a different experience on that network. 
-Additionally any member can enable "advanced" or "expert" features, and these may be beyond 
-their technical skill level. This may also result in an increased support burden.
-
-This role is supported by the hubzilla community.
-
-#### Pro
-
-The 'pro' server role is primarily designed for communities which want to present a uniform 
-experience and be relieved of many federation support issues. In this role there is 
-**no federation with other networks**. Additional features **may** be provided, such 
-as channel ratings, premium channels, and e-commerce. 
-
-By default a channel may set a "techlevel" appropriate to their technical skill. Higher 
-levels provide more features. Everybody starts with techlevel 0 (similar to the 'basic' 
-role) where all complicated features are hidden from view. Increasing the techlevel provides 
-more advanced or complex features.
-
-The hub admin may also lock individual channels or their entire site at a defined techlevel 
-which provides an installation with a selection of advanced features consistent with the 
-perceived technical skills of the members. For instance, a community for horse racing might 
-have a different techlevel than a community for Linux kernel developers. 
-
-This role is not supported by the hubzilla community. 
 
 ### Techlevels
-
-Techlevels is a unique feature of Hubzilla 'pro'. It is not available in other server_roles, although it expands on the concepts introduced in $Projectname 'basic'.
 
 We've implemented several different mechanisms in order to reduce the apparent complexity and learning curve presented to new members. At the same time, we do not wish to limit any functionality for people who are able to grasp some slightly advanced technical technical features. The first mechanism was to move several features to an optional 'Features' page where they could be enabled at will; with the default interface kept somewhat lean. 
 
@@ -257,8 +233,7 @@ The techlevels seeeks to remedy this by grouping features within different level
 
 When a new member registers, their account is provided a techlevel setting of 0. On the account settings page they may change this to any available level. A higher level opens more advanced features and possible interactions.
 
-The account administrator may also lock a particular level, lock a maximum level, or change/re-arrange the features available to any level. Those with the minimum level are typically not very exploratory and are unlikely to discover the advanced modes. This is by design. Those that look around and desire more interactions will find them. In the absence of administrator defaults they may choose any level. As they look at the features available to the level in question, it is generally expected that they will discover some features are beyond their comprehension and it is hoped they will back off to a level where the interface and features are comfortable to their skill level. This is somewhat experimental at present and for that reason is not part of the 'standard' server role. The standard server role is preset to level '5', and the basic server role is preset to level '0', with no possibility of change. Members in these roles may find themselves overwhelmed or underwhelmed by the feature set and complexity.        
-
+The account administrator may also lock a particular level, lock a maximum level, or change/re-arrange the features available to any level. Those with the minimum level are typically not very exploratory and are unlikely to discover the advanced modes. This is by design. Those that look around and desire more interactions will find them. In the absence of administrator defaults they may choose any level. As they look at the features available to the level in question, it is generally expected that they will discover some features are beyond their comprehension and it is hoped they will back off to a level where the interface and features are comfortable to their skill level. 
 
 ### Service Classes
 

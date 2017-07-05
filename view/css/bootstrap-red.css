@@ -38,7 +38,7 @@ nav .badge {
 }
 
 #navbar-collapse-1 i {
-	font-size: 1rem;
+	font-size: 1.0rem;
 }
 
 nav .dropdown-menu {
@@ -61,7 +61,7 @@ nav .dropdown-menu {
 	padding: 0.5rem 0.1rem;
 }
 
-.navbar-inverse .navbar-toggler {
+.navbar-dark .navbar-toggler {
 	color: rgba(255,255,255,1);
 }
 /* nav overrides end */

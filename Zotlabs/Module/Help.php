@@ -44,42 +44,42 @@ class Help extends \Zotlabs\Web\Controller {
 
 			return $o;
 		}
-                
-                
-                if(argc() > 2 && argv(argc()-2) === 'assets') {
-                        $path = '';
-                        for($x = 1; $x < argc(); $x ++) {
-                                if(strlen($path))
-                                        $path .= '/';
-                                $path .= argv($x);
-                        }
-                        $realpath = 'doc/' . $path;
-                         //Set the content-type header as appropriate
-                        $imageInfo = getimagesize($realpath);
-                        switch ($imageInfo[2]) {
-                            case IMAGETYPE_JPEG:
-                                header("Content-Type: image/jpeg");
-                                break;
-                            case IMAGETYPE_GIF:
-                                header("Content-Type: image/gif");
-                                break;
-                            case IMAGETYPE_PNG:
-                                header("Content-Type: image/png");
-                                break;
-                           default:
-                                break;
-                        }
-                        header("Content-Length: " . filesize($realpath));
+				
+				
+		if(argc() > 2 && argv(argc()-2) === 'assets') {
+			$path = '';
+			for($x = 1; $x < argc(); $x ++) {
+				if(strlen($path))
+					$path .= '/';
+				$path .= argv($x);
+			}
+			$realpath = 'doc/' . $path;
+			 //Set the content-type header as appropriate
+			$imageInfo = getimagesize($realpath);
+			switch ($imageInfo[2]) {
+				case IMAGETYPE_JPEG:
+					header("Content-Type: image/jpeg");
+					break;
+				case IMAGETYPE_GIF:
+					header("Content-Type: image/gif");
+					break;
+				case IMAGETYPE_PNG:
+					header("Content-Type: image/png");
+					break;
+			   default:
+					break;
+			}
+			header("Content-Length: " . filesize($realpath));
 
-                        // dump the picture and stop the script
-                        readfile($realpath);
-                        killme();
-                }
+			// dump the picture and stop the script
+			readfile($realpath);
+			killme();
+		}
 
 		$headings = [
-			'about' => t('About'),
-			'member' => t('Members'),
-			'admin' => t('Administrators'),
+			'about'     => t('About'),
+			'member'    => t('Members'),
+			'admin'     => t('Administrators'),
 			'developer' => t('Developers'),
 			'tutorials' => t('Tutorials')
 		];
@@ -87,13 +87,13 @@ class Help extends \Zotlabs\Web\Controller {
 		if(array_key_exists(argv(1), $headings))
 			$heading = $headings[argv(1)];
 
-                $content =  get_help_content();
+		$content =  get_help_content();
 
 		return replace_macros(get_markup_template('help.tpl'), array(
-			'$title' => t('$Projectname Documentation'),
+			'$title'      => t('$Projectname Documentation'),
 			'$tocHeading' => t('Contents'),
-			'$content' => $content,
-			'$heading' => $heading
+			'$content'    => $content,
+			'$heading'    => $heading
 		));
 	}
 

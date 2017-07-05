@@ -49,7 +49,7 @@ class Invite extends \Zotlabs\Web\Controller {
 			if(! $recip)
 				continue;
 	
-			if(! valid_email($recip)) {
+			if(! validate_email($recip)) {
 				notice(  sprintf( t('%s : Not a valid email address.'), $recip) . EOL);
 				continue;
 			}

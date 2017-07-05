@@ -209,6 +209,7 @@ class Apps {
 
 	static public function translate_system_apps(&$arr) {
 		$apps = array(
+			'Apps' => t('Apps'),
 			'Site Admin' => t('Site Admin'),
 			'Report Bug' => t('Report Bug'),
 			'View Bookmarks' => t('View Bookmarks'),
@@ -663,11 +664,6 @@ class Apps {
 		set_pconfig($uid,'system','app_order',implode(',',$narr));
 
 	}
-
-
-
-
-
 
 	static public function app_decode($s) {
 		$x = base64_decode(str_replace(array('<br />',"\r","\n",' '),array('','','',''),$s));

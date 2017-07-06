@@ -176,7 +176,7 @@ class Auth {
 			return false;
 		}
 
-		$this->Debug('auth check request returned .' . print_r($j, true));
+		$this->Debug('auth check request returned ' . print_r($j, true));
 
 		if(! $j['success']) 
 			return false;

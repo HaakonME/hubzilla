@@ -60,7 +60,7 @@ function zid($s,$address = '') {
 
 	/**
 	 * @FIXME checking against our own channel url is no longer reliable. We may have a lot
-	 * of urls attached to out channel. Should probably match against our site, since we
+	 * of urls attached to our channel. Should probably match against our site, since we
 	 * will not need to remote authenticate on our own site anyway.
 	 */
 

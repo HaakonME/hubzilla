@@ -77,7 +77,7 @@
 /* conv_item */
 
 .wall-item-head-new {
-	border-top: 0.2rem solid #0275d8;
+	border-top: 0.2rem solid #007bff;
 }
 
 .wall-item-info {
@@ -168,11 +168,11 @@ a.wall-item-name-link {
 }
 
 .ivoted {
-	color: #0275d8;
+	color: #007bff;
 }
 
 .item-highlight {
-	border-left: 0.2rem solid #0275d8;
+	border-left: 0.2rem solid #007bff;
 }
 
 .item-highlight .wall-item-head,

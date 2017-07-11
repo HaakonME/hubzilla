@@ -10,14 +10,16 @@ class Featured {
 	
 		call_hooks('feature_settings_post', $_POST);
 	
-		if(intval($_POST['affinity_cmax'])) {
-			set_pconfig(local_channel(),'affinity','cmax',intval($_POST['affinity_cmax']));
-		}
-		if(intval($_POST['affinity_cmin'])) {
-			set_pconfig(local_channel(),'affinity','cmin',intval($_POST['affinity_cmin']));			
-		}
-		if(intval($_POST['affinity_cmax']) || intval($_POST['affinity_cmin'])) {
-			info( t('Affinity Slider settings updated.') . EOL);
+		if($_POST['affinity_slider-submit']) {
+			if(intval($_POST['affinity_cmax'])) {
+				set_pconfig(local_channel(),'affinity','cmax',intval($_POST['affinity_cmax']));
+			}
+			if(intval($_POST['affinity_cmin'])) {
+				set_pconfig(local_channel(),'affinity','cmin',intval($_POST['affinity_cmin']));			
+			}
+			if(intval($_POST['affinity_cmax']) || intval($_POST['affinity_cmin'])) {
+				info( t('Affinity Slider settings updated.') . EOL);
+			}
 		}
 		
 		build_sync_packet();

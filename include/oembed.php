@@ -134,7 +134,9 @@ function oembed_fetch_url($embedurl){
 	$txt = null;
 
 	// we should try to cache this and avoid a lookup on each render
-	$zrl = ((get_config('system','oembed_zrl')) ? is_matrix_url($embedurl) : false);
+	$is_matrix = is_matrix_url($embedurl);
+
+	$zrl = ((get_config('system','oembed_zrl')) ? $is_matrix : false);
 
 	$furl = ((local_channel() && $zrl) ? zid($embedurl) : $embedurl);
 
@@ -222,7 +224,7 @@ function oembed_fetch_url($embedurl){
 	if($action === 'filter') {
 		if($j['html']) {
 			$orig = $j['html'];
-			$allow_position = (($zrl) ? true : false);
+			$allow_position = (($is_matrix) ? true : false);
 			$j['html'] = purify_html($j['html'],$allow_position);
 			if($j['html'] != $orig) {
 				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j['html'], LOGGER_DEBUG, LOG_INFO); 

@@ -1009,6 +1009,8 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				$parent_link = $rawthread[0]['attribs']['']['href'];
 			}
 
+			logger('in-reply-to: ' . $parent_mid, LOGGER_DEBUG);
+
 			if($is_reply) {
 
 				if($pass == 1)
@@ -1088,6 +1090,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						intval($importer['channel_id'])
 					);
 					if($c) {
+						logger('find_parent: matched conversation: ' . $conv_id, LOGGER_DEBUG);
 						$pmid = $c[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
 					}
@@ -1099,6 +1102,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					);
 				
 					if($x) {
+						logger('find_parent: matched in-reply-to: ' . $parent_mid, LOGGER_DEBUG);
 						$pmid = $x[0]['parent_mid'];
 						$datarray['parent_mid'] = $pmid;
 					}

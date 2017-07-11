@@ -39,6 +39,10 @@ class React extends \Zotlabs\Web\Controller {
 			$n['author_xchan'] = $channel['channel_hash'];
 
 			$x = item_store($n); 
+
+			if(local_channel())
+				retain_item($postid);
+
 			if($x['success']) {
 				$nid = $x['item_id'];
 				 \Zotlabs\Daemon\Master::Summon(array('Notifier','like',$nid));

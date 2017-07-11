@@ -1761,7 +1761,7 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 					$result[] = $DR->get();
 				}
 				else {
-					update_imported_item($sender,$arr,$r[0],$channel['channel_id'],$tag_delivery);
+					$item_result = update_imported_item($sender,$arr,$r[0],$channel['channel_id'],$tag_delivery);
 					$DR->update('updated');
 					$result[] = $DR->get();
 					if(! $relay)
@@ -1808,6 +1808,14 @@ function process_delivery($sender, $arr, $deliveries, $relay, $public = false, $
 				$DR->update(($item_id) ? 'posted' : 'storage failed: ' . $item_result['message']);
 				$result[] = $DR->get();
 			}
+		}
+
+		// preserve conversations with which you are involved from expiration
+
+		$stored = (($item_result && $item_result['item']) ? $item_result['item'] : false);
+		if((is_array($stored)) && ($stored['id'] != $stored['parent'])
+			&& ($stored['author_xchan'] === $channel['channel_hash'])) {
+			retain_item($stored['item']['parent']);
 		}
 
 		if($relay && $item_id) {
@@ -1946,6 +1954,8 @@ function update_imported_item($sender, $item, $orig, $uid, $tag_delivery) {
 		logger('update_imported_item: failed: ' . $x['message']);
 	else
 		logger('update_imported_item');
+
+	return $x;
 }
 
 /**

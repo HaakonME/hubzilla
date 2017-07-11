@@ -1737,7 +1737,7 @@ logger('revision: ' . $arr['revision']);
 
 			if($r[0]['owner_xchan'] !== $arr['owner_xchan']) {
 				$arr['owner_xchan'] = $r[0]['owner_xchan'];
-//				$uplinked_comment = true;
+				//				$uplinked_comment = true;
 			}
 
 			// if the parent is private, force privacy for the entire conversation

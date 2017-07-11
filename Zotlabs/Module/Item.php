@@ -861,8 +861,8 @@ class Item extends \Zotlabs\Web\Controller {
 		}
 	
 	
-		if(mb_strlen($datarray['title']) > 255)
-			$datarray['title'] = mb_substr($datarray['title'],0,255);
+		if(mb_strlen($datarray['title']) > 191)
+			$datarray['title'] = mb_substr($datarray['title'],0,191);
 	
 		if($webpage) {
 			Zlib\IConfig::Set($datarray,'system', webpage_to_namespace($webpage),
@@ -928,6 +928,11 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			if($parent) {
 	
+				// prevent conversations which you are involved from being expired
+
+				if(local_channel())
+					retain_item($parent);
+
 				// only send comment notification if this is a wall-to-wall comment,
 				// otherwise it will happen during delivery
 	

@@ -1085,6 +1085,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				// next try thr:in_reply_to
 
 				if($conv_id) {
+					logger('find_parent: conversation_id: ' . $conv_id, LOGGER_DEBUG);
 					$c = q("select parent_mid from item left join iconfig on item.id = iconfig.iid where iconfig.cat = 'ostatus' and iconfig.k = 'conversation' and iconfig.v = '%s' and item.uid = %d order by item.id limit 1",
 						dbesc($conv_id),
 						intval($importer['channel_id'])

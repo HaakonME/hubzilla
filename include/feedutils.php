@@ -516,7 +516,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// turn Mastodon content warning into a #nsfw hashtag
 	if($mastodon && $summary) {
-		$res['body'] .= "\n\n#nsfw\n";
+		$res['body'] .= "\n\n#ContentWarning\n";
 	}
 
 
@@ -1147,7 +1147,48 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					}
 				}
 
-				if(! $pmid) {
+				if($pmid) {
+
+					// check comment permissions on the parent
+
+					$r = q("select * from item where parent_mid = '%s' and parent_mid = mid and uid = %d limit 1"
+						dbesc($pmid),
+						intval($importer['channel_id'])
+					);
+					if($r) {
+						$parent_item = $r[0];
+
+					if(intval($parent_item['item_nocomment']) || $parent_item['comment_policy'] === 'none' 
+						|| ($parent_item['comments_closed'] > NULL_DATE && $parent_item['comments_closed'] < datetime_convert())) {
+						logger('comments disabled for post ' . $parent_item['mid']);
+						continue;
+					}
+
+					$allowed = false;
+
+					if($parent_item) {
+						if($parent_item['owner_xchan'] == $importer['channel_hash']) 
+							$allowed = perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'post_comments');
+						else
+							$allowed = true;
+
+						if(! $allowed) {
+							logger('Ignoring this comment author.');
+							$status = 202;
+							continue;
+						}
+					}
+					else {
+						if((! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $importer['system'])) {
+							// @fixme check for and process ostatus autofriend
+							// otherwise 
+
+							logger('Ignoring this author.');
+							continue;
+						}
+					}
+				}
+				else {
 
 					// immediate parent wasn't found. Turn into a top-level post if permissions allow
 					// but save the thread_parent in case we need to refer to it later.
@@ -1197,17 +1238,6 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 				$datarray['author_xchan'] = '';
-
-				if(activity_match($datarray['verb'],ACTIVITY_FOLLOW) && $datarray['obj_type'] === ACTIVITY_OBJ_PERSON) {
-					$cb = array('item' => $datarray,'channel' => $importer, 'xchan' => [ 'placeholder' => '' ], 'author' => $author, 'caught' => false);
-					call_hooks('follow_from_feed',$cb);
-					if($cb['caught']) {
-						if($cb['return_code'])
-							http_status_exit($cb['return_code']);
-
-						continue;
-					}
-				}
 
 				if($author['author_link'] != $contact['xchan_url']) {
 					$name = '';

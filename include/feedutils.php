@@ -1151,17 +1151,19 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 					// check comment permissions on the parent
 
-					$r = q("select * from item where parent_mid = '%s' and parent_mid = mid and uid = %d limit 1"
+					$parent_item = 0;
+
+					$r = q("select * from item where parent_mid = '%s' and parent_mid = mid and uid = %d limit 1",
 						dbesc($pmid),
 						intval($importer['channel_id'])
 					);
 					if($r) {
 						$parent_item = $r[0];
-
-					if(intval($parent_item['item_nocomment']) || $parent_item['comment_policy'] === 'none' 
-						|| ($parent_item['comments_closed'] > NULL_DATE && $parent_item['comments_closed'] < datetime_convert())) {
-						logger('comments disabled for post ' . $parent_item['mid']);
-						continue;
+						if(intval($parent_item['item_nocomment']) || $parent_item['comment_policy'] === 'none' 
+							|| ($parent_item['comments_closed'] > NULL_DATE && $parent_item['comments_closed'] < datetime_convert())) {
+							logger('comments disabled for post ' . $parent_item['mid']);
+							continue;
+						}
 					}
 
 					$allowed = false;

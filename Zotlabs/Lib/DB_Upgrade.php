@@ -10,15 +10,17 @@ class DB_Upgrade {
 
 	function __construct($db_revision) {
 
-		$update_file = 'install/' . PLATFORM_NAME . '/update.php';
+		$platform_name = System::get_platform_name();
+
+		$update_file = 'install/' . $platform_name . '/update.php';
 		if(! file_exists($update_file)) {
 			$update_file = 'install/update.php';
 			$this->config_name = 'db_version';
 			$this->func_prefix = 'update_r';
 		}
 		else {
-			$this->config_name = PLATFORM_NAME . '_db_version';
-			$this->func_prefix = PLATFORM_NAME . '_update_';
+			$this->config_name = $platform_name . '_db_version';
+			$this->func_prefix = $platform_name . '_update_';
 		}
 
 		$build = get_config('system', $this->config_name, 0);

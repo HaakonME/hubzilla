@@ -19,6 +19,9 @@ class System {
 	static public function get_project_version() {
 		if(is_array(\App::$config) && is_array(\App::$config['system']) && \App::$config['system']['hide_version'])
 			return '';
+		if(is_array(\App::$config) && is_array(\App::$config['system']) && array_key_exists('std_version',\App::$config['system']))
+			return \App::$config['system']['std_version'];
+
 		return self::get_std_version();
 	}
 

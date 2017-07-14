@@ -163,8 +163,9 @@ abstract class dba_driver {
 	}
 
 	function get_install_script() {
-		if(file_exists('install/' . PLATFORM_NAME . '/' . \DBA::$install_script))
-			 return 'install/' . PLATFORM_NAME . '/' . \DBA::$install_script;
+		$platform_name = \Zotlabs\Lib\System::get_platform_name();
+		if(file_exists('install/' . $platform_name . '/' . \DBA::$install_script))
+			 return 'install/' . $platform_name . '/' . \DBA::$install_script;
 		return 'install/' . \DBA::$install_script;
 	}
 

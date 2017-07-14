@@ -899,6 +899,11 @@ class App {
 		self::$argv = explode('/', self::$cmd);
 		self::$argc = count(self::$argv);
 		if ((array_key_exists('0', self::$argv)) && strlen(self::$argv[0])) {
+			if(strpos(self::$argv[0],'.')) {
+				$_REQUEST['module_format'] = substr(self::$argv[0],strpos(self::$argv[0],'.')+1);
+				self::$argv[0] =  substr(self::$argv[0],0,strpos(self::$argv[0],'.'));
+			}
+
 			self::$module = str_replace(".", "_", self::$argv[0]);
 			self::$module = str_replace("-", "_", self::$module);
 			if(strpos(self::$module,'_') === 0)

@@ -207,7 +207,7 @@ We recommend the following addons be installed on all public sites:
 
 Several web communities have begun to converge using common protocols. The protocols involved are somewhat limited in their abilities. The GNU-Social protocol for instance offers no privacy modes, and the Diaspora protocol is somewhat restrictive in what kinds of communications are allowed. All comments must be signed in a very unique manner by the original author. The ActivityPub protocol is also being considered and may be supported at a future date. No other existing protocol supports nomadic location as used by this project. This presents some support challenges as some features work with some networks and don't work with others. Nevertheless the federation protocols allow connections to be made to a much larger community of people worldwide. They are provided as addons.
 
-> diaspora - The Diaspora Protocol used by Diaspora and Friendica. You should enable 'Diaspora Statistics' (statistics_json) first to enable all the available features. 
+> diaspora - The Diaspora Protocol used by Diaspora and Friendica. You should enable 'Diaspora Statistics' (statistics) first to enable all the available features. 
 
 > gnusoc - The GNU-Social Protocol, used by GNU-Social, Mastodon and several other communities. This addon requires you first install the 'pubsubhubbub' service (also an addon). 
 

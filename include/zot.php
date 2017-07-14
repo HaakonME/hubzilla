@@ -2831,7 +2831,7 @@ function import_site($arr, $pubkey) {
 		$access_policy = ACCESS_PRIVATE;
 
 	if($access_policy != ACCESS_PRIVATE) {
-		$x = z_fetch_url($arr['url'] . '/siteinfo/json');
+		$x = z_fetch_url($arr['url'] . '/siteinfo.json');
 		if(! $x['success'])
 			$access_policy = ACCESS_PRIVATE;
 	}

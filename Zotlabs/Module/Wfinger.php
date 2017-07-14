@@ -117,7 +117,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 	
 				[
 					'rel'      => 'http://ostatus.org/schema/1.0/subscribe',
-					'template' => z_root() . '/follow/url={uri}',
+					'template' => z_root() . '/follow?f=&url={uri}',
 				],
 	
 				[

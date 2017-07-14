@@ -2,9 +2,7 @@
 namespace Zotlabs\Module;
 
 require_once('include/attach.php');
-require_once('include/channel.php');
 require_once('include/photos.php');
-
 
 class Wall_attach extends \Zotlabs\Web\Controller {
 
@@ -56,6 +54,8 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 				json_return_and_die($result);
 			}
 			else {
+				header('Range: bytes=0-' . (($x['size']) ? $x['size'] - 1 : 0));
+
 				$_FILES['userfile'] = [
 					'name'     => $x['name'],
 					'type'     => $x['type'],
@@ -100,9 +100,6 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 		if($using_api)
 			return $s;
 
-
-		if($partial)
-			header('Range: bytes=0-' . (($x['length']) ? $x['length'] - 1 : 0));
 		$result['message'] = $s;
 		json_return_and_die($result);
 		

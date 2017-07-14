@@ -2355,3 +2355,104 @@ function attach_upgrade() {
 	}
 }
 
+
+function save_chunk($channel,$start,$end,$len) {
+
+	$result = [];
+
+	$tmp_path = $_FILES['files']['tmp_name'];
+	$new_base = 'store/[data]/' . $channel['channel_address'] . '/tmp';
+	os_mkdir($new_base,STORAGE_DEFAULT_PERMISSIONS,true);
+	
+	$new_path = $new_base . '/' . $_FILES['files']['name'];
+
+	if(! file_exists($new_path)) {
+		rename($tmp_path,$new_path);
+	}
+	else {
+		$istream = fopen($tmp_path,'rb');
+		$ostream = fopen($new_path,'ab');
+		if($istream && $ostream) {
+			pipe_streams($istream,$ostream);
+			fclose($istream);
+			fclose($ostream);
+		}
+	}
+	if(($len - 1) == $end) {
+		unlink($tmp_path);
+		$result['name']     = $_FILES['files']['tmp_name'];
+		$result['type']     = $_FILES['files']['type'];
+		$result['tmp_name'] = $new_path;
+		$result['error']    = 0;
+		$result['size']     = $len;
+		$result['complete'] = true;
+		return $result;
+	}
+	$result['partial'] = true;
+	$result['length']  = intval(filesize($new_path));
+	return $result;
+}
+
+
+/*
+ * chunkloader
+ * Submit handler for chunked uploads
+ * 
+ */
+
+function chunkloader($channel,$arr) {
+
+	logger('request: ' . print_r($arr,true), LOGGER_DEBUG);
+	logger('files: ' . print_r($_FILES,true), LOGGER_DEBUG);
+	
+
+	$result = [];
+		
+
+	$tmp_path = $_FILES['file']['tmp_name'];
+	$new_base = 'store/[data]/' . $channel['channel_address'] . '/tmp';
+	os_mkdir($new_base,STORAGE_DEFAULT_PERMISSIONS,true);
+
+	$new_path = $new_base . '/' . $arr['resumableFilename'];
+
+	rename($tmp_path,$new_path . '.' . intval($arr['resumableChunkNumber']));
+	
+	$missing_parts = false;
+	for($x = 1; $x <= intval($arr['resumableTotalChunks']); $x ++) {
+		if(! file_exists($new_path . '.' . $x)) {
+			$missing_parts = true;
+			break;
+		}
+	}
+
+	if($missing_parts) {
+		$result['partial'] = true;
+		return $result;
+	}
+
+	if(intval($arr['resumableTotalChunks']) === 1) {
+		rename($new_path . '.' . '1', $new_path);
+	}
+	else {
+		for($x = 1; $x <= intval($arr['resumableTotalChunks']); $x ++) {
+			$istream = fopen($new_path . '.' . $x,'rb');
+			$ostream = fopen($new_path,'ab');
+			if($istream && $ostream) {
+				pipe_streams($istream,$ostream);
+				fclose($istream);
+				fclose($ostream);
+			}
+			unlink($new_path . '.' . $x);
+		}
+	}
+
+	$result['name'] = $arr['resumableFilename'];
+	$result['type'] = $arr['resumableType'];
+	$result['tmp_name'] = $new_path;
+	$result['error'] = 0;
+	$result['size'] = $arr['resumableTotalSize'];
+	$result['complete'] = true;
+	return $result;
+
+}
+

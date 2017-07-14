@@ -100,77 +100,44 @@ function enableOnUser(){
 	initEditor();
 }
 </script>
-<script type="text/javascript" src="{{$baseurl}}/view/js/ajaxupload.js" ></script>
+
+<script src="library/blueimp_upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="library/blueimp_upload/js/jquery.iframe-transport.js"></script>
+<script src="library/blueimp_upload/js/jquery.fileupload.js"></script>
+
 <script>
 	$(document).ready(function() {
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
 
-		var upload_title = $('#wall-image-upload').attr('title');
-		var attach_title = $('#wall-file-upload').attr('title');
-		try {
-			var uploader = new window.AjaxUpload('wall-image-upload',
-			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
-				name: 'userfile',
-				title: upload_title,
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
-				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#jot-media').val($('#jot-media').val() + response);
-					$('#profile-rotator').spin(false);
-				}
-			});
-		} catch (e) {
-		}
-		try {
-			var uploader_sub = new window.AjaxUpload('wall-image-upload-sub',
-			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
-				name: 'userfile',
-				title: upload_title,
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
-				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#jot-media').val($('#jot-media').val() + response);
-					$('#profile-rotator').spin(false);
-				}
-			});
-		} catch(e) {
-		}
-		try {
-			var file_uploader = new window.AjaxUpload('wall-file-upload',
-			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
-				name: 'userfile',
-				title: attach_title,
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
-				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#jot-media').val($('#jot-media').val() + response);
-					$('#profile-rotator').spin(false);
-				}
-			});
-		} catch(e) {
-		}
-		try {
-			var file_uploader_sub = new window.AjaxUpload('wall-file-upload-sub',
-			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
-				name: 'userfile',
-				title: attach_title,
-				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
-				onComplete: function(file,response) {
-					addeditortext(response);
-					$('#jot-media').val($('#jot-media').val() + response);
-					$('#profile-rotator').spin(false);
-				}
-			});
-		} catch(e) {
-		}
-        
-        
+
+		$('#invisible-wall-file-upload').fileupload({
+			url: 'wall_attach/{{$nickname}}',
+			dataType: 'json',
+			dropZone: $('#profile-jot-text'),
+			maxChunkSize: 4 * 1024 * 1024,
+			add: function(e,data) {
+				$('#profile-rotator').spin('tiny');
+				data.submit();
+			},
+			done: function(e,data) {
+				addeditortext(data.result.message);
+				$('#jot-media').val($('#jot-media').val() + data.result.message);
+			},
+			stop: function(e,data) {
+				$('#profile-rotator').spin(false);
+			},
+		});
+
+		$('#wall-file-upload').click(function(event) { event.preventDefault(); $('#invisible-wall-file-upload').trigger('click'); return false;});
+		$('#wall-file-upload-sub').click(function(event) { event.preventDefault(); $('#invisible-wall-file-upload').trigger('click'); return false;});
+
         // call initialization file
         if (window.File && window.FileList && window.FileReader) {
           DragDropUploadInit();
         }
+
 	});
 
 	function deleteCheckedItems() {
@@ -291,15 +258,17 @@ function enableOnUser(){
 
 	function linkdrop(event) {
 		var reply = event.dataTransfer.getData("text/uri-list");
-		event.preventDefault();
-		var editwin = '#' + event.target.id;
-		var commentwin = false;
-		if(editwin) {
-			commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
-			if(commentwin) {
-				var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
-				commentOpen(document.getElementById(event.target.id),commentid);
+		if(reply) {
+			event.preventDefault();
+			var editwin = '#' + event.target.id;
+			var commentwin = false;
+			if(editwin) {
+				commentwin = ((editwin.indexOf('comment') >= 0) ? true : false);
+				if(commentwin) {
+					var commentid = editwin.substring(editwin.lastIndexOf('-') + 1);
+					commentOpen(document.getElementById(event.target.id),commentid);
 
+				}
 			}
 		}
 
@@ -353,8 +322,6 @@ function enableOnUser(){
 					commentBusy = true;
 					$('body').css('cursor', 'wait');
 					$.get('{{$baseurl}}/filer/' + id + '?term=' + reply, NavUpdate);
-//					if(timer) clearTimeout(timer);
-//					timer = setTimeout(NavUpdate,3000);
 					liking = 1;
 					$('#item-filer-dialog').modal('hide');
 				}
@@ -499,32 +466,20 @@ function enableOnUser(){
     };
 
     //
-    // initialize
+    // initialize drag-drop
     function DragDropUploadInit() {
 
       var filedrag = $("#profile-jot-text");
 
-      // is XHR2 available?
-      var xhr = new XMLHttpRequest();
-      if (xhr.upload) {
-
-        // file drop
+	  // file drop
         filedrag.on("dragover", DragDropUploadFileHover);
         filedrag.on("dragleave", DragDropUploadFileHover);
         filedrag.on("drop", DragDropUploadFileSelectHandler);
-
-      }
-
-      window.filesToUpload = 0;
-      window.fileUploadsCompleted = 0;
-
 
     }
 
     // file drag hover
     function DragDropUploadFileHover(e) {
-      e.stopPropagation();
-      e.preventDefault();
       e.target.className = (e.type == "dragover" ? "hover" : "");
     }
 
@@ -533,49 +488,12 @@ function enableOnUser(){
 
       // cancel event and hover styling
       DragDropUploadFileHover(e);
-	  if (!editor) $("#profile-jot-text").val("");
+      // open editor if it isn't yet initialised
+	  if (!editor) {
+			initEditor();
+	  }
+	  linkdrop(e);
 
-
-      // fetch FileList object
-      var files = e.target.files || e.originalEvent.dataTransfer.files;
-      // process all File objects
-      for (var i = 0, f; f = files[i]; i++) {
-        DragDropUploadFile(f, i);
-      }
-
-    }
-
-    // upload  files
-    function DragDropUploadFile(file, idx) {
-
-      window.filesToUpload = window.filesToUpload + 1;
-
-      var xhr = new XMLHttpRequest();
-      xhr.withCredentials = true;   // Include the SESSION cookie info for authentication
-      (xhr.upload || xhr).addEventListener('progress', function (e) {
-         $('#profile-rotator').spin('tiny');
-      });
-      xhr.addEventListener('load', function (e) {
-        //console.log('xhr upload complete', e);
-        window.fileUploadsCompleted = window.fileUploadsCompleted + 1;
-
-		initEditor(function() {
-			addeditortext(xhr.responseText);
-		});
-
-		$('#jot-media').val($('#jot-media').val() + xhr.responseText);
-        // When all the uploads have completed, refresh the page
-        if (window.filesToUpload > 0 && window.fileUploadsCompleted === window.filesToUpload) {  
-          $('#profile-rotator').spin(false);
-          window.fileUploadsCompleted = window.filesToUpload = 0;
-        }
-      });
-      // POST to the wall_upload endpoint
-      xhr.open('post', '{{$baseurl}}/wall_attach/{{$nickname}}', true);
-
-      var data = new FormData();
-      data.append('userfile', file);
-      xhr.send(data);
     }
 
 </script>

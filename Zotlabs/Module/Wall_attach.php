@@ -8,10 +8,21 @@ require_once('include/photos.php');
 
 class Wall_attach extends \Zotlabs\Web\Controller {
 
+	function init() {
+		logger('request_method: ' . $_SERVER['REQUEST_METHOD'],LOGGER_DATA,LOG_INFO);
+		logger('wall_attach: ' . print_r($_REQUEST,true),LOGGER_DEBUG,LOG_INFO);
+		logger('wall_attach files: ' . print_r($_FILES,true),LOGGER_DEBUG,LOG_INFO);
+		// for testing without actually storing anything
+		//		http_status_exit(200,'OK');
+	}
+
+
 	function post() {
 	
 		$using_api = false;
-	
+
+		$result = [];	
+
 		if($_REQUEST['api_source'] && array_key_exists('media',$_FILES)) {
 			$using_api = true;
 		}
@@ -28,7 +39,44 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 
 		if(! $channel)
 			killme();
-	
+
+		$matches = [];
+		$partial = false;
+
+		$x = preg_match('/bytes (\d*)\-(\d*)\/(\d*)/',$_SERVER['HTTP_CONTENT_RANGE'],$matches);
+		if($x) {
+			// logger('Content-Range: ' . print_r($matches,true));
+			$partial = true;
+		}
+
+		if($partial) {
+			$x = save_chunk($channel,$matches[1],$matches[2],$matches[3]);
+			if($x['partial']) {
+				header('Range: bytes=0-' . (($x['length']) ? $x['length'] - 1 : 0));
+				json_return_and_die($result);
+			}
+			else {
+				$_FILES['userfile'] = [
+					'name'     => $x['name'],
+					'type'     => $x['type'],
+					'tmp_name' => $x['tmp_name'],
+					'error'    => $x['error'],
+					'size'     => $x['size']
+				];
+			}
+		}
+		else {	
+			if(! array_key_exists('userfile',$_FILES)) {
+				$_FILES['userfile'] = [
+					'name'     => $_FILES['files']['name'],
+					'type'     => $_FILES['files']['type'],
+					'tmp_name' => $_FILES['files']['tmp_name'],
+					'error'    => $_FILES['files']['error'],
+					'size'     => $_FILES['files']['size']
+				];
+			}
+		}
+
 		$observer = \App::get_observer();
 	
 	
@@ -51,10 +99,14 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 	
 		if($using_api)
 			return $s;
-	
-		echo $s;
-		killme();
-	
+
+
+		if($partial)
+			header('Range: bytes=0-' . (($x['length']) ? $x['length'] - 1 : 0));
+		$result['message'] = $s;
+		json_return_and_die($result);
+		
 	}
 	
+
 }

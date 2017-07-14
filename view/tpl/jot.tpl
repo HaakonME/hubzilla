@@ -1,3 +1,4 @@
+<input id="invisible-wall-file-upload" type="file" name="files" style="visibility:hidden;position:absolute;top:-50;left:-50;width:0;height:0;" multiple>
 <form id="profile-jot-form" action="{{$action}}" method="post" class="acl-form" data-form_id="profile-jot-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 	{{$mimeselect}}
 	{{$layoutselect}}
@@ -39,7 +40,7 @@
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex="2" placeholder="{{$share}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex="2" placeholder="{{$share}}" >{{$content}}</textarea>
 		</div>
 		{{if $attachment}}
 		<div id="jot-attachment-wrap">

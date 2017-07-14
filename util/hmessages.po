@@ -1,14 +1,14 @@
-# red
-# Copyright (C) 2012-2016 red
-# This file is distributed under the same license as the red package.
+# hubzilla
+# Copyright (C) 2012-2016 hubzilla
+# This file is distributed under the same license as the hubzilla package.
 # Mike Macgirvin, 2012
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.3.1\n"
+"Project-Id-Version: 2.5.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-05 20:52-0700\n"
+"POT-Creation-Date: 2017-07-05 21:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -583,7 +583,7 @@ msgid "Membership on this site is by invitation only."
 msgstr ""
 
 #: ../../Zotlabs/Module/Register.php:268 ../../include/nav.php:147
-#: ../../boot.php:1573
+#: ../../boot.php:1572
 msgid "Register"
 msgstr ""
 
@@ -880,7 +880,7 @@ msgstr ""
 #: ../../extend/addon/addon/gitwiki/Mod_Gitwiki.php:166
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
 #: ../../include/dir_fns.php:145 ../../view/theme/redbasic/php/config.php:100
-#: ../../view/theme/redbasic/php/config.php:115 ../../boot.php:1596
+#: ../../view/theme/redbasic/php/config.php:115 ../../boot.php:1595
 msgid "No"
 msgstr ""
 
@@ -943,7 +943,7 @@ msgstr ""
 #: ../../extend/addon/addon/gitwiki/Mod_Gitwiki.php:166
 #: ../../include/dir_fns.php:143 ../../include/dir_fns.php:144
 #: ../../include/dir_fns.php:145 ../../view/theme/redbasic/php/config.php:100
-#: ../../view/theme/redbasic/php/config.php:115 ../../boot.php:1596
+#: ../../view/theme/redbasic/php/config.php:115 ../../boot.php:1595
 msgid "Yes"
 msgstr ""
 
@@ -978,8 +978,8 @@ msgstr ""
 #: ../../Zotlabs/Module/Settings/Oauth.php:87
 #: ../../Zotlabs/Module/Settings/Account.php:118
 #: ../../Zotlabs/Module/Settings/Channel.php:476
+#: ../../Zotlabs/Module/Settings/Featured.php:50
 #: ../../Zotlabs/Module/Settings/Display.php:203
-#: ../../Zotlabs/Module/Settings/Featured.php:52
 #: ../../Zotlabs/Module/Settings/Tokens.php:168
 #: ../../Zotlabs/Module/Settings/Permcats.php:110
 #: ../../Zotlabs/Module/Thing.php:320 ../../Zotlabs/Module/Thing.php:370
@@ -5443,7 +5443,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../Zotlabs/Module/Lostpass.php:91 ../../boot.php:1600
+#: ../../Zotlabs/Module/Lostpass.php:91 ../../boot.php:1599
 msgid "Password Reset"
 msgstr ""
 
@@ -6590,6 +6590,30 @@ msgstr ""
 msgid "Start calendar week on Monday"
 msgstr ""
 
+#: ../../Zotlabs/Module/Settings/Featured.php:20
+msgid "Affinity Slider settings updated."
+msgstr ""
+
+#: ../../Zotlabs/Module/Settings/Featured.php:34
+msgid "No feature settings configured"
+msgstr ""
+
+#: ../../Zotlabs/Module/Settings/Featured.php:41
+msgid "Default maximum affinity level"
+msgstr ""
+
+#: ../../Zotlabs/Module/Settings/Featured.php:46
+msgid "Default minimum affinity level"
+msgstr ""
+
+#: ../../Zotlabs/Module/Settings/Featured.php:50
+msgid "Affinity Slider Settings"
+msgstr ""
+
+#: ../../Zotlabs/Module/Settings/Featured.php:60
+msgid "Feature/Addon Settings"
+msgstr ""
+
 #: ../../Zotlabs/Module/Settings/Display.php:145
 msgid "No special theme for mobile devices"
 msgstr ""
@@ -6701,30 +6725,6 @@ msgstr ""
 
 #: ../../Zotlabs/Module/Settings/Display.php:224
 msgid "Grid page max height of content (in pixels)"
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:21
-msgid "Affinity Slider settings updated."
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:36
-msgid "No feature settings configured"
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:43
-msgid "Default maximum affinity level"
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:48
-msgid "Default minimum affinity level"
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:52
-msgid "Affinity Slider Settings"
-msgstr ""
-
-#: ../../Zotlabs/Module/Settings/Featured.php:62
-msgid "Feature/Addon Settings"
 msgstr ""
 
 #: ../../Zotlabs/Module/Settings/Tokens.php:31
@@ -7894,7 +7894,7 @@ msgid "Suggest Channels"
 msgstr ""
 
 #: ../../Zotlabs/Lib/Apps.php:221 ../../include/nav.php:115
-#: ../../boot.php:1592
+#: ../../boot.php:1591
 msgid "Login"
 msgstr ""
 
@@ -11251,7 +11251,7 @@ msgstr ""
 msgid "YYYY-MM-DD or MM-DD"
 msgstr ""
 
-#: ../../include/datetime.php:286 ../../boot.php:2420
+#: ../../include/datetime.php:286 ../../boot.php:2419
 msgid "never"
 msgstr ""
 
@@ -11683,7 +11683,7 @@ msgstr ""
 msgid "Click to authenticate to your home hub"
 msgstr ""
 
-#: ../../include/nav.php:101 ../../include/nav.php:125 ../../boot.php:1591
+#: ../../include/nav.php:101 ../../include/nav.php:125 ../../boot.php:1590
 msgid "Logout"
 msgstr ""
 
@@ -13350,44 +13350,44 @@ msgstr ""
 msgid "Set size of followup author photos"
 msgstr ""
 
-#: ../../boot.php:1572
+#: ../../boot.php:1571
 msgid "Create an account to access services and applications"
 msgstr ""
 
-#: ../../boot.php:1594
+#: ../../boot.php:1593
 msgid "Login/Email"
 msgstr ""
 
-#: ../../boot.php:1595
+#: ../../boot.php:1594
 msgid "Password"
 msgstr ""
 
-#: ../../boot.php:1596
+#: ../../boot.php:1595
 msgid "Remember me"
 msgstr ""
 
-#: ../../boot.php:1599
+#: ../../boot.php:1598
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:2137
+#: ../../boot.php:2136
 msgid "toggle mobile"
 msgstr ""
 
-#: ../../boot.php:2290
+#: ../../boot.php:2289
 #, php-format
 msgid "[$Projectname] Website SSL error for %s"
 msgstr ""
 
-#: ../../boot.php:2295
+#: ../../boot.php:2294
 msgid "Website SSL certificate is not valid. Please correct."
 msgstr ""
 
-#: ../../boot.php:2414
+#: ../../boot.php:2413
 #, php-format
 msgid "[$Projectname] Cron tasks not running on %s"
 msgstr ""
 
-#: ../../boot.php:2419
+#: ../../boot.php:2418
 msgid "Cron/Scheduled tasks not running."
 msgstr ""

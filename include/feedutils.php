@@ -408,8 +408,11 @@ function get_atom_elements($feed, $item, &$author) {
 	$ostatus_protocol = (($ostatus_conversation) ? true : false);
 	
 	$mastodon = (($item->get_item_tags('http://mastodon.social/schema/1.0','scope')) ? true : false);
-	if($mastodon)
+	if($mastodon) {
 		$ostatus_protocol = true;
+		if(($mastodon[0]['data']) && ($mastodon[0]['data'] !== 'public'))
+			$res['item_private'] = 1;
+	}
 
 	$apps = $item->get_item_tags(NAMESPACE_STATUSNET, 'notice_info');
 	if($apps && $apps[0]['attribs']['']['source']) {
@@ -1024,6 +1027,14 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if(! $datarray['mid'])
 					continue;
 
+				// A Mastodon privacy tag has been found. We cannot send private comments
+				// through the OStatus protocol, so block commenting.
+
+				if(array_key_exists('item_private',$datarray) && intval($datarray['item_private'])) {
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
+				}
+
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';
 					$datarray['comment_policy'] = 'none';
@@ -1219,6 +1230,14 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				if(! $datarray['mid'])
 					continue;
+
+				// A Mastodon privacy tag has been found. We cannot send private comments
+				// through the OStatus protocol, so block commenting.
+
+				if(array_key_exists('item_private',$datarray) && intval($datarray['item_private'])) {
+					$datarray['public_policy'] = 'specific';
+					$datarray['comment_policy'] = 'none';
+				}
 
 				if($contact['xchan_network'] === 'rss') {
 					$datarray['public_policy'] = 'specific';

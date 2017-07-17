@@ -1040,6 +1040,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$datarray['comment_policy'] = 'none';
 				}
 
+				// if we have everything but a photo, provide the default profile photo
+
+				if($author['author_name'] && $author['author_link'] && (! $author['author_photo']))
+					$author['author_photo'] = z_root() . '/' . get_default_profile_photo(80);
+
 				if((! x($author,'author_name')) || ($author['author_is_feed']))
 					$author['author_name'] = $contact['xchan_name'];
 				if((! x($author,'author_link')) || ($author['author_is_feed']))
@@ -1243,6 +1248,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$datarray['public_policy'] = 'specific';
 					$datarray['comment_policy'] = 'none';
 				}
+
+
+				// if we have everything but a photo, provide the default profile photo
+
+				if($author['author_name'] && $author['author_link'] && (! $author['author_photo']))
+					$author['author_photo'] = z_root() . '/' . get_default_profile_photo(80);
 
 				if(is_array($contact)) {
 					if((! x($author,'author_name')) || ($author['author_is_feed']))

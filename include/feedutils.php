@@ -1890,17 +1890,17 @@ function i2asld($i) {
 
 	$ret = array();
 
-	$ret['@context'] = array( 'http://www.w3.org/ns/activitystreams', 'zot' => 'http://purl.org/zot/protocol');
+	$ret['@context'] = array( 'https://www.w3.org/ns/activitystreams', 'zot' => 'http://purl.org/zot/protocol');
 
 	if($i['verb']) {
 		if(strpos(dirname($i['verb'],'activitystrea.ms/schema/1.0'))) {
-			$ret['@type'] = ucfirst(basename($i['verb']));
+			$ret['type'] = ucfirst(basename($i['verb']));
 		}
 		elseif(strpos(dirname($i['verb'],'purl.org/zot'))) {
-			$ret['@type'] = 'zot:' . ucfirst(basename($i['verb']));
+			$ret['type'] = 'zot:' . ucfirst(basename($i['verb']));
 		}
 	}
-	$ret['@id'] = $i['plink'];
+	$ret['id'] = $i['plink'];
 
 	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
 
@@ -1922,7 +1922,7 @@ function asencode_note($i) {
 	$ret = array();
 
 	$ret['@type'] = 'Note';
-	$ret['@id'] = $i['plink'];
+	$ret['id'] = $i['plink'];
 	if($i['title'])
 		$ret['title'] = bbcode($i['title']);
 
@@ -1938,16 +1938,18 @@ function asencode_note($i) {
 
 function asencode_person($p) {
 	$ret = array();
-	$ret['@type'] = 'Person';
-	$ret['@id'] = 'acct:' . $p['xchan_addr'];
-	$ret['displayName'] = $p['xchan_name'];
-	$ret['icon'] = array(
-		'@type' => 'Link',
+	$ret['type'] = 'Person';
+	$ret['id'] = $p['xchan_url'];
+	$ret['name'] = $p['xchan_name'];
+	$ret['image'] = array(
+		'type' => 'Link',
 		'mediaType' => $p['xchan_photo_mimetype'],
-		'href' => $p['xchan_photo_m']
+		'href' => $p['xchan_photo_l'],
+		'height' => 300,
+		'width' => 300
 	);
 	$ret['url'] = array(
-		'@type' => 'Link',
+		'type' => 'Link',
 		'mediaType' => 'text/html',
 		'href' => $p['xchan_url']
 	);

@@ -1941,13 +1941,28 @@ function asencode_person($p) {
 	$ret['type']  = 'Person';
 	$ret['id']    = $p['xchan_url'];
 	$ret['name']  = $p['xchan_name'];
-	$ret['icon']  = [ $p['xchan_photo_l'] ];
-	$ret['image'] = [
-		'type'      => 'Link',
-		'mediaType' => $p['xchan_photo_mimetype'],
-		'href'      => $p['xchan_photo_l'],
-		'height'    => 300,
-		'width'     => 300
+	$ret['icon']  = [ 
+		[
+			'type'      => 'Image',
+			'mediaType' => $p['xchan_photo_mimetype'],
+			'url'       => $p['xchan_photo_l'],
+			'height'    => 300,
+			'width'     => 300,
+		],
+		[
+			'type'      => 'Image',
+			'mediaType' => $p['xchan_photo_mimetype'],
+			'url'       => $p['xchan_photo_m'],
+			'height'    => 80,
+			'width'     => 80,
+		],
+		[
+			'type'      => 'Image',
+			'mediaType' => $p['xchan_photo_mimetype'],
+			'url'       => $p['xchan_photo_l'],
+			'height'    => 48,
+			'width'     => 48,
+		]
 	];
 	$ret['url'] = [
 		'type'      => 'Link',

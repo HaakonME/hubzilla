@@ -689,7 +689,7 @@ class Photos extends \Zotlabs\Web\Controller {
 					(SELECT resource_id, max(imgscale) imgscale FROM photo left join attach on folder = '%s' and photo.resource_id = attach.hash WHERE attach.uid = %d AND imgscale <= 4 AND photo_usage IN ( %d, %d ) and is_nsfw = %d $sql_extra GROUP BY resource_id) ph 
 					ON (p.resource_id = ph.resource_id AND p.imgscale = ph.imgscale)
 				ORDER BY created $order LIMIT %d OFFSET %d",
-				dbesc($datum),
+				dbesc($x['hash']),
 				intval($owner_uid),
 				intval(PHOTO_NORMAL),
 				intval(PHOTO_PROFILE),

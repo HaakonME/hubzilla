@@ -1937,22 +1937,34 @@ function asencode_note($i) {
 
 
 function asencode_person($p) {
-	$ret = array();
-	$ret['type'] = 'Person';
-	$ret['id'] = $p['xchan_url'];
-	$ret['name'] = $p['xchan_name'];
-	$ret['image'] = array(
-		'type' => 'Link',
+	$ret = [];
+	$ret['type']  = 'Person';
+	$ret['id']    = $p['xchan_url'];
+	$ret['name']  = $p['xchan_name'];
+	$ret['icon']  = [ $p['xchan_photo_l'] ];
+	$ret['image'] = [
+		'type'      => 'Link',
 		'mediaType' => $p['xchan_photo_mimetype'],
-		'href' => $p['xchan_photo_l'],
-		'height' => 300,
-		'width' => 300
-	);
-	$ret['url'] = array(
-		'type' => 'Link',
+		'href'      => $p['xchan_photo_l'],
+		'height'    => 300,
+		'width'     => 300
+	];
+	$ret['url'] = [
+		'type'      => 'Link',
 		'mediaType' => 'text/html',
-		'href' => $p['xchan_url']
-	);
+		'href'      => $p['xchan_url']
+	];
+
+	if(array_key_exists('channel_id',$p)) {
+		$ret['inbox'] = z_root() . '/inbox/' . $p['channel_address'];
+		$ret['outbox'] = z_root() . '/outbox/' . $p['channel_address'];
+	}
+	else {
+		$collections = get_xconfig($p['xchan_hash'],'activitystreams','collections',[]);
+		if($collections) {
+			$ret = array_merge($ret,$collections);
+		}
+	}
 
 	return $ret;
 }

@@ -43,7 +43,7 @@ class ActivityStreams2 {
 	function fetch_property($url) {
 		$redirects = 0;
 		$x = z_fetch_url($url,true,$redirects,
-			['headers' => [ 'Accept' => 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"']]);
+			['headers' => [ 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"']]);
 		if($x['success'])
 			return json_decode($x['body'],true);
 		return null;

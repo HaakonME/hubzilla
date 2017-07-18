@@ -598,9 +598,10 @@ function photos_album_exists($channel_id, $observer_hash, $album) {
  
 	if(! $r) {
 		$r = q("SELECT folder, hash, is_dir, filename, os_path, display_path FROM attach WHERE filename = '%s' AND is_dir = 1 AND uid = %d $sql_extra limit 1",
-		dbesc(hex2bin($album)),
-		intval($channel_id)
-	);
+			dbesc(hex2bin($album)),
+			intval($channel_id)
+		);
+	}
 
 	return (($r) ? $r[0] : false);
 }

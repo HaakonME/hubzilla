@@ -11,7 +11,8 @@ class Ap_probe extends \Zotlabs\Web\Controller {
 		$o .= '<h3>ActivityPub Probe Diagnostic</h3>';
 	
 		$o .= '<form action="ap_probe" method="get">';
-		$o .= 'Lookup URI: <input type="text" style="width: 250px;" name="addr" value="' . $_GET['addr'] .'" />';
+		$o .= 'Lookup URI: <input type="text" style="width: 250px;" name="addr" value="' . $_GET['addr'] .'" /><br>';
+		$o .= 'Request Signed version: <input type=checkbox name="magenv" value="1" ><br>';
 		$o .= '<input type="submit" name="submit" value="Submit" /></form>'; 
 	
 		$o .= '<br /><br />';
@@ -19,11 +20,15 @@ class Ap_probe extends \Zotlabs\Web\Controller {
 		if(x($_GET,'addr')) {
 			$addr = $_GET['addr'];
 
-			$redirects = 0;
-		    $x = z_fetch_url($addr,true,$redirects,
-	        [ 'headers' => [ 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"']]);
-logger('fetch: ' . print_r($x,true));
+			if($_GET['magenv']) {
+				$headers = 'Accept: application/magic-envelope+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+			}
+			else {
+				$headers = 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+			}
 
+			$redirects = 0;
+		    $x = z_fetch_url($addr,true,$redirects, [ 'headers' => [ $headers ]]);
 	    	if($x['success'])
 				$o .= '<pre>' . str_replace('\\','',jindent($x['body'])) . '</pre>';
 		}

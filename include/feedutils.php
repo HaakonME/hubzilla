@@ -1973,6 +1973,14 @@ function asencode_person($p) {
 	if(array_key_exists('channel_id',$p)) {
 		$ret['inbox'] = z_root() . '/inbox/' . $p['channel_address'];
 		$ret['outbox'] = z_root() . '/outbox/' . $p['channel_address'];
+		$ret['me:magic_keys'] = [
+			[ 
+				'value' => salmon_key($p['channel_pubkey']), 
+				'key_id' => base64url_encode(hash('sha256',salmon_key($p['channel_pubkey'])),true)
+			]
+		];
+
+
 	}
 	else {
 		$collections = get_xconfig($p['xchan_hash'],'activitystreams','collections',[]);

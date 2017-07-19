@@ -186,14 +186,17 @@ class Setup extends \Zotlabs\Web\Controller {
 		}
 		$db_return_text = '';
 		if(x(\App::$data, 'db_installed')) {
-			$txt = '<p style="font-size: 130%;">';
-			$txt .= t('Your site database has been installed.') . EOL;
+			$pass = 'Installation succeeded!';
+			$icon = 'check';
+			$txt = t('Your site database has been installed.') . EOL;
 			$db_return_text .= $txt;
 		}
 		if(x(\App::$data, 'db_failed')) {
+			$pass = 'Database install failed!';
+			$icon = 'exclamation-triangle';
 			$txt = t('You may need to import the file "install/schema_xxx.sql" manually using a database client.') . EOL;
 			$txt .= t('Please see the file "install/INSTALL.txt".') . EOL ."<hr>" ;
-			$txt .= "<pre>".\App::$data['db_failed'] . "</pre>". EOL ;
+			$txt .= "<pre>" . \App::$data['db_failed'] . "</pre>". EOL ;
 			$db_return_text .= $txt;
 		}
 		if(\DBA::$dba && \DBA::$dba->connected) {
@@ -217,8 +220,10 @@ class Setup extends \Zotlabs\Web\Controller {
 			$tpl = get_markup_template('install.tpl');
 			return replace_macros($tpl, array(
 				'$title' => $install_title,
-				'$pass' => '',
-				'$text' => $db_return_text . $this->what_next(),
+				'$icon' => $icon,
+				'$pass' => $pass,
+				'$text' => $db_return_text,
+				'$what_next' => $this->what_next()
 			));
 		}
 
@@ -395,7 +400,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		if(!$passed) {
 			$help .= t('Could not find a command line version of PHP in the web server PATH.'). EOL;
 			$help .= t('If you don\'t have a command line version of PHP installed on server, you will not be able to run background polling via cron.') . EOL;
-			$help .= EOL . EOL ;
+			$help .= EOL;
 			$tpl = get_markup_template('field_input.tpl');
 			$help .= replace_macros($tpl, array(
 				'$field' => array('phpath', t('PHP executable path'), $phpath, t('Enter full path to php executable. You can leave this blank to continue the installation.')),
@@ -443,7 +448,7 @@ class Setup extends \Zotlabs\Web\Controller {
 				userReadableSize($result['max_upload_filesize']),
 				$result['max_file_uploads']
 				);
-		$help .= '<br>' . t('You can adjust these settings in the server php.ini file.');
+		$help .= '<br><br>' . t('You can adjust these settings in the server php.ini file.');
 
 		$this->check_add($checks, t('PHP upload limits'), true, false, $help);
 	}
@@ -735,12 +740,12 @@ class Setup extends \Zotlabs\Web\Controller {
 
 		$baseurl = z_root();
 		return
-			t('<h1>What next</h1>')
-			."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
+			t('<h1>What next?</h1>')
+			."<div class=\"alert alert-info\">".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.').EOL
 			.t('Please see the file "install/INSTALL.txt".')
-			."</p><p>"
+			."</div><div>"
 			.t("Go to your new hub <a href='$baseurl/register'>registration page</a> and register as new member. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
-			."</p>";
+			."</div>";
 	}
 
 	/**

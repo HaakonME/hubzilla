@@ -236,9 +236,9 @@ class Channel extends \Zotlabs\Web\Controller {
 
 			if($load || ($checkjs->disabled())) {
 				if($mid) {
-					$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d $item_normal
+					$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal
 						AND item_wall = 1 $sql_extra limit 1",
-						dbesc($mid),
+						dbesc($mid . '%'),
 						intval(\App::$profile['profile_uid'])
 					);
 					if (! $r) {

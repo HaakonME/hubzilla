@@ -1073,7 +1073,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				$datarray['owner_xchan'] = $contact['xchan_hash'];
 
-				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
+				$r = q("SELECT id, edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
@@ -1089,7 +1089,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
+						$datarray['uid'] = $importer['channel_id'];
+						$datarray['aid'] = $importer['channel_account_id'];
+						$datarray['id'] = $r[0]['id'];
+
 						update_feed_item($importer['channel_id'],$datarray);
+
 					}
 					continue;
 				}
@@ -1300,7 +1305,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				}
 
 
-				$r = q("SELECT edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
+				$r = q("SELECT id, edited FROM item WHERE mid = '%s' AND uid = %d LIMIT 1",
 					dbesc($datarray['mid']),
 					intval($importer['channel_id'])
 				);
@@ -1314,6 +1319,10 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						// do not accept (ignore) an earlier edit than one we currently have.
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
+
+						$datarray['uid'] = $importer['channel_id'];
+						$datarray['aid'] = $importer['channel_account_id'];
+						$datarray['id'] = $r[0]['id'];
 
 						update_feed_item($importer['channel_id'],$datarray);
 					}
@@ -1555,7 +1564,7 @@ function feed_meta($xml) {
  * @param array $datarray
  */
 function update_feed_item($uid, $datarray) {
-	logger('Not implemented! ' . $uid . ' ' . print_r($datarray, true), LOGGER_DATA);
+	item_store_update($datarray);
 }
 
 /**

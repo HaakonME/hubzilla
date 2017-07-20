@@ -3372,7 +3372,7 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 								dbesc($cl['name']),
 								intval($cl['visible']),
 								intval($cl['deleted']),
-								dbesc($cl['hash']),
+								dbesc($cl['collection']),
 								intval($channel['channel_id'])
 							);
 						}

@@ -56,6 +56,7 @@ class Group extends \Zotlabs\Web\Controller {
 				);
 				if($r)
 					info( t('Privacy group updated.') . EOL );
+				build_sync_packet(local_channel(),null,true);
 			}
 	
 			goaway(z_root() . '/group/' . argv(1) . '/' . argv(2));
@@ -63,7 +64,8 @@ class Group extends \Zotlabs\Web\Controller {
 		return;	
 	}
 	
-		function get() {
+	function get() {
+
 		$change = false;
 	
 		logger('mod_group: ' . \App::$cmd,LOGGER_DEBUG);

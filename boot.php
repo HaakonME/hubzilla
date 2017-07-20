@@ -455,6 +455,8 @@ define ( 'NAMESPACE_YMEDIA',          'http://search.yahoo.com/mrss/' );
  * activity stream defines
  */
 
+define ( 'ACTIVITY_PUBLIC_INBOX', 'https://www.w3.org/ns/activitystreams#Public' );
+
 define ( 'ACTIVITY_REACT',       NAMESPACE_ZOT   . '/activity/react' );
 define ( 'ACTIVITY_LIKE',        NAMESPACE_ACTIVITY_SCHEMA . 'like' );
 define ( 'ACTIVITY_DISLIKE',     NAMESPACE_ZOT   . '/activity/dislike' );

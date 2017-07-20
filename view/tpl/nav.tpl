@@ -4,7 +4,7 @@
 		{{$nav.loginmenu.1.1}}
 	</a>
 	{{if $nav.register}}
-	<a class="btn btn-warning btn-sm text-white" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" >
+	<a class="btn btn-warning btn-sm text-dark" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}" >
 		{{$nav.register.1}}
 	</a>
 	{{/if}}

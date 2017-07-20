@@ -1235,24 +1235,24 @@ img.mail-conv-sender-photo {
 
 .section-content-info-wrapper {
 	padding: 21px 10px;
-	color: #31708f;
-	background-color: #d9edf7;
+	color: #0c5460;
+	background-color: #d1ecf1;
 	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
 .section-content-warning-wrapper {
 	padding: 21px 10px;
-	color: #8a6d3b;
-	background-color: #fcf8e3;
+	color: #856404;
+	background-color: #fff3cd;
 	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }
 
 .section-content-danger-wrapper {
 	padding: 21px 10px;
-	color: #a94442;
-	background-color: #f2dede;
+	color: #721c24;
+	background-color: #f8d7da;
 	border-bottom: 3px solid $comment_item_colour;
 	text-align: center;
 }

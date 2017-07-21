@@ -77,7 +77,7 @@ class Directory extends \Zotlabs\Web\Controller {
 		$pubforums = get_directory_setting($observer, 'pubforums');
 	
 		$o = '';
-		nav_set_selected('directory');
+		nav_set_selected(t('Directory'));
 	
 		if(x($_POST,'search'))
 			$search = notags(trim($_POST['search']));

@@ -46,8 +46,16 @@ function term_query($table,$s,$type = TERM_UNKNOWN, $type2 = '') {
 
 function term_item_parent_query($uid,$table,$s,$type = TERM_UNKNOWN, $type2 = '') {
 
+	// Allow asterisks for wildcard search
+	// In theory this means '%' will also do a wildcard search, but there appear to be multiple escape 
+	// issues with '%' in term names and trying to fix this with '\\%' here did not help.
+	// Ideally I think we want '*' to indicate wildcards and allow '%' literally in names, but that is being
+	// left for another developer on another day.  
+
+	$s = str_replace('*','%',$s);
+
 	if($type2) {
-		$r = q("select parent from item left join term on term.oid = item.id where term.ttype in (%d, %d) and term.term = '%s' and term.uid = %d and term.otype = 1",
+		$r = q("select parent from item left join term on term.oid = item.id where term.ttype in (%d, %d) and term.term like '%s' and term.uid = %d and term.otype = 1",
 			intval($type),
 			intval($type2),
 			dbesc($s),
@@ -55,12 +63,13 @@ function term_item_parent_query($uid,$table,$s,$type = TERM_UNKNOWN, $type2 = ''
 		);
 	}
 	else {
-		$r = q("select parent from item left join term on term.oid = item.id where term.ttype = %d and term.term = '%s' and term.uid = %d and term.otype = 1",
+		$r = q("select parent from item left join term on term.oid = item.id where term.ttype = %d and term.term like '%s' and term.uid = %d and term.otype = 1",
 			intval($type),
 			dbesc($s),
 			intval($uid)
 		);
 	}
+
 	if($r) {
 		$str = '';
 		foreach($r as $rv) {

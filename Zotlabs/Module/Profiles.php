@@ -9,7 +9,7 @@ class Profiles extends \Zotlabs\Web\Controller {
 
 	function init() {
 	
-		nav_set_selected('profiles');
+		nav_set_selected('Profiles');
 	
 		if(! local_channel()) {
 			return;

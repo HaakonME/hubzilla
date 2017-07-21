@@ -140,7 +140,7 @@ class Mail extends \Zotlabs\Web\Controller {
 	function get() {
 	
 		$o = '';
-		nav_set_selected('messages');
+		nav_set_selected(t('Mail'));
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);

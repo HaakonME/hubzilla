@@ -19,10 +19,10 @@
 	{{if $localuser}}
 	<div class="dropdown-menu">
 		{{foreach $nav.usermenu as $usermenu}}
-		<a class="dropdown-item"  href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem" id="{{$usermenu.4}}">{{$usermenu.1}}</a>
+		<a class="dropdown-item{{if $usermenu.2}} active{{/if}}"  href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem" id="{{$usermenu.4}}">{{$usermenu.1}}</a>
 		{{/foreach}}
 		{{if $nav.manage}}
-		<a class="dropdown-item" href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem" id="{{$nav.manage.4}}">{{$nav.manage.1}}</a>
+		<a class="dropdown-item{{if $sel.active == Manage}} active{{/if}}" href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem" id="{{$nav.manage.4}}">{{$nav.manage.1}}</a>
 		{{/if}}	
 		{{if $nav.channels}}
 		{{foreach $nav.channels as $chan}}
@@ -34,11 +34,11 @@
 		{{/if}}
 		{{if $nav.settings}}
 		<div class="dropdown-divider"></div>
-		<a class="dropdown-item" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a>
+		<a class="dropdown-item{{if $sel.active == Settings}} active{{/if}}" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a>
 		{{/if}}
 		{{if $nav.admin}}
 		<div class="dropdown-divider"></div>
-		<a class="dropdown-item" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a>
+		<a class="dropdown-item{{if $sel.active == Admin}} active{{/if}}" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a>
 		{{/if}}
 		{{if $nav.logout}}
 		<div class="dropdown-divider"></div>

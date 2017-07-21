@@ -21,6 +21,8 @@ class Profile extends \Zotlabs\Web\Controller {
 			\App::$error = 404;
 			return;
 		}
+
+		nav_set_selected('Profile');
 	
 		$profile = '';
 		$channel = \App::get_channel();

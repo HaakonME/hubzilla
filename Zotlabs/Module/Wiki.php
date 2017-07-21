@@ -42,7 +42,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 		if(! feature_enabled(\App::$profile_uid,'wiki')) {
 			notice( t('Not found') . EOL);
-     		return;
+			return;
  		}
 
 
@@ -75,6 +75,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if (local_channel() === intval($owner['channel_id'])) {
 
 			$wiki_owner = true;
+
+			nav_set_selected(t('Wiki'));
 
 			// Obtain the default permission settings of the channel
 			$owner_acl = array(

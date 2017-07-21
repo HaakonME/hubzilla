@@ -53,7 +53,7 @@ class Settings extends \Zotlabs\Web\Controller {
 	
 	function get() {
 	
-		nav_set_selected('settings');
+		nav_set_selected('Settings');
 	
 		if((! local_channel()) || ($_SESSION['delegate'])) {
 			notice( t('Permission denied.') . EOL );

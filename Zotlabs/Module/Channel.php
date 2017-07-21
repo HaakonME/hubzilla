@@ -94,7 +94,7 @@ class Channel extends \Zotlabs\Web\Controller {
 		}
 		else {
 			if(\App::$profile['profile_uid'] == local_channel()) {
-				nav_set_selected('home');
+				nav_set_selected(t('Channel Home'));
 			}
 		}
 

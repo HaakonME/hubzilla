@@ -554,6 +554,8 @@ class Photos extends \Zotlabs\Web\Controller {
 		$sql_item = item_permissions_sql($owner_uid,get_observer_hash());
 		$sql_extra = permissions_sql($owner_uid,get_observer_hash(),'photo');
 		$sql_attach = permissions_sql($owner_uid,get_observer_hash(),'attach');
+
+		nav_set_selected(t('Photos'));
 	
 		$o = "";
 	

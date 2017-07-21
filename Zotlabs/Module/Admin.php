@@ -52,6 +52,8 @@ class Admin extends \Zotlabs\Web\Controller {
 		 * Page content
 		 */
 
+		nav_set_selected('Admin');
+
 		$o = '';
 
 		if(argc() > 1) {

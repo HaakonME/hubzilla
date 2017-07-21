@@ -29,6 +29,8 @@ class Connections extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return login();
 		}
+
+		nav_set_selected(t('Connections'));
 	
 		$blocked     = false;
 		$hidden      = false;
@@ -71,7 +73,6 @@ class Connections extends \Zotlabs\Web\Controller {
 					$search_flags = " and abook_pending = 1 ";
 					$head = t('New');
 					$pending = true;
-					nav_set_selected('intros');
 					break;
 				case 'ifpending':
 					$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and abook_pending = 1 and abook_self = 0 and abook_ignored = 0 and xchan_deleted = 0 and xchan_orphan = 0 ",
@@ -81,7 +82,6 @@ class Connections extends \Zotlabs\Web\Controller {
 						$search_flags = " and abook_pending = 1 ";
 						$head = t('New');
 						$pending = true;
-						nav_set_selected('intros');
 						\App::$argv[1] = 'pending';
 					}
 					else {
@@ -91,7 +91,6 @@ class Connections extends \Zotlabs\Web\Controller {
 						\App::$argc = 1;
 						unset(\App::$argv[1]);
 					}
-					nav_set_selected('intros');
 					break;
 	//			case 'unconnected':
 	//				$search_flags = " and abook_unconnected = 1 ";

@@ -101,12 +101,12 @@ EOT;
 		$nav['logout'] = ['logout',t('Logout'), "", t('End this session'),'logout_nav_btn'];
 		
 		// user menu
-		$nav['usermenu'][] = ['profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'),'profile_nav_btn'];
+		$nav['usermenu'][] = ['profile/' . $channel['channel_address'], t('View Profile'), ((\App::$nav_sel['active'] == 'Profile') ? 'active' : ''), t('Your profile page'),'profile_nav_btn'];
 
 		if(feature_enabled(local_channel(),'multi_profiles'))
-			$nav['usermenu'][]   = ['profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'),'profiles_nav_btn'];
+			$nav['usermenu'][]   = ['profiles', t('Edit Profiles'), ((\App::$nav_sel['active'] == 'Profiles') ? 'active' : '') , t('Manage/Edit profiles'),'profiles_nav_btn'];
 		else
-			$nav['usermenu'][]   = ['profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'),'profiles_nav_btn'];
+			$nav['usermenu'][]   = ['profiles/' . $prof[0]['id'], t('Edit Profile'), ((\App::$nav_sel['active'] == 'Profiles') ? 'active' : ''), t('Edit your profile'),'profiles_nav_btn'];
 
 	}
 	else {
@@ -290,21 +290,7 @@ EOT;
  * 
  */
 function nav_set_selected($item){
-    App::$nav_sel = array(
-		'community' 	=> null,
-		'network' 		=> null,
-		'home'			=> null,
-		'profiles'		=> null,
-		'intros'        => null,
-		'notifications'	=> null,
-		'messages'		=> null,
-		'directory'	    => null,
-		'settings'		=> null,
-		'contacts'		=> null,
-		'manage'        => null,
-		'register'      => null,
-	);
-	App::$nav_sel[$item] = 'active';
+	App::$nav_sel['active'] = $item;
 }
 
 

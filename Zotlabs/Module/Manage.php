@@ -10,6 +10,8 @@ class Manage extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
+
+		nav_set_selected('Manage');
 	
 		require_once('include/security.php');
 	

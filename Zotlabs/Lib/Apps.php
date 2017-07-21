@@ -284,6 +284,9 @@ class Apps {
 		if(! $papp['photo'])
 			$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
 
+		if(\App::$nav_sel['active'] == $papp['name'])
+			$papp['active'] = true;
+
 		self::translate_system_apps($papp);
 
 		if(trim($papp['plugin']) && (! plugin_is_installed(trim($papp['plugin']))))

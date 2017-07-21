@@ -81,11 +81,12 @@ class Search extends \Zotlabs\Web\Controller {
 			return $o;
 	
 		if($tag) {
-			$sql_extra = sprintf(" AND item.id IN (select oid from term where otype = %d and ttype in ( %d , %d) and term = '%s') ",
+			$wildtag = str_replace('*','%',$search);
+			$sql_extra = sprintf(" AND item.id IN (select oid from term where otype = %d and ttype in ( %d , %d) and term like '%s') ",
 				intval(TERM_OBJ_POST),
 				intval(TERM_HASHTAG),
 				intval(TERM_COMMUNITYTAG),
-				dbesc(protect_sprintf($search))
+				dbesc(protect_sprintf($wildtag))
 			);
 		}
 		else {

@@ -17,7 +17,7 @@
 	</div>
 	<h3>
 		{{if $selected == $channel.channel_id}}
-		<i class="selected-channel fa fa-circle" title="{{$msg_selected}}"></i>
+		<i class="fa fa-circle text-success" title="{{$msg_selected}}"></i>
 		{{/if}}
 		{{if $channel.delegate}}
 		<i class="fa fa-arrow-circle-right" title="{{$delegated_desc}}"></i>
@@ -37,11 +37,11 @@
 	<div class="channel-notifications-wrapper">
 		{{if !$channel.delegate}}
 		<div class="channel-notification">
-			<i class="fa fa-envelope{{if $channel.mail != 0}} new-notification{{/if}}"></i>
+			<i class="fa fa-fw fa-envelope{{if $channel.mail != 0}} text-danger{{/if}}"></i>
 			{{if $channel.mail != 0}}<a href="manage/{{$channel.channel_id}}/mail/combined">{{/if}}{{$channel.mail|string_format:$mail_format}}{{if $channel.mail != 0}}</a>{{/if}}
 		</div>
 		<div class="channel-notification">
-			<i class="fa fa-user{{if $channel.intros != 0}} new-notification{{/if}}"></i>
+			<i class="fa fa-fw fa-user{{if $channel.intros != 0}} text-danger{{/if}}"></i>
 			{{if $channel.intros != 0}}<a href='manage/{{$channel.channel_id}}/connections/ifpending'>{{/if}}{{$channel.intros|string_format:$intros_format}}{{if $channel.intros != 0}}</a>{{/if}}
 		</div>
 		{{/if}}

@@ -26,7 +26,7 @@
 		{{/if}}	
 		{{if $nav.channels}}
 		{{foreach $nav.channels as $chan}}
-		<a class="dropdown-item" href="manage/{{$chan.channel_id}}" title="{{$chan.channel_name}}" role="menuitem">{{$chan.channel_name}}</a>
+		<a class="dropdown-item" href="manage/{{$chan.channel_id}}" title="{{$chan.channel_name}}" role="menuitem"><i class="fa fa-circle{{if $localuser == $chan.channel_id}} text-success{{else}} invisible{{/if}}"></i> {{$chan.channel_name}}</a>
 		{{/foreach}}
 		{{/if}}
 		{{if $nav.profiles}}

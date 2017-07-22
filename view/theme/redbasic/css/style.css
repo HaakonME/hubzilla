@@ -1380,6 +1380,11 @@ blockquote {
 	background-color: $item_colour;
 }
 
+.dropdown-item.active {
+	color: #fff;
+	background-color: #007bff;
+}
+
 .bg-dark {
 	background-color: $nav_bg !important;
 }

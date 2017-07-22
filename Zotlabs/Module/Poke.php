@@ -143,12 +143,14 @@ class Poke extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
+
+		nav_set_selected(t('Poke'));
 	
 		$name = '';
 		$id = '';

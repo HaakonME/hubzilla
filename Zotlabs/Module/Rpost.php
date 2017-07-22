@@ -59,6 +59,8 @@ class Rpost extends \Zotlabs\Web\Controller {
 			}
 			return login();
 		}
+
+		nav_set_selected(t('Post'));
 	
 		// If we have saved rpost session variables, but nothing in the current $_REQUEST, recover the saved variables
 	

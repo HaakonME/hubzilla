@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div class="d-md-none p-1">
+<div class="d-md-none pt-1 pb-1">
 	<a class="btn btn-primary btn-sm text-white" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
 	</a>

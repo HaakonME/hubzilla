@@ -2001,3 +2001,52 @@ function asencode_person($p) {
 	return $ret;
 }
 
+
+function activity_mapper($verb) {
+
+	$acts = [
+		'http://activitystrea.ms/schema/1.0/post'      => 'Create',
+		'http://activitystrea.ms/schema/1.0/update'    => 'Update',
+		'http://activitystrea.ms/schema/1.0/like'      => 'Like',
+		'http://activitystrea.ms/schema/1.0/favorite'  => 'Like',
+		'http://purl.org/zot/activity/dislike'         => 'Dislike',
+		'http://activitystrea.ms/schema/1.0/tag'       => 'Add',
+		'http://activitystrea.ms/schema/1.0/follow'    => 'Follow',
+		'http://activitystrea.ms/schema/1.0/unfollow'  => 'Unfollow',
+	];
+
+
+	if(array_key_exists($acts[$verb])) {
+		return $acts[$verb];
+	}
+	return false;
+}
+
+
+function activity_obj_mapper($obj,$reverse = false) {
+
+	$objs = [
+		'http://activitystrea.ms/schema/1.0/note'           => 'Note',
+		'http://activitystrea.ms/schema/1.0/comment'        => 'Note',
+		'http://activitystrea.ms/schema/1.0/person'         => 'Person',
+		'http://purl.org/zot/activity/profile'              => 'Profile',
+		'http://activitystrea.ms/schema/1.0/photo'          => 'Image',
+		'http://activitystrea.ms/schema/1.0/profile-photo'  => 'Icon',
+		'http://activitystrea.ms/schema/1.0/event'          => 'Event',
+		'http://activitystrea.ms/schema/1.0/wiki'           => 'Document',
+		'http://purl.org/zot/activity/location'             => 'Place',
+		'http://purl.org/zot/activity/chessgame'            => 'Game',
+		'http://purl.org/zot/activity/tagterm'              => 'zot:Tag',
+		'http://purl.org/zot/activity/thing'                => 'zot:Thing',
+		'http://purl.org/zot/activity/file'                 => 'zot:File',
+		'http://purl.org/zot/activity/poke'                 => 'zot:Action',
+		'http://purl.org/zot/activity/react'                => 'zot:Reaction',
+		'http://purl.org/zot/activity/mood'                 => 'zot:Mood',
+		
+	];
+
+	if(array_key_exists($objs[$verb])) {
+		return $objs[$verb];
+	}
+	return false;
+}

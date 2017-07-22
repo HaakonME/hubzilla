@@ -55,7 +55,7 @@ $(document).ready(function() {
 	});
 
 	$("input[data-role=cat-tagsinput]").tagsinput({
-		tagClass: 'badge badge-pill badge-warning'
+		tagClass: 'badge badge-pill badge-warning text-dark'
 	});
 
 	var doctitle = document.title;

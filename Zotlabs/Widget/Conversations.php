@@ -40,6 +40,8 @@ class Conversations {
 
 			foreach($r as $rr) {
 
+				$selected = ((argc() == 3) ? intval(argv(2)) == intval($rr['id']) : $r[0]['id'] == $rr['id']);
+
 				$messages[] = array(
 					'mailbox'      => $mailbox,
 					'id'           => $rr['id'],
@@ -54,7 +56,7 @@ class Conversations {
 					'body'         => $rr['body'],
 					'date'         => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], 'c'),
 					'seen'         => $rr['seen'],
-					'selected'     => ((argc() == 2) ? (intval(argv(1)) == intval($rr['id'])) : ($r[0]['id'] == $rr['id']))
+					'selected'     => ((argv(1) != 'new') ? $selected : '')
 				);
 			}
 

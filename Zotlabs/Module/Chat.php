@@ -89,9 +89,11 @@ class Chat extends \Zotlabs\Web\Controller {
 	
 	function get() {
 	
-		if(local_channel())
+		if(local_channel()) {
 			$channel = \App::get_channel();
-	
+			nav_set_selected(t('My Chatrooms'));
+		}
+
 		$ob = \App::get_observer();
 		$observer = get_observer_hash();
 		if(! $observer) {

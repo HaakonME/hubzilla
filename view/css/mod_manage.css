@@ -4,10 +4,6 @@
 	text-decoration: none;
 }
 
-.new-notification {
-	color: #c60032;
-}
-
 .channel-photo-wrapper {
 	display: table-cell;
 	table-layout: fixed;
@@ -23,12 +19,4 @@
 	table-layout: fixed;
 	vertical-align: top;
 	padding-left: 10px;
-}
-
-.selected-channel {
-	color: green;
-}
-
-#all-channels-end {
-	margin-bottom: 20px;
 }

@@ -7,7 +7,9 @@ require_once('include/zot.php');
 class Probe extends \Zotlabs\Web\Controller {
 
 	function get() {
-	
+
+		nav_set_selected(t('Remote Diagnostics'));
+
 		$o .= '<h3>Probe Diagnostic</h3>';
 	
 		$o .= '<form action="probe" method="get">';

@@ -28,6 +28,8 @@ class Suggest extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
+
+		nav_set_selected(t('Suggest Channels'));
 	
 		$_SESSION['return_url'] = z_root() . '/' . \App::$cmd;
 	

@@ -34,7 +34,9 @@ class Webpages extends \Zotlabs\Web\Controller {
 			\App::$error = 404;
 			return;
 		}
-	
+
+		nav_set_selected(t('Webpages'));
+
 		$which = argv(1);
 		
 		$_SESSION['return_url'] = \App::$query_string;

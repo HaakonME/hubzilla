@@ -110,16 +110,16 @@ class Mood extends \Zotlabs\Web\Controller {
 	
 	
 	
-		function get() {
+	function get() {
 	
 		if(! local_channel()) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
+
+		nav_set_selected(t('Mood'));
+
 		$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : '0');
-	
-	
 	
 		$verbs = get_mood_verbs();
 	

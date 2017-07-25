@@ -122,7 +122,8 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 		],
 		'callback' => '/post',
 		'version' => ZOT_REVISION,
-		'encryption' => crypto_methods()
+		'encryption' => crypto_methods(),
+		'signing' => signing_methods()
 	];
 
 	if ($recipients) {

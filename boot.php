@@ -50,7 +50,7 @@ require_once('include/attach.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
 define ( 'STD_VERSION',             '2.5.9' );
-define ( 'ZOT_REVISION',            '1.2' );
+define ( 'ZOT_REVISION',            '1.3' );
 
 define ( 'DB_UPDATE_VERSION',       1192  );
 

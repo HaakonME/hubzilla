@@ -42,7 +42,7 @@ EOT;
 		$observer = App::get_observer();
 
 	require_once('include/conversation.php');
-	$is_owner = (((local_channel()) && (App::$profile['profile_uid'] == local_channel())) ? true : false);
+	$is_owner = (((local_channel()) && ((App::$profile_uid == local_channel()) || (App::$profile_uid == 0))) ? true : false);
 	$channel_apps[] = channel_apps($is_owner, App::$profile['channel_address']);
 
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
@@ -93,8 +93,6 @@ EOT;
 
 
 	if(local_channel()) {
-
-
 		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select'))
 			$nav['channels'] = $chans;
 
@@ -134,12 +132,12 @@ EOT;
 		$homelink = (($observer) ? $observer['xchan_url'] : '');
 	}
 
-	if(! local_channel()) {
+	if(! $is_owner) {
 		$nav['rusermenu'] = array(
 			$homelink,
 			t('Take me home'),
 			'logout',
-			t('Log me out of this site')
+			((local_channel()) ? t('Logout') : t('Log me out of this site'))
 		);
 	}
 
@@ -170,7 +168,6 @@ EOT;
 
 	if(local_channel()) {
 
-	
 		$nav['network'] = array('network', t('Grid'), "", t('Your grid'),'network_nav_btn');
 		$nav['network']['all'] = [ 'network', t('View your network/grid'), '','' ];
 		$nav['network']['mark'] = array('', t('Mark all grid notifications seen'), '','');
@@ -221,7 +218,7 @@ EOT;
 	$powered_by = '';
 
 	//app bin
-	if(local_channel()) {
+	if($is_owner) {
 		if(get_pconfig(local_channel(), 'system','initial_import_system_apps') === false) {
 			Zlib\Apps::import_system_apps();
 			set_pconfig(local_channel(), 'system','initial_import_system_apps', 1);
@@ -245,7 +242,10 @@ EOT;
 	$syslist = Zlib\Apps::app_order(local_channel(),$syslist);
 
 	foreach($syslist as $app) {
-		$nav_apps[] = Zlib\Apps::app_render($app,'nav');
+		if($is_owner)
+			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
+		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false)
+			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
 	}
 
 	$tpl = get_markup_template('nav.tpl');
@@ -259,6 +259,7 @@ EOT;
 		'$emptynotifications' => t('Loading...'),
 		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_channel(),
+		'$is_owner' => $is_owner,
 		'$sel' => 	App::$nav_sel,
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),

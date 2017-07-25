@@ -3768,7 +3768,7 @@ function zot_rekey_request($sender,$data) {
 	// oldkey, and if so change all the abook, abconfig, group, and permission elements which reference the 
 	// old xchan_hash. 
 
-	if((! $data['oldkey']) && (! $data['oldsig']) && (! $data['newkey']) && (! $data['newsig']))
+	if((! $data['old_key']) && (! $data['new_key']) && (! $data['new_sig']))
 		json_return_and_die($ret);
 
 	$oldhash = make_xchan_hash($data['old_guid'],$data['old_guid_sig']);
@@ -3783,7 +3783,7 @@ function zot_rekey_request($sender,$data) {
 
 	$xchan = $r[0];
 
-	if(! rsa_verify($data['newkey'],base64url_decode($data['newsig']),$xchan['xchan_pubkey'])) {
+	if(! rsa_verify($data['new_key'],base64url_decode($data['new_sig']),$xchan['xchan_pubkey'])) {
 		json_return_and_die($ret);
 	}
 

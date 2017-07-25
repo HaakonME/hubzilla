@@ -67,6 +67,7 @@ require_once('include/bbcode.php');
  *       location               channel_id
  *       request                channel_id            xchan_hash             message_id
  *       rating                 xlink_id
+ *       keychange              channel_id
  *
  */
 
@@ -142,6 +143,20 @@ class Notifier {
 			$private = true;
 			$recipients[] = $xchan;
 			$packet_type = 'request';
+			$normal_mode = false;
+		}
+		elseif($cmd === 'keychange') {
+			$channel = channelx_by_n($item_id);
+			$r = q("select abook_xchan from abook where abook_channel = %d",
+				intval($item_id)
+			);
+			if($r) {
+				foreach($r as $rr) {
+					$recipients[] = $rr['abook_xchan'];
+				}
+			}
+			$private = false;
+			$packet_type = 'keychange';
 			$normal_mode = false;
 		}
 		elseif($cmd == 'permission_update' || $cmd == 'permission_create') {
@@ -570,11 +585,16 @@ class Notifier {
 
 			}
 
-			$hash = random_string();
+			$hash   = random_string();
 			$packet = null;
+			$pmsg   = '';
 
 			if($packet_type === 'refresh' || $packet_type === 'purge') {
 				$packet = zot_build_packet($channel,$packet_type,(($packet_recips) ? $packet_recips : null));
+			}
+			if($packet_type === 'keychange') {
+				$packet = zot_build_packet($channel,$packet_type,(($packet_recips) ? $packet_recips : null));
+				$pmsg = get_pconfig($channel['channel_id'],'system','keychange');
 			}
 			elseif($packet_type === 'request') {
 				$env = (($hub_env && $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']]) ? $hub_env[$hub['hubloc_host'] . $hub['hubloc_sitekey']] : '');
@@ -589,7 +609,8 @@ class Notifier {
 					'account_id' => $channel['channel_account_id'],
 					'channel_id' => $channel['channel_id'],
 					'posturl'    => $hub['hubloc_callback'],
-					'notify'     => $packet
+					'notify'     => $packet,
+					'msg'        => (($pmsg) ? json_encode($pmsg) : '')
 				));
 			}
 			else {

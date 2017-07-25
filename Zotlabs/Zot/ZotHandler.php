@@ -20,6 +20,10 @@ class ZotHandler implements IHandler {
 		zot_reply_message_request($data);
 	}
 
+	function Rekey($sender,$data) {
+		zot_rekey_request($sender,$data);
+	}
+
 	function AuthCheck($data,$encrypted) {
 		zot_reply_auth_check($data,$encrypted);
 	}

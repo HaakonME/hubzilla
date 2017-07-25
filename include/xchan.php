@@ -137,3 +137,232 @@ function xchan_fetch($arr) {
 }
 
 
+function xchan_change_key($oldx,$newx,$data) {
+
+	$r = q("update abook set abook_xchan = '%s' where abook_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update abconfig set xchan = '%s' where xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update group_member set xchan = '%s' where xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update chat set chat_xchan = '%s' where chat_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update chatpresence set cp_xchan = '%s' where cp_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update event set event_xchan = '%s' where event_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update item set owner_xchan = '%s' where owner_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update item set author_xchan = '%s' where author_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update item set source_xchan = '%s' where source_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update mail set from_xchan = '%s' where from_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update mail set to_xchan = '%s' where to_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update shares set share_xchan = '%s' where share_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update source set src_channel_xchan = '%s' where src_channel_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update source set src_xchan = '%s' where src_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xchat set xchat_xchan = '%s' where xchat_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xconfig set xchan = '%s' where xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xign set xchan = '%s' where xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xlink set xlink_xchan = '%s' where xlink_xchan = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xprof set xprof_hash = '%s' where xprof_hash = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("update xtag set xtag_hash = '%s' where xtag_hash = '%s'",
+		dbsec($newx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	$r = q("select channel_id, channel_allow_cid, channel_deny_cid from channel where (channel_allow_cid like '%s' or channel_deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update channel set channel_allow_cid = '%s', channel_deny_cid = '%s' where channel_id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['channel_allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['channel_deny_cid'])),
+				intval($rv['channel_id'])
+			);
+		}
+	}
+
+	$r = q("select id, allow_cid, deny_cid from attach where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update attach set allow_cid = '%s', deny_cid = '%s' where id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['id'])
+			);
+		}
+	}
+
+	$r = q("select cr_id, allow_cid, deny_cid from chatroom where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update chatroom set allow_cid = '%s', deny_cid = '%s' where cr_id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['cr_id'])
+			);
+		}
+	}
+
+
+	$r = q("select id, allow_cid, deny_cid from event where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update event set allow_cid = '%s', deny_cid = '%s' where id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['id'])
+			);
+		}
+	}
+
+
+	$r = q("select id, allow_cid, deny_cid from item where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update item set allow_cid = '%s', deny_cid = '%s' where id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['id'])
+			);
+		}
+	}
+
+
+	$r = q("select mitem_id, allow_cid, deny_cid from menu_item where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update menu_item set allow_cid = '%s', deny_cid = '%s' where mitem_id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['mitem_id'])
+			);
+		}
+	}
+
+
+
+	$r = q("select obj_id, allow_cid, deny_cid from obj where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update obj set allow_cid = '%s', deny_cid = '%s' where obj_id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['obj_id'])
+			);
+		}
+	}
+
+	$r = q("select id, allow_cid, deny_cid from photo where (allow_cid like '%s' or deny_cid like '%s') ",
+		dbesc($oldx['xchan_hash']),
+		dbesc($oldx['xchan_hash'])
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update photo set allow_cid = '%s', deny_cid = '%s' where id = %d",
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['allow_cid'])),
+				dbesc(str_replace('<' . $oldx['xchan_hash'] . '>', '<' . $newx['xchan_hash'] . '>', $rv['deny_cid'])),
+				intval($rv['id'])
+			);
+		}
+	}
+
+
+}

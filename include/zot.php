@@ -3757,6 +3757,50 @@ function zot_reply_message_request($data) {
 	json_return_and_die($ret);
 }
 
+function zot_rekey_request($sender,$data) {
+
+	$ret = array('success' => false);
+
+	//	newsig is newkey signed with oldkey
+
+	// The original xchan will remain. In Zot/Receiver we will have imported the new xchan and hubloc to verify
+	// the packet authenticity. What we will do now is verify that the keychange operation was signed by the 
+	// oldkey, and if so change all the abook, abconfig, group, and permission elements which reference the 
+	// old xchan_hash. 
+
+	if((! $data['oldkey']) && (! $data['oldsig']) && (! $data['newkey']) && (! $data['newsig']))
+		json_return_and_die($ret);
+
+	$oldhash = make_xchan_hash($data['old_guid'],$data['old_guid_sig']);
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($oldhash)
+	);
+
+	if(! $r) {
+		json_return_and_die($ret);
+	}
+
+	$xchan = $r[0];
+
+	if(! rsa_verify($data['newkey'],base64url_decode($data['newsig']),$xchan['xchan_pubkey'])) {
+		json_return_and_die($ret);
+	}
+
+	$newhash = make_xchan_hash($sender['guid'],$sender['guid_sig']);
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($newhash)
+	);
+
+	$newxchan = $r[0];
+
+	xchan_change_key($xchan,$newxchan,$data);
+
+	$ret['success'] = true;
+	json_return_and_die($ret);
+}
+
 
 function zotinfo($arr) {
 

@@ -31,9 +31,9 @@ require_once('include/perm_upgrade.php');
  * @param string $channel_nick a unique nickname of controlling entity
  * @returns string
  */
+
 function zot_new_uid($channel_nick) {
 	$rawstr = z_root() . '/' . $channel_nick . '.' . mt_rand();
-
 	return(base64url_encode(hash('whirlpool', $rawstr, true), true));
 }
 
@@ -49,6 +49,7 @@ function zot_new_uid($channel_nick) {
  * @param string $guid
  * @param string $guid_sig
  */
+
 function make_xchan_hash($guid, $guid_sig) {
 	return base64url_encode(hash('whirlpool', $guid . $guid_sig, true));
 }
@@ -62,17 +63,17 @@ function make_xchan_hash($guid, $guid_sig) {
  * @param string $hash - xchan_hash
  * @returns array of hubloc (hub location structures)
  *  * \b hubloc_id          int
- *  * \b hubloc_guid        char(255)
+ *  * \b hubloc_guid        char(191)
  *  * \b hubloc_guid_sig    text
- *  * \b hubloc_hash        char(255)
- *  * \b hubloc_addr        char(255)
+ *  * \b hubloc_hash        char(191)
+ *  * \b hubloc_addr        char(191)
  *  * \b hubloc_flags       int
  *  * \b hubloc_status      int
- *  * \b hubloc_url         char(255)
+ *  * \b hubloc_url         char(191)
  *  * \b hubloc_url_sig     text
- *  * \b hubloc_host        char(255)
- *  * \b hubloc_callback    char(255)
- *  * \b hubloc_connect     char(255)
+ *  * \b hubloc_host        char(191)
+ *  * \b hubloc_callback    char(191)
+ *  * \b hubloc_connect     char(191)
  *  * \b hubloc_sitekey     text
  *  * \b hubloc_updated     datetime
  *  * \b hubloc_connected   datetime
@@ -97,7 +98,7 @@ function zot_get_hublocs($hash) {
  * @param array $channel
  *   sender channel structure
  * @param string $type
- *   packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'force_refresh', 'notify', 'auth_check'
+ *   packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'keychange', 'force_refresh', 'notify', 'auth_check'
  * @param array $recipients
  *   envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key
@@ -532,7 +533,7 @@ function zot_gethub($arr, $multiple = false) {
 		}
 
 		$limit = (($multiple) ? '' : ' limit 1 ');
-		$sitekey = ((array_key_exists('sitekey',$arr) && $arr['sitekey']) ? " and hubloc_sitekey = '" . protect_sprintf($arr['sitekey']) . "' " : '');
+		$sitekey = ((array_key_exists('sitekey',$arr) && $arr['sitekey']) ? " and hubloc_sitekey = '" . dbesc(protect_sprintf($arr['sitekey'])) . "' " : '');
 
 		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on hubloc_url = site_url
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s'
@@ -3925,6 +3926,8 @@ function zotinfo($arr) {
 
 	$ret = array('success' => false);
 
+	$sig_method = get_config('system','signature_algorithm','sha256');
+
 	$zhash     = ((x($arr,'guid_hash'))  ? $arr['guid_hash']   : '');
 	$zguid     = ((x($arr,'guid'))       ? $arr['guid']        : '');
 	$zguid_sig = ((x($arr,'guid_sig'))   ? $arr['guid_sig']    : '');
@@ -4088,7 +4091,7 @@ function zotinfo($arr) {
 	// Communication details
 
 	if($token)
-		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey']));
+		$ret['signed_token'] = base64url_encode(rsa_sign('token.' . $token,$e['channel_prvkey'],$sig_method));
 
 
 	$ret['guid']           = $e['xchan_guid'];
@@ -4157,7 +4160,7 @@ function zotinfo($arr) {
 
 	$ret['site'] = array();
 	$ret['site']['url'] = z_root();
-	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey']));
+	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey'],$sig_method));
 	$ret['site']['zot_auth'] = z_root() . '/magic';
 
 	$dirmode = get_config('system','directory_mode');
@@ -4175,6 +4178,7 @@ function zotinfo($arr) {
 
 
 	$ret['site']['encryption'] = crypto_methods();
+	$ret['site']['signing'] = signing_methods();
 
 	// hide detailed site information if you're off the grid
 

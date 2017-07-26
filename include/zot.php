@@ -111,13 +111,15 @@ function zot_get_hublocs($hash) {
  */
 function zot_build_packet($channel, $type = 'notify', $recipients = null, $remote_key = null, $methods = '', $secret = null, $extra = null) {
 
+	$sig_method = get_config('system','signature_algorithm','sha256');
+
 	$data = [
 		'type' => $type,
 		'sender' => [
 			'guid' => $channel['channel_guid'],
-			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
+			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'],$sig_method)),
 			'url' => z_root(),
-			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey'])),
+			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey'],$sig_method)),
 			'sitekey' => get_config('system','pubkey')
 		],
 		'callback' => '/post',
@@ -135,7 +137,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 
 	if ($secret) {
 		$data['secret'] = $secret;
-		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey']));
+		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey'],$sig_method));
 	}
 
 	if ($extra) {
@@ -576,6 +578,8 @@ function zot_register_hub($arr) {
 
 	if($arr['url'] && $arr['url_sig'] && $arr['guid'] && $arr['guid_sig']) {
 
+		$sig_methods = ((array_key_exists('signing',$arr) && is_array($arr['signing'])) ? $arr['signing'] : [ 'sha256' ]);
+
 		$guid_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
 		$url = $arr['url'] . '/.well-known/zot-info/?f=&guid_hash=' . $guid_hash;
@@ -595,17 +599,18 @@ function zot_register_hub($arr) {
 			 * our current communication.
 			 */
 
-			if((rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$record['key']))
-				&& (rsa_verify($arr['url'],base64url_decode($arr['url_sig']),$record['key']))
+			foreach($sig_methods as $method) {
+				if((rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$record['key'],$method))
+				&& (rsa_verify($arr['url'],base64url_decode($arr['url_sig']),$record['key'],$method))
 				&& ($arr['guid'] === $record['guid'])
 				&& ($arr['guid_sig'] === $record['guid_sig'])) {
-
-				$c = import_xchan($record);
-				if($c['success'])
-					$result['success'] = true;
-			}
-			else {
-				logger('zot_register_hub: failure to verify returned packet.');
+					$c = import_xchan($record);
+					if($c['success'])
+						$result['success'] = true;
+				}
+				else {
+					logger('zot_register_hub: failure to verify returned packet using ' . $method);
+				}
 			}
 		}
 	}
@@ -658,8 +663,19 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 	$import_photos = false;
 
-	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
-		logger('import_xchan: Unable to verify channel signature for ' . $arr['address']);
+	$sig_methods = ((array_key_exists('signing',$arr) && is_array($arr['signing'])) ? $arr['signing'] : [ 'sha256' ]);
+	$verified = false;
+
+	foreach($sig_methods as $method) {
+		if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'],$method)) {
+			logger('import_xchan: Unable to verify channel signature for ' . $arr['address'] . ' using ' . $method);
+			continue;
+		}
+		else {
+			$verified = true;
+		}
+	}
+	if(! $verified) {
 		$ret['message'] = t('Unable to verify channel signature');
 		return $ret;
 	}
@@ -918,7 +934,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 	elseif(! $ud_flags) {
 		// nothing changed but we still need to update the updates record
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d)>0 ",
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) > 0 ",
 			intval(UPDATE_FLAGS_UPDATED),
 			dbesc($address),
 			intval(UPDATE_FLAGS_UPDATED)

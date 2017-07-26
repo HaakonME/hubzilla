@@ -488,6 +488,7 @@ function change_channel_keys($channel) {
 	if(! $r) {
 		return $ret;
  	}
+
 	$r = q("select * from channel where channel_id = %d",
 		intval($channel['channel_id'])
 	);
@@ -531,6 +532,8 @@ function change_channel_keys($channel) {
 			$newxchan = $xv;
 		}
 	}
+
+	build_sync_packet($channel['channel_id'], [ 'keychange' => $stored ]);
 
 	$a = q("select * from abook where abook_xchan = '%s' and abook_self = 1",
 		dbesc($stored['old_hash'])

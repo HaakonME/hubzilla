@@ -2949,6 +2949,11 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	if($packet)
 		logger('packet: ' . print_r($packet, true),LOGGER_DATA, LOG_DEBUG);
 
+	$keychange = (($packet && array_key_exists('keychange',$packet)) ? true : false);
+	if($keychange) {
+		logger('keychange sync');
+	}
+
 	if(! $uid)
 		$uid = local_channel();
 
@@ -2962,6 +2967,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		return;
 
 	$channel = $r[0];
+
 	unset($channel['channel_password']);
 	unset($channel['channel_salt']);
 
@@ -2972,12 +2978,11 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		}
 	}
 
-
 	if(intval($channel['channel_removed']))
 		return;
 
 	$h = q("select hubloc.*, site.site_crypto from hubloc left join site on site_url = hubloc_url where hubloc_hash = '%s' and hubloc_deleted = 0",
-		dbesc($channel['channel_hash'])
+		dbesc(($keychange) ? $packet['keychange']['old_hash'] : $channel['channel_hash'])
 	);
 
 	if(! $h)
@@ -3032,7 +3037,15 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 			// don't pass these elements, they should not be synchronised
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address','channel_deleted','channel_removed','channel_system');
+
+			$disallowed = [
+				'channel_id','channel_account_id','channel_primary','channel_address',
+				'channel_deleted','channel_removed','channel_system'
+			];
+
+			if(! $keychange) {
+				$disallowed[] = 'channel_prvkey';
+			}
 
 			if(in_array($k,$disallowed))
 				continue;
@@ -3092,17 +3105,18 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 function process_channel_sync_delivery($sender, $arr, $deliveries) {
 
-
 	require_once('include/import.php');
 
 	/** @FIXME this will sync red structures (channel, pconfig and abook).
 		Eventually we need to make this application agnostic. */
 
-	$result = array();
+	$result = [];
+
+	$keychange = ((array_key_exists('keychange',$arr)) ? true : false);
 
 	foreach ($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
-			dbesc($d['hash'])
+			dbesc(($keychange) ? $arr['keychange']['old_hash'] : $d['hash'])
 		);
 
 		if (! $r) {
@@ -3120,6 +3134,94 @@ function process_channel_sync_delivery($sender, $arr, $deliveries) {
 			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name'],'');
 			continue;
 		}
+
+		if($keychange) {
+			// verify the keychange operation
+			if(! rsa_verify($arr['channel']['channel_pubkey'],base64url_decode($arr['keychange']['new_sig']),$channel['channel_prvkey'])) {
+				logger('sync keychange: verification failed');
+				continue;
+			}
+
+			$sig = base64url_encode(rsa_sign($channel['channel_guid'],$arr['channel']['channel_prvkey']));
+			$hash = make_xchan_hash($channel['channel_guid'],$sig);
+
+
+			$r = q("update channel set channel_prvkey = '%s', channel_pubkey = '%s', channel_guid_sig = '%s', 
+				channel_hash = '%s' where channel_id = %d",
+				dbesc($arr['channel']['channel_prvkey']),
+				dbesc($arr['channel']['channel_pubkey']),
+				dbesc($sig),
+				dbesc($hash),
+				intval($channel['channel_id'])
+			);
+			if(! $r) {
+				logger('keychange sync: channel update failed');
+				continue;
+ 			}
+
+			$r = q("select * from channel where channel_id = %d",
+				intval($channel['channel_id'])
+			);
+
+			if(! $r) {
+				logger('keychange sync: channel retrieve failed');
+				continue;
+			}
+
+			$channel = $r[0];
+
+			$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' ",
+				dbesc($arr['keychange']['old_hash']),
+				dbesc(z_root())
+			);
+
+			if($h) {
+				foreach($h as $hv) {
+					$hv['hubloc_guid_sig'] = $sig;
+					$hv['hubloc_hash']     = $hash;
+					$hv['hubloc_url_sig']  = base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']));
+					hubloc_store_lowlevel($hv);
+				}
+			}
+
+			$x = q("select * from xchan where xchan_hash = '%s' ",
+				dbesc($arr['keychange']['old_hash'])
+			);
+
+			$check = q("select * from xchan where xchan_hash = '%s'",
+				dbesc($hash)
+			);
+
+			if(($x) && (! $check)) {
+				$oldxchan = $x[0];
+				foreach($x as $xv) {
+					$xv['xchan_guid_sig']  = $sig;
+					$xv['xchan_hash']      = $hash;
+					$xv['xchan_pubkey']    = $channel['channel_pubkey'];
+					xchan_store_lowlevel($xv);
+					$newxchan = $xv;
+				}
+			}
+
+			$a = q("select * from abook where abook_xchan = '%s' and abook_self = 1",
+				dbesc($arr['keychange']['old_hash'])
+			);
+
+			if($a) {
+				q("update abook set abook_xchan = '%s' where abook_id = %d",
+					dbesc($hash),
+					intval($a[0]['abook_id'])
+				);
+			}
+
+			xchan_change_key($oldxchan,$newxchan,$arr['keychange']);
+
+			// keychange operations can end up in a confused state if you try and sync anything else
+			// besides the channel keys, so ignore any other packets.
+
+			continue;
+		}
+
 
 		if(array_key_exists('config',$arr) && is_array($arr['config']) && count($arr['config'])) {
 			foreach($arr['config'] as $cat => $k) {

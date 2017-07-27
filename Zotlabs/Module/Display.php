@@ -140,7 +140,7 @@ class Display extends \Zotlabs\Web\Controller {
 		if((! $update) && (! $load)) {
 	
 
-			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 0);
+			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
 	
 			$o .= '<div id="live-display"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))

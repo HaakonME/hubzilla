@@ -27,7 +27,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 		if(! $update) {
 
-			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 0);
+			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
 	
 			$maxheight = get_config('system','home_divmore_height');
 			if(! $maxheight)

@@ -242,6 +242,9 @@ EOT;
 	$syslist = Zlib\Apps::app_order(local_channel(),$syslist);
 
 	foreach($syslist as $app) {
+		if(\App::$nav_sel['active'] == $app['name'])
+			$app['active'] = true;
+
 		if($is_owner)
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
 		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false)

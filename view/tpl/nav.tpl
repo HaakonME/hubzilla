@@ -68,7 +68,7 @@
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
+	<button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
 		<i class="fa fa-bars"></i>
 	</button>
 </div>

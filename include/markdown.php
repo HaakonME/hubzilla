@@ -84,6 +84,72 @@ function markdown_to_bb($s, $use_zrl = false, $options = []) {
 
 
 
+function bb_to_markdown_share($match) {
+
+	$matches = array();
+	$attributes = $match[1];
+
+	$author = "";
+	preg_match("/author='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$author = urldecode($matches[1]);
+
+	$link = "";
+	preg_match("/link='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$link = $matches[1];
+
+	$avatar = "";
+	preg_match("/avatar='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$avatar = $matches[1];
+
+	$profile = "";
+	preg_match("/profile='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$profile = $matches[1];
+
+	$posted = "";
+	preg_match("/posted='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$posted = $matches[1];
+
+	// message_id is never used, do we still need it?
+	$message_id = "";
+	preg_match("/message_id='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$message_id = $matches[1];
+
+	if(! $message_id) {
+		preg_match("/guid='(.*?)'/ism", $attributes, $matches);
+		if ($matches[1] != "")
+			$message_id = $matches[1];
+	}
+
+
+	$reldate = datetime_convert('UTC', date_default_timezone_get(), $posted, 'r');
+
+	$headline = '';
+
+	if ($avatar != "")
+		$headline .= '[url=' . zid($profile) . '][img]' . $avatar . '[/img][/url]';
+
+	// Bob Smith wrote the following post 2 hours ago
+
+	$fmt = sprintf( t('%1$s wrote the following %2$s %3$s'),
+		'[url=' . zid($profile) . ']' . $author . '[/url]',
+		'[url=' . zid($link) . ']' . t('post') . '[/url]',
+		$reldate
+	);
+
+	$headline .= $fmt . "\n\n";
+
+	$text = $headline . trim($match[2]);
+
+	return $text;
+}
+
+
 
 function bb_to_markdown($Text) {
 
@@ -100,8 +166,11 @@ function bb_to_markdown($Text) {
 	// Converting images with size parameters to simple images. Markdown doesn't know it.
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '[img]$3[/img]', $Text);
 
+	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism", 'bb_to_markdown_share', $Text);
+
 
 	call_hooks('bb_to_markdown_bb',$Text);
+
 
 	// Convert it to HTML - don't try oembed
 	$Text = bbcode($Text, $preserve_nl, false);

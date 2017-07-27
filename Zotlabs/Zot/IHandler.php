@@ -12,6 +12,8 @@ interface IHandler {
 
 	function Request($data);
 
+	function Rekey($sender,$data);
+
 	function AuthCheck($data,$encrypted);
 
 	function Purge($sender,$recipients);

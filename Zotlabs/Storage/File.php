@@ -265,7 +265,7 @@ class File extends DAV\Node implements DAV\IFile {
 					$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $x;
 				else
 					$f = $x;
-				return fopen($f, 'rb');
+				return @fopen($f, 'rb');
 			}
 			return dbunescbin($r[0]['content']);
 		}

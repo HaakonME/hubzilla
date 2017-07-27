@@ -999,6 +999,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
+			$send_downstream = false;
 			$parent_link = '';
 
 			logger('processing ' . $item->get_id(), LOGGER_DEBUG);
@@ -1200,6 +1201,15 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 							$status = 202;
 							continue;
 						}
+
+						// The salmon endpoint sets this to indicate that we should send comments from
+						// interactive feeds (such as OStatus) downstream to our followers
+						// We do not want to set it for non-interactive feeds or conversations we do not own
+
+						if(array_key_exists('send_downstream',$importer) && intval($importer['send_downstream']) 
+							&& ($parent_item['owner_xchan'] == $importer['channel_hash'])) {
+							$send_downstream = true;
+						}
 					}
 					else {
 						if((! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $importer['system'])) {
@@ -1229,6 +1239,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				$xx = item_store($datarray);
 				$r = $xx['item_id'];
+
+				if($send_downstream) {
+					\Zotlabs\Daemon\Master::Summon(array('Notifier', 'comment', $r));
+				}
+
 				continue;
 			}
 			else {
@@ -1868,185 +1883,3 @@ function atom_entry($item, $type, $author, $owner, $comment = false, $cid = 0, $
 	return $x['entry'];
 }
 
-/**
- * @brief
- *
- * @param array $items
- * @return array
- */
-function gen_asld($items) {
-	$ret = array();
-	if(! $items)
-		return $ret;
-
-	foreach($items as $item) {
-		$ret[] = i2asld($item);
-	}
-
-	return $ret;
-}
-
-/**
- * @brief
- *
- * @param array $i
- * @return array
- */
-function i2asld($i) {
-
-	if(! $i)
-		return array();
-
-	$ret = array();
-
-	$ret['@context'] = array( 'https://www.w3.org/ns/activitystreams', 'zot' => 'http://purl.org/zot/protocol');
-
-	if($i['verb']) {
-		if(strpos(dirname($i['verb'],'activitystrea.ms/schema/1.0'))) {
-			$ret['type'] = ucfirst(basename($i['verb']));
-		}
-		elseif(strpos(dirname($i['verb'],'purl.org/zot'))) {
-			$ret['type'] = 'zot:' . ucfirst(basename($i['verb']));
-		}
-	}
-	$ret['id'] = $i['plink'];
-
-	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
-
-	// we need to pass the parent into this
-//	if($i['id'] != $i['parent'] && $i['obj_type'] === ACTIVITY_OBJ_NOTE) {
-//		$ret['inReplyTo'] = asencode_note
-//	}
-
-	if($i['obj_type'] === ACTIVITY_OBJ_NOTE)
-		$ret['object'] = asencode_note($i);
-
-	$ret['actor'] = asencode_person($i['author']);
-
-	return $ret;
-}
-
-function asencode_note($i) {
-
-	$ret = array();
-
-	$ret['@type'] = 'Note';
-	$ret['id'] = $i['plink'];
-	if($i['title'])
-		$ret['title'] = bbcode($i['title']);
-
-	$ret['content'] = bbcode($i['body']);
-	$ret['zot:owner'] = asencode_person($i['owner']);
-	$ret['published'] = datetime_convert('UTC','UTC',$i['created'],ATOM_TIME);
-	if($i['created'] !== $i['edited'])
-		$ret['updated'] = datetime_convert('UTC','UTC',$i['edited'],ATOM_TIME);
-
-	return $ret;
-}
-
-
-function asencode_person($p) {
-	$ret = [];
-	$ret['type']  = 'Person';
-	$ret['id']    = $p['xchan_url'];
-	$ret['name']  = $p['xchan_name'];
-	$ret['icon']  = [ 
-		[
-			'type'      => 'Image',
-			'mediaType' => $p['xchan_photo_mimetype'],
-			'url'       => $p['xchan_photo_l'],
-			'height'    => 300,
-			'width'     => 300,
-		],
-		[
-			'type'      => 'Image',
-			'mediaType' => $p['xchan_photo_mimetype'],
-			'url'       => $p['xchan_photo_m'],
-			'height'    => 80,
-			'width'     => 80,
-		],
-		[
-			'type'      => 'Image',
-			'mediaType' => $p['xchan_photo_mimetype'],
-			'url'       => $p['xchan_photo_l'],
-			'height'    => 48,
-			'width'     => 48,
-		]
-	];
-	$ret['url'] = [
-		'type'      => 'Link',
-		'mediaType' => 'text/html',
-		'href'      => $p['xchan_url']
-	];
-
-	if(array_key_exists('channel_id',$p)) {
-		$ret['inbox'] = z_root() . '/inbox/' . $p['channel_address'];
-		$ret['outbox'] = z_root() . '/outbox/' . $p['channel_address'];
-		$ret['me:magic_keys'] = [
-			[ 
-				'value' => salmon_key($p['channel_pubkey']), 
-				'key_id' => base64url_encode(hash('sha256',salmon_key($p['channel_pubkey'])),true)
-			]
-		];
-
-
-	}
-	else {
-		$collections = get_xconfig($p['xchan_hash'],'activitystreams','collections',[]);
-		if($collections) {
-			$ret = array_merge($ret,$collections);
-		}
-	}
-
-	return $ret;
-}
-
-
-function activity_mapper($verb) {
-
-	$acts = [
-		'http://activitystrea.ms/schema/1.0/post'      => 'Create',
-		'http://activitystrea.ms/schema/1.0/update'    => 'Update',
-		'http://activitystrea.ms/schema/1.0/like'      => 'Like',
-		'http://activitystrea.ms/schema/1.0/favorite'  => 'Like',
-		'http://purl.org/zot/activity/dislike'         => 'Dislike',
-		'http://activitystrea.ms/schema/1.0/tag'       => 'Add',
-		'http://activitystrea.ms/schema/1.0/follow'    => 'Follow',
-		'http://activitystrea.ms/schema/1.0/unfollow'  => 'Unfollow',
-	];
-
-
-	if(array_key_exists($acts[$verb])) {
-		return $acts[$verb];
-	}
-	return false;
-}
-
-
-function activity_obj_mapper($obj,$reverse = false) {
-
-	$objs = [
-		'http://activitystrea.ms/schema/1.0/note'           => 'Note',
-		'http://activitystrea.ms/schema/1.0/comment'        => 'Note',
-		'http://activitystrea.ms/schema/1.0/person'         => 'Person',
-		'http://purl.org/zot/activity/profile'              => 'Profile',
-		'http://activitystrea.ms/schema/1.0/photo'          => 'Image',
-		'http://activitystrea.ms/schema/1.0/profile-photo'  => 'Icon',
-		'http://activitystrea.ms/schema/1.0/event'          => 'Event',
-		'http://activitystrea.ms/schema/1.0/wiki'           => 'Document',
-		'http://purl.org/zot/activity/location'             => 'Place',
-		'http://purl.org/zot/activity/chessgame'            => 'Game',
-		'http://purl.org/zot/activity/tagterm'              => 'zot:Tag',
-		'http://purl.org/zot/activity/thing'                => 'zot:Thing',
-		'http://purl.org/zot/activity/file'                 => 'zot:File',
-		'http://purl.org/zot/activity/poke'                 => 'zot:Action',
-		'http://purl.org/zot/activity/react'                => 'zot:Reaction',
-		'http://purl.org/zot/activity/mood'                 => 'zot:Mood',
-		
-	];
-
-	if(array_key_exists($objs[$verb])) {
-		return $objs[$verb];
-	}
-	return false;
-}

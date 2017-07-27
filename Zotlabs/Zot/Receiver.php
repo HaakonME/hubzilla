@@ -120,6 +120,10 @@ class Receiver {
 				$this->handler->Notify($this->data);
 				break;
 
+			case 'rekey':
+				$this->handler->Rekey($this->sender, $this->data);
+				break;
+
 			default:
 				$this->response['message'] = 'Not implemented';
 				json_return_and_die($this->response);

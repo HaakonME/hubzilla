@@ -137,3 +137,83 @@ function xchan_fetch($arr) {
 }
 
 
+function xchan_keychange_table($table,$column,$oldxchan,$newxchan) {
+	$r = q("update $table set $column = '%s' where $column = '%s'",
+		dbesc($newxchan['xchan_hash']),
+		dbesc($oldxchan['xchan_hash'])
+	);
+	return $r;
+}
+
+function xchan_keychange_acl($table,$column,$oldxchan,$newxchan) {
+
+	$allow = (($table === 'channel') ? 'channel_allow_cid' : 'allow_cid');
+	$deny  = (($table === 'channel') ? 'channel_deny_cid'  : 'deny_cid');
+
+
+	$r = q("select $column, $allow, $deny from $table where ($allow like '%s' or $deny like '%s') ",
+		dbesc('<' . $oldxchan['xchan_hash'] . '>'),
+		dbesc('<' . $oldxchan['xchan_hash'] . '>')
+	);
+
+	if($r) {
+		foreach($r as $rv) {
+			$z = q("update $table set $allow = '%s', $deny = '%s' where $column = %d",
+				dbesc(str_replace('<' . $oldxchan['xchan_hash'] . '>', '<' . $newxchan['xchan_hash'] . '>', 
+					$rv[$allow])),
+				dbesc(str_replace('<' . $oldxchan['xchan_hash'] . '>', '<' . $newxchan['xchan_hash'] . '>', 
+					$rv[$deny])),
+				intval($rv[$column])
+			);
+		}
+	}
+	return $z;
+}
+
+
+function xchan_change_key($oldx,$newx,$data) {
+
+	$tables = [
+		'abook'        => 'abook_xchan',
+		'abconfig'     => 'xchan',
+		'group_member' => 'xchan',
+		'chat'         => 'chat_xchan',
+		'chatpresence' => 'cp_xchan',
+		'event'        => 'event_xchan',
+		'item'         => 'owner_xchan',
+		'item'         => 'author_xchan',
+		'item'         => 'source_xchan',
+		'mail'         => 'from_xchan',
+		'mail'         => 'to_xchan',
+		'shares'       => 'share_xchan',
+		'source'       => 'src_channel_xchan',
+		'source'       => 'src_xchan',
+		'xchat'        => 'xchat_xchan',
+		'xconfig'      => 'xchan',
+		'xign'         => 'xchan',
+		'xlink'        => 'xlink_xchan',
+		'xprof'        => 'xprof_hash',
+		'xtag'         => 'xtag_hash'
+	];
+	
+
+	$acls = [
+		'channel'   => 'channel_id',
+		'attach'    => 'id',
+		'chatroom'  => 'cr_id',
+		'event'     => 'id',
+		'item'      => 'id',
+		'menu_item' => 'mitem_id',
+		'obj'       => 'obj_id',
+		'photo'     => 'id'
+	];
+
+
+	foreach($tables as $k => $v) {
+		xchan_keychange_table($k,$v,$oldx,$newx);
+	}
+
+	foreach($acls as $k => $v) {
+		xchan_keychange_acl($k,$v,$oldx,$newx);
+	}
+}

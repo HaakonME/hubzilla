@@ -454,6 +454,108 @@ function create_identity($arr) {
 	return $ret;
 }
 
+
+function change_channel_keys($channel) {
+
+	$ret = array('success' => false);
+
+	$stored = [];
+
+	$key = new_keypair(4096);
+
+	$sig = base64url_encode(rsa_sign($channel['channel_guid'],$key['prvkey']));
+	$hash = make_xchan_hash($channel['channel_guid'],$sig);
+
+	$stored['old_guid']     = $channel['channel_guid'];
+	$stored['old_guid_sig'] = $channel['channel_guid_sig'];
+	$stored['old_key']      = $channel['channel_pubkey'];
+	$stored['old_hash']     = $channel['channel_hash'];
+
+	$stored['new_key']      = $key['pubkey'];
+	$stored['new_sig']      = base64url_encode(rsa_sign($key['pubkey'],$channel['channel_prvkey']));
+
+	// Save this info for the notifier to collect
+
+	set_pconfig($channel['channel_id'],'system','keychange',$stored);
+
+	$r = q("update channel set channel_prvkey = '%s', channel_pubkey = '%s', channel_guid_sig = '%s', channel_hash = '%s' where channel_id = %d",
+		dbesc($key['prvkey']),
+		dbesc($key['pubkey']),
+		dbesc($sig),
+		dbesc($hash),
+		intval($channel['channel_id'])
+	);
+	if(! $r) {
+		return $ret;
+ 	}
+
+	$r = q("select * from channel where channel_id = %d",
+		intval($channel['channel_id'])
+	);
+
+	if(! $r) {
+		$ret['message'] = t('Unable to retrieve modified identity');
+		return $ret;
+	}
+
+	$modified = $r[0];
+
+	$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' ",
+		dbesc($stored['old_hash']),
+		dbesc(z_root())
+	);
+
+	if($h) {
+		foreach($h as $hv) {
+			$hv['hubloc_guid_sig'] = $sig;
+			$hv['hubloc_hash']     = $hash;
+			$hv['hubloc_url_sig']  = base64url_encode(rsa_sign(z_root(),$modifed['channel_prvkey']));
+			hubloc_store_lowlevel($hv);
+		}
+	}
+
+	$x = q("select * from xchan where xchan_hash = '%s' ",
+		dbesc($stored['old_hash'])
+	);
+
+	$check = q("select * from xchan where xchan_hash = '%s'",
+		dbesc($hash)
+	);
+
+	if(($x) && (! $check)) {
+		$oldxchan = $x[0];
+		foreach($x as $xv) {
+			$xv['xchan_guid_sig']  = $sig;
+			$xv['xchan_hash']      = $hash;
+			$xv['xchan_pubkey']    = $key['pubkey'];
+			xchan_store_lowlevel($xv);
+			$newxchan = $xv;
+		}
+	}
+
+	build_sync_packet($channel['channel_id'], [ 'keychange' => $stored ]);
+
+	$a = q("select * from abook where abook_xchan = '%s' and abook_self = 1",
+		dbesc($stored['old_hash'])
+	);
+
+	if($a) {
+		q("update abook set abook_xchan = '%s' where abook_id = %d",
+			dbesc($hash),
+			intval($a[0]['abook_id'])
+		);
+	}
+
+	xchan_change_key($oldxchan,$newxchan,$stored);
+
+	Zotlabs\Daemon\Master::Summon(array('Notifier', 'keychange', $channel['channel_id']));
+
+	$ret['success'] = true;
+	return $ret;
+}
+
+
+
 /**
  * @brief Set default channel to be used on login.
  *

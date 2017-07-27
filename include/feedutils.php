@@ -999,6 +999,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 		foreach($items as $item) {
 
 			$is_reply = false;
+			$send_downstream = false;
 			$parent_link = '';
 
 			logger('processing ' . $item->get_id(), LOGGER_DEBUG);
@@ -1200,6 +1201,15 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 							$status = 202;
 							continue;
 						}
+
+						// The salmon endpoint sets this to indicate that we should send comments from
+						// interactive feeds (such as OStatus) downstream to our followers
+						// We do not want to set it for non-interactive feeds or conversations we do not own
+
+						if(array_key_exists('send_downstream',$importer) && intval($importer['send_downstream']) 
+							&& ($parent_item['owner_xchan'] == $importer['channel_hash'])) {
+							$send_downstream = true;
+						}
 					}
 					else {
 						if((! perm_is_allowed($importer['channel_id'],$contact['xchan_hash'],'send_stream')) && (! $importer['system'])) {
@@ -1229,6 +1239,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 
 				$xx = item_store($datarray);
 				$r = $xx['item_id'];
+
+				if($send_downstream) {
+					\Zotlabs\Daemon\Master::Summon(array('Notifier', 'comment', $r));
+				}
+
 				continue;
 			}
 			else {

@@ -36,6 +36,8 @@ class Ping extends \Zotlabs\Web\Controller {
 		$result['all_events_today'] = 0;
 		$result['notice'] = array();
 		$result['info'] = array();
+		$result['pubs'] = 0;
+		$result['files'] = 0;
 
 		$t0 = dba_timer();
 
@@ -133,6 +135,24 @@ class Ping extends \Zotlabs\Web\Controller {
 		q("delete from chatpresence where cp_last < %s - INTERVAL %s and cp_client != 'auto' ",
 			db_utcnow(), db_quoteinterval('3 MINUTE')
 		);
+
+
+		if(($vnotify & VNOTIFY_PUBS) && ! get_config('system', 'disable_discover_tab')) {
+			$sys = get_sys_channel();
+
+			$pubs = q("SELECT count(id) as total from item
+				WHERE uid = %d
+				AND item_unseen = 1
+				AND created > '" . datetime_convert('UTC','UTC',$_SESSION['static_loadtime']) . "'
+				$item_normal",
+				intval($sys['channel_id'])
+			);
+
+			if($pubs)
+				$result['pubs'] = intval($pubs[0]['total']);
+		}
+
+		$t1 = dba_timer();
 
 		if((! local_channel()) || ($result['invalid'])) {
 			echo json_encode($result);
@@ -356,7 +376,25 @@ class Ping extends \Zotlabs\Web\Controller {
 				$result['notify'] = intval($t[0]['total']);
 		}
 
-		$t1 = dba_timer();
+		$t2 = dba_timer();
+
+		if($vnotify & VNOTIFY_FILES) {
+			$files = q("SELECT count(id) as total FROM item
+				WHERE verb = '%s'
+				AND obj_type = '%s'
+				AND uid = %d
+				AND owner_xchan != '%s'
+				AND item_unseen = 1",
+				dbesc(ACTIVITY_POST),
+				dbesc(ACTIVITY_OBJ_FILE),
+				intval(local_channel()),
+				dbesc($ob_hash)
+			);
+			if($files)
+				$result['files'] = intval($files[0]['total']);
+		}
+
+		$t2 = dba_timer();
 
 		if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 			$r = q("SELECT id, item_wall FROM item
@@ -384,20 +422,20 @@ class Ping extends \Zotlabs\Web\Controller {
 		if(! ($vnotify & VNOTIFY_CHANNEL))
 			$result['home'] = 0;
 
-		$t2 = dba_timer();
+		$t4 = dba_timer();
 
 		if($vnotify & VNOTIFY_INTRO) {
 			$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and abook_pending = 1 and abook_self = 0 and abook_ignored = 0 and xchan_deleted = 0 and xchan_orphan = 0 ",
 				intval(local_channel())
 			);
 
-			$t3 = dba_timer();
+			$t5 = dba_timer();
 
 			if($intr)
 				$result['intros'] = intval($intr[0]['total']);
 		}
 
-		$t4 = dba_timer();
+		$t6 = dba_timer();
 		$channel = \App::get_channel();
 
 		if($vnotify & VNOTIFY_MAIL) {
@@ -420,7 +458,7 @@ class Ping extends \Zotlabs\Web\Controller {
 			}
 		}
 
-		$t5 = dba_timer();
+		$t7 = dba_timer();
 
 		if($vnotify & (VNOTIFY_EVENT|VNOTIFY_EVENTTODAY|VNOTIFY_BIRTHDAY)) {
 			$events = q("SELECT etype, dtstart, adjust FROM event
@@ -466,9 +504,9 @@ class Ping extends \Zotlabs\Web\Controller {
 
 		$x = json_encode($result);
 
-		$t6 = dba_timer();
+		$t8 = dba_timer();
 
-//		logger('ping timer: ' . sprintf('%01.4f %01.4f %01.4f %01.4f %01.4f %01.4f',$t6 - $t5, $t5 - $t4, $t4 - $t3, $t3 - $t2, $t2 - $t1, $t1 - $t0));
+//		logger('ping timer: ' . sprintf('%01.4f %01.4f %01.4f %01.4f %01.4f %01.4f %01.4f %01.4f',$t8 - $t7, $t7 - $t6, $t6 - $t5, $t5 - $t4, $t4 - $t3, $t3 - $t2, $t2 - $t1, $t1 - $t0));
 
 		echo $x;
 		killme();

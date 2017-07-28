@@ -402,6 +402,8 @@ define ( 'VNOTIFY_INFO',       0x0080 );
 define ( 'VNOTIFY_ALERT',      0x0100 );
 define ( 'VNOTIFY_INTRO',      0x0200 );
 define ( 'VNOTIFY_REGISTER',   0x0400 );
+define ( 'VNOTIFY_FILES',      0x0800 );
+define ( 'VNOTIFY_PUBS',       0x1000 );
 
 
 

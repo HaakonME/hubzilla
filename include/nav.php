@@ -200,12 +200,18 @@ EOT;
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'),'settings_nav_btn');
 
+		$nav['files'] = array('sharedwithme', t('Shared Files'), "", t('New files shared with me'),'files_nav_btn');
+
+	}
+
+	if(! get_config('system', 'disable_discover_tab')) {
+		$nav['pubs'] = array('pubstream', t('Public stream'), "", t('Public stream activities'),'pubs_nav_btn');
 	}
 
 	/**
 	 * Admin page
 	 */
-	 if (is_site_admin()){
+	 if (is_site_admin()) {
 		 $nav['admin'] = array('admin/', t('Admin'), "", t('Site Setup and Configuration'),'admin_nav_btn');
 	 }
 

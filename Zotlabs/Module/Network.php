@@ -534,12 +534,13 @@ class Network extends \Zotlabs\Web\Controller {
 	
 				if($parents_str) {
 					$update_unseen = " AND ( id IN ( " . dbesc($parents_str) . " )";
+					$update_unseen .= " AND item_notshown = 0";
 					$update_unseen .= " OR ( parent IN ( " . dbesc($parents_str) . " ) AND verb in ( '" . dbesc(ACTIVITY_LIKE) . "','" . dbesc(ACTIVITY_DISLIKE) . "' ))) ";
 				}
 			}
 			else {
 				if($parents_str) {
-					$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " )";
+					$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " )  AND item_notshown = 0";
 				}
 			}
 		}

@@ -137,6 +137,10 @@
 								{{include file="field_intcheckbox.tpl" field=$vnotify8}}
 								{{include file="field_intcheckbox.tpl" field=$vnotify9}}
 								{{include file="field_intcheckbox.tpl" field=$vnotify11}}
+								{{include file="field_intcheckbox.tpl" field=$vnotify12}}
+								{{if $vnotify13}}
+									{{include file="field_intcheckbox.tpl" field=$vnotify13}}
+								{{/if}}
 								{{include file="field_intcheckbox.tpl" field=$always_show_in_notices}}
 								{{include file="field_input.tpl" field=$evdays}}
 							</div>

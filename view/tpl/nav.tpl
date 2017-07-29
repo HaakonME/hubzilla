@@ -63,7 +63,7 @@
 	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
-	{{if $localuser}}
+	{{if $localuser || $nav.pubs}}
 	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
@@ -152,7 +152,7 @@
 		</li>
 		{{/if}}
 		{{if $nav.login && !$userinfo}}
-		<li class="nav-item">
+		<li class="nav-item d-none d-md-flex">
 			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
 		</li>
 		{{/if}}

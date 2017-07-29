@@ -423,6 +423,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$hash = (($arr && $arr['hash']) ? $arr['hash'] : null);
 	$upload_path = (($arr && $arr['directory']) ? $arr['directory'] : '');
 	$visible = (($arr && $arr['visible']) ? $arr['visible'] : '');
+	$notify = (($arr && $arr['notify']) ? $arr['notify'] : '');
 
 	$observer = array();
 
@@ -884,6 +885,12 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
 	}
 
+	if($notify) {
+		$cloudPath =  z_root() . '/cloud/' . $channel['channel_address'] . $r['0']['display_path'];
+		$object = get_file_activity_object($channel['channel_id'], $r['0']['hash'], $cloudPath);
+		file_activity($channel['channel_id'], $object, $r['0']['allow_cid'], $r['0']['allow_gid'], $r['0']['deny_cid'], $r['0']['deny_gid'], 'post', $notify);
+	}
+
 	return $ret;
 }
 
@@ -1297,8 +1304,8 @@ function attach_delete($channel_id, $resource, $is_photo = 0) {
 		return;
 	}
 
-	$cloudpath = get_parent_cloudpath($channel_id, $channel_address, $resource);
-	$object = get_file_activity_object($channel_id, $resource, $cloudpath);
+	$url = get_cloudpath($channel_id, $channel_address, $resource);
+	$object = get_file_activity_object($channel_id, $resource, $url);
 
 	// If resource is a directory delete everything in the directory recursive
 	if(intval($r[0]['is_dir'])) {
@@ -1439,7 +1446,7 @@ function get_cloudpath($arr) {
  * @param string $attachHash
  * @return string with the full folder path
  */
-function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
+function get_cloud_url($channel_id, $channel_name, $attachHash) {
 	$parentFullPath = '';
 	// build directory tree
 	$parentHash = $attachHash;
@@ -1451,9 +1458,9 @@ function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
 		}
 	} while ($parentHash);
 
-	$parentFullPath = z_root() . '/cloud/' . $channel_name . '/' . $parentFullPath;
+	$url = z_root() . '/cloud/' . $channel_name . '/' . $parentFullPath . find_filename_by_hash($channel_id, $attachHash);
 
-	return $parentFullPath;
+	return $url;
 }
 
 /**
@@ -1731,14 +1738,14 @@ function file_activity($channel_id, $object, $allow_cid, $allow_gid, $deny_cid, 
  * @param string $hash
  * @param string $cloudpath
  */
-function get_file_activity_object($channel_id, $hash, $cloudpath) {
+function get_file_activity_object($channel_id, $hash, $url) {
 
 	$x = q("SELECT creator, filename, filetype, filesize, revision, folder, os_storage, is_photo, is_dir, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid FROM attach WHERE uid = %d AND hash = '%s' LIMIT 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
 
-	$url = rawurlencode($cloudpath . $x[0]['filename']);
+	$url = rawurlencode($url);
 
 	$links   = array();
 	$links[] = array(

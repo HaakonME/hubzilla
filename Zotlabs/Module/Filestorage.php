@@ -26,7 +26,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 
 		$recurse = ((x($_POST, 'recurse')) ? intval($_POST['recurse']) : 0);
 		$resource = ((x($_POST, 'filehash')) ? notags($_POST['filehash']) : '');
-		$notify = ((x($_POST, 'notify')) ? intval($_POST['notify']) : 0);
+		$notify = ((x($_POST, 'notify_edit')) ? intval($_POST['notify_edit']) : 0);
 
 		if(! $resource) {
 			notice(t('Item not found.') . EOL);
@@ -39,16 +39,16 @@ class Filestorage extends \Zotlabs\Web\Controller {
 		$acl->set_from_array($_REQUEST);
 		$x = $acl->get();
 
-		$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource);
+		$url = get_cloud_url($channel_id, $channel['channel_address'], $resource);
 
 		//get the object before permissions change so we can catch eventual former allowed members
-		$object = get_file_activity_object($channel_id, $resource, $cloudPath);
+		$object = get_file_activity_object($channel_id, $resource, $url);
 
 		attach_change_permissions($channel_id, $resource, $x['allow_cid'], $x['allow_gid'], $x['deny_cid'], $x['deny_gid'], $recurse, true);
 
 		file_activity($channel_id, $object, $x['allow_cid'], $x['allow_gid'], $x['deny_cid'], $x['deny_gid'], 'post', $notify);
 
-		goaway($cloudPath);
+		goaway(dirname($url));
 	}
 
 	function get() {
@@ -107,11 +107,11 @@ class Filestorage extends \Zotlabs\Web\Controller {
 			$f = $r[0];
 			$channel = \App::get_channel();
 
-			$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
+			$url = get_cloud_url($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
 			attach_delete($owner, $f['hash']);
 
-			goaway($parentpath);
+			goaway(dirname($url));
 		}
 
 		if(argc() > 3 && argv(3) === 'edit') {
@@ -131,7 +131,6 @@ class Filestorage extends \Zotlabs\Web\Controller {
 			$channel = \App::get_channel();
 
 			$cloudpath = get_cloudpath($f);
-			$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
 			$aclselect_e = populate_acl($f, false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_storage'));
 			$is_a_dir = (intval($f['is_dir']) ? true : false);
@@ -146,7 +145,6 @@ class Filestorage extends \Zotlabs\Web\Controller {
 				'$header' => t('Edit file permissions'),
 				'$file' => $f,
 				'$cloudpath' => z_root() . '/' . $encoded_path,
-				'$parentpath' => $parentpath,
 				'$uid' => $channel['channel_id'],
 				'$channelnick' => $channel['channel_address'],
 				'$permissions' => t('Permissions'),
@@ -165,7 +163,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 				'$submit' => t('Submit'),
 				'$attach_btn_title' => t('Share this file'),
 				'$link_btn_title' => t('Show URL to this file'),
-				'$notify' => array('notify', t('Notify your contacts about this file'), 0, '', array(t('No'), t('Yes'))),
+				'$notify' => array('notify_edit', t('Show in your contacts shared folder'), 0, '', array(t('No'), t('Yes'))),
 			));
 
 			echo $o;

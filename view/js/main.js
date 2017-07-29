@@ -375,7 +375,7 @@ function NavUpdate() {
 			}
 			else {
 				$('#notifications-btn').css('opacity', 0.5);
-				$('#navbar-collapse-1').removeClass('in');
+				$('#navbar-collapse-1').removeClass('show');
 			}
 
 			if(data.network == 0) {

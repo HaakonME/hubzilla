@@ -401,9 +401,10 @@ class Ping extends \Zotlabs\Web\Controller {
 				WHERE item_unseen = 1 and uid = %d
 				$item_normal
 				AND author_xchan != '%s'
-				AND item_notshown = 0",
+				AND obj_type != '%s'",
 				intval(local_channel()),
-				dbesc($ob_hash)
+				dbesc($ob_hash),
+				dbesc(ACTIVITY_OBJ_FILE)
 			);
 
 			if($r) {

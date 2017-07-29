@@ -540,7 +540,7 @@ class Network extends \Zotlabs\Web\Controller {
 			}
 			else {
 				if($parents_str) {
-					$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " ) AND obj_type != " . dbesc(ACTIVITY_OBJ_FILE) . "";
+					$update_unseen = " AND parent IN ( " . dbesc($parents_str) . " ) AND obj_type != '" . dbesc(ACTIVITY_OBJ_FILE) . "'";
 				}
 			}
 		}

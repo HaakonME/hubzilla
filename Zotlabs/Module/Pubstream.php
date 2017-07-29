@@ -8,7 +8,6 @@ class Pubstream extends \Zotlabs\Web\Controller {
 
 	function get($update = 0, $load = false) {
 
-	
 		if($load)
 			$_SESSION['loadtime'] = datetime_convert();
 

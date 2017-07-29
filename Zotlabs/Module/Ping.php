@@ -39,6 +39,9 @@ class Ping extends \Zotlabs\Web\Controller {
 		$result['pubs'] = 0;
 		$result['files'] = 0;
 
+		if(! $_SESSION['static_loadtime'])
+			$_SESSION['static_loadtime'] = datetime_convert();
+
 		$t0 = dba_timer();
 
 		header("content-type: application/json");
@@ -136,16 +139,19 @@ class Ping extends \Zotlabs\Web\Controller {
 			db_utcnow(), db_quoteinterval('3 MINUTE')
 		);
 
+		$notify_pubs = local_channel() ? ($vnotify & VNOTIFY_PUBS) && ! get_config('system', 'disable_discover_tab') : ! get_config('system', 'disable_discover_tab');
 
-		if(($vnotify & VNOTIFY_PUBS) && ! get_config('system', 'disable_discover_tab')) {
+		if($notify_pubs) {
 			$sys = get_sys_channel();
 
 			$pubs = q("SELECT count(id) as total from item
 				WHERE uid = %d
+				AND author_xchan != '%s'
 				AND item_unseen = 1
 				AND created > '" . datetime_convert('UTC','UTC',$_SESSION['static_loadtime']) . "'
 				$item_normal",
-				intval($sys['channel_id'])
+				intval($sys['channel_id']),
+				dbesc(get_observer_hash())
 			);
 
 			if($pubs)

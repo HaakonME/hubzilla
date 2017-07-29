@@ -347,7 +347,8 @@ class Browser extends DAV\Browser\Plugin {
 				'$return_url' => \App::$cmd,
 				'$path' => $path,
 				'$folder' => find_folder_hash_by_path($this->auth->owner_id, $path),
-				'$dragdroptext' => t('Drop files here to immediately upload')
+				'$dragdroptext' => t('Drop files here to immediately upload'),
+				'$notify' => ['notify', t('Show in your contacts shared folder'), 0, '', [t('No'), t('Yes')]]
 			));
 	}
 

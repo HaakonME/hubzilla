@@ -34,10 +34,10 @@ class File_upload extends \Zotlabs\Web\Controller {
 		$_REQUEST['deny_gid'] = perms2str($_REQUEST['group_deny']);
 
 		if($_REQUEST['filename']) {
-			$r = attach_mkdir($channel,get_observer_hash(),$_REQUEST);
+			$r = attach_mkdir($channel, get_observer_hash(), $_REQUEST);
 		}
 		else {
-			$r = attach_store($channel,get_observer_hash(), '', $_REQUEST);
+			$r = attach_store($channel, get_observer_hash(), '', $_REQUEST);
 		}
 		goaway(z_root() . '/' . $_REQUEST['return_url']);
 	

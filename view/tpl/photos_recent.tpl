@@ -19,5 +19,8 @@
 	</div>
 </div>
 <div class="photos-end"></div>
-<script>$(document).ready(function() { loadingPage = false; justifyPhotos('photo-album-contents-{{$album_id}}'); });</script>
+<script>
+	loadingPage = false;
+	justifyPhotos('photo-album-contents-{{$album_id}}');
+</script>
 <div id="page-spinner"></div>

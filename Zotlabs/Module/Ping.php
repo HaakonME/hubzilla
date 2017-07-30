@@ -291,9 +291,12 @@ class Ping extends \Zotlabs\Web\Controller {
 
 			$r = q("SELECT * FROM item
 				WHERE item_unseen = 1 and uid = %d $item_normal
-				and author_xchan != '%s' ORDER BY created DESC limit 300",
+				AND author_xchan != '%s'
+				AND obj_type != '%s'
+				ORDER BY created DESC limit 300",
 				intval(local_channel()),
-				dbesc($ob_hash)
+				dbesc($ob_hash),
+				dbesc(ACTIVITY_OBJ_FILE)
 			);
 
 			if($r) {

@@ -35,6 +35,8 @@ class File_upload extends \Zotlabs\Web\Controller {
 
 		if($_REQUEST['filename']) {
 			$r = attach_mkdir($channel, get_observer_hash(), $_REQUEST);
+			if($r['success'])
+				goaway(z_root() . '/cloud/' . $channel['channel_address'] . '/' . $r['data']['display_path']);
 		}
 		else {
 			$r = attach_store($channel, get_observer_hash(), '', $_REQUEST);

@@ -708,7 +708,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	$os_relpath   = ltrim($os_relpath,'/');
 
 	$os_path      = $os_relpath;
-	$display_path = $pathname . '/' . $filename;
+	$display_path = ltrim($pathname . '/' . $filename,'/');
 
 	if($src)
 		@file_put_contents($os_basepath . $os_relpath,@file_get_contents($src));
@@ -886,7 +886,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	}
 
 	if($notify) {
-		$cloudPath =  z_root() . '/cloud/' . $channel['channel_address'] . $r['0']['display_path'];
+		$cloudPath =  z_root() . '/cloud/' . $channel['channel_address'] . '/' . $r['0']['display_path'];
 		$object = get_file_activity_object($channel['channel_id'], $r['0']['hash'], $cloudPath);
 		file_activity($channel['channel_id'], $object, $r['0']['allow_cid'], $r['0']['allow_gid'], $r['0']['deny_cid'], $r['0']['deny_gid'], 'post', $notify);
 	}

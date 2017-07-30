@@ -534,7 +534,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 				if($parents_str) {
 					$update_unseen = " AND ( id IN ( " . dbesc($parents_str) . " )";
-					$update_unseen .= " AND obj_type != " . dbesc(ACTIVITY_OBJ_FILE) . "";
+					$update_unseen .= " AND obj_type != '" . dbesc(ACTIVITY_OBJ_FILE) . "'";
 					$update_unseen .= " OR ( parent IN ( " . dbesc($parents_str) . " ) AND verb in ( '" . dbesc(ACTIVITY_LIKE) . "','" . dbesc(ACTIVITY_DISLIKE) . "' ))) ";
 				}
 			}

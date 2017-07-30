@@ -611,7 +611,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		// A freshly uploaded file. Check for duplicate and resolve with the channel's overwrite settings.
 
-		$r = q("select filename, id, hash, filesize from attach where filename = '%s' and folder = '%s' ",
+		$r = q("select filename, id, hash, filesize from attach where uid = %d and filename = '%s' and folder = '%s' ",
+			intval($channel_id),
 			dbesc($filename),
 			dbesc($folder_hash)
 		);
@@ -633,7 +634,8 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 					$ext = $def_extension;
 				}
 
-				$r = q("select filename from attach where ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+				$r = q("select filename from attach where uid = %d and ( filename = '%s' OR filename like '%s' ) and folder = '%s' ",
+					intval($channel_id),
 					dbesc($basename . $ext),
 					dbesc($basename . '(%)' . $ext),
 					dbesc($folder_hash)

@@ -52,7 +52,7 @@
 		{{/foreach}}
 		<div class="section-content-info-wrapper">
 			<div>
-				{{$addr_text}} <strong>'{{$addr}}'</strong>			
+				{{$addr_text}} <strong>'{{if $addr}}{{$addr}}{{else}}{{$primeurl}}{{/if}}'</strong>			
 			</div>
 			{{if $locstr}}
 			<div>

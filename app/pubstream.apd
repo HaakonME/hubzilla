@@ -1,0 +1,6 @@
+version: 1
+url: $baseurl/pubstream
+requires: !disable_discover_tab
+name: Public Stream
+photo: icon:globe
+categories: Social

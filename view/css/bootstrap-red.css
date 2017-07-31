@@ -5,6 +5,7 @@
 nav .badge {
 	position: absolute;
 	font-size: 0.75rem;
+	line-height: 0.75;
 }
 
 @media screen and (min-width: 767px) {

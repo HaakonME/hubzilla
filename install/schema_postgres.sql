@@ -631,6 +631,7 @@ create index "item_restrict" on item ("item_restrict");
 create index "item_flags" on item ("item_flags");
 create index "item_commented" on item ("commented");
 create index "item_verb" on item ("verb");
+create index "item_obj_type" on item ("obj_type");
 create index "item_private" on item ("item_private");
 create index "item_llink" on item ("llink");
 create index "item_expires" on item ("expires");

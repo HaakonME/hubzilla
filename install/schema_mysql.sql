@@ -660,6 +660,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `item_flags` (`item_flags`),
   KEY `commented` (`commented`),
   KEY `verb` (`verb`),
+  KEY `obj_type` (`obj_type`),
   KEY `item_private` (`item_private`),
   KEY `llink` (`llink`),
   KEY `expires` (`expires`),

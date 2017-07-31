@@ -5,14 +5,6 @@ namespace Zotlabs\Module;
  *
  */
 
-require_once('include/attach.php');
-
-
-/**
- *
- * @param object &$a
- */
-
 class Filestorage extends \Zotlabs\Web\Controller {
 
 	function post() {
@@ -36,7 +28,7 @@ class Filestorage extends \Zotlabs\Web\Controller {
 		$channel = \App::get_channel();
 
 		$acl = new \Zotlabs\Access\AccessList($channel);
-		$acl->set_from_array($_REQUEST);
+		$acl->set_from_array($_POST);
 		$x = $acl->get();
 
 		$url = get_cloud_url($channel_id, $channel['channel_address'], $resource);

@@ -4,6 +4,11 @@ require_once('include/conversation.php');
 require_once('include/text.php');
 
 
+/**
+ * @file Zotlabs/Module/Sharedwithme.php
+ *
+ */
+
 class Sharedwithme extends \Zotlabs\Web\Controller {
 
 	function get() {

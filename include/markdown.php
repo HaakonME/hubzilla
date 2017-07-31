@@ -151,7 +151,7 @@ function bb_to_markdown_share($match) {
 
 
 
-function bb_to_markdown($Text) {
+function bb_to_markdown($Text, $options = []) {
 
 	/*
 	 * Transform #tags, strip off the [url] and replace spaces with underscore
@@ -168,9 +168,11 @@ function bb_to_markdown($Text) {
 
 	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism", 'bb_to_markdown_share', $Text);
 
+	$x = [ 'bbcode' => $Text, 'options' => $options ];
 
-	call_hooks('bb_to_markdown_bb',$Text);
+	call_hooks('bb_to_markdown_bb',$x);
 
+	$Text = $x['bbcode'];
 
 	// Convert it to HTML - don't try oembed
 	$Text = bbcode($Text, $preserve_nl, false);

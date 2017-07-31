@@ -1028,6 +1028,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if(! $datarray['mid'])
 					continue;
 
+				// This probably isn't an appropriate default but we're about to change it
+				// if it's wrong.
+
+				$datarray['comment_policy'] = 'authenticated';
+
 				// A Mastodon privacy tag has been found. We cannot send private comments
 				// through the OStatus protocol, so block commenting.
 
@@ -1256,6 +1261,11 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if(! $datarray['mid'])
 					continue;
 
+				// This probably isn't an appropriate default but we're about to change it
+				// if it's wrong.
+
+				$datarray['comment_policy'] = 'authenticated';
+
 				// A Mastodon privacy tag has been found. We cannot send private comments
 				// through the OStatus protocol, so block commenting.
 
@@ -1268,6 +1278,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					$datarray['public_policy'] = 'specific';
 					$datarray['comment_policy'] = 'none';
 				}
+
 
 
 				// if we have everything but a photo, provide the default profile photo
@@ -1493,7 +1504,7 @@ function process_salmon_feed($xml, $importer) {
 			// reset policies which are restricted by default for RSS connections
 			// This item is likely coming from GNU-social via salmon and allows public interaction
 			$datarray['public_policy'] = '';
-			$datarray['comment_policy'] = '';
+			$datarray['comment_policy'] = 'authenticated';
 
 			$ret['item'] = $datarray;
 		}

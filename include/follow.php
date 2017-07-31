@@ -182,6 +182,11 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	$hash = get_observer_hash();
 	$default_group = $channel['channel_default_group'];
 
+	if($hash == $xchan_hash) {
+		$result['message'] = t('Cannot connect to yourself.');
+		return $result;
+	}
+
 	if($xchan['xchan_network'] === 'rss') {
 
 		// check service class feed limits
@@ -196,27 +201,21 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			$result['message'] = upgrade_message();
 			return $result;
 		}
-	}
-
-	if($hash == $xchan_hash) {
-		$result['message'] = t('Cannot connect to yourself.');
-		return $result;
-	}
-
-	$r = q("select abook_id, abook_xchan, abook_pending, abook_instance from abook 
-		where abook_xchan = '%s' and abook_channel = %d limit 1",
-		dbesc($xchan_hash),
-		intval($uid)
-	);
-
-	if($is_http) {
 
 		// Always set these "remote" permissions for feeds since we cannot interact with them
 		// to negotiate a suitable permission response
 
 		set_abconfig($uid,$xchan_hash,'their_perms','view_stream',1);
 		set_abconfig($uid,$xchan_hash,'their_perms','republish',1);
+
 	}
+
+
+	$r = q("select abook_id, abook_xchan, abook_pending, abook_instance from abook 
+		where abook_xchan = '%s' and abook_channel = %d limit 1",
+		dbesc($xchan_hash),
+		intval($uid)
+	);
 
 	if($r) {
 
@@ -250,7 +249,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 				'abook_channel'   => intval($uid),
 				'abook_closeness' => intval($closeness),
 				'abook_xchan'     => $xchan_hash,
-				'abook_feed'      => intval(($is_http) ? 1 : 0),
+				'abook_feed'      => intval(($xchan['xchan_network'] === 'rss') ? 1 : 0),
 				'abook_created'   => datetime_convert(),
 				'abook_updated'   => datetime_convert(),
 				'abook_instance'  => (($singleton) ? z_root() : '')

@@ -256,7 +256,7 @@ define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-s
 define ( 'NETWORK_GNUSOCIAL',        'gnusoc');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'rss');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'diaspora');    // Diaspora
-define ( 'NETWORK_ACTIVITYPUB'       'activitypub');
+define ( 'NETWORK_ACTIVITYPUB',       'activitypub');
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
 define ( 'NETWORK_MAIL2',            'mai2');    // extended IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API

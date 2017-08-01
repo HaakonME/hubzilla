@@ -169,7 +169,15 @@ class Apps {
 			$requires = explode(',',$ret['requires']);
 			foreach($requires as $require) {
 				$require = trim(strtolower($require));
+				$config = false;
+
+				if(substr($require, 0, 7) == 'config:') {
+					$config = true;
+					$require = ltrim($require, 'config:');
+				}
+
 				$toggle = (($require[0] == '!') ? 0 : 1);
+
 				switch($require) {
 					case 'nologin':
 						if(local_channel())
@@ -192,9 +200,10 @@ class Apps {
 							unset($ret);
 						break;
 					default:
-						$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
-						$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
-
+						if($config)
+							$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
+						else
+							$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
 						if($unset)
 							unset($ret);
 						break;
@@ -308,9 +317,18 @@ class Apps {
 
 			if($k === 'requires') {
 				$requires = explode(',',$v);
+
 				foreach($requires as $require) {
 					$require = trim(strtolower($require));
+					$config = false;
+
+					if(substr($require, 0, 7) == 'config:') {
+						$config = true;
+						$require = ltrim($require, 'config:');
+					}
+
 					$toggle = (($require[0] == '!') ? 0 : 1);
+
 					switch($require) {
 						case 'nologin':
 							if(local_channel())
@@ -334,9 +352,10 @@ class Apps {
 								return '';
 							break;
 						default:
-							$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
-							$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
-
+							if($config)
+								$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
+							else
+								$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
 							if($unset)
 								return '';
 							break;

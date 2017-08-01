@@ -484,6 +484,7 @@ footer {
 
 #nav-search-text {
 	width: 280px;
+	padding: .15rem .5rem;
 }
 
 #nav-search-text::-webkit-input-placeholder {

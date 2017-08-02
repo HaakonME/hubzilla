@@ -407,6 +407,7 @@ class ThreadItem {
 			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),
 			'previewing' => ($conv->is_preview() ? true : false ),
+			'preview_lbl' => t('This is an unsaved preview'),
 			'wait' => t('Please wait'),
 			'submid' => str_replace(['+','='], ['',''], base64_encode(substr($item['mid'],0,32))),
 			'thread_level' => $thread_level

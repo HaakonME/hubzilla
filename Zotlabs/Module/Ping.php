@@ -147,11 +147,13 @@ class Ping extends \Zotlabs\Web\Controller {
 			$pubs = q("SELECT count(id) as total from item
 				WHERE uid = %d
 				AND author_xchan != '%s'
+				AND obj_type != '%s'
 				AND item_unseen = 1
 				AND created > '" . datetime_convert('UTC','UTC',$_SESSION['static_loadtime']) . "'
 				$item_normal",
 				intval($sys['channel_id']),
-				dbesc(get_observer_hash())
+				dbesc(get_observer_hash()),
+				dbesc(ACTIVITY_OBJ_FILE)
 			);
 
 			if($pubs)

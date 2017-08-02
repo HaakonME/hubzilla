@@ -423,6 +423,7 @@ function enableOnUser(){
                                 function(ddata) {
                                     if (ddata['status']) {
                                         addeditortext(ddata['photolink']);
+										preview_post();
                                     } else {
                                         window.console.log("{{$modalerrorlink}}" + ':' + ddata['errormsg']);
                                     }

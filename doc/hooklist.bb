@@ -572,6 +572,9 @@ Hooks allow plugins/addons to "hook into" the code at many points and alter the 
 [zrl=[baseurl]/help/hook/tagged]tagged[/zrl]
 	Called when a delivery is processed which results in you being tagged
 
+[zrl=[baseurl]/help/hook/update_unseen]update_unseen[/zrl]
+	Called prior to automatically marking items seen which were loaded in the browser
+
 [zrl=[baseurl]/help/hook/validate_channelname]validate_channelname[/zrl]
 	Used to validate the names used by a channel
 

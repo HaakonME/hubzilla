@@ -545,10 +545,15 @@ class Network extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		if(($update_unseen) && (! $firehose))
-			$r = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 AND uid = %d $update_unseen ",
-				intval(local_channel())
-			);
+		if(($update_unseen) && (! $firehose)) {
+			$x = [ 'channel_id' => local_channel(), 'update' => 'unset' ];
+			call_hooks('update_unseen',$x);
+			if($x['update'] === 'unset' || intval($x['update'])) {
+				$r = q("UPDATE item SET item_unseen = 0 WHERE item_unseen = 1 AND uid = %d $update_unseen ",
+					intval(local_channel())
+				);
+			}
+		}
 	
 		$mode = (($nouveau) ? 'network-new' : 'network');
 	

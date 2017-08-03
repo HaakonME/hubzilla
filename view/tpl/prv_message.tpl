@@ -6,6 +6,7 @@
 	<div class="section-content-wrapper">
 {{/if}}
 		<div id="prvmail-wrapper" >
+			<input id="invisible-wall-file-upload" type="file" name="files" style="visibility:hidden;position:absolute;top:-50;left:-50;width:0;height:0;" multiple>
 			<form id="prvmail-form" action="mail" method="post" >
 				<input type="hidden" id="inp-prvmail-expires" name="expires" value="{{$defexpire}}" />
 				<input type="hidden" name="media_str" id="jot-media" value="" />

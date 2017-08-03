@@ -19,3 +19,11 @@
 	#doco-top-toc li {
 	padding: 3px 0px;
 }
+
+#doco-side-toc li {
+	padding-left: 10px;
+}
+
+#doco-side-toc {
+	padding-top: 10px;
+}

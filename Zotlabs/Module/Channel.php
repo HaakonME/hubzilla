@@ -358,9 +358,13 @@ class Channel extends \Zotlabs\Web\Controller {
 		}
 
 		if($is_owner && $update_unseen) {
-			$r = q("UPDATE item SET item_unseen = 0 where item_unseen = 1 and item_wall = 1 AND uid = %d $update_unseen",
-				intval(local_channel())
-			);
+			$x = [ 'channel_id' => local_channel(), 'update' => 'unset' ];
+			call_hooks('update_unseen',$x);
+			if($x['update'] === 'unset' || intval($x['update'])) {
+				$r = q("UPDATE item SET item_unseen = 0 where item_unseen = 1 and item_wall = 1 AND uid = %d $update_unseen",
+					intval(local_channel())
+				);
+			}
 		}
 
 

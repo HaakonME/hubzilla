@@ -126,6 +126,7 @@ function enableOnUser(){
 				$('#jot-media').val($('#jot-media').val() + data.result.message);
 			},
 			stop: function(e,data) {
+				preview_post();
 				$('#profile-rotator').spin(false);
 			},
 		});
@@ -175,6 +176,7 @@ function enableOnUser(){
                             $('#profile-rotator').spin('tiny');
                             $.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
                                     addeditortext(data);
+									preview_post();
                                     $('#profile-rotator').spin(false);
                             });
                         }
@@ -421,6 +423,7 @@ function enableOnUser(){
                                 function(ddata) {
                                     if (ddata['status']) {
                                         addeditortext(ddata['photolink']);
+										preview_post();
                                     } else {
                                         window.console.log("{{$modalerrorlink}}" + ':' + ddata['errormsg']);
                                     }

@@ -149,6 +149,7 @@ function insertCommentURL(comment, id) {
 
 			textarea = document.getElementById("comment-edit-text-" +id);
 			textarea.value = textarea.value + data;
+			preview_comment(id);
 			$('body').css('cursor', 'auto');
 		});
 	}

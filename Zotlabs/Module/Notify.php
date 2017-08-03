@@ -15,12 +15,16 @@ class Notify extends \Zotlabs\Web\Controller {
 				intval(local_channel())
 			);
 			if($r) {
-				q("update notify set seen = 1 where (( parent != '' and parent = '%s' and otype = '%s' ) or link = '%s' ) and uid = %d",
-					dbesc($r[0]['parent']),
-					dbesc($r[0]['otype']),
-					dbesc($r[0]['link']),
-					intval(local_channel())
-				);
+				$x = [ 'channel_id' => local_channel(), 'update' => 'unset' ];
+				call_hooks('update_unseen',$x);
+				if($x['update'] === 'unset' || intval($x['update'])) {
+					q("update notify set seen = 1 where (( parent != '' and parent = '%s' and otype = '%s' ) or link = '%s' ) and uid = %d",
+						dbesc($r[0]['parent']),
+						dbesc($r[0]['otype']),
+						dbesc($r[0]['link']),
+						intval(local_channel())
+					);
+				}
 				goaway($r[0]['link']);
 			}
 			goaway(z_root());

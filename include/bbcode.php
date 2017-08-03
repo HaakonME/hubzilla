@@ -7,7 +7,7 @@
 require_once('include/oembed.php');
 require_once('include/event.php');
 require_once('include/zot.php');
-
+require_once('include/html2plain.php');
 
 function get_bb_tag_pos($s, $name, $occurance = 1) {
 

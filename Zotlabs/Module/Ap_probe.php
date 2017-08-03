@@ -30,7 +30,7 @@ class Ap_probe extends \Zotlabs\Web\Controller {
 			$redirects = 0;
 		    $x = z_fetch_url($addr,true,$redirects, [ 'headers' => [ $headers ]]);
 	    	if($x['success'])
-				$o .= '<pre>' . str_replace('\\','',jindent($x['body'])) . '</pre>';
+				$o .= '<pre>' . str_replace(['\\n','\\'],["\n",''],jindent($x['body'])) . '</pre>';
 		}
 		return $o;
 	}

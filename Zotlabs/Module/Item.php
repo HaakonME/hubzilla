@@ -634,7 +634,7 @@ class Item extends \Zotlabs\Web\Controller {
 					$attach_link = '';
 					$hash = substr($mtch,0,strpos($mtch,','));
 					$rev = intval(substr($mtch,strpos($mtch,',')));
-					$r = attach_by_hash_nodata($hash,$rev);
+					$r = attach_by_hash_nodata($hash, $observer['xchan_hash'], $rev);
 					if($r['success']) {
 						$attachments[] = array(
 							'href'     => z_root() . '/attach/' . $r['data']['hash'],

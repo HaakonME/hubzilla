@@ -47,6 +47,7 @@
 		</li>
 		<div id="upload-form" class="sub-menu-wrapper">
 			<div class="sub-menu">
+				<form enctype="multipart/form-data" method="post" action="">
 					<div class="form-group">
 						<select id="import" name="target" class="form-control">
 							<option value="">{{$import_placeholder}}</option>

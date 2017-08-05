@@ -53,8 +53,8 @@ class Mail extends \Zotlabs\Web\Controller {
 						}
 						$body = trim(str_replace($match[1],'',$body));
 					}
-					echo json_encode(['preview' => zidify_links(smilies(bbcode($body)))]);
 				}
+				echo json_encode(['preview' => zidify_links(smilies(bbcode($body)))]);
 			}
 			killme();
 		} 

@@ -467,6 +467,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 
 	$preview = (($page_mode === 'preview') ? true : false);
 	$previewing = (($preview) ? ' preview ' : '');
+	$preview_lbl = t('This is an unsaved preview');
 
 	if ($mode === 'network') {
 
@@ -684,6 +685,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 					'mode' => $mode,
 					'approve' => t('Approve'),
 					'delete' => t('Delete'),
+					'preview_lbl' => $preview_lbl,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,

@@ -157,11 +157,11 @@ function bb_to_markdown($Text, $options = []) {
 	 * Transform #tags, strip off the [url] and replace spaces with underscore
 	 */
 
-	$Text = preg_replace_callback('/#\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/[(zu)]rl\]/i', 
+	$Text = preg_replace_callback('/#\[([zu])rl\=(.*?)\](.*?)\[\/[(zu)]rl\]/i', 
 		create_function('$match', 'return \'#\'. str_replace(\' \', \'_\', $match[3]);'), $Text);
 
 
-	$Text = preg_replace('/#\^\[([zu])rl\=(\w+.*?)\](\w+.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
+	$Text = preg_replace('/#\^\[([zu])rl\=(.*?)\](.*?)\[\/([zu])rl\]/i', '[$1rl=$2]$3[/$4rl]', $Text);
 
 	// Converting images with size parameters to simple images. Markdown doesn't know it.
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '[img]$3[/img]', $Text);
@@ -196,9 +196,6 @@ function bb_to_markdown($Text, $options = []) {
 
 	// Remove empty zrl links
 	$Text = preg_replace("/\[zrl\=\].*?\[\/zrl\]/is", "", $Text);
-
-	// escape all unconverted tags
-	$Text = escape_tags($Text);
 
 	$Text = trim($Text);
 

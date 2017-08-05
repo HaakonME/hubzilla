@@ -554,6 +554,92 @@ function change_channel_keys($channel) {
 	return $ret;
 }
 
+function channel_change_address($channel,$new_address) {
+
+	$ret = array('success' => false);
+
+	$old_address = $channel['channel_address'];
+
+	if($new_address === 'sys') {
+        $ret['message'] = t('Reserved nickname. Please choose another.');
+        return $ret;
+    }
+
+    if(check_webbie(array($new_address)) !== $new_address) {
+        $ret['message'] = t('Nickname has unsupported characters or is already being used on this site.');
+        return $ret;
+    }
+
+	$r = q("update channel set channel_address = '%s' where channel_id = %d",
+		dbesc($new_address),
+		intval($channel['channel_id'])
+	);
+	if(! $r) {
+		return $ret;
+ 	}
+
+	$r = q("select * from channel where channel_id = %d",
+		intval($channel['channel_id'])
+	);
+
+	if(! $r) {
+		$ret['message'] = t('Unable to retrieve modified identity');
+		return $ret;
+	}
+
+	$r = q("update xchan set xchan_addr = '%s' where xchan_hash = '%s'",
+		dbesc($new_address . '@' . App::get_hostname()),
+		dbesc($channel['channel_hash'])
+	);
+
+	$h = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' ",
+		dbesc($channel['channel_hash']),
+		dbesc(z_root())
+	);
+
+	if($h) {
+		foreach($h as $hv) {
+			if($hv['hubloc_primary']) {
+				q("update hubloc set hubloc_primary = 0 where hubloc_id = %d",
+					intval($hv['hubloc_id'])
+				);
+			}
+			q("update hubloc set hubloc_deleted = 1 where hubloc_id = %d",
+				intval($hv['hubloc_id'])
+			);
+
+			unset($hv['hubloc_id']);
+			$hv['hubloc_addr'] = $new_address . '@' . App::get_hostname();
+			hubloc_store_lowlevel($hv);
+		}
+	}
+
+	// fix apps which were stored with the actual name rather than a macro
+
+	$r = q("select * from app where app_channel = %d and app_system = 1",
+		intval($channel['channel_id'])
+	);
+	if($r) {
+		foreach($r as $rv) {
+			$replace = preg_replace('/([\=\/])(' . $old_address . ')($|[\%\/])/ism','$1' . $new_address . '$3',$rv['app_url']);
+			if($replace != $rv['app_url']) {
+				q("update app set app_url = '%s' where id = %d",
+					dbesc($replace),
+					intval($rv['id'])
+				);
+			}
+		}
+	}		
+
+	Zotlabs\Daemon\Master::Summon(array('Notifier', 'refresh_all', $channel['channel_id']));
+
+	$ret['success'] = true;
+	return $ret;
+}
+
+
+
+
 
 
 /**

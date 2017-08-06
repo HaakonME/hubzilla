@@ -1,6 +1,6 @@
-version: 1
+version: 2
 url: $baseurl/pubstream
-requires: config:!disable_discover_tab
+requires: config:disable_discover_tab=0
 name: Public Stream
 photo: icon:globe
 categories: Social

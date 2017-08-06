@@ -174,9 +174,8 @@ class Apps {
 				if(substr($require, 0, 7) == 'config:') {
 					$config = true;
 					$require = ltrim($require, 'config:');
+					$require = explode('=', $require);
 				}
-
-				$toggle = (($require[0] == '!') ? 0 : 1);
 
 				switch($require) {
 					case 'nologin':
@@ -201,7 +200,7 @@ class Apps {
 						break;
 					default:
 						if($config)
-							$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
+							$unset = ((get_config('system', $require[0]) == $require[1]) ? false : true);
 						else
 							$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
 						if($unset)
@@ -325,9 +324,8 @@ class Apps {
 					if(substr($require, 0, 7) == 'config:') {
 						$config = true;
 						$require = ltrim($require, 'config:');
+						$require = explode('=', $require);
 					}
-
-					$toggle = (($require[0] == '!') ? 0 : 1);
 
 					switch($require) {
 						case 'nologin':
@@ -353,7 +351,7 @@ class Apps {
 							break;
 						default:
 							if($config)
-								$unset = ((get_config('system', ltrim($require, '!')) == $toggle) ? false : true);
+								$unset = ((get_config('system', $require[0]) == $require[1]) ? false : true);
 							else
 								$unset = ((local_channel() && feature_enabled(local_channel(),$require)) ? false : true);
 							if($unset)

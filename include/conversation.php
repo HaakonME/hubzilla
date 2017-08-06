@@ -1624,11 +1624,9 @@ function network_tabs() {
 	// tabs
 	$tabs = array();
 
-	$d = get_config('system','disable_discover_tab');
-	if($d === false)
-		$d = 1;
+	$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
 
-	if(! $d) {
+	if(! $disable_discover_tab) {
 		$tabs[] = array(
 			'label' => t('Discover'),
 			'url' => z_root() . '/' . $cmd . '?f=&fh=1' ,

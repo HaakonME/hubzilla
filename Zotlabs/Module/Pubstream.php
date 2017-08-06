@@ -16,8 +16,8 @@ class Pubstream extends \Zotlabs\Web\Controller {
 				return login();
 		}
 	
-	
-		if(get_config('system','disable_discover_tab'))
+		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
+		if($disable_discover_tab)
 			return;
 	
 		$item_normal = item_normal();

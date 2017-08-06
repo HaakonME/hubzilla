@@ -409,8 +409,9 @@ class Network extends \Zotlabs\Web\Controller {
 		}
 	
 		$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
-	
-		if($firehose && (! get_config('system','disable_discover_tab'))) {
+
+		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
+		if($firehose && (! $disable_discover_tab)) {
 			require_once('include/channel.php');
 			$sys = get_sys_channel();
 			$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";

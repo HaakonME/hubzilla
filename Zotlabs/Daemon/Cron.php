@@ -174,7 +174,8 @@ class Cron {
 
 		// pull in some public posts
 
-		if(! get_config('system','disable_discover_tab'))
+		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
+		if(! $disable_discover_tab)
 			Master::Summon(array('Externals'));
 
 		$generation = 0;

@@ -1344,8 +1344,10 @@ function public_recips($msg) {
 	$include_sys = false;
 
 	if($msg['message']['type'] === 'activity') {
-		if(! get_config('system','disable_discover_tab'))
+		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
+		if(! $disable_discover_tab)
 			$include_sys = true;
+
 		$perm = 'send_stream';
 
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {

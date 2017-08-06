@@ -139,7 +139,8 @@ class Ping extends \Zotlabs\Web\Controller {
 			db_utcnow(), db_quoteinterval('3 MINUTE')
 		);
 
-		$notify_pubs = local_channel() ? ($vnotify & VNOTIFY_PUBS) && ! get_config('system', 'disable_discover_tab') : ! get_config('system', 'disable_discover_tab');
+		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
+		$notify_pubs = ((local_channel()) ? ($vnotify & VNOTIFY_PUBS) && !$disable_discover_tab : !$disable_discover_tab);
 
 		if($notify_pubs) {
 			$sys = get_sys_channel();

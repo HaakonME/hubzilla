@@ -20,6 +20,7 @@
 				$('#jot-media').val($('#jot-media').val() + data.result.message);
 			},
 			stop: function(e,data) {
+				preview_mail();
 				$('#prvmail-rotator').spin(false);
 			},
 		});
@@ -36,6 +37,7 @@
 			$('#prvmail-rotator').spin('tiny');
 			$.get('linkinfo?f=&url=' + reply, function(data) {
 				addmailtext(data);
+				preview_mail();
 				$('#prvmail-rotator').spin(false);
 			});
 		}
@@ -62,6 +64,7 @@
 			$('#prvmail-rotator').spin('tiny');
 			$.get('linkinfo?f=&url=' + reply, function(data) {
 				addmailtext(data);
+				preview_mail();
 				$('#prvmail-rotator').spin(false);
 			});
 		}

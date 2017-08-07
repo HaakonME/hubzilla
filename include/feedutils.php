@@ -115,7 +115,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$items = items_fetch(
 		[
-			'wall' => '1',
+			'wall'       => '1',
 			'datequery'  => $params['end'],
 			'datequery2' => $params['begin'],
 			'start'      => intval($params['start']),

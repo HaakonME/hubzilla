@@ -1,4 +1,98 @@
-Hubzilla 2.4 (2017-??-??)
+Hubzilla 2.6 (2017-??-??)
+	- Consolidate disable_discover_tab config
+	- Fix some bbcode to markdown conversion issues
+	- Improved finding of recursive attachment permissions
+	- Smaller line-height for notification badges 
+	- Bluegrid schema removed - will be added again if someone is willing to maintain it
+	- Improved file_activity()
+	- DB - add index for item.obj_type
+	- Add options flag to bb_to_markdown() so we can distinguish between diaspora use and other use and therefore filter and adjust content selectively
+	- Close the apps-menu if the notifications-menu is open and vice versa 
+	- Remove redundant call to jquery ready function in photo albums view
+	- Remove borders from navbar toggler in mobile view
+	- Improve the formatting of shares when converting from bbcode to markdown
+	- Suppress fopen errors from dav
+	- Make local channel (not our own) nav menus appear similar to what we are used from remote channels
+	- Indicate the selected channel in the dropdown menu if the feature is enabled	
+	- Provide a mechanism to mark apps active in the app tray
+	- Allow wildcard tag and category searches
+	- Improved installer
+	- Update some addon docs and ensure we only generate statistics once a day
+	- Turn url requests where argv[0] is something.xyz into module='something' and $_REQUEST['module_format'] = 'xyz'; But leave modules beginning with . (like .well_known) alone (convert the initial . to _ and then strip it)
+	- Turn platform name and std_version into config variables
+	- Implement chunked uploads on the wall
+	- Prevent expiration of conversations you are involved with
+	- Update htmlpurifier to version 4.9.3
+	- Update sabre/http to version 4.2.3
+	- Add optimize-autoloader to composer config
+	- Missing abook_{my,their}_perms in pg schema and missing keys in mysql schema 
+	- Provide a gender icon on the profile sidebar within reason
+	- Provide more comprehensible information on the admin summary page
+	- Upgrade blueimp from 9.8 to 9.18
+	- Chanview - if already connected, bypass the chanview intermediary page and go straight to the remote profile.
+	- Allow poke by xchan_hash
+	- guess_image_type() - ignore scheme when checking for urls
+	- Remove unused page_widgets.php include and provide a general function for loading sql from file
+	- Migrate cdav from addons to core
+	- Address several mail issues
+	- Add files and photos to featured apps by default
+	- import_author_zot() fixes
+	- Remove deprecated app parameter from conversation()
+	- Implement anonymous comments (like wordpress)
+	- Add rel=noopener to all external target _blank links
+	- Add 'can_comment_on_post' hook so we can better deal with the complications of Diaspora policy
+	- Added Portfolio widget (requires foundation)
+	- Convert schema_mysql engine to InnoDB and charset utf8mb4
+	- Put unreachable federated connections in the archived tab of the connections list page
+	- Indicate on connections page if a federated connection from another network is unavailable from the current location
+	- Make authenticated oembeds optional, default to false.
+	- Remove text_highlight css load from core
+	- Numerous ostatus feed improvements (mastodon, gnu-social)
+	- Provide hook when deleting a connection - we need this to clean up dangling PuSH subscriptions
+	- Move code syntax highlighting to plugin
+	- Oembed: ensure that width and height are returned as type int and not float
+	- Rewrite wiki pages widget - no need for ajax on pageload, show the pages to not authenticated people.
+	- Convert randprof to use chanlink_hash() instead of chanlink_url() and filter sys channels by xchan.xchan_system instead of xchan_addr != sys@%
+	- Update Sabre libraries
+	- Only provide "connected apps" on the settings menu if techlevel > 0.
+	- Provide ability to search webpage
+	- Move disapora xrd stuff to plugin
+	- Deprecate server_role
+	- Introduce automatic language selection for help, webpages, and wiki content
+	- Provide ability to order apps in app-tray
+	- Replace Mardownify library with html-to-markdown library
+
+	Bugfixes
+	- Fix a bug where if multiple channels uploaded the same file to the same folder, the uploaded file would end up with an incremental number added to the filename for each upload even if the file did not exist yet in the channels folder
+	- Fix privacy groups not syncing across clones properly (github issue #832)
+	- Fix an issue where the ability to use a portion of the message-id to display a message wasn't honoured in all cases
+	- Fix minor issues in the bs-default schema
+	- Fix backward compatibility for album links generated in earlier times before the ambiguity of photo album names was solved (github issue #827)
+	- Fix photo item comments not ported to bs4
+	- Fix incorrect album link
+	- Fix incorrect follow url in webfinger
+	- Fix regression - allow position attributes in oembedable zcards
+	- Fix affinitiy slider settings were being updated on any submit of of settings/featured
+	- Fix minor weirdness in zot finger results after deleting a clone from a channel that was on a site which was previously migrated from http to https and still had the old hubloc
+	- Fix cloud headers already sent issue
+	- Partial fix for failure to sync photos - appears to be memory exhaustion and dependent on filesize although an unrelated issue was found with directory creation during file sync (we didn't check ownership when looking for duplicates)
+	- Fix github issue #810
+	- Don't allow negative age in directory listings
+	- Fix allow setting a default schema for the hub (github issue #797) and allow selecting of focus (hubzilla default) schema if a default is set
+	- Fix update_r1189() for mysql and postgres
+
+	Plugins/Addon
+	Diaspora: Rewrite the addon to implemented Diaspora Version 2 federation protocol
+	GNU-Social: GNU-Social and Mastodon compatibility was greatly increased and a "fetch conversations" feature added to try and locate missing contextual references and maintain conversations in posts from those networks
+	Rename statistics_json to statistics and implement nodeinfo v2
+	New authchoose addon to restrict what sites you authenticate to by default
+	Cdav addon moved to core
+	head_add_css() needs a preceding '/' to find files in the addons dir
+	New addon code syntax highlighting (moved from core to addon)
+	Pubsubhubbub: specify a minimum number of records - otherwise it defaults to zero	
+
+
+Hubzilla 2.4 (2017-05-31)
 	- Silence php warning during install
 	- Implemented switch statement logic in Comanche layout parser
 	- Don't allow html in plugin comment blocks

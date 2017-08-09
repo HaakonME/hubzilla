@@ -63,6 +63,7 @@ Hubzilla 2.6 (2017-??-??)
 	- Replace Mardownify library with html-to-markdown library
 
 	Bugfixes
+	- Fix wrong wiki pages in the sidebar github issue #841
 	- Fix a bug where if multiple channels uploaded the same file to the same folder, the uploaded file would end up with an incremental number added to the filename for each upload even if the file did not exist yet in the channels folder
 	- Fix privacy groups not syncing across clones properly (github issue #832)
 	- Fix an issue where the ability to use a portion of the message-id to display a message wasn't honoured in all cases

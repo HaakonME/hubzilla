@@ -132,6 +132,19 @@ function inserteditortag(BBcode, id) {
 	return true;
 }
 
+function insertCommentAttach(comment,id) {
+
+	activeCommentID = id;
+	activeCommentText = comment;
+
+	$('body').css('cursor', 'wait');
+
+	$('#invisible-comment-upload').trigger('click');
+ 
+	return false;
+
+}
+
 function insertCommentURL(comment, id) {
 	reply = prompt(aStr.linkurl);
 	if(reply && reply.length) {

@@ -47,6 +47,9 @@
 							</button>
 						</div>
 						<div class="btn-group mr-2">
+							<button class="btn btn-outline-secondary btn-sm" title="{{$edatt}}" onclick="insertCommentAttach('{{$comment}}',{{$id}}); return false;">
+								<i class="fa fa-paperclip comment-icon"></i>
+							</button>
 							<button class="btn btn-outline-secondary btn-sm" title="{{$edurl}}" onclick="insertCommentURL('{{$comment}}',{{$id}}); return false;">
 								<i class="fa fa-link comment-icon"></i>
 							</button>

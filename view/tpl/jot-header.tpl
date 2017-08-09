@@ -106,6 +106,9 @@ function enableOnUser(){
 <script src="library/blueimp_upload/js/jquery.fileupload.js"></script>
 
 <script>
+var activeCommentID = 0;
+var activeCommentText = '';
+
 	$(document).ready(function() {
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
@@ -139,6 +142,34 @@ function enableOnUser(){
           DragDropUploadInit();
         }
 
+
+		$('#invisible-comment-upload').fileupload({
+			url: 'wall_attach/{{$nickname}}',
+			dataType: 'json',
+			maxChunkSize: 4 * 1024 * 1024,
+			add: function(e,data) {
+
+				var tmpStr = $("#comment-edit-text-" + activeCommentID).val();
+				if(tmpStr == activeCommentText) {
+					tmpStr = "";
+					$("#comment-edit-text-" + activeCommentID).addClass("comment-edit-text-full");
+					$("#comment-edit-text-" + activeCommentID).removeClass("comment-edit-text-empty");
+					openMenu("comment-tools-" + activeCommentID);
+					$("#comment-edit-text-" + activeCommentID).val(tmpStr);
+				}
+				data.submit();
+			},
+
+			done: function(e,data) {
+				textarea = document.getElementById("comment-edit-text-" + activeCommentID);
+				textarea.value = textarea.value + data.result.message;
+			},
+			stop: function(e,data) {
+				$('body').css('cursor', 'auto');
+				preview_comment(activeCommentID);
+				activeCommentID = 0;
+			},
+		});
 	});
 
 	function deleteCheckedItems() {

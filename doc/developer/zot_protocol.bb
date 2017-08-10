@@ -79,7 +79,7 @@ We may also attempt to recover with even less information, but doing so is prone
 
 In order to implement high performance communications, the data transfer format for all aspects of Zot is JSON. XML communications require way too much overhead.
 
-Bi-directional encryption is based on RSA 4096-bit keys expressed in DER/ASN.1 format using the PKCS#8 encoding variant, with AES-256-CBC used for block encryption of variable length or large items.
+Bi-directional encryption is based on RSA 4096-bit keys expressed in DER/ASN.1 format using the PKCS#8 encoding variant, with AES encryption of variable length or large items. The precise encryption algorithms are negotiable between sites. 
 
 Some aspects of well known "federation protocols" (webfinger, salmon, activitystreams, portablecontacts, etc.) may be used in zot, but we are not tied to them and will not be bound by them. $Projectname project is attempting some rather novel developments in decentralised communications and if there is any need to diverge from such "standard protocols" we will do so without question or hesitation. 
 
@@ -391,7 +391,7 @@ When this packet is received, a Zot message is initiated to the auth identity:
     }
 [/code]
 
-auth_check messages MUST be encrypted with AES256CBC. This message is sent to the origination site, which checks the 'secret' to see if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:
+auth_check messages MUST be encrypted. This message is sent to the origination site, which checks the 'secret' to see if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:
 [code nowrap]
     { 
       "success":1, 
@@ -404,11 +404,11 @@ auth_check messages MUST be encrypted with AES256CBC. This message is sent to th
 [h4]Zot Signatures[/h4]
 All signed data in Zot is accomplished by performing an RSA sign operation using the private key of the initiator. The binary result is then base64url encoded for transport.
 [h4]Zot Encryption[/h4]
-Encryption is currently provided by AES256-CBC, the Advanced Encryption Standard using 256-bit keys and the Cipher Block Chaining mode of operation. Additional algorithms MAY be supported. A 32-octet key and 16-octet initialisation vector are randomly generated. The desired data is then encrypted using these generated strings and the result base64url encoded. Then we build an array:
+Encryption is currently provided by AES256CTR. Additional algorithms MAY be supported. A 32-octet key and 16-octet initialisation vector are randomly generated. The desired data is then encrypted using these generated strings and the result base64url encoded. Then we build an array:
 
 [dl terms="b"]
 [*= data]The base64url encoded encrypted data
-[*= alg]The chosen algorithm, in this case the string 'aes256cbc'.
+[*= alg]The chosen algorithm, in this case the string 'aes256ctr'.
 [*= key]The randomly generated key, RSA encrypted using the recipients public key, and the result base64url encoded
 [*= iv]The randomly generated initialization vector, RSA encrypted using the recipient's public key, and the result base64url encoded
 [/dl]
@@ -449,7 +449,7 @@ M23in0xqMVsyQvzjNkpImrO/QdbEFRIIMee83IHq+adbyjQR49Z2hNEIZhkLPc3U
       "callback":"\/post",
       "version":"1.2",
       "encryption":{
-        "aes256cbc"
+        "aes256ctr"
       },
       "secret":"1eaa6613699be6ebb2adcefa5379c61a3678aa0df89025470fac871431b70467",
       "secret_sig":"0uShifsvhHnxnPIlDM9lWuZ1hSJTrk3NN9Ds6AKpyNRqf3DUdz81-Xvs8I2kj6y5vfFtm-FPKAqu77XP05r74vGaWbqb1r8zpWC7zxXakVVOHHC4plG6rLINjQzvdSFKCQb5R_xtGsPPfvuE24bv4fvN4ZG2ILvb6X4Dly37WW_HXBqBnUs24mngoTxFaPgNmz1nDQNYQu91-ekX4-BNaovjDx4tP379qIG3-NygHTjFoOMDVUvs-pOPi1kfaoMjmYF2mdZAmVYS2nNLWxbeUymkHXF8lT_iVsJSzyaRFJS1Iqn7zbvwH1iUBjD_pB9EmtNmnUraKrCU9eHES27xTwD-yaaH_GHNc1XwXNbhWJaPFAm35U8ki1Le4WbUVRluFx0qwVqlEF3ieGO84PMidrp51FPm83B_oGt80xpvf6P8Ht5WvVpytjMU8UG7-js8hAzWQeYiK05YTXk-78xg0AO6NoNe_RSRk05zYpF6KlA2yQ_My79rZBv9GFt4kUfIxNjd9OiV1wXdidO7Iaq_Q"

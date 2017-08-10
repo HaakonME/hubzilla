@@ -63,6 +63,7 @@ Hubzilla 2.6 (2017-??-??)
 	- Replace Mardownify library with html-to-markdown library
 
 	Bugfixes
+	- Fix channel manager and nav channel select visible if in a delegate session
 	- Fix wrong wiki pages in the sidebar github issue #841
 	- Fix a bug where if multiple channels uploaded the same file to the same folder, the uploaded file would end up with an incremental number added to the filename for each upload even if the file did not exist yet in the channels folder
 	- Fix privacy groups not syncing across clones properly (github issue #832)

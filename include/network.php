@@ -1137,7 +1137,7 @@ function discover_by_url($url, $arr = null) {
 	return true;
 }
 
-function discover_by_webbie($webbie) {
+function discover_by_webbie($webbie,$protocol = '') {
 
 	$result   = [];
 
@@ -1153,7 +1153,7 @@ function discover_by_webbie($webbie) {
 				// If we discover zot - don't search further; grab the info and get out of
 				// here.
 
-				if($link['rel'] === PROTOCOL_ZOT) {
+				if($link['rel'] === PROTOCOL_ZOT && ((! $protocol) || (strtolower($protocol) === 'zot'))) {
 					logger('discover_by_webbie: zot found for ' . $webbie, LOGGER_DEBUG);
 					if(array_key_exists('zot',$x) && $x['zot']['success']) {
 						$i = import_xchan($x['zot']);
@@ -1174,7 +1174,7 @@ function discover_by_webbie($webbie) {
 
 	logger('webfinger: ' . print_r($x,true), LOGGER_DATA, LOG_INFO);
 
-	$arr = array('address' => $webbie, 'success' => false, 'webfinger' => $x);
+	$arr = array('address' => $webbie, 'protocol' => $protocol, 'success' => false, 'webfinger' => $x);
 	call_hooks('discover_channel_webfinger', $arr);
 	if($arr['success'])
 		return true;

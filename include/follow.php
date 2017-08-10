@@ -17,6 +17,17 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 	$my_perms = false;
 	$is_zot   = false;
+	$protocol = '';
+
+	
+	if(substr($url,0,1) === '[') {
+		$x = strpos($url,']');
+		if($x) {
+			$protocol = substr($url,1,$x-1);
+			$url = substr($url,$x+1);
+		}
+	}
+
 	$is_http  = ((strpos($url,'://') !== false) ? true : false);
 
 	if($is_http && substr($url,-1,1) === '/')
@@ -47,13 +58,13 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	}
 
 
-	$arr = array('url' => $url, 'channel' => array());
+	$arr = array('url' => $url, 'protocol', 'channel' => array());
 
 	call_hooks('follow_init', $arr);
 
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
-	elseif(! $is_http)
+	elseif((! $is_http) && ((! $protocol) || (strtolower($protocol) === 'zot')))
 		$ret = Zotlabs\Zot\Finger::run($url,$channel);
 
 	if($ret && is_array($ret) && $ret['success']) {
@@ -118,8 +129,10 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	else {
 
 		$xchan_hash = '';
+		$sql_options = (($protocol) ? " and xchan_network = '" . dbesc($protocol) . "' " : '');
+		
 
-		$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' limit 1",
+		$r = q("select * from xchan where xchan_hash = '%s' or xchan_url = '%s' $sql_options limit 1",
 			dbesc($url),
 			dbesc($url)
 		);
@@ -127,7 +140,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		if(! $r) {
 			// attempt network auto-discovery
 
-			$d = discover_by_webbie($url);
+			$d = discover_by_webbie($url,$protocol);
 
 			if((! $d) && ($is_http)) {
 

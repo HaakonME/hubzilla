@@ -18,6 +18,7 @@ class ThreadStream {
 	private $observer = null;
 	private $writable = false;
 	private $commentable = false;
+	private $uploadable = false;
 	private $profile_owner = 0;
 	private $preview = false;
 	private $prepared_item = '';

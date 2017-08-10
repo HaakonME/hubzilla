@@ -446,7 +446,7 @@ abstract class photo_driver {
  */
 
 function guess_image_type($filename, $headers = '') {
-	logger('Photo: guess_image_type: '.$filename . ($headers?' from curl headers':''), LOGGER_DEBUG);
+//	logger('Photo: guess_image_type: '.$filename . ($headers?' from curl headers':''), LOGGER_DEBUG);
 	$type = null;
 	if ($headers) {
 
@@ -513,7 +513,7 @@ function guess_image_type($filename, $headers = '') {
 		}
 
 	}
-	logger('Photo: guess_image_type: type = ' . $type, LOGGER_DEBUG);
+	logger('Photo: guess_image_type: filename = ' . $filename . ' type = ' . $type, LOGGER_DEBUG);
 	return $type;
 
 }

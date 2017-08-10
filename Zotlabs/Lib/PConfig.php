@@ -20,11 +20,12 @@ class PConfig {
 		if(is_null($uid) || $uid === false)
 			return false;
 
-		if(! array_key_exists($uid, \App::$config))
-			\App::$config[$uid] = array();
-
 		if(! is_array(\App::$config)) {
-			btlogger('App::$config not an array: ' . $uid);
+			btlogger('App::$config not an array');
+		}
+
+		if(! array_key_exists($uid, \App::$config)) {
+			\App::$config[$uid] = array();
 		}
 
 		if(! is_array(\App::$config[$uid])) {

@@ -532,14 +532,14 @@ class Notifier {
 
 			if($hub['hubloc_network'] == 'zot') {
 				if(! in_array($hub['hubloc_sitekey'],$keys)) {
-					$hublist[] = $hub['hubloc_host'];
+					$hublist[] = $hub['hubloc_host'] . ' ' . $hub['hubloc_network'];
 					$dhubs[]   = $hub;
 					$keys[]    = $hub['hubloc_sitekey'];
 				}
 			}
 			else {
 				if(! in_array($hub['hubloc_url'],$urls)) {
-					$hublist[] = $hub['hubloc_host'];
+					$hublist[] = $hub['hubloc_host'] . ' ' . $hub['hubloc_network'];
 					$dhubs[]   = $hub;
 					$urls[]    = $hub['hubloc_url'];
 				}

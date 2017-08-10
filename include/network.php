@@ -671,11 +671,12 @@ function parse_xml_string($s,$strict = true) {
 	libxml_use_internal_errors(true);
 
 	$x = @simplexml_load_string($s2);
-	if(! $x) {
+	if($x === false) {
 		logger('libxml: parse: error: ' . $s2, LOGGER_DATA);
-		foreach(libxml_get_errors() as $err)
-			logger('libxml: parse: ' . $err->code." at ".$err->line.":".$err->column." : ".$err->message, LOGGER_DATA);
-
+		foreach(libxml_get_errors() as $err) {
+			logger('libxml: parse: ' . $err->code . ' at ' . $err->line
+				. ':' . $err->column . ' : ' . $err->message, LOGGER_DATA);
+		}
 		libxml_clear_errors();
 	}
 

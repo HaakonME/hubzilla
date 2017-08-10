@@ -538,7 +538,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 	}
 
 	elseif ($mode === 'photos') {
-		$profile_onwer = App::$profile['profile_uid'];
+		$profile_owner = App::$profile['profile_uid'];
 		$page_writeable = ($profile_owner == local_channel());
 		$live_update_div = '<div id="live-photos"></div>' . "\r\n";
 		// for photos we've already formatted the top-level item (the photo)

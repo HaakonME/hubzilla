@@ -713,7 +713,6 @@ class ThreadItem {
 		call_hooks('comment_buttons',$arr);
 		$comment_buttons = $arr['comment_buttons'];
 
-
 		$comment_box = replace_macros($template,array(
 			'$return_path' => '',
 			'$threaded' => $this->is_threaded(),

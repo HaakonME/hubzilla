@@ -18,7 +18,7 @@ class Ofeed extends \Zotlabs\Web\Controller {
 		$params['pages']     = ((x($_REQUEST,'pages'))      ? intval($_REQUEST['pages'])    : 0);
 		$params['top']       = ((x($_REQUEST,'top'))        ? intval($_REQUEST['top'])      : 0);
 		$params['start']     = ((x($params,'start'))        ? intval($params['start'])      : 0);
-		$params['records']   = ((x($params,'records'))      ? intval($params['records'])    : 40);
+		$params['records']   = ((x($params,'records'))      ? intval($params['records'])    : 10);
 		$params['direction'] = ((x($params,'direction'))    ? dbesc($params['direction'])   : 'desc');
 		$params['cat']       = ((x($_REQUEST,'cat'))        ? escape_tags($_REQUEST['cat']) : '');
 		$params['compat']    = ((x($_REQUEST,'compat'))     ? intval($_REQUEST['compat'])   : 1);	

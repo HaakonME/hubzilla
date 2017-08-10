@@ -85,6 +85,15 @@ class Cdav extends \Zotlabs\Web\Controller {
 				if($channel['channel_timezone'])
 					$auth->setTimezone($channel['channel_timezone']);
 				$auth->observer = $channel['channel_hash'];
+
+				$principalUri = 'principals/' . $channel['channel_address'];
+				if(!cdav_principal($principalUri)) {
+					$this->activate($pdo, $channel);
+					if(!cdav_principal($principalUri)) {
+						return;
+					}
+				}
+
 			}
 
 

@@ -11,14 +11,8 @@ class Wiki_pages {
 			return;
 
 		if(! $arr['resource_id']) {
-
-			$c = \App::get_channel();
-
-			if(! $c)
-				$c = channelx_by_nick(argv(1));
-
+			$c = channelx_by_nick(argv(1));
 			$w = \Zotlabs\Lib\NativeWiki::exists_by_name($c['channel_id'],argv(2));
-
 			$arr = array(
 				'resource_id' => $w['resource_id'],
 				'channel_id' => $c['channel_id'],

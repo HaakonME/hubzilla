@@ -34,9 +34,11 @@ EOT;
 			intval($channel['channel_id'])
 		);
 
-		$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and channel_removed = 0 order by channel_name ",
-			intval(get_account_id())
-		);
+		if(! $_SESSION['delegate']) {
+			$chans = q("select channel_name, channel_id from channel where channel_account_id = %d and channel_removed = 0 order by channel_name ",
+				intval(get_account_id())
+			);
+		}
 	}
 	elseif(remote_channel())
 		$observer = App::get_observer();
@@ -196,7 +198,9 @@ EOT;
 		$nav['all_events']['all']=array('events', t('View events'), "", "");
 		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 
-		$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
+		if(! $_SESSION['delegate']) {
+			$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
+		}
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'),'settings_nav_btn');
 

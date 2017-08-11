@@ -255,7 +255,7 @@ function get_atom_elements($feed, $item, &$author) {
 		$author['author_is_feed'] = false;
 
 		$rawauthor = $feed->get_feed_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
-		logger('rawauthor: ' . print_r($rawauthor, true));
+		//logger('rawauthor: ' . print_r($rawauthor, true));
 
 	}
 	else {
@@ -519,7 +519,7 @@ function get_atom_elements($feed, $item, &$author) {
 
 	// turn Mastodon content warning into a #nsfw hashtag
 	if($mastodon && $summary) {
-		$res['body'] .= "\n\n#ContentWarning\n";
+		$res['body'] = $summary . "\n\n" . $res['body'] . "\n\n#ContentWarning\n";
 	}
 
 

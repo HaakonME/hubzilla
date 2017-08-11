@@ -1652,9 +1652,17 @@ function check_channelallowed($hash) {
 }
 
 function deliverable_singleton($channel_id,$xchan) {
+
+	if(array_key_exists('xchan_hash',$xchan))
+		$xchan_hash = $xchan['xchan_hash'];
+	elseif(array_key_exists('hubloc_hash',$xchan))
+		$xchan_hash = $xchan['hubloc_hash'];
+	else
+		return true;
+
 	$r = q("select abook_instance from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
 		intval($channel_id),
-		dbesc($xchan['xchan_hash'])
+		dbesc($xchan_hash)
 	);
 	if($r) {
 		if(! $r[0]['abook_instance'])

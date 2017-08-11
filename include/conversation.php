@@ -550,6 +550,19 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 	if (! feature_enabled($profile_owner,'multi_delete'))
 		$page_dropping = false;
 
+	$uploading = true;
+
+	if($profile_owner > 0) {
+		$owner_channel = channelx_by_n($profile_owner);
+		if($owner_channel['channel_allow_cid'] || $owner_channel['channel_allow_gid']
+			|| $owner_channel['channel_deny_cid'] || $owner_channel['channel_deny_gid']) {
+			$uploading = false;
+		}
+	}
+	else {
+		$uploading = false;
+	}
+
 
 	$channel = App::get_channel();
 	$observer = App::get_observer();
@@ -753,7 +766,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
-			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $prepared_item);
+			$conv = new Zotlabs\Lib\ThreadStream($mode, $preview, $uploading, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 

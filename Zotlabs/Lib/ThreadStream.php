@@ -28,9 +28,10 @@ class ThreadStream {
 	// wherein we've already prepared a top level item which doesn't look anything like
 	// a normal "post" item
 
-	public function __construct($mode, $preview, $prepared_item = '') {
+	public function __construct($mode, $preview, $uploadable, $prepared_item = '') {
 		$this->set_mode($mode);
 		$this->preview = $preview;
+		$this->uploadable = $uploadable;
 		$this->prepared_item = $prepared_item;
 		$c = ((local_channel()) ? get_pconfig(local_channel(),'system','default_cipher') : '');
 		if($c)
@@ -61,6 +62,7 @@ class ThreadStream {
 				// pull some trickery which allows us to re-invoke this function afterward
 				// it's an ugly hack so @FIXME
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
+				$this->uploadable = false;
 				break;
 			case 'page':
 				$this->profile_owner = \App::$profile['uid'];
@@ -91,6 +93,11 @@ class ThreadStream {
 	public function is_commentable() {
 		return $this->commentable;
 	}
+
+	public function is_uploadable() {
+		return $this->uploadable;
+	}
+
 
 	/**
 	 * Check if page is a preview

@@ -106,8 +106,8 @@
 				{{if $item.mode === 'moderate'}}
 
 				<div class="wall-item-tools-left btn-group">
-					<a href="moderate/{{$item.id}}/approve" class="btn btn-outline-secondary btn-small">{{$item.approve}}</a>
-					<a href="moderate/{{$item.id}}/drop" class="btn btn-outline-secondary btn-small">{{$item.delete}}</a>
+					<a href="moderate/{{$item.id}}/approve" class="btn btn-success btn-sm">{{$item.approve}}</a>
+					<a href="moderate/{{$item.id}}/drop" class="btn btn-danger btn-sm">{{$item.delete}}</a>
 
 				</div>
 

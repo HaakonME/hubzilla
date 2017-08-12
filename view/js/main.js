@@ -21,15 +21,20 @@ function commentOpenUI(obj, id) {
 }
 
 function commentCloseUI(obj, id) {
-	$(document).unbind( "click.commentClose", handler );
+	var form_id = $(obj)[0].form.id;
+
+	$('#' + form_id).on('click', function(e) {
+		$(document).unbind( "click.commentClose", handler );
+	});
 
 	var handler = function() {
-		if(obj.value === '') {
-		obj.value = aStr.comment;
+		if($('#comment-edit-text-' + id).val() === '') {
+			$('#comment-edit-text-' + id).val(aStr.comment);
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full").addClass("comment-edit-text-empty");
 			$("#comment-edit-text-" + id).removeAttr('tabindex');
 			$("#comment-edit-submit-" + id).removeAttr('tabindex');
 			$("#comment-tools-" + id).hide();
+			$("#comment-edit-anon-" + id).hide();
 		}
 	};
 
@@ -42,8 +47,8 @@ function commentOpen(obj, id) {
 		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 		$("#mod-cmnt-wrap-" + id).show();
+		$("#comment-tools-" + id).show();
 		$("#comment-edit-anon-" + id).show();
-		openMenu("comment-tools-" + id);
 		return true;
 	}
 	return false;
@@ -55,7 +60,8 @@ function commentClose(obj, id) {
 		$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
 		$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
 		$("#mod-cmnt-wrap-" + id).hide();
-		closeMenu("comment-tools-" + id);
+		$("#comment-tools-" + id).hide();
+		$("#comment-edit-anon-" + id).hide();
 		return true;
 	}
 	return false;

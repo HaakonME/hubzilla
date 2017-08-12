@@ -138,6 +138,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		);
 
 		if(! $r) {
+
 			// attempt network auto-discovery
 
 			$d = discover_by_webbie($url,$protocol);
@@ -146,11 +147,13 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 
 				// try RSS discovery
 
-				if(get_config('system','feed_contacts')) {
+				$feeds = get_config('system','feed_contacts');
+
+				if(($feeds) && ($protocol === '' || $protocol === 'feed')) {
 					$d = discover_by_url($url);
 				}
 				else {
-					$result['message'] = t('Protocol disabled.');
+					$result['message'] = t('Remote channel or protocol unavailable.');
 					return $result;
 				}
 			}

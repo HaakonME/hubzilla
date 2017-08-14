@@ -1,4 +1,5 @@
 Hubzilla 2.6 (2017-??-??)
+	- Upgrade to bootstrap-4 beta
 	- Consolidate disable_discover_tab config
 	- Fix some bbcode to markdown conversion issues
 	- Improved finding of recursive attachment permissions

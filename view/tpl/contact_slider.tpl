@@ -4,10 +4,10 @@ $(document).ready(function() {
 	// The slider does not render correct if width is given in % and
 	// the slider container is hidden (display: none) during rendering.
 	// So let's unhide it to render and hide again afterwards.
-	if(!$("#affinity-tool-collapse").hasClass("in")) {
-		$("#affinity-tool-collapse").addClass("in");
+	if(!$("#affinity-tool-collapse").hasClass("show")) {
+		$("#affinity-tool-collapse").addClass("show");
 		makeContactSlider();
-		$("#affinity-tool-collapse").removeClass("in");
+		$("#affinity-tool-collapse").removeClass("show");
 	}
 	else {
 		makeContactSlider();

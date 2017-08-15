@@ -1,4 +1,5 @@
 Hubzilla 2.6 (2017-??-??)
+	- Upgrade to bootstrap-4 beta
 	- Consolidate disable_discover_tab config
 	- Fix some bbcode to markdown conversion issues
 	- Improved finding of recursive attachment permissions
@@ -60,7 +61,7 @@ Hubzilla 2.6 (2017-??-??)
 	- Deprecate server_role
 	- Introduce automatic language selection for help, webpages, and wiki content
 	- Provide ability to order apps in app-tray
-	- Replace Mardownify library with html-to-markdown library
+	- Replace Markdownify library with html-to-markdown library
 
 	Bugfixes
 	- Fix channel manager and nav channel select visible if in a delegate session

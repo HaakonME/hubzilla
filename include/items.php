@@ -1600,7 +1600,6 @@ function item_store($arr, $allow_exec = false, $deliver = true) {
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                           : 0);
 	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))                     : random_string());
 	$arr['revision']      = ((x($arr,'revision') && intval($arr['revision']) > 0)   ? intval($arr['revision']) : 0);
-logger('revision: ' . $arr['revision']);
 
 	$arr['author_xchan']  = ((x($arr,'author_xchan'))  ? notags(trim($arr['author_xchan']))  : '');
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');

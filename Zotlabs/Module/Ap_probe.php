@@ -21,10 +21,10 @@ class Ap_probe extends \Zotlabs\Web\Controller {
 			$addr = $_GET['addr'];
 
 			if($_GET['magenv']) {
-				$headers = 'Accept: application/magic-envelope+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+				$headers = 'Accept: application/magic-envelope+json, application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
 			}
 			else {
-				$headers = 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+				$headers = 'Accept: application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
 			}
 
 			$redirects = 0;

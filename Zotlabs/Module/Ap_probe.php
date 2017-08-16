@@ -2,7 +2,7 @@
 namespace Zotlabs\Module;
 
 require_once('include/zot.php');
-
+require_once('addon/pubcrawl/HTTPSig.php');
 
 class Ap_probe extends \Zotlabs\Web\Controller {
 
@@ -21,16 +21,19 @@ class Ap_probe extends \Zotlabs\Web\Controller {
 			$addr = $_GET['addr'];
 
 			if($_GET['magenv']) {
-				$headers = 'Accept: application/magic-envelope+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+				$headers = 'Accept: application/magic-envelope+json, application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
 			}
 			else {
-				$headers = 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
+				$headers = 'Accept: application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"';
 			}
 
 			$redirects = 0;
 		    $x = z_fetch_url($addr,true,$redirects, [ 'headers' => [ $headers ]]);
 	    	if($x['success'])
 				$o .= '<pre>' . $x['header'] . '</pre>' . EOL;
+				
+				$o .= 'verify returns: ' . \HTTPSig::verify($x) . EOL;
+ 
 				$o .= '<pre>' . str_replace(['\\n','\\'],["\n",''],jindent($x['body'])) . '</pre>';
 		}
 		return $o;

@@ -40,6 +40,20 @@ class HTTPHeaders {
 	function fetch() {
 		return $this->parsed;
 	}
+
+	function fetcharr() {
+		$ret = [];
+		if($this->parsed) {
+			foreach($this->parsed as $x) {
+				foreach($x as $y => $z) {
+					$ret[$y] = $z;
+				}
+			}
+		}
+		return $ret;
+	}
+
+
 }
 
 

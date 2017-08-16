@@ -272,6 +272,7 @@ var last_filestorage_id = null;
 var mediaPlaying = false;
 var contentHeightDiff = 0;
 var liveRecurse = 0;
+var savedTitle = '';
 
 $(function() {
 	$.ajaxSetup({cache: false});
@@ -401,11 +402,13 @@ function NavUpdate() {
 			if(data.network == 0) {
 				data.network = '';
 				$('.net-update, .net-button').hide();
+				document.title = savedTitle;
 			} else {
 				$('.net-update, .net-button').show();
+				document.title = '(' + data.network + ') ' + savedTitle;
 			}
 			$('.net-update').html(data.network);
-
+			
 			if(data.pubs == 0) {
 				data.pubs = '';
 				$('.pubs-update, .pubs-button').hide();
@@ -1383,6 +1386,8 @@ $(document).ready(function() {
 		wordSeparator : aStr['t16'],
 		numbers       : aStr['t17'],
 	};
+
+	savedTitle = document.title;
 
 });
 

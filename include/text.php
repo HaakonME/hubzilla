@@ -2401,13 +2401,6 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			//...do nothing
 			return $replaced;
 		}
-		if($tag == '#getzot') {
-			$basetag = 'getzot';
-			$url = 'http://hubzilla.org';
-			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
-			$body = str_replace($tag,$newtag,$body);
-			$replaced = true;
-		}
 		if(! $replaced) {
 
 			//base tag has the tags name only

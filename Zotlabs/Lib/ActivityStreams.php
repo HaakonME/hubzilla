@@ -2,8 +2,7 @@
 
 namespace Zotlabs\Lib;
 
-
-class ActivityStreams2 {
+class ActivityStreams {
 
 	public $data;
 	public $valid = false;
@@ -21,11 +20,17 @@ class ActivityStreams2 {
 		}
 
 		if($this->is_valid()) {
-			$this->id    = $this->get_property_obj('id');
-			$this->type  = $this->get_primary_type();
-			$this->actor = $this->get_compound_property('actor');
-			$this->obj   = $this->get_compound_property('object');
-			$this->tgt   = $this->get_compound_property('target');
+			$this->id     = $this->get_property_obj('id');
+			$this->type   = $this->get_primary_type();
+			$this->actor  = $this->get_compound_property('actor');
+			$this->obj    = $this->get_compound_property('object');
+			$this->tgt    = $this->get_compound_property('target');
+			$this->origin = $this->get_compound_property('origin');
+
+			if(($this->type === 'Note') && (! $this->obj)) {
+				$this->obj = $this->data;
+				$this->type = 'Create';
+			}
 		}
 	}
 
@@ -34,16 +39,19 @@ class ActivityStreams2 {
 	}
 
 	function get_property_obj($property,$base = '') {
-		if(! $base) {
-			$base = $this->data;
-		}
-		return $base[$property];
+		$base = (($base) ? $base : $this->data);
+		return ((array_key_exists($property,$base)) ? $base[$property] : null);
 	}
 
 	function fetch_property($url) {
 		$redirects = 0;
+		if(! check_siteallowed($url)) {
+			logger('blacklisted: ' . $url);
+			return null;
+		}
+
 		$x = z_fetch_url($url,true,$redirects,
-			['headers' => [ 'Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"']]);
+			['headers' => [ 'Accept: application/activity+json, application/ld+json; profile="https://www.w3.org/ns/activitystreams"']]);
 		if($x['success'])
 			return json_decode($x['body'],true);
 		return null;

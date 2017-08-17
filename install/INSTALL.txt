@@ -104,7 +104,7 @@ technical abilities.
 	Example config scripts are available for these platforms in the install 
 	directory. Apache and nginx have the most support. 
 
-    - PHP 5.5 or later. 
+    - PHP 5.6 or later. 
 
     - PHP *command line* access with register_argc_argv set to true in the 
     php.ini file - and with no hosting provider restrictions on the use of 
@@ -116,7 +116,7 @@ technical abilities.
 
     - some form of email server or email gateway such that PHP mail() works.
 
-    - Mysql 5.x or MariaDB or postgres database server.
+    - Mysql 5.5.3 or later or MariaDB or postgres database server.
     
     - ability to schedule jobs with cron.
 

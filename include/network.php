@@ -1291,7 +1291,7 @@ function fetch_xrd_links($url) {
 		return array();
 
 	$h = parse_xml_string($xml);
-	if(! $h)
+	if($h === false)
 		return array();
 
 	$arr = convert_xml_element_to_array($h);

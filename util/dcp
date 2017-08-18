@@ -1,0 +1,73 @@
+#!/usr/bin/env php
+<?php
+
+// file import to DAV utility
+
+if(!file_exists('include/cli_startup.php')) {
+	echo 'Run dcp from the top level Hubzilla web directory, as util/dcp <args>' . PHP_EOL;
+	exit(1);
+}
+
+require_once('include/cli_startup.php');
+require_once('include/attach.php');
+
+cli_startup();
+
+$srcfile = $argv[1];
+$dstfile = $argv[2];
+
+if($argc != 3) {
+	echo "Usage: " . $argv[0] . ' source destination' . "\n";
+	echo 'Always run from the toplevel web directory.' . "\n";
+	echo 'destination should begin with store/$nickname/desired/path/filename or $nickname/desired/path/filename' . "\n";
+	echo 'destination must end with the destination filename (not a directory name).' . "\n";
+	echo 'Example: util/dcp /etc/motd store/joe/etc/motd' . "\n";
+	exit;
+}
+
+
+
+	if(strpos($dstfile,'store/') === 0)
+		$dstfile = substr($dstfile,6);
+
+	$nick = substr($dstfile,0,strpos($dstfile,'/'));
+
+	$dstfile = substr($dstfile,strlen($nick)+1);
+
+	$channel = channelx_by_nick($nick);
+	if(! $channel)
+		return;
+
+
+	$arr = [
+		'pathname' => dirname($dstfile),
+		'allow_cid' => $channel['channel_allow_cid'],
+		'allow_gid' => $channel['channel_allow_gid'],
+		'deny_cid'  => $channel['channel_deny_cid'],
+		'deny_gid'  => $channel['channel_deny_gid'],
+	];
+
+	$folder = '';
+	if(dirname($dstfile)) {	
+		$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
+		if($x['success'])
+			$folder = $x['data']['hash'];
+	}
+
+	$arr = [ 
+		'src' => $srcfile,
+		'filename' => basename($srcfile),
+		'hash' => random_string(),
+		'allow_cid' => $channel['channel_allow_cid'],
+		'allow_gid' => $channel['channel_allow_gid'],
+		'deny_cid'  => $channel['channel_deny_cid'],
+		'deny_gid'  => $channel['channel_deny_gid'],
+		'preserve_original' => true,
+	];
+
+	if($folder)
+		$arr['folder'] = $folder;
+		
+	attach_store($channel,$channel['channel_hash'],'import',$arr);
+
+

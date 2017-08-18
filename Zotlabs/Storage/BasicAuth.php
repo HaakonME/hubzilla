@@ -187,7 +187,7 @@ class BasicAuth extends DAV\Auth\Backend\AbstractBasic {
     }
 
 	protected function check_module_access($channel_id) {
-		if($channel_id && \App::$module === 'cdav') {
+		if($channel_id && in_array(\App::$module,[ 'dav', 'cdav', 'snap'] )) {
 			return true;
 		}
 		$this->module_disabled = true;

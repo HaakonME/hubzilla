@@ -324,8 +324,9 @@ class Display extends \Zotlabs\Web\Controller {
 		}
 
 		$o .= '<div id="content-complete"></div>';
+
 		
-		if((! $update) && (! $items))  {
+		if((($update && $load) || $checkjs->disabled()) && (! $items))  {
 			
 			$r = q("SELECT id, item_flags FROM item WHERE id = '%s' OR mid = '%s' LIMIT 1",
 				dbesc($item_hash),

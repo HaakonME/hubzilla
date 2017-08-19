@@ -324,12 +324,8 @@ class Display extends \Zotlabs\Web\Controller {
 		}
 
 		$o .= '<div id="content-complete"></div>';
-	
-		return $o;
-	
-	
-	/*
-		elseif((! $update) && (!  {
+		
+		if((! $update) && (! $items))  {
 			
 			$r = q("SELECT id, item_flags FROM item WHERE id = '%s' OR mid = '%s' LIMIT 1",
 				dbesc($item_hash),
@@ -348,7 +344,9 @@ class Display extends \Zotlabs\Web\Controller {
 			}
 	
 		}
-	*/
+
+		return $o;
+
 	}
 	
 	

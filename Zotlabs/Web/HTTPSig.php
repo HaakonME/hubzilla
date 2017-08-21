@@ -27,10 +27,18 @@ class HTTPSig {
 		$body = $data;
 		$headers = null;
 
+		$result = [
+			'signer'         => '',
+			'header_signed'  => false,
+			'header_valid'   => false,
+			'content_signed' => false,
+			'content_valid'  => false
+		];
+
 		// decide if $data arrived via controller submission or curl
 		if(is_array($data) && $data['header']) {
 			if(! $data['success'])
-				return false;
+				return $result;
 			$h = new \Zotlabs\Web\HTTPHeaders($data['header']);
 			$headers = $h->fetcharr();
 			$body = $data['body'];
@@ -59,7 +67,9 @@ class HTTPSig {
 		}
 
 		if(! $sig_block)
-			return null;
+			return $result;
+
+		$result['header_signed'] = true;
 
 		$signed_headers = $sig_block['headers'];
 		if(! $signed_headers) 
@@ -79,6 +89,7 @@ class HTTPSig {
 		}
 
 		if(! $key) {
+			$result['signer'] = $sig_block['keyId'];
 			$key = self::get_activitypub_key($sig_block['keyId']);
 		}
 
@@ -88,21 +99,23 @@ class HTTPSig {
 		$x = rsa_verify($signed_data,$sig_block['signature'],$key,$algorithm);
 
 		if($x === false)
-			return $x;
+			return $result;
+
+		$result['header_valid'] = true;
 
 		if(in_array('digest',$signed_headers)) {
+			$result['content_signed'] = true;
 			$digest = explode('=', $headers['digest']);
 			if($digest[0] === 'SHA-256')
 				$hashalg = 'sha256';
 
 			// The explode operation will have stripped the '=' padding, so compare against unpadded base64 
-			if(rtrim(base64_encode(hash($hashalg,$body,true)),'=') === $digest[1])
-				return true;
-			else
-				return false;
+			if(rtrim(base64_encode(hash($hashalg,$body,true)),'=') === $digest[1]) {
+				$result['content_valid'] = true;
+			}
 		}
 
-		return $x;
+		return $result;
 
 	}
 

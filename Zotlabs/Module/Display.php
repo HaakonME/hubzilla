@@ -174,6 +174,8 @@ class Display extends \Zotlabs\Web\Controller {
 				'$verb' => '',
 				'$mid' => $item_hash
 			));
+
+			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string) . '" title="oembed" />' . "\r\n";
 	
 	
 		}
@@ -218,13 +220,13 @@ class Display extends \Zotlabs\Web\Controller {
 	
 					if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
 						$sysid = 0;
-	
+dbg(1);	
 	
 					$r = q("SELECT item.id as item_id from item
 						WHERE mid = '%s'
 						AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
 						AND item.deny_gid  = '' AND item_private = 0 ) 
-						and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+						and uid in ( " . stream_perms_api_uids(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 						OR uid = %d )
 						$sql_extra )
 						$item_normal
@@ -232,7 +234,7 @@ class Display extends \Zotlabs\Web\Controller {
 						dbesc($target_item['parent_mid']),
 						intval($sysid)
 					);
-	
+dbg(0);	
 				}
 			}
 		}

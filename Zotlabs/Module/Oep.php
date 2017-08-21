@@ -66,9 +66,9 @@ class Oep extends \Zotlabs\Web\Controller {
 		$url = $args['url'];
 		$maxwidth  = intval($args['maxwidth']);
 		$maxheight = intval($args['maxheight']);
-	
-		if(preg_match('#//display/(.*?)(&|\?|$)#',$url,$matches)) {
-			$res = $matches[1];
+	logger('processing display');
+		if(preg_match('#//(.*?)/display/(.*?)(&|\?|$)#',$url,$matches)) {
+			$res = $matches[2];
 		}
 
 		if(strpos($res,'b64.') === 0) {
@@ -78,7 +78,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		$item_normal = item_normal();
 
 		$p = q("select * from item where mid like '%s' limit 1",
-	  		dbesc($res . '%'),
+	  		dbesc($res . '%')
 		);
 
 		if(! $p)

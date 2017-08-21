@@ -95,7 +95,7 @@ class Linkinfo extends \Zotlabs\Web\Controller {
 			echo $arr['text'];
 			killme();
 		}
-	
+
 		if($process_oembed) {
 			$x = oembed_process($url);
 			if($x) {

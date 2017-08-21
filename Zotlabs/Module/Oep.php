@@ -151,19 +151,29 @@ class Oep extends \Zotlabs\Web\Controller {
 		
 		xchan_query($p,true);
 		$p = fetch_post_tags($p,true);
-	        
+
+		// This function can get tripped up if the item is already a reshare
+		// (the multiple share declarations do not parse cleanly if nested) 
+		// So build a template with a known nonsense string as the content, and then
+		// replace that known string with the actual rendered content, sending
+		// each content layer through bbcode() separately.
+
+		$x = '2eGriplW^*Jmf4';
+			
 		$o = "[share author='".urlencode($p[0]['author']['xchan_name']).
-	            "' profile='".$p[0]['author']['xchan_url'] .
-	            "' avatar='".$p[0]['author']['xchan_photo_s'].
-	            "' link='".$p[0]['plink'].
-	            "' posted='".$p[0]['created'].
-	            "' message_id='".$p[0]['mid']."']";
-	    if($p[0]['title'])
-	            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
-	        $o .= $p[0]['body'];
-	        $o .= "[/share]";
+			"' profile='".$p[0]['author']['xchan_url'] .
+			"' avatar='".$p[0]['author']['xchan_photo_s'].
+			"' link='".$p[0]['plink'].
+			"' posted='".$p[0]['created'].
+			"' message_id='".$p[0]['mid']."']";
+		if($p[0]['title'])
+			$o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
+		$o .= $x; 
+		$o .= "[/share]";
 		$o = bbcode($o);
 	
+		$o = str_replace($x,bbcode($p[0]['body']),$o);
+
 		$ret['type'] = 'rich';
 	
 		$w = (($maxwidth) ? $maxwidth : 640);

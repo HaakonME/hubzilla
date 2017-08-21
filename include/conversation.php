@@ -295,7 +295,7 @@ function localize_item(&$item){
 		}
 		$plink = '[zrl=' . $obj['plink'] . ']' . $post_type . '[/zrl]';
 
-		$parsedobj = parse_xml_string($xmlhead.$item['obj']);
+//		$parsedobj = parse_xml_string($xmlhead.$item['obj']);
 
 		$tag = sprintf('#[zrl=%s]%s[/zrl]', $parsedobj->id, $parsedobj->content);
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
@@ -312,7 +312,7 @@ function localize_item(&$item){
 
 		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['obj']);
+//		$obj = parse_xml_string($xmlhead.$item['obj']);
 		if(strlen($obj->id)) {
 			$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($obj->id),

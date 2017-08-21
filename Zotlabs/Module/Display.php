@@ -96,8 +96,7 @@ class Display extends \Zotlabs\Web\Controller {
 			$item_hash = $decoded;
 
 		$r = q("select id, uid, mid, parent_mid, item_type, item_deleted from item where mid like '%s' limit 1",
-			dbesc($item_hash . '%'),
-			dbesc($decoded . '%')
+			dbesc($item_hash . '%')
 		);
 	
 		if($r) {

@@ -276,7 +276,6 @@ Discovery returns a JSON array with the following components:
 
 [h5]Permissions[/h5]
 
-
 'permissions' => extensible array of permissions appropriate to this target, values are true or false
 
   Permissions may include:

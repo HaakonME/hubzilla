@@ -640,7 +640,7 @@ function stream_perms_xchans($perms = NULL ) {
 	if(local_channel())
 		$ret[] = get_observer_hash();
 
-	$x = q("select uid from pconfig where cat = 'perm_limits' and k = 'view_stream' ");
+	$x = q("select uid, v from pconfig where cat = 'perm_limits' and k = 'view_stream' ");
 	if($x) {
 		$y = [];
 		foreach($x as $xv) {
@@ -650,6 +650,7 @@ function stream_perms_xchans($perms = NULL ) {
 		}
 		if($y) {		
 			$ids = ids_to_querystr($y,'uid');
+
 			$r = q("select channel_hash from channel where channel_id in ( $ids ) and ( channel_pageflags & %d ) = 0 and channel_system = 0 and channel_removed = 0 ",
 				intval(PAGE_ADULT|PAGE_CENSORED)
 			);

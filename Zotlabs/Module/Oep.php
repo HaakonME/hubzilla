@@ -67,43 +67,65 @@ class Oep extends \Zotlabs\Web\Controller {
 		$maxwidth  = intval($args['maxwidth']);
 		$maxheight = intval($args['maxheight']);
 	
-		if(preg_match('#//(.*?)/(.*?)/(.*?)/(.*?)mid\=(.*?)(&|$)#',$url,$matches)) {
-			$chn = $matches[3];
-			$res = $matches[5];
+		if(preg_match('#//display/(.*?)(&|\?|$)#',$url,$matches)) {
+			$res = $matches[1];
 		}
-	
-		if(! ($chn && $res))
-			return;
-		$c = q("select * from channel where channel_address = '%s' limit 1",
-			dbesc($chn)
+
+		if(strpos($res,'b64.') === 0) {
+			$res = base64url_decode(substr($res,4));
+		}
+
+		$item_normal = item_normal();
+
+		$p = q("select * from item where mid like '%s' limit 1",
+	  		dbesc($res . '%'),
 		);
+
+		if(! $p)
+			return;
+
+		$c = channelx_by_n($p[0]['uid']);
+
 	
-		if(! $c)
+		if(! ($c && $res))
 			return;
 	
-		$sql_extra = item_permissions_sql($c[0]['channel_id']);
+		$sql_extra = item_permissions_sql($c['channel_id']);
 	
-		$p = q("select * from item where mid = '%s' and uid = %d $sql_extra limit 1",
-	  		dbesc($res),
-			intval($c[0]['channel_id'])
+		$p = q("select * from item where mid like '%s' and uid = %d $sql_extra $item_normal limit 1",
+			dbesc($res . '%'),
+			intval($c['channel_id'])
 		);
+
 		if(! $p)
 			return;
 		
 		xchan_query($p,true);
 		$p = fetch_post_tags($p,true);
+
+		// This function can get tripped up if the item is already a reshare
+		// (the multiple share declarations do not parse cleanly if nested) 
+		// So build a template with a known nonsense string as the content, and then
+		// replace that known string with the actual rendered content, sending
+		// each content layer through bbcode() separately.
+
+		$x = '2eGriplW^*Jmf4';
+
 	        
 		$o = "[share author='".urlencode($p[0]['author']['xchan_name']).
-	            "' profile='".$p[0]['author']['xchan_url'] .
-	            "' avatar='".$p[0]['author']['xchan_photo_s'].
-	            "' link='".$p[0]['plink'].
-	            "' posted='".$p[0]['created'].
-	            "' message_id='".$p[0]['mid']."']";
+            "' profile='".$p[0]['author']['xchan_url'] .
+            "' avatar='".$p[0]['author']['xchan_photo_s'].
+            "' link='".$p[0]['plink'].
+            "' posted='".$p[0]['created'].
+            "' message_id='".$p[0]['mid']."']";
 	    if($p[0]['title'])
-	            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
-	        $o .= $p[0]['body'];
-	        $o .= "[/share]";
+            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
+
+		$o .= $x; 
+		$o .= "[/share]";
 		$o = bbcode($o);
+	
+		$o = str_replace($x,bbcode($p[0]['body']),$o);
 	
 		$ret['type'] = 'rich';
 	

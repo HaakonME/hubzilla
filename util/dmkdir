@@ -46,3 +46,12 @@ if($argc != 2) {
 	];
 
 	$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
+
+	if($x['success']) {
+		$hash = $x['data']['hash'];
+
+		$sync = attach_export_data($channel,$hash);
+		if($sync) {
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+		}
+	}

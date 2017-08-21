@@ -97,6 +97,12 @@ class Wall_attach extends \Zotlabs\Web\Controller {
 			$s =  "\n\n" . '[attachment]' . $r['data']['hash'] . ',' . $r['data']['revision'] . '[/attachment]' . "\n";
 		}
 	
+
+		$sync = attach_export_data($channel,$r['data']['hash']);
+		if($sync) {
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+		}
+
 		if($using_api)
 			return $s;
 

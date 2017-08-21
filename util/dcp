@@ -54,10 +54,12 @@ if($argc != 3) {
 			$folder = $x['data']['hash'];
 	}
 
+	$hash = random_string();
+
 	$arr = [ 
 		'src' => $srcfile,
 		'filename' => basename($srcfile),
-		'hash' => random_string(),
+		'hash' => $hash,
 		'allow_cid' => $channel['channel_allow_cid'],
 		'allow_gid' => $channel['channel_allow_gid'],
 		'deny_cid'  => $channel['channel_deny_cid'],
@@ -70,4 +72,7 @@ if($argc != 3) {
 		
 	attach_store($channel,$channel['channel_hash'],'import',$arr);
 
-
+	$sync = attach_export_data($channel,$hash);
+	if($sync)
+			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+	

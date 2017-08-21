@@ -242,7 +242,7 @@ Example of discovery packet for 'mike@zothub.com'
 
 Discovery returns a JSON array with the following components:
 
-'success' => ('1' or '')  Operation was successful if '1'. Otherwise an optional 'message' may be present indicating the source of error.
+'success' => (true or false)  Operation was successful if true. Otherwise an optional 'message' may be present indicating the source of error.
 
 'signed_token' => If a token parameter was provided in the request, it is prepended with the text 'token.' and then RSA signed with the channel private key and base64url encoded and returned as 'signed_token'.
 
@@ -272,12 +272,12 @@ Discovery returns a JSON array with the following components:
 
 'target_sig' => if a permissions target was specified, the signature is mirrored.
     
-'searchable' => ('1' or '') '1' indicates this entry can be searched in a directory
+'searchable' => (true or false) true indicates this entry can be searched in a directory
 
 [h5]Permissions[/h5]
 
 
-'permisssions' => extensible array of permissions appropriate to this target, values are '1' or ''
+'permissions' => extensible array of permissions appropriate to this target, values are true or false
 
   Permissions may include:
 [list]
@@ -328,7 +328,7 @@ Each location is an array of
 
 'address' => the webbie or user@host identifier associated with this location
 
-'primary' => ('1' or '') whether or not this is the primary location for this channel where files and web pages are generally found
+'primary' => (true or false) whether or not this is the primary location for this channel where files and web pages are generally found
 
 'url' => url of the root of this DNS location e.g. https://example.com
 

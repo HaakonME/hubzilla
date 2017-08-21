@@ -13,18 +13,16 @@ require_once('include/attach.php');
 
 cli_startup();
 
-$srcfile = $argv[1];
-$dstfile = $argv[2];
 
-if($argc != 3) {
+if($argc <= 3) {
 	echo "Usage: " . $argv[0] . ' source destination' . "\n";
 	echo 'Always run from the toplevel web directory.' . "\n";
-	echo 'destination should begin with store/$nickname/desired/path/filename or $nickname/desired/path/filename' . "\n";
-	echo 'destination must end with the destination filename (not a directory name).' . "\n";
+	echo 'destination should begin with store/$nickname/desired/path or $nickname/desired/path' . "\n";
 	echo 'Example: util/dcp /etc/motd store/joe/etc/motd' . "\n";
 	exit;
 }
 
+	$dstfile = $argv[$argc - 1];
 
 
 	if(strpos($dstfile,'store/') === 0)
@@ -38,41 +36,57 @@ if($argc != 3) {
 	if(! $channel)
 		return;
 
+	$isadir = false;
 
-	$arr = [
-		'pathname' => dirname($dstfile),
-		'allow_cid' => $channel['channel_allow_cid'],
-		'allow_gid' => $channel['channel_allow_gid'],
-		'deny_cid'  => $channel['channel_deny_cid'],
-		'deny_gid'  => $channel['channel_deny_gid'],
-	];
+	$r = q("select * from attach where display_path = '%s' and uid = %d limit 1",
+		dbesc($dstfile),
+		intval($channel['channel_id'])
+	);
 
-	$folder = '';
-	if(dirname($dstfile)) {	
-		$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
-		if($x['success'])
-			$folder = $x['data']['hash'];
+	if($r && $r[0]['is_dir']) {
+		$isadir = true;
+		$folder = $r[0]['hash'];
+	}
+	else {
+		$arr = [
+			'pathname'  => dirname($dstfile),
+			'allow_cid' => $channel['channel_allow_cid'],
+			'allow_gid' => $channel['channel_allow_gid'],
+			'deny_cid'  => $channel['channel_deny_cid'],
+			'deny_gid'  => $channel['channel_deny_gid'],
+		];
+
+		$folder = '';
+		if(dirname($dstfile)) {	
+			$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
+			if($x['success'])
+				$folder = $x['data']['hash'];
+		}
 	}
 
-	$hash = random_string();
 
-	$arr = [ 
-		'src' => $srcfile,
-		'filename' => basename($srcfile),
-		'hash' => $hash,
-		'allow_cid' => $channel['channel_allow_cid'],
-		'allow_gid' => $channel['channel_allow_gid'],
-		'deny_cid'  => $channel['channel_deny_cid'],
-		'deny_gid'  => $channel['channel_deny_gid'],
-		'preserve_original' => true,
-	];
+	for($x = 1; $x < ($argc - 1); $x ++) {
+		$srcfile = $argv[$x];
 
-	if($folder)
-		$arr['folder'] = $folder;
+		$hash = random_string();
+
+		$arr = [ 
+			'src' => $srcfile,
+			'filename' => basename($srcfile),
+			'hash' => $hash,
+			'allow_cid' => $channel['channel_allow_cid'],
+			'allow_gid' => $channel['channel_allow_gid'],
+			'deny_cid'  => $channel['channel_deny_cid'],
+			'deny_gid'  => $channel['channel_deny_gid'],
+			'preserve_original' => true,
+		];
+
+		if($folder)
+			$arr['folder'] = $folder;
 		
-	attach_store($channel,$channel['channel_hash'],'import',$arr);
+		attach_store($channel,$channel['channel_hash'],'import',$arr);
 
-	$sync = attach_export_data($channel,$hash);
-	if($sync)
+		$sync = attach_export_data($channel,$hash);
+		if($sync)
 			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
-	
+	}

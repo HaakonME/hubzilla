@@ -39,7 +39,7 @@ class Display extends \Zotlabs\Web\Controller {
 		$observer_is_owner = false;
 		$updateable = false;
 	
-	
+
 		if(local_channel() && (! $update)) {
 	
 			$channel = \App::get_channel();
@@ -216,11 +216,11 @@ class Display extends \Zotlabs\Web\Controller {
 				if($r === null) {
 	
 					// in case somebody turned off public access to sys channel content using permissions
-					// make that content unsearchable by ensuring the owner_xchan can't match
+					// make that content unsearchable by ensuring the owner uid can't match
 	
 					if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
 						$sysid = 0;
-dbg(1);	
+
 	
 					$r = q("SELECT item.id as item_id from item
 						WHERE mid = '%s'
@@ -234,7 +234,7 @@ dbg(1);
 						dbesc($target_item['parent_mid']),
 						intval($sysid)
 					);
-dbg(0);	
+
 				}
 			}
 		}

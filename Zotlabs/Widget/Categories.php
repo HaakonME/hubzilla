@@ -10,7 +10,7 @@ class Categories {
 
 		$cards = ((array_key_exists('cards',$arr) && $arr['cards']) ? true : false);
 
-		if(($cards) && (! feature_enabled(\App::$profile['profile_uid'],'cards'))
+		if(($cards) && (! feature_enabled(\App::$profile['profile_uid'],'cards')))
 			return '';
 
 		if((! \App::$profile['profile_uid']) 

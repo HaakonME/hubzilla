@@ -460,6 +460,7 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 	// By default remove $src when finished
 
 	$remove_when_processed = true;
+	$import_replace = false;
 
 	if($options === 'import') {
 		$src      = $arr['src'];
@@ -475,6 +476,9 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 		if($arr['preserve_original'])
 			$remove_when_processed = false;
+
+		if($arr['replace'])
+			$import_replace = true;
 
 		// if importing a directory, just do it now and go home - we're done.
 
@@ -617,8 +621,10 @@ function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 			dbesc($folder_hash)
 		);
 		if($r) {
-			$overwrite = get_pconfig($channel_id,'system','overwrite_dup_files');
+			$overwrite = (($import_replace || get_pconfig($channel_id,'system','overwrite_dup_files')) ? true : false);
 			if(($overwrite) || ($options === 'import')) {
+				if(! array_key_exists('edited',$arr))
+					$arr['edited'] = datetime_convert();
 				$options = 'replace';
 				$existing_id = $x[0]['id'];
 				$existing_size = intval($x[0]['filesize']);

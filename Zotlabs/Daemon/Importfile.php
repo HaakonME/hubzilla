@@ -6,6 +6,8 @@ class Importfile {
 
 	static public function run($argc,$argv){
 
+		logger('Importfile: ' . print_r($argv,true));
+
 		if($argc < 3)
 			return;
 

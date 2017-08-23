@@ -36,7 +36,19 @@ if($argc <= 3) {
 	if(! $channel)
 		return;
 
+	for($x = 1; $x < ($argc - 1); $x ++) {
+		if(($argv[$x] === '-r') || ($argv[$x] === '-R')) {
+			$recursive = true;
+			break;
+		}
+	}
+
+
 	$isadir = false;
+
+	if(($recursive) || ($argc > 3))
+		$isadir = true;
+
 
 	$r = q("select * from attach where display_path = '%s' and uid = %d limit 1",
 		dbesc($dstfile),
@@ -49,8 +61,9 @@ if($argc <= 3) {
 		$folder = $r[0]['hash'];
 	}
 	else {
+		$pathname = (($isadir) ? $dstfile : dirname($dstfile));
 		$arr = [
-			'pathname'  => dirname($dstfile),
+			'pathname'  => $pathname,
 			'allow_cid' => $channel['channel_allow_cid'],
 			'allow_gid' => $channel['channel_allow_gid'],
 			'deny_cid'  => $channel['channel_deny_cid'],
@@ -58,7 +71,7 @@ if($argc <= 3) {
 		];
 
 		$folder = '';
-		if(dirname($dstfile)) {	
+		if($pathname && $isadir) {
 			$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
 			if($x['success'])
 				$folder = $x['data']['hash'];
@@ -67,7 +80,6 @@ if($argc <= 3) {
 
 	for($x = 1; $x < ($argc - 1); $x ++) {
 		if(($argv[$x] === '-r') || ($argv[$x] === '-R')) {
-			$recursive = true;
 			continue;
 		}
 
@@ -93,6 +105,7 @@ if($argc <= 3) {
 			while(($entry = readdir($dir)) !== false) {
 				if($entry === '.' || $entry === '..')
 					continue;
+
 				$dstfile = $basepath . '/' . $entry;
 				if(is_dir($src . '/' . $entry)) {
 					$r = q("select * from attach where display_path = '%s' and uid = %d limit 1",
@@ -118,8 +131,7 @@ if($argc <= 3) {
 						if($x['success'])
 							$folder = $x['data']['hash'];
 					}
-					$basepath = $dstfile;
-					dcp_recurse($channel,$src . '/' . $entry,$basepath,$folder);
+					dcp_recurse($channel,$src . '/' . $entry,$dstfile,$folder);
 				}
 				else {
 					$cmd = [ 'Importfile', $channel['channel_id'], $src . '/' . $entry, $folder ];

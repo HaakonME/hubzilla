@@ -256,7 +256,7 @@ define ( 'NETWORK_OSTATUS',          'stat');    // status.net, identi.ca, GNU-s
 define ( 'NETWORK_GNUSOCIAL',        'gnusoc');    // status.net, identi.ca, GNU-social, other OStatus implementations
 define ( 'NETWORK_FEED',             'rss');    // RSS/Atom feeds with no known "post/notify" protocol
 define ( 'NETWORK_DIASPORA',         'diaspora');    // Diaspora
-define ( 'NETWORK_ACTIVITYPUB',       'activitypub');
+define ( 'NETWORK_ACTIVITYPUB',      'activitypub');
 define ( 'NETWORK_MAIL',             'mail');    // IMAP/POP
 define ( 'NETWORK_MAIL2',            'mai2');    // extended IMAP/POP
 define ( 'NETWORK_FACEBOOK',         'face');    // Facebook API
@@ -509,6 +509,7 @@ define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
 define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
 define ( 'ACTIVITY_OBJ_LOCATION',NAMESPACE_ZOT  . '/activity/location' );
 define ( 'ACTIVITY_OBJ_FILE',    NAMESPACE_ZOT  . '/activity/file' );
+define ( 'ACTIVITY_OBJ_CARD',    NAMESPACE_ZOT  . '/activity/card' );
 
 /**
  * Account Flags
@@ -554,6 +555,7 @@ define ( 'ITEM_TYPE_PDL',        2 );
 define ( 'ITEM_TYPE_WEBPAGE',    3 );
 define ( 'ITEM_TYPE_BUG',        4 );
 define ( 'ITEM_TYPE_DOC',        5 );
+define ( 'ITEM_TYPE_CARD',       6 );
 
 define ( 'ITEM_IS_STICKY',       1000 );
 

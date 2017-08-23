@@ -13,21 +13,3 @@
 		{{$content}}
 	</div>
 </div>
-
-<script>
-	// Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
-	$(document).ready(function () {
-		$('#doco-top-toc').toc({content: "#doco-content", headings: "h3,h4,h5,h6"});
-	});
-	
-	function docoTocToggle() {
-		if($('#doco-top-toc').is(':visible')) {
-			$('#doco-toc-toggle').removeClass('fa-cog').addClass('fa-caret-right');
-		} else {
-			$('#doco-toc-toggle').removeClass('fa-caret-right').addClass('fa-caret-down');
-		}
-		$('#doco-top-toc').toggle();
-		
-		return false;
-	}
-</script>

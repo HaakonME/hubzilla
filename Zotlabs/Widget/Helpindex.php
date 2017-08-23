@@ -9,14 +9,22 @@ class Helpindex {
 		$o .= '<div class="widget">';
 
 		$level_0 = get_help_content('sitetoc');
-		if(! $level_0)
-			$level_0 = get_help_content('toc');
+		if(! $level_0) {
+			$path = 'toc';
+			$x = determine_help_language();
+			$lang = $x['language'];
+			if($lang !== 'en') {
+				$path = $lang . '/toc';
+			}
+			$level_0 = get_help_content($path);
+		}
 
 		$level_0 = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$level_0);
 
 		$levels = array();
 
 
+		// TODO: Implement support for translations in hierarchical table of content files
 		if(argc() > 2) {
 			$path = '';
 			for($x = 1; $x < argc(); $x ++) {

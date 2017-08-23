@@ -107,20 +107,39 @@ function preg_callback_help_include($matches) {
 
 }
 
-
+function determine_help_language() {
+	require_once('Text/LanguageDetect.php');
+	$lang_detect = new Text_LanguageDetect();
+	$lang_detect->setNameMode(2);
+	if($lang_detect->languageExists(argv(1))) {
+		$lang = argv(1);
+		$from_url = true;
+	} else {
+		$lang = \App::$language;
+		if(! isset($lang)) 
+			$lang = 'en';
+		$from_url = false;
+	}
+	return array('language' => $lang, 'from_url' => $from_url);
+}
 
 function load_doc_file($s) {
-	$lang = \App::$language;
-	if(! isset($lang))
-		$lang = 'en';
-	$b = basename($s);
-	$d = dirname($s);
-
-	if($dirname !== '-') {
-		$c = find_doc_file("$d/$lang/$b");
-		if($c)
-			return $c;
+	$path = 'doc';
+	$x = determine_help_language();
+	$lang = $x['language'];
+	$url_idx = ($x['from_url'] ? 1 : 0);
+	if($x['from_url'] && $lang !== 'en') {
+		$path .= '/' . $lang;	
 	}
+		
+	$b = basename($s);
+	
+	for($i=1+$url_idx; $i<argc()-1; $i++) {
+		$path .= '/' . argv($i);
+	}
+	$c = find_doc_file($path . '/' . $b);
+	if($c)
+		return $c;
 	$c = find_doc_file($s);
 	if($c)
 		return $c;

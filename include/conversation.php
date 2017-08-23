@@ -1835,7 +1835,8 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	require_once('include/menu.php');
 	$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
-	if ($is_owner && $has_bookmarks) {
+
+	if($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
 			'url'   => z_root() . '/bookmarks',
@@ -1846,6 +1847,17 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	}
 
+	if(feature_enabled($uid,'cards')) {
+		$tabs[] = array(
+			'label' => t('Cards'),
+			'url'   => z_root() . '/cards/' . $nickname,
+			'sel'   => ((argv(0) == 'cards') ? 'active' : ''),
+			'title' => t('View Cards'),
+			'id'    => 'cards-tab',
+			'icon'  => 'list'
+		);
+	}
+ 
 	if($has_webpages && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
@@ -1856,7 +1868,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'icon'  => 'newspaper-o'
 		);
 	}
- 
+
 
 	if ($p['view_wiki']) {
 		if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {

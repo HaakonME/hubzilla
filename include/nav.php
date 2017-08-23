@@ -434,6 +434,18 @@ function channel_apps($is_owner = false, $nickname = null) {
 		];
 	}
 
+	if($p['view_pages'] && feature_enabled($uid,'cards')) {
+		$tabs[] = [
+			'label' => t('Cards'),
+			'url'   => z_root() . '/cards/' . $nickname ,
+			'sel'   => ((argv(0) == 'cards') ? 'active' : ''),
+			'title' => t('View Cards'),
+			'id'    => 'cards-tab',
+			'icon'  => 'list'
+		];
+	}
+
+
 	if($has_webpages && feature_enabled($uid,'webpages')) {
 		$tabs[] = [
 			'label' => t('Webpages'),

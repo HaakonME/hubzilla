@@ -1,0 +1,5 @@
+version: 1
+url: $baseurl/cards/$nick
+name: Cards
+photo: icon:list
+categories: Productivity

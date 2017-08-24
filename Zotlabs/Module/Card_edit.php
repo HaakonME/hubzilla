@@ -104,6 +104,7 @@ class Card_edit extends \Zotlabs\Web\Controller {
 			'hide_location' => false,
 			'hide_expire' => false,
 			'showacl' => true,
+			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),
 			'ptyp' => $itm[0]['type'],
 			'mimeselect' => false,
 			'mimetype' => $itm[0]['mimetype'],

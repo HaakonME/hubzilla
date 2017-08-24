@@ -517,6 +517,15 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 		}
 	}
 
+	elseif ($mode === 'cards') {
+		$profile_owner = App::$profile['profile_uid'];
+		$page_writeable = ($profile_owner == local_channel());
+		$live_update_div = '<div id="live-cards"></div>' . "\r\n"
+			. "<script> var profile_uid = " . App::$profile['profile_uid']
+			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
+	}
+
+
 	elseif ($mode === 'display') {
 		$profile_owner = local_channel();
 		$page_writeable = false;

@@ -19,8 +19,7 @@ class Cards extends \Zotlabs\Web\Controller {
 	
 	}
 	
-	
-	function get() {
+	function get($update = 0, $load = false) {
 	
 		if(observer_prohibited(true)) {
 			return login();
@@ -173,7 +172,7 @@ class Cards extends \Zotlabs\Web\Controller {
 				$items = [];
 		}
 
-		$mode = 'channel';
+		$mode = 'cards';
 			
      	$content = conversation($items,$mode,false,'traditional');
 

@@ -380,6 +380,7 @@ function NavUpdate() {
 				if($('#live-pubstream').length)  { src = 'pubstream'; liveUpdate(); }
 				if($('#live-display').length)    { src = 'display'; liveUpdate(); }
 				if($('#live-search').length)     { src = 'search'; liveUpdate(); }
+				if($('#live-cards').length)      { src = 'cards'; liveUpdate(); }
 
 				if($('#live-photos').length) {
 					if(liking) {

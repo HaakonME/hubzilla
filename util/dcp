@@ -15,15 +15,15 @@ cli_startup();
 
 
 if($argc <= 3) {
-	echo "Usage: " . $argv[0] . ' source destination' . "\n";
+	echo "Usage: " . $argv[0] . ' src dstdir' . "\n";
 	echo 'Always run from the toplevel web directory.' . "\n";
 	echo 'destination should begin with store/$nickname/desired/path or $nickname/desired/path' . "\n";
-	echo 'Example: util/dcp /etc/motd store/joe/etc/motd' . "\n";
+	echo 'Example: util/dcp /etc/motd store/joe/etc' . "\n";
 	exit;
 }
 
-	$dstfile = $argv[$argc - 1];
-
+	$recursive = false;
+	$dstfile   = $argv[$argc - 1];
 
 	if(strpos($dstfile,'store/') === 0)
 		$dstfile = substr($dstfile,6);
@@ -36,7 +36,19 @@ if($argc <= 3) {
 	if(! $channel)
 		return;
 
+	for($x = 1; $x < ($argc - 1); $x ++) {
+		if(($argv[$x] === '-r') || ($argv[$x] === '-R')) {
+			$recursive = true;
+			break;
+		}
+	}
+
+
 	$isadir = false;
+
+	if(($recursive) || ($argc > 3))
+		$isadir = true;
+
 
 	$r = q("select * from attach where display_path = '%s' and uid = %d limit 1",
 		dbesc($dstfile),
@@ -45,11 +57,13 @@ if($argc <= 3) {
 
 	if($r && $r[0]['is_dir']) {
 		$isadir = true;
+		$basepath = $dstfile;
 		$folder = $r[0]['hash'];
 	}
 	else {
+		$pathname = (($isadir) ? $dstfile : dirname($dstfile));
 		$arr = [
-			'pathname'  => dirname($dstfile),
+			'pathname'  => $pathname,
 			'allow_cid' => $channel['channel_allow_cid'],
 			'allow_gid' => $channel['channel_allow_gid'],
 			'deny_cid'  => $channel['channel_deny_cid'],
@@ -57,36 +71,73 @@ if($argc <= 3) {
 		];
 
 		$folder = '';
-		if(dirname($dstfile)) {	
+		if($pathname && $isadir) {
 			$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
 			if($x['success'])
 				$folder = $x['data']['hash'];
 		}
 	}
 
-
 	for($x = 1; $x < ($argc - 1); $x ++) {
-		$srcfile = $argv[$x];
+		if(($argv[$x] === '-r') || ($argv[$x] === '-R')) {
+			continue;
+		}
 
-		$hash = random_string();
+		if(is_dir($argv[$x])) {
+			if($recursive) {
+				dcp_recurse($channel,$argv[$x],$basepath,$folder);
+			}
+			else {
+				continue;
+			}
+		}
+		else {
+			$dstname = (($isadir) ? '' : basename($dstfile));
+			$cmd = [ 'Importfile', $channel['channel_id'], $argv[$x], $folder, $dstname ];
+			\Zotlabs\Daemon\Master::Summon($cmd);
+		}
+	}
 
-		$arr = [ 
-			'src' => $srcfile,
-			'filename' => basename($srcfile),
-			'hash' => $hash,
-			'allow_cid' => $channel['channel_allow_cid'],
-			'allow_gid' => $channel['channel_allow_gid'],
-			'deny_cid'  => $channel['channel_deny_cid'],
-			'deny_gid'  => $channel['channel_deny_gid'],
-			'preserve_original' => true,
-		];
 
-		if($folder)
-			$arr['folder'] = $folder;
-		
-		attach_store($channel,$channel['channel_hash'],'import',$arr);
+	function dcp_recurse($channel,$src,$basepath,$folder) {
+		$dir = opendir($src);
+		if($dir) {
+			while(($entry = readdir($dir)) !== false) {
+				if($entry === '.' || $entry === '..')
+					continue;
 
-		$sync = attach_export_data($channel,$hash);
-		if($sync)
-			build_sync_packet($channel['channel_id'],array('file' => array($sync)));
+				$dstfile = $basepath . '/' . $entry;
+				if(is_dir($src . '/' . $entry)) {
+					$r = q("select * from attach where display_path = '%s' and uid = %d limit 1",
+						dbesc($dstfile),
+						intval($channel['channel_id'])
+					);
+
+					if($r && $r[0]['is_dir']) {
+						$folder = $r[0]['hash'];
+					}
+					else {
+
+						$arr = [
+							'pathname'  => $dstfile,
+							'allow_cid' => $channel['channel_allow_cid'],
+							'allow_gid' => $channel['channel_allow_gid'],
+							'deny_cid'  => $channel['channel_deny_cid'],
+							'deny_gid'  => $channel['channel_deny_gid'],
+						];
+
+						$folder = '';
+						$x = attach_mkdirp($channel,$channel['channel_hash'],$arr);
+						if($x['success'])
+							$folder = $x['data']['hash'];
+					}
+					dcp_recurse($channel,$src . '/' . $entry,$dstfile,$folder);
+				}
+				else {
+					$cmd = [ 'Importfile', $channel['channel_id'], $src . '/' . $entry, $folder ];
+					\Zotlabs\Daemon\Master::Summon($cmd);
+				}
+			}
+			closedir($dir);
+		}
 	}

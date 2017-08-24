@@ -199,6 +199,62 @@ function tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $re
 
 }
 
+
+
+function card_tagadelic($uid, $count = 0, $authors = '', $owner = '', $flags = 0, $restrict = 0, $type = TERM_CATEGORY) {
+
+	require_once('include/security.php');
+
+	if(! perm_is_allowed($uid,get_observer_hash(),'view_pages'))
+		return array();
+
+
+	$item_normal = item_normal();
+	$sql_options = item_permissions_sql($uid);
+	$count = intval($count);
+
+	if($flags) {
+		if($flags === 'wall')
+			$sql_options .= " and item_wall = 1 ";
+	}
+
+	if($authors) {
+		if(! is_array($authors))
+			$authors = array($authors);
+
+		stringify_array_elms($authors,true);
+		$sql_options .= " and author_xchan in (" . implode(',',$authors) . ") "; 
+	}
+
+	if($owner) {
+		$sql_options .= " and owner_xchan  = '" . dbesc($owner) . "' ";
+	}	
+
+
+	// Fetch tags
+	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
+		where term.uid = %d and term.ttype = %d 
+		and otype = %d and item_type = %d and item_private = 0
+		$sql_options $item_normal
+		group by term order by total desc %s",
+		intval($uid),
+		intval($type),
+		intval(TERM_OBJ_POST),
+		intval($restrict),
+		((intval($count)) ? "limit $count" : '')
+	);
+
+	if(! $r)
+		return array();
+
+	return Zotlabs\Text\Tagadelic::calc($r);
+
+}
+
+
+
+
+
 function dir_tagadelic($count = 0) {
 
 	$count = intval($count);
@@ -309,6 +365,26 @@ function catblock($uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restric
 		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
 		foreach($r as $rr) { 
 			$o .= '<a href="channel/' . $c[0]['channel_address']. '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
+	}
+
+	return $o;
+}
+
+function card_catblock($uid,$count = 0,$authors = '',$owner = '', $flags = 0,$restrict = 0,$type = TERM_CATEGORY) {
+	$o = '';
+
+	$r = card_tagadelic($uid,$count,$authors,$owner,$flags,$restrict,$type);
+
+	if($r) {
+		$c = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+	
+		$o = '<div class="tagblock widget"><h3>' . t('Categories') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+			$o .= '<a href="cards/' . $c[0]['channel_address']. '?f=&cat=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
 		}
 		$o .= '</div></div>';
 	}

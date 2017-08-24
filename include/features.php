@@ -118,6 +118,15 @@ function get_features($filtered = true) {
 			],
 
 			[
+				'cards',       
+				t('Cards'),          
+				t('Create personal planning cards'),
+				false,
+				get_config('feature_lock','cards'),
+				feature_level('cards',1),
+			],
+
+			[
 				'nav_channel_select',  
 				t('Navigation Channel Select'), 
 				t('Change channels directly from within the navigation dropdown menu'),

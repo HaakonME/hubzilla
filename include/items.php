@@ -4111,6 +4111,8 @@ function webpage_to_namespace($webpage) {
 		$page_type = 'BUILDBLOCK';
 	elseif($webpage == ITEM_TYPE_PDL)
 		$page_type = 'PDL';
+	elseif($webpage == ITEM_TYPE_CARD)
+		$page_type = 'CARD';
 	elseif($webpage == ITEM_TYPE_DOC)
 		$page_type = 'docfile';
 	else

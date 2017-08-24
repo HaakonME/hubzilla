@@ -276,7 +276,7 @@ class Notifier {
 				$deleted_item = true;
 			}
 
-			if(intval($target_item['item_type']) != ITEM_TYPE_POST) {
+			if(! in_array(intval($target_item['item_type']), [ ITEM_TYPE_POST ] )) {
 				logger('notifier: target item not forwardable: type ' . $target_item['item_type'], LOGGER_DEBUG);
 				return;
 			}

@@ -464,6 +464,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 	$profile_owner   = 0;
 	$page_writeable  = false;
 	$live_update_div = '';
+	$jsreload        = '';
 
 	$preview = (($page_mode === 'preview') ? true : false);
 	$previewing = (($preview) ? ' preview ' : '');
@@ -516,6 +517,16 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 			}
 		}
 	}
+
+	elseif ($mode === 'cards') {
+		$profile_owner = App::$profile['profile_uid'];
+		$page_writeable = ($profile_owner == local_channel());
+		$live_update_div = '<div id="live-cards"></div>' . "\r\n"
+			. "<script> var profile_uid = " . App::$profile['profile_uid']
+			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
+		$jsreload = $_SESSION['return_url'];
+	}
+
 
 	elseif ($mode === 'display') {
 		$profile_owner = local_channel();
@@ -808,6 +819,10 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 						$item_object->set_template('conv_list.tpl');
 						$item_object->set_display_mode('list');
 					}
+					if($page_mode === 'cards') {
+						$item_object->set_reload($jsreload);
+					}
+
 				}
 			}
 
@@ -1305,6 +1320,11 @@ function status_editor($a, $x, $popup = false) {
 	if(! $cipher)
 		$cipher = 'aes256';
 
+	if(array_key_exists('catsenabled',$x))
+		$catsenabled = $x['catsenabled'];
+	else
+		$catsenabled = ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : '');
+
 	// avoid illegal offset errors
 	if(! array_key_exists('permissions',$x)) 
 		$x['permissions'] = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
@@ -1349,7 +1369,7 @@ function status_editor($a, $x, $popup = false) {
 		'$clearloc' => $clearloc,
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
-		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
+		'$catsenabled' => $catsenabled,
 		'$category' => ((x($x, 'category')) ? $x['category'] : ''),
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
 		'$permset' => t('Permission settings'),
@@ -1456,6 +1476,8 @@ function conv_sort($arr, $order) {
 		usort($parents,'sort_thr_created');
 	elseif(stristr($order,'commented'))
 		usort($parents,'sort_thr_commented');
+	elseif(stristr($order,'updated'))
+		usort($parents,'sort_thr_updated');
 	elseif(stristr($order,'ascending'))
 		usort($parents,'sort_thr_created_rev');
 
@@ -1495,6 +1517,12 @@ function sort_thr_created_rev($a,$b) {
 
 function sort_thr_commented($a,$b) {
 	return strcmp($b['commented'],$a['commented']);
+}
+
+function sort_thr_updated($a,$b) {
+	$indexa = (($a['changed'] > $a['edited']) ? $a['changed'] : $a['edited']);
+	$indexb = (($b['changed'] > $b['edited']) ? $b['changed'] : $b['edited']);
+	return strcmp($indexb,$indexa);
 }
 
 function find_thread_parent_index($arr,$x) {
@@ -1835,7 +1863,8 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 
 	require_once('include/menu.php');
 	$has_bookmarks = menu_list_count(local_channel(),'',MENU_BOOKMARK) + menu_list_count(local_channel(),'',MENU_SYSTEM|MENU_BOOKMARK);
-	if ($is_owner && $has_bookmarks) {
+
+	if($is_owner && $has_bookmarks) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
 			'url'   => z_root() . '/bookmarks',
@@ -1846,6 +1875,17 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 		);
 	}
 
+	if(feature_enabled($uid,'cards')) {
+		$tabs[] = array(
+			'label' => t('Cards'),
+			'url'   => z_root() . '/cards/' . $nickname,
+			'sel'   => ((argv(0) == 'cards') ? 'active' : ''),
+			'title' => t('View Cards'),
+			'id'    => 'cards-tab',
+			'icon'  => 'list'
+		);
+	}
+ 
 	if($has_webpages && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
@@ -1856,7 +1896,7 @@ function profile_tabs($a, $is_owner = false, $nickname = null){
 			'icon'  => 'newspaper-o'
 		);
 	}
- 
+
 
 	if ($p['view_wiki']) {
 		if(feature_enabled($uid,'wiki') && (get_account_techlevel($account_id) > 3)) {

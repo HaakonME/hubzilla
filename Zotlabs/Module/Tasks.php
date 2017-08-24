@@ -19,8 +19,8 @@ class Tasks extends \Zotlabs\Web\Controller {
 				$arr['all'] = 1;
 			
 			$x = tasks_fetch($arr);
+			$x['html'] = '';
 			if($x['tasks']) {
-				$x['html'] = '';
 				foreach($x['tasks'] as $y) {
 					$x['html'] .= '<div class="tasklist-item"><input type="checkbox" onchange="taskComplete(' . $y['id'] . '); return false;" /> ' . $y['summary'] . '</div>';
 				}
@@ -69,6 +69,7 @@ class Tasks extends \Zotlabs\Web\Controller {
 				if($x)
 					$ret['success'] = true;
 			}
+
 			json_return_and_die($ret);
 		}
 	

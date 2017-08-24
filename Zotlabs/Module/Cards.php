@@ -82,6 +82,8 @@ class Cards extends \Zotlabs\Web\Controller {
 			$channel_acl = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
 		}
 	
+
+
 		if(perm_is_allowed($owner,$ob_hash,'write_pages')) {
 
 			$x = array(
@@ -101,6 +103,7 @@ class Cards extends \Zotlabs\Web\Controller {
 				'layoutselect' => false,
 				'expanded' => false,
 				'novoting'=> false,
+				'catsenabled' => feature_enabled($owner,'categories'),
 				'bbco_autocomplete' => 'bbcode',
 				'bbcode' => true
 			);

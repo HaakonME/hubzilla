@@ -41,6 +41,8 @@ class Oep extends \Zotlabs\Web\Controller {
 			$arr = $this->oep_profile_reply($_REQUEST);
 		elseif(fnmatch('*/profile/*',$url))
 			$arr = $this->oep_profile_reply($_REQUEST);
+		elseif(fnmatch('*/cards/*',$url))
+			$arr = $this->oep_cards_reply($_REQUEST);
 	
 		if($arr) {
 			if($html) {
@@ -89,7 +91,10 @@ class Oep extends \Zotlabs\Web\Controller {
 	
 		if(! ($c && $res))
 			return;
-	
+
+		if(! perm_is_allowed($c[0]['channel_id'],get_observer_hash(),'view_stream'))
+			return;
+
 		$sql_extra = item_permissions_sql($c['channel_id']);
 	
 		$p = q("select * from item where mid like '%s' and uid = %d $sql_extra $item_normal limit 1",
@@ -140,6 +145,91 @@ class Oep extends \Zotlabs\Web\Controller {
 		return $ret;
 	
 	}
+
+
+	function oep_cards_reply($args) {
+	
+		$ret = [];
+		$url = $args['url'];
+		$maxwidth  = intval($args['maxwidth']);
+		$maxheight = intval($args['maxheight']);
+
+		if(preg_match('#//(.*?)/cards/(.*?)/(.*?)(&|\?|$)#',$url,$matches)) {
+			$nick = $matches[2];
+			$res = $matches[3];
+		}
+		if(! ($nick && $res))
+			return $ret; 
+
+		$channel = channelx_by_nick($nick);
+
+		if(! $channel)
+			return $ret;
+
+
+		if(! perm_is_allowed($channel['channel_id'],get_observer_hash(),'view_pages'))
+			return $ret;
+
+		$sql_extra = items_permissions_sql($channel['channel_id'],get_observer_hash());
+
+		$r = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = 'CARD' and iconfig.v = '%s' limit 1",
+			dbesc($res)
+		);
+		if($r) {
+			$sql_extra = "and item.id = " . intval($r[0]['iid']) . " ";
+		}
+		else {
+			return $ret;
+		}
+				
+		$r = q("select * from item 
+			where item.uid = %d and item_type = %d 
+			$sql_extra order by item.created desc",
+			intval($channel['channel_id']),
+			intval(ITEM_TYPE_CARD)
+		);
+
+		$item_normal = " and item.item_hidden = 0 and item.item_type in (0,6) and item.item_deleted = 0
+			and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
+			and item.item_blocked = 0 ";
+
+		if($r) {
+			xchan_query($r);
+			$p = fetch_post_tags($r, true);
+		}
+
+		$x = '2eGriplW^*Jmf4';
+
+	        
+		$o = "[share author='".urlencode($p[0]['author']['xchan_name']).
+            "' profile='".$p[0]['author']['xchan_url'] .
+            "' avatar='".$p[0]['author']['xchan_photo_s'].
+            "' link='".$p[0]['plink'].
+            "' posted='".$p[0]['created'].
+            "' message_id='".$p[0]['mid']."']";
+	    if($p[0]['title'])
+            $o .= '[b]'.$p[0]['title'].'[/b]'."\r\n";
+
+		$o .= $x; 
+		$o .= "[/share]";
+		$o = bbcode($o);
+	
+		$o = str_replace($x,bbcode($p[0]['body']),$o);
+	
+		$ret['type'] = 'rich';
+	
+		$w = (($maxwidth) ? $maxwidth : 640);
+		$h = (($maxheight) ? $maxheight : intval($w * 2 / 3));
+	
+		$ret['html'] = '<div style="width: ' . $w . '; height: ' . $h . '; font-family: sans-serif,arial,freesans;" >' . $o . '</div>';
+		
+		$ret['width'] = $w;
+		$ret['height'] = $h;
+	
+		return $ret;
+	
+	}
+
 	
 	function oep_mid_reply($args) {
 	
@@ -160,6 +250,9 @@ class Oep extends \Zotlabs\Web\Controller {
 		);
 	
 		if(! $c)
+			return;
+
+		if(! perm_is_allowed($c[0]['channel_id'],get_observer_hash(),'view_stream'))
 			return;
 	
 		$sql_extra = item_permissions_sql($c[0]['channel_id']);
@@ -279,6 +372,9 @@ class Oep extends \Zotlabs\Web\Controller {
 		if(! $c)
 			return;
 	
+		if(! perm_is_allowed($c[0]['channel_id'],get_observer_hash(),'view_files'))
+			return;
+
 		$sql_extra = permissions_sql($c[0]['channel_id']);
 	
 		$p = q("select resource_id from photo where album = '%s' and uid = %d and imgscale = 0 $sql_extra order by created desc limit 1",
@@ -340,6 +436,9 @@ class Oep extends \Zotlabs\Web\Controller {
 		if(! $c)
 			return;
 	
+		if(! perm_is_allowed($c[0]['channel_id'],get_observer_hash(),'view_files'))
+			return;
+
 		$sql_extra = permissions_sql($c[0]['channel_id']);
 	
 		$p = q("select resource_id from photo where uid = %d and imgscale = 0 $sql_extra order by created desc limit 1",
@@ -400,7 +499,10 @@ class Oep extends \Zotlabs\Web\Controller {
 	
 		if(! $c)
 			return;
-	
+
+		if(! perm_is_allowed($c[0]['channel_id'],get_observer_hash(),'view_files'))
+			return;
+
 		$sql_extra = permissions_sql($c[0]['channel_id']);
 	
 	

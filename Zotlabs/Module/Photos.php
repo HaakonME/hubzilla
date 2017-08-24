@@ -671,8 +671,13 @@ class Photos extends \Zotlabs\Web\Controller {
 		 */
 	
 		if($datatype === 'album') {
-	
-			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$cmd) . '" title="oembed" />' . "\r\n";
+
+			head_add_link([ 
+				'rel'   => 'alternate',
+				'type'  => 'application/json+oembed',
+				'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
+				'title' => 'oembed'
+			]);
 
 			if($x = photos_album_exists($owner_uid, get_observer_hash(), $datum)) {
 				\App::set_pager_itemspage(60);

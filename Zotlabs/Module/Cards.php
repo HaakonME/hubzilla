@@ -38,6 +38,14 @@ class Cards extends \Zotlabs\Web\Controller {
 
 		nav_set_selected(t('Cards'));
 
+		head_add_link([ 
+			'rel'   => 'alternate',
+			'type'  => 'application/json+oembed',
+			'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
+			'title' => 'oembed'
+		]);
+
+
 		$category = (($_REQUEST['cat']) ? escape_tags(trim($_REQUEST['cat'])) : '');
 					
 		if($category) {

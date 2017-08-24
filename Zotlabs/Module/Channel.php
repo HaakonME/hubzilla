@@ -180,7 +180,12 @@ class Channel extends \Zotlabs\Web\Controller {
 
 		$simple_update = (($update) ? " AND item_unseen = 1 " : '');
 
-		\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string) . '" title="oembed" />' . "\r\n";
+		head_add_link([ 
+			'rel'   => 'alternate',
+			'type'  => 'application/json+oembed',
+			'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
+			'title' => 'oembed'
+		]);
 
 		if($update && $_SESSION['loadtime'])
 			$simple_update = " AND (( item_unseen = 1 AND item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' )  OR item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' ) ";

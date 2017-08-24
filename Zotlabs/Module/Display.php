@@ -175,9 +175,12 @@ class Display extends \Zotlabs\Web\Controller {
 				'$mid' => $item_hash
 			));
 
-			\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string) . '" title="oembed" />' . "\r\n";
-	
-	
+			head_add_link([ 
+				'rel'   => 'alternate',
+				'type'  => 'application/json+oembed',
+				'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
+				'title' => 'oembed'
+			]);
 		}
 	
 		$observer_hash = get_observer_hash();

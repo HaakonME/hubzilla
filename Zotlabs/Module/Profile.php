@@ -94,7 +94,6 @@ class Profile extends \Zotlabs\Web\Controller {
 			echo \App::$profile['profile_vcard'];
 			killme();
 		}
-
 	
 		$is_owner = ((local_channel()) && (local_channel() == \App::$profile['profile_uid']) ? true : false);
 	
@@ -102,11 +101,14 @@ class Profile extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
-		//$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
-	
-		\App::$page['htmlhead'] .= "\r\n" . '<link rel="alternate" type="application/json+oembed" href="' . z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string) . '" title="oembed" />' . "\r\n";
-	
+		
+		head_add_link([ 
+			'rel'   => 'alternate',
+			'type'  => 'application/json+oembed',
+			'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
+			'title' => 'oembed'
+		]);
+
 		$o .= advanced_profile($a);
 		call_hooks('profile_advanced',$o);
 		return $o;

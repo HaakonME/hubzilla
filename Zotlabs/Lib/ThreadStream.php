@@ -22,6 +22,7 @@ class ThreadStream {
 	private $profile_owner = 0;
 	private $preview = false;
 	private $prepared_item = '';
+	public $reload = '';
 	private $cipher = 'aes256';
 
 	// $prepared_item is for use by alternate conversation structures such as photos
@@ -56,6 +57,11 @@ class ThreadStream {
 			case 'channel':
 				$this->profile_owner = \App::$profile['profile_uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
+				break;
+			case 'cards':
+				$this->profile_owner = \App::$profile['profile_uid'];
+				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
+				$this->reload = $_SESSION['return_url'];
 				break;
 			case 'display':
 				// in this mode we set profile_owner after initialisation (from conversation()) and then 

@@ -735,6 +735,10 @@ class Item extends \Zotlabs\Web\Controller {
 		if($parent_item)
 			$parent_mid = $parent_item['mid'];
 	
+		if($webpage == ITEM_TYPE_CARD && $pagetitle) {
+			$plink = z_root() . '/cards/' . $channel['channel_address'] . '/' . $pagetitle;
+		}
+
 		// Fallback so that we alway have a thr_parent
 	
 		if(!$thr_parent)

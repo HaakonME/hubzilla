@@ -100,6 +100,49 @@ function categories_widget($baseurl,$selected = '') {
 	return '';
 }
 
+function cardcategories_widget($baseurl,$selected = '') {
+	
+	if(! feature_enabled(App::$profile['profile_uid'],'categories'))
+		return '';
+
+	$item_normal = "and item.item_hidden = 0 and item.item_type = 6 and item.item_deleted = 0
+		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
+		and item.item_blocked = 0 ";
+
+	$terms = array();
+	$r = q("select distinct(term.term)
+                from term join item on term.oid = item.id
+                where item.uid = %d
+                and term.uid = item.uid
+                and term.ttype = %d
+				and term.otype = %d
+                and item.owner_xchan = '%s'
+				$item_normal
+                order by term.term asc",
+		intval(App::$profile['profile_uid']),
+	        intval(TERM_CATEGORY),
+			intval(TERM_OBJ_POST),
+	        dbesc(App::$profile['channel_hash'])
+	);
+	if($r && count($r)) {
+		foreach($r as $rr)
+			$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
+
+		return replace_macros(get_markup_template('categories_widget.tpl'),array(
+			'$title' => t('Categories'),
+			'$desc' => '',
+			'$sel_all' => (($selected == '') ? 'selected' : ''),
+			'$all' => t('Everything'),
+			'$terms' => $terms,
+			'$base' => $baseurl,
+
+		));
+	}
+	return '';
+}
+
+
+
 function common_friends_visitor_widget($profile_uid) {
 
 	if(local_channel() == $profile_uid)

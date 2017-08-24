@@ -1,0 +1,6 @@
+version: 1.1
+url: $baseurl/cards/$nick
+name: Cards
+requires: local_channel, cards
+photo: icon:list
+categories: Productivity

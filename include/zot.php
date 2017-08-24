@@ -2965,8 +2965,6 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	logger('build_sync_packet');
 
-	if($packet)
-		logger('packet: ' . print_r($packet, true),LOGGER_DATA, LOG_DEBUG);
 
 	$keychange = (($packet && array_key_exists('keychange',$packet)) ? true : false);
 	if($keychange) {
@@ -3032,6 +3030,9 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$env_recips = array();
 	$env_recips[] = array('guid' => $r[0]['xchan_guid'],'guid_sig' => $r[0]['xchan_guid_sig']);
+
+	if($packet)
+		logger('packet: ' . print_r($packet, true),LOGGER_DATA, LOG_DEBUG);
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';

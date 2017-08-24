@@ -1,0 +1,5 @@
+[region=aside]
+[widget=categories][var=cards]1[/var][/widget]
+[widget=tasklist][/widget]
+[widget=notes][/widget]
+[/region]

@@ -1,9 +1,9 @@
 <div id="help-content" class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="clearfix section-title-wrapper">
 		<div class="pull-right">
 			<div class="btn-group">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-language" style="font-size: 1.4em;"></i><span class="caret"></span>
+					<i class="fa fa-language" style="font-size: 1.4em;"></i>
 				</button>
 				<div class="dropdown-menu dropdown-menu-right flex-column lang-selector">
 					<a class="dropdown-item lang-choice" href="/help">de</a>

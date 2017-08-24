@@ -159,7 +159,7 @@ class Cards extends \Zotlabs\Web\Controller {
 			if($items) {
 				xchan_query($items);
 				$items = fetch_post_tags($items, true);
-				$items = conv_sort($items,'created');
+				$items = conv_sort($items,'updated');
 			}
 			else
 				$items = [];

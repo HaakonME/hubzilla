@@ -1461,6 +1461,8 @@ function conv_sort($arr, $order) {
 		usort($parents,'sort_thr_created');
 	elseif(stristr($order,'commented'))
 		usort($parents,'sort_thr_commented');
+	elseif(stristr($order,'updated'))
+		usort($parents,'sort_thr_updated');
 	elseif(stristr($order,'ascending'))
 		usort($parents,'sort_thr_created_rev');
 
@@ -1500,6 +1502,10 @@ function sort_thr_created_rev($a,$b) {
 
 function sort_thr_commented($a,$b) {
 	return strcmp($b['commented'],$a['commented']);
+}
+
+function sort_thr_updated($a,$b) {
+	return strcmp($b['updated'],$a['updated']);
 }
 
 function find_thread_parent_index($arr,$x) {

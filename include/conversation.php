@@ -464,6 +464,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 	$profile_owner   = 0;
 	$page_writeable  = false;
 	$live_update_div = '';
+	$jsreload        = '';
 
 	$preview = (($page_mode === 'preview') ? true : false);
 	$previewing = (($preview) ? ' preview ' : '');
@@ -523,6 +524,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 		$live_update_div = '<div id="live-cards"></div>' . "\r\n"
 			. "<script> var profile_uid = " . App::$profile['profile_uid']
 			. "; var netargs = '?f='; var profile_page = " . App::$pager['page'] . "; </script>\r\n";
+		$jsreload = $_SESSION['return_url'];
 	}
 
 
@@ -817,6 +819,10 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 						$item_object->set_template('conv_list.tpl');
 						$item_object->set_display_mode('list');
 					}
+					if($page_mode === 'cards') {
+						$item_object->set_reload($jsreload);
+					}
+
 				}
 			}
 

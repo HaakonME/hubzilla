@@ -58,8 +58,8 @@ class Cards extends \Zotlabs\Web\Controller {
 
 		$_SESSION['return_url'] = \App::$query_string;
 	
-		$uid = local_channel();
-		$owner = \App::$profile_uid;
+		$uid      = local_channel();
+		$owner    = \App::$profile_uid;
 		$observer = \App::get_observer();
 	
 		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
@@ -68,11 +68,7 @@ class Cards extends \Zotlabs\Web\Controller {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
-	
-		$mimetype = (($_REQUEST['mimetype']) ? $_REQUEST['mimetype'] : get_pconfig($owner,'system','page_mimetype'));
-	
-		$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
-	
+		
 		$is_owner = ($uid && $uid == $owner);
 	
 		$channel = channelx_by_n($owner);
@@ -93,38 +89,42 @@ class Cards extends \Zotlabs\Web\Controller {
 
 		if(perm_is_allowed($owner,$ob_hash,'write_pages')) {
 
-			$x = array(
-				'webpage' => ITEM_TYPE_CARD,
-				'is_owner' => true,
-				'nickname' => $channel['channel_address'],
-				'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-				'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
-				'permissions' => $channel_acl,
-				'showacl' => (($is_owner) ? true : false),
-				'visitor' => true,
-				'hide_location' => false,
-				'hide_voting' => false,
-				'profile_uid' => intval($owner),
-				'mimetype' => $mimetype,
-				'mimeselect' => false,
-				'layoutselect' => false,
-				'expanded' => false,
-				'novoting'=> false,
-				'catsenabled' => feature_enabled($owner,'categories'),
+			$x = [
+				'webpage'           => ITEM_TYPE_CARD,
+				'is_owner'          => true,
+				'nickname'          => $channel['channel_address'],
+				'lockstate'         => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
+					|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+				'acl'               => (($is_owner) ? populate_acl($channel_acl, false, 
+					\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
+				'permissions'       => $channel_acl,
+				'showacl'           => (($is_owner) ? true : false),
+				'visitor'           => true,
+				'hide_location'     => false,
+				'hide_voting'       => false,
+				'profile_uid'       => intval($owner),
+				'mimetype'          => 'text/bbcode',
+				'mimeselect'        => false,
+				'layoutselect'      => false,
+				'expanded'          => false,
+				'novoting'          => false,
+				'catsenabled'       => feature_enabled($owner,'categories'),
 				'bbco_autocomplete' => 'bbcode',
-				'bbcode' => true
-			);
+				'bbcode'            => true
+			];
+
+			if($_REQUEST['title'])
+				$x['title'] = $_REQUEST['title'];
+			if($_REQUEST['body'])
+				$x['body'] = $_REQUEST['body'];
+			$editor = status_editor($a,$x);
+
 		}
 		else {
-			$x = '';
+			$editor = '';
 		}
 		
-		if($_REQUEST['title'])
-			$x['title'] = $_REQUEST['title'];
-		if($_REQUEST['body'])
-			$x['body'] = $_REQUEST['body'];
 		
-
 		$sql_extra = item_permissions_sql($owner);
 
 		if($selected_card) {
@@ -146,10 +146,6 @@ class Cards extends \Zotlabs\Web\Controller {
 		$item_normal = " and item.item_hidden = 0 and item.item_type in (0,6) and item.item_deleted = 0
 			and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
 			and item.item_blocked = 0 ";
-
-
-		if($x)
-			$editor = status_editor($a,$x);
 
 		if($r) {
 

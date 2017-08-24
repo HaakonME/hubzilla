@@ -27,7 +27,7 @@
 		<input type="hidden" id="jot-consensus" name="consensus" value="{{if $consensus}}{{$consensus}}{{else}}0{{/if}}" />
 		<input type="hidden" id="jot-nocomment" name="nocomment" value="{{if $nocomment}}{{$nocomment}}{{else}}0{{/if}}" />
 
-		{{if $webpage && $webpage != 6 }}
+		{{if $webpage}}
 		<div id="jot-pagetitle-wrap" class="jothidden">
 			<input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}">
 		</div>
@@ -35,7 +35,7 @@
 		<div id="jot-title-wrap" class="jothidden">
 			<input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" tabindex="1" value="{{$title}}">
 		</div>
-		{{if $catsenabled || $webpage == 6 }}
+		{{if $catsenabled}}
 		<div id="jot-category-wrap" class="jothidden">
 			<input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" data-role="cat-tagsinput">
 		</div>

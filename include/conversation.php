@@ -1305,6 +1305,11 @@ function status_editor($a, $x, $popup = false) {
 	if(! $cipher)
 		$cipher = 'aes256';
 
+	if(array_key_exists('catsenabled',$x))
+		$catsenabled = $x['catsenabled'];
+	else
+		$catsenabled = ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : '');
+
 	// avoid illegal offset errors
 	if(! array_key_exists('permissions',$x)) 
 		$x['permissions'] = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
@@ -1349,7 +1354,7 @@ function status_editor($a, $x, $popup = false) {
 		'$clearloc' => $clearloc,
 		'$title' => ((x($x, 'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => ((x($x, 'placeholdertitle')) ? $x['placeholdertitle'] : t('Title (optional)')),
-		'$catsenabled' => ((feature_enabled($x['profile_uid'], 'categories') && (! $webpage)) ? 'categories' : ''),
+		'$catsenabled' => $catsenabled,
 		'$category' => ((x($x, 'category')) ? $x['category'] : ''),
 		'$placeholdercategory' => t('Categories (optional, comma-separated list)'),
 		'$permset' => t('Permission settings'),

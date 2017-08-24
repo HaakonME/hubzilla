@@ -47,23 +47,13 @@ class Cards extends \Zotlabs\Web\Controller {
 
 		$which = argv(1);
 		
+		$selected_card = ((argc() > 2) ? argv(2) : '');
+
 		$_SESSION['return_url'] = \App::$query_string;
 	
-		$uid = \App::$profile_uid;
-		$owner = 0;
+		$uid = local_channel();
+		$owner = \App::$profile_uid;
 		$observer = \App::get_observer();
-	
-		$channel = \App::$profile;
-
-		if(! $owner) {
-			// Figure out who the page owner is.
-			$r = q("select channel_id from channel where channel_address = '%s'",
-				dbesc($which)
-			);
-			if($r) {
-				$owner = intval($r[0]['channel_id']);
-			}
-		}
 	
 		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 		
@@ -76,13 +66,10 @@ class Cards extends \Zotlabs\Web\Controller {
 	
 		$layout = (($_REQUEST['layout']) ? $_REQUEST['layout'] : get_pconfig($owner,'system','page_layout'));
 	
-		// Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
-		// Nickname is set to the observers xchan, and profile_uid to the owner's.  
-		// This lets you post pages at other people's channels.
+		$is_owner = ($uid && $uid == $owner);
 	
-		if((! $channel) && ($uid) && ($uid == \App::$profile_uid)) {
-			$channel = \App::get_channel();
-		}
+		$channel = channelx_by_n($owner);
+
 		if($channel) {
 			$channel_acl = array(
 				'allow_cid' => $channel['channel_allow_cid'],
@@ -95,28 +82,25 @@ class Cards extends \Zotlabs\Web\Controller {
 			$channel_acl = [ 'allow_cid' => '', 'allow_gid' => '', 'deny_cid' => '', 'deny_gid' => '' ];
 		}
 	
-
-		$is_owner = ($uid && $uid == $owner);
-
 		if(perm_is_allowed($owner,$ob_hash,'write_pages')) {
 
 			$x = array(
 				'webpage' => ITEM_TYPE_CARD,
 				'is_owner' => true,
-				'nickname' => \App::$profile['channel_address'],
+				'nickname' => $channel['channel_address'],
 				'lockstate' => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 				'acl' => (($is_owner) ? populate_acl($channel_acl,false, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')) : ''),
 				'permissions' => $channel_acl,
 				'showacl' => (($is_owner) ? true : false),
 				'visitor' => true,
-				'hide_location' => true,
-				'hide_voting' => true,
+				'hide_location' => false,
+				'hide_voting' => false,
 				'profile_uid' => intval($owner),
 				'mimetype' => $mimetype,
 				'mimeselect' => false,
 				'layoutselect' => false,
 				'expanded' => false,
-				'novoting'=> true,
+				'novoting'=> false,
 				'bbco_autocomplete' => 'bbcode',
 				'bbcode' => true
 			);
@@ -130,12 +114,18 @@ class Cards extends \Zotlabs\Web\Controller {
 		if($_REQUEST['body'])
 			$x['body'] = $_REQUEST['body'];
 		
-		// Get a list of webpages.  We can't display all them because endless scroll makes that unusable, 
-		// so just list titles and an edit link.
-	
-	
+
 		$sql_extra = item_permissions_sql($owner);
-	
+
+		if($selected_card) {
+			$r = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = 'CARD' and iconfig.v = '%s' limit 1",
+				dbesc($selected_card)
+			);
+			if($r) {
+				$sql_extra .= "and item.id = " . intval($r[0]['iid']) . " ";
+			}
+		}
+				
 		$r = q("select * from item 
 			where item.uid = %d and item_type = %d 
 			$sql_extra order by item.created desc",

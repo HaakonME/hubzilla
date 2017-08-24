@@ -101,10 +101,13 @@ class ThreadItem {
 		if($item['author']['xchan_network'] === 'rss')
 			$shareable = true;
 
+
 		$mode = $conv->get_mode();
 
+		$edlink = (($item['item_type'] == ITEM_TYPE_CARD) ? 'card_edit' : 'editpost');
+
 		if(local_channel() && $observer['xchan_hash'] === $item['author_xchan'])
-			$edpost = array(z_root()."/editpost/".$item['id'], t("Edit"));
+			$edpost = array(z_root() . '/' . $edlink . '/' . $item['id'], t('Edit'));
 		else
 			$edpost = false;
 

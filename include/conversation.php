@@ -1505,7 +1505,9 @@ function sort_thr_commented($a,$b) {
 }
 
 function sort_thr_updated($a,$b) {
-	return strcmp($b['updated'],$a['updated']);
+	$indexa = (($a['changed'] > $a['edited']) ? $a['changed'] : $a['edited']);
+	$indexb = (($b['changed'] > $b['edited']) ? $b['changed'] : $b['edited']);
+	return strcmp($indexb,$indexa);
 }
 
 function find_thread_parent_index($arr,$x) {

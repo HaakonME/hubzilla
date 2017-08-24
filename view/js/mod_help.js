@@ -71,4 +71,54 @@ $(document).ready(function () {
 		var newref = p.protocol + '//' + p.hostname + portstr + p.pathname + p.hash.split('?').shift();
 		location.replace(newref)
 	}
+
+	
+	// Determine language translations available from the language selector menu itself
+	var langChoices = [];
+	$('.lang-selector').find('.lang-choice').each(function (idx, a) {
+		langChoices.push($(a).html());
+	});
+	// Parse the URL and insert the language code for the loaded language, based
+	// on the variable "help_language" that is declared in the help.tpl page template
+	var path = window.location.pathname.split('/');
+	var pathParts = [];
+	var pick_me = true;
+	for (var i = 0; i < path.length; i++) {
+		if(i === 2 && pick_me ) {
+			if(path[i].length > 0) {
+				pathParts.push(help_language);
+				pick_me = false;
+				if($.inArray(path[i], langChoices) < 0) {
+					i--;	
+				}
+			}
+		} else {
+			if(path[i].length > 0) {
+				pathParts.push(path[i]);
+			}
+		}
+		
+	}
+	// Update the address bar to reflect the loaded language
+	window.history.pushState({}, '', '/' + pathParts.join('/'));
+	
+	// Highlight the language in the language selector that is currently viewed
+	$('.lang-selector').find('.lang-choice:contains("' + help_language + '")').css('font-weight','bold').css('background-color','lightgray');
+	
+	// Construct the links to the available translations based and populate the selector menu
+	$('.lang-selector').find('.lang-choice').each(function (idx, a) {
+		var langLink = [];
+
+		for (var i = 0; i < pathParts.length; i++) {
+			
+			if(i === 1) {
+				langLink.push($(a).html());
+			} else {
+				langLink.push(pathParts[i]);
+			}
+
+		}
+		$(a).attr('href', '/' + langLink.join('/'));
+	});
+	
 });

@@ -128,7 +128,7 @@ function load_doc_file($s) {
 	$x = determine_help_language();
 	$lang = $x['language'];
 	$url_idx = ($x['from_url'] ? 1 : 0);
-	if($x['from_url'] && $lang !== 'en') {
+	if($lang !== 'en') {
 		$path .= '/' . $lang;	
 	}
 		

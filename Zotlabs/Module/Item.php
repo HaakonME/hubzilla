@@ -734,9 +734,20 @@ class Item extends \Zotlabs\Web\Controller {
 	
 		if($parent_item)
 			$parent_mid = $parent_item['mid'];
+
+
+		// fix permalinks for cards
 	
 		if($webpage == ITEM_TYPE_CARD && $pagetitle) {
 			$plink = z_root() . '/cards/' . $channel['channel_address'] . '/' . $pagetitle;
+		}
+		if(($parent_item) && ($parent_item['item_type'] == ITEM_TYPE_CARD)) {
+			$r = q("select v from iconfig where iconfig.cat = 'system' and iconfig.k = 'CARD' and iconfig.iid = %d limit 1",
+				intval($parent_item['id'])
+			);
+			if($r) {
+				$plink = z_root() . '/cards/' . $channel['channel_address'] . '/' . $r[0]['v'];
+			}
 		}
 
 		// Fallback so that we alway have a thr_parent

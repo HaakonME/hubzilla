@@ -1340,10 +1340,14 @@ function status_editor($a, $x, $popup = false) {
 		call_hooks('jot_networks', $jotnets);
 	}
 
+	$sharebutton = (x($x,'button') ? $x['button'] : t('Share'));
+	$placeholdtext = (x($x,'content_label') ? $x['content_label'] : $sharebutton);
+
 	$o .= replace_macros($tpl, array(
 		'$return_path' => ((x($x, 'return_path')) ? $x['return_path'] : App::$query_string),
 		'$action' =>  z_root() . '/item',
-		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
+		'$share' => $sharebutton,
+		'$placeholdtext' => $placeholdtext,
 		'$webpage' => $webpage,
 		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link name')),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),

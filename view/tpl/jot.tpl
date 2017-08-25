@@ -41,7 +41,7 @@
 		</div>
 		{{/if}}
 		<div id="jot-text-wrap">
-			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex="2" placeholder="{{$share}}" >{{$content}}</textarea>
+			<textarea class="profile-jot-text" id="profile-jot-text" name="body" tabindex="2" placeholder="{{$placeholdtext}}" >{{$content}}</textarea>
 		</div>
 		{{if $attachment}}
 		<div id="jot-attachment-wrap">

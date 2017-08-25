@@ -103,7 +103,7 @@ $(document).ready(function () {
 	window.history.pushState({}, '', '/' + pathParts.join('/'));
 	
 	// Highlight the language in the language selector that is currently viewed
-	$('.lang-selector').find('.lang-choice:contains("' + help_language + '")').css('font-weight','bold').css('background-color','lightgray');
+	$('.lang-selector').find('.lang-choice:contains("' + help_language + '")').addClass('active');
 	
 	// Construct the links to the available translations based and populate the selector menu
 	$('.lang-selector').find('.lang-choice').each(function (idx, a) {

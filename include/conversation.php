@@ -1616,7 +1616,6 @@ function network_tabs() {
 	$conv_active = '';
 	$spam_active = '';
 	$postord_active = '';
-	$public_active = '';
 
 	if(x($_GET,'new')) {
 		$new_active = 'active';
@@ -1638,16 +1637,11 @@ function network_tabs() {
 		$spam_active = 'active';
 	}
 
-	if(x($_GET,'fh')) {
-		$public_active = 'active';
-	}
-
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($conv_active == '')
 		&& ($search_active == '')
-		&& ($spam_active == '')
-		&& ($public_active == '')) {
+		&& ($spam_active == '')) {
 			$no_active = 'active';
 	}
 
@@ -1664,17 +1658,6 @@ function network_tabs() {
 
 	// tabs
 	$tabs = array();
-
-	$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
-
-	if(! $disable_discover_tab) {
-		$tabs[] = array(
-			'label' => t('Discover'),
-			'url' => z_root() . '/' . $cmd . '?f=&fh=1' ,
-			'sel' => $public_active,
-			'title' => t('Imported public streams'),
-		);
-	}
 
 	$tabs[] = array(
 		'label' => t('Commented Order'),

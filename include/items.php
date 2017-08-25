@@ -177,7 +177,7 @@ function item_normal() {
 }
 
 function item_normal_search() {
-	return " and item.item_hidden = 0 and item.item_type in (0,3) and item.item_deleted = 0
+	return " and item.item_hidden = 0 and item.item_type in (0,3,6) and item.item_deleted = 0
 		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
 		and item.item_blocked = 0 ";
 }

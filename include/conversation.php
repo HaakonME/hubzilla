@@ -703,6 +703,9 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 				if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 					$is_new = true;
 
+				$conv_link = (($item['item_type'] == ITEM_TYPE_CARD) ? $item['plink'] : z_root() . '/display/' . gen_link_id($item['mid']));
+
+
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
@@ -757,7 +760,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 					'like' => '',
 					'dislike' => '',
 					'comment' => '',
-					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . gen_link_id($item['mid']), 'title'=> t('View in context'))),
+					'conv' => (($preview) ? '' : array('href'=> $conv_link, 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,

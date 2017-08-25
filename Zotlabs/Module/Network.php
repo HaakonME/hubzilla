@@ -116,7 +116,6 @@ class Network extends \Zotlabs\Web\Controller {
 		$spam     = ((x($_GET,'spam'))  ? intval($_GET['spam'])  : 0);
 		$cmin     = ((x($_GET,'cmin'))  ? intval($_GET['cmin'])  : 0);
 		$cmax     = ((x($_GET,'cmax'))  ? intval($_GET['cmax'])  : 99);
-		$firehose = ((x($_GET,'fh'))    ? intval($_GET['fh'])    : 0);
 		$file     = ((x($_GET,'file'))  ? $_GET['file']          : '');
 		$xchan    = ((x($_GET,'xchan')) ? $_GET['xchan']         : '');
 		
@@ -290,9 +289,6 @@ class Network extends \Zotlabs\Web\Controller {
 			// We only launch liveUpdate if you aren't filtering in some incompatible
 			// way and also you aren't writing a comment (discovered in javascript).
 	
-			if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
-				$firehose = 0;
-	
 			$maxheight = get_pconfig(local_channel(),'system','network_divmore_height');
 			if(! $maxheight)
 				$maxheight = 400;
@@ -315,7 +311,7 @@ class Network extends \Zotlabs\Web\Controller {
 				'$liked'   => (($liked) ? $liked : '0'),
 				'$conv'    => (($conv) ? $conv : '0'),
 				'$spam'    => (($spam) ? $spam : '0'),
-				'$fh'      => (($firehose) ? $firehose : '0'),
+				'$fh'      => '0',
 				'$nouveau' => (($nouveau) ? $nouveau : '0'),
 				'$wall'    => '0',
 				'$static'  => $static, 
@@ -409,17 +405,7 @@ class Network extends \Zotlabs\Web\Controller {
 		}
 	
 		$abook_uids = " and abook.abook_channel = " . local_channel() . " ";
-
-		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
-		if($firehose && (! $disable_discover_tab)) {
-			require_once('include/channel.php');
-			$sys = get_sys_channel();
-			$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
-			\App::$data['firehose'] = intval($sys['channel_id']);
-		}
-		else {
-			$uids = " and item.uid = " . local_channel() . " ";
-		}
+		$uids = " and item.uid = " . local_channel() . " ";
 	
 		if(get_pconfig(local_channel(),'system','network_list_mode'))
 			$page_mode = 'list';
@@ -516,7 +502,7 @@ class Network extends \Zotlabs\Web\Controller {
 					dbesc($parents_str)
 				);
 	
-				xchan_query($items,true,(($firehose) ? local_channel() : 0));
+				xchan_query($items,true);
 				$items = fetch_post_tags($items,true);
 				$items = conv_sort($items,$ordering);
 			}
@@ -546,7 +532,7 @@ class Network extends \Zotlabs\Web\Controller {
 			}
 		}
 	
-		if(($update_unseen) && (! $firehose)) {
+		if($update_unseen) {
 			$x = [ 'channel_id' => local_channel(), 'update' => 'unset' ];
 			call_hooks('update_unseen',$x);
 			if($x['update'] === 'unset' || intval($x['update'])) {

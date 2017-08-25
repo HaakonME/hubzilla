@@ -32,6 +32,13 @@ function get_help_content($tocpath = false) {
 		if(! $tocpath)
 			\App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 
+		if($tocpath !== false && 
+			load_doc_file('doc/' . $path . '.md') === '' && 
+			load_doc_file('doc/' . $path . '.bb') === '' && 
+			load_doc_file('doc/' . $path . '.html') === '' 
+		  ) {
+			$path = 'toc';
+		}
 		$text = load_doc_file('doc/' . $path . '.md');
 
 		if(! $text) {
@@ -107,20 +114,55 @@ function preg_callback_help_include($matches) {
 
 }
 
-
+function determine_help_language() {
+	require_once('Text/LanguageDetect.php');
+	$lang_detect = new Text_LanguageDetect();
+	// Set this mode to recognize language by the short code like "en", "ru", etc.
+	$lang_detect->setNameMode(2);
+	// If the language was specified in the URL, override the language preference 
+	// of the browser. Default to English if both of these are absent.
+	if($lang_detect->languageExists(argv(1))) {
+		$lang = argv(1);
+		$from_url = true;
+	} else {
+		$lang = \App::$language;
+		if(! isset($lang)) 
+			$lang = 'en';
+		$from_url = false;
+	}
+	return array('language' => $lang, 'from_url' => $from_url);
+}
 
 function load_doc_file($s) {
-	$lang = \App::$language;
-	if(! isset($lang))
-		$lang = 'en';
-	$b = basename($s);
-	$d = dirname($s);
-
-	if($dirname !== '-') {
-		$c = find_doc_file("$d/$lang/$b");
-		if($c)
-			return $c;
+	$path = 'doc';
+	// Determine the language and modify the path accordingly
+	$x = determine_help_language();
+	$lang = $x['language'];
+	$url_idx = ($x['from_url'] ? 1 : 0);
+	// The English translation is at the root of /doc/. Other languages are in 
+	// subfolders named by the language code such as "de", "es", etc.
+	if($lang !== 'en') {
+		$path .= '/' . $lang;	
 	}
+
+	$b = basename($s);
+	
+	for($i=1+$url_idx; $i<argc()-1; $i++) {
+		$path .= '/' . argv($i);
+	}
+	$c = find_doc_file($path . '/' . $b);
+	if($c)
+		return $c;
+	// Possibly a translation was requested that has not been translated, so fall
+	// back to the English version
+	$path = 'doc';
+	for($i=1+$url_idx; $i<argc()-1; $i++) {
+		$path .= '/' . argv($i);
+	}
+	$c = find_doc_file($path . '/' . $b);
+	if($c)
+		return $c;
+	// Try one last time to find the file at the explicit path input to the function
 	$c = find_doc_file($s);
 	if($c)
 		return $c;

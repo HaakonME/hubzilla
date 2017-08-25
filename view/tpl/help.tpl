@@ -1,5 +1,17 @@
 <div id="help-content" class="generic-content-wrapper">
-	<div class="section-title-wrapper">
+	<div class="clearfix section-title-wrapper">
+		<div class="pull-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-language" style="font-size: 1.4em;"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right flex-column lang-selector">
+					<a class="dropdown-item lang-choice" href="/help">de</a>
+					<a class="dropdown-item lang-choice" href="/help">en</a>
+					<a class="dropdown-item lang-choice" href="/help">es</a>
+				</div>
+			</div>
+		</div>
 		<h2>{{$title}}: {{$heading}}</h2>
 	</div>
 	<div class="section-content-wrapper" id="doco-content">
@@ -13,21 +25,6 @@
 		{{$content}}
 	</div>
 </div>
-
 <script>
-	// Generate the table of contents in the side nav menu (see view/tpl/help.tpl)
-	$(document).ready(function () {
-		$('#doco-top-toc').toc({content: "#doco-content", headings: "h3,h4,h5,h6"});
-	});
-	
-	function docoTocToggle() {
-		if($('#doco-top-toc').is(':visible')) {
-			$('#doco-toc-toggle').removeClass('fa-cog').addClass('fa-caret-right');
-		} else {
-			$('#doco-toc-toggle').removeClass('fa-caret-right').addClass('fa-caret-down');
-		}
-		$('#doco-top-toc').toggle();
-		
-		return false;
-	}
+	var help_language = '{{$language}}'
 </script>

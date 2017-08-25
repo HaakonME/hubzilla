@@ -28,16 +28,22 @@ function get_help_content($tocpath = false) {
 	}
 
 	if($path) {
+		
 		$title = basename($path);
 		if(! $tocpath)
 			\App::$page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags($title)));
 
+		// Check that there is a "toc" or "sitetoc" located at the specified path.
+		// If there is not, then there was not a translation of the table of contents
+		// available and so default back to the English TOC at /doc/toc.{html,bb,md}
+		// TODO: This is incompatible with the hierarchical TOC construction
+		// defined in /Zotlabs/Widget/Helpindex.php.
 		if($tocpath !== false && 
 			load_doc_file('doc/' . $path . '.md') === '' && 
 			load_doc_file('doc/' . $path . '.bb') === '' && 
 			load_doc_file('doc/' . $path . '.html') === '' 
 		  ) {
-			$path = 'toc';
+			$path = $title;
 		}
 		$text = load_doc_file('doc/' . $path . '.md');
 

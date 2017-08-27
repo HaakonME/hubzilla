@@ -596,8 +596,9 @@ function updateConvItems(mode,data) {
 				var title = $(".wall-item-title").text();
 				title.replace(/^\s+/, '');
 				title.replace(/\s+$/, '');
-				if (title)
-					document.title = title + " - " + document.title;
+				if (title) {
+					savedTitle = title + " " + savedTitle;
+				}
 			}
 		}
 	});

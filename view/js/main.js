@@ -533,133 +533,77 @@ function updatePageItems(mode, data) {
 
 function updateConvItems(mode,data) {
 
-	if(mode === 'update') {
+	if(mode === 'update' || mode === 'replace') {
 		prev = 'threads-begin';
-
-		$('.thread-wrapper.toplevel_item',data).each(function() {
-
-			var ident = $(this).attr('id');
-			// This should probably use the context argument instead
-			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
-			var itmId = 0;
-			var isVisible = false;
-
-			if(typeof commentWrap !== 'undefined')
-				itmId = commentWrap.replace('collapsed-comments-','');
-				
-			if($('#' + ident).length == 0 && profile_page == 1) {
-				$('img',this).each(function() {
-					$(this).attr('src',$(this).attr('dst'));
-				});
-				if($('#collapsed-comments-'+itmId).is(':visible'))
-					isVisible = true;
-				$('#' + prev).after($(this));
-				if(isVisible)
-					showHideComments(itmId);
-				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
-				$("> .shared_header .autotime",this).timeago();
-			}
-			else {
-				$('img',this).each(function() {
-					$(this).attr('src',$(this).attr('dst'));
-				});
-				if($('#collapsed-comments-'+itmId).is(':visible'))
-					isVisible = true;
-				$('#' + ident).replaceWith($(this));
-				if(isVisible)
-					showHideComments(itmId);
-				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
-				$("> .shared_header .autotime",this).timeago();
-			}
-			prev = ident;
-		});
 	}
 	if(mode === 'append') {
-
 		next = 'threads-end';
-
-		$('.thread-wrapper.toplevel_item',data).each(function() {
-			var ident = $(this).attr('id');
-			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
-			var itmId = 0;
-			var isVisible = false;
-
-			if(typeof commentWrap !== 'undefined')
-				itmId = commentWrap.replace('collapsed-comments-', '');
-
-			if($('#' + ident).length == 0) {
-				$('img',this).each(function() {
-					$(this).attr('src',$(this).attr('dst'));
-				});
-				if($('#collapsed-comments-'+itmId).is(':visible'))
-					isVisible = true;
-				$('#threads-end').before($(this));
-				if(isVisible)
-					showHideComments(itmId);
-				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
-				$("> .shared_header .autotime",this).timeago();
-			}
-			else {
-				$('img',this).each(function() {
-					$(this).attr('src', $(this).attr('dst'));
-				});
-				if($('#collapsed-comments-'+itmId).is(':visible'))
-					isVisible = true;
-				$('#' + ident).replaceWith($(this));
-				if(isVisible)
-					showHideComments(itmId);
-				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
-				$("> .shared_header .autotime",this).timeago();
-			}
-		});
-
-		if(loadingPage) {
-			loadingPage = false;
-		}
 	}
+	
 	if(mode === 'replace') {
-		// clear existing content
-		$('.thread-wrapper').remove();
+		$('.thread-wrapper').remove(); // clear existing content
+	}
 
-		prev = 'threads-begin';
+	$('.thread-wrapper.toplevel_item',data).each(function() {
 
-		$('.thread-wrapper.toplevel_item',data).each(function() {
+		var ident = $(this).attr('id');
 
-			var ident = $(this).attr('id');
-			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
-			var itmId = 0;
-			var isVisible = false;
+		var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
+		var itmId = 0;
+		var isVisible = false;
 
-			if(typeof commentWrap !== 'undefined')
-				itmId = commentWrap.replace('collapsed-comments-','');
+		// figure out the comment state
+		if(typeof commentWrap !== 'undefined')
+			itmId = commentWrap.replace('collapsed-comments-','');
+				
+		if($('#collapsed-comments-'+itmId).is(':visible'))
+			isVisible = true;
 
-			if($('#' + ident).length == 0 && profile_page == 1) {
-				$('img',this).each(function() {
-					$(this).attr('src',$(this).attr('dst'));
-				});
-				if($('#collapsed-comments-'+itmId).is(':visible'))
-					isVisible = true;
-				$('#' + prev).after($(this));
-				if(isVisible)
-					showHideComments(itmId);
-				$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
-				$("> .shared_header .autotime",this).timeago();
+		// insert the content according to the mode and first_page 
+		// and whether or not the content exists already (overwrite it)
+
+		if($('#' + ident).length == 0) {
+			if((mode === 'update' || mode === 'replace') && profile_page == 1) {
+					$('#' + prev).after($(this));
+				prev = ident;
 			}
-			prev = ident;
-		});
+			if(mode === 'append') {
+				$('#' + next).before($(this));
+			}
+		}
+		else {
+			$('#' + ident).replaceWith($(this));
+		}		
 
-		if(loadingPage) {
+		// set the comment state to the state we discovered earlier
+
+		if(isVisible)
+			showHideComments(itmId);
+
+		// trigger the autotime function on all newly created content
+
+		$("> .wall-item-outside-wrapper .autotime, > .thread-wrapper .autotime",this).timeago();
+		$("> .shared_header .autotime",this).timeago();
+		
+		if((mode === 'append' || mode === 'replace') && (loadingPage)) {
 			loadingPage = false;
 		}
 
-		if (window.location.search.indexOf("mid=") != -1 || window.location.pathname.indexOf("display") != -1) {
-			var title = $(".wall-item-title").text();
-			title.replace(/^\s+/, '');
-			title.replace(/\s+$/, '');
-			if (title)
-				document.title = title + " - " + document.title;
+		// if single thread view and  the item has a title, display it in the title bar
+
+		if(mode === 'replace') {
+			if (window.location.search.indexOf("mid=") != -1 || window.location.pathname.indexOf("display") != -1) {
+				var title = $(".wall-item-title").text();
+				title.replace(/^\s+/, '');
+				title.replace(/\s+$/, '');
+				if (title) {
+					savedTitle = title + " " + savedTitle;
+				}
+			}
 		}
-	}
+	});
+
+	// reset rotators and cursors we may have set before reaching this place
 
 	$('.like-rotator').spin(false);
 
@@ -667,6 +611,9 @@ function updateConvItems(mode,data) {
 		commentBusy = false;
 		$('body').css('cursor', 'auto');
 	}
+
+	// Setup to determine if the media player is playing. This affects
+	// some content loading decisions. 
 
 	$('video').off('playing');
 	$('video').off('pause');

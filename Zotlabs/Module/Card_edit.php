@@ -123,7 +123,7 @@ class Card_edit extends \Zotlabs\Web\Controller {
 		$editor = status_editor($a, $x);
 
 		$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-			'$title' => t('Edit Block'),
+			'$title' => t('Edit Card'),
 			'$delete' => ((($itm[0]['author_xchan'] === $ob_hash) || ($itm[0]['owner_xchan'] === $ob_hash)) ? t('Delete') : false),
 			'$id' => $itm[0]['id'],
 			'$editor' => $editor

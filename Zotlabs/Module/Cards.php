@@ -92,6 +92,8 @@ class Cards extends \Zotlabs\Web\Controller {
 			$x = [
 				'webpage'           => ITEM_TYPE_CARD,
 				'is_owner'          => true,
+				'content_label'     => t('Add Card'),
+				'button'            => t('Create'),
 				'nickname'          => $channel['channel_address'],
 				'lockstate'         => (($channel['channel_allow_cid'] || $channel['channel_allow_gid'] 
 					|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),

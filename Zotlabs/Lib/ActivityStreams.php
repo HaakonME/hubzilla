@@ -14,6 +14,8 @@ class ActivityStreams {
 	public $origin = null;
 	public $owner  = null;
 
+	public $recips = null;
+
 	function __construct($string) {
 
 		$this->data = json_decode($string,true);
@@ -28,7 +30,7 @@ class ActivityStreams {
 			$this->obj    = $this->get_compound_property('object');
 			$this->tgt    = $this->get_compound_property('target');
 			$this->origin = $this->get_compound_property('origin');
-			$this->owner  = $this->get_compound_property('owner','','http://purl.org/zot/protocol');
+			$this->recips = $this->collect_recips();
 
 			if(($this->type === 'Note') && (! $this->obj)) {
 				$this->obj = $this->data;
@@ -39,6 +41,45 @@ class ActivityStreams {
 
 	function is_valid() {
 		return $this->valid;
+	}
+
+	function collect_recips($base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+		$x = [];
+		$fields = [ 'to','cc','bto','bcc','audience'];
+		foreach($fields as $f) {
+			$y = $this->get_compound_property($f,$base,$namespace);
+			if($y)
+				$x = array_merge($x,$y);
+		}						
+// not yet ready for prime time
+//		$x = $this->expand($x,$base,$namespace);
+		return $x;
+	}
+
+	function expand($arr,$base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+		$ret = [];
+
+		// right now use a hardwired recursion depth of 5
+
+		for($z = 0; $z < 5; $z ++) {
+			if(is_array($arr) && $arr) {
+				foreach($arr as $a) {
+					if(is_array($a)) {
+						$ret[] = $a;
+					}
+					else {
+						$x = $this->get_compound_property($a,$base,$namespace);
+						if($x) {
+							$ret = array_merge($ret,$x);
+						}
+					}
+				}
+			}
+		}
+
+		// @fixme de-duplicate
+
+		return $ret;
 	}
 
 	function get_namespace($base,$namespace) {

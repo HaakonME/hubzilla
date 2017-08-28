@@ -1128,8 +1128,10 @@ function post_comment(id) {
 				$("#comment-edit-wrapper-" + id).hide();
 				$("#comment-edit-text-" + id).val('');
 				var tarea = document.getElementById("comment-edit-text-" + id);
-				if(tarea)
+				if(tarea) {
 					commentClose(tarea, id);
+					$(document).unbind( "click.commentOpen");
+				}
 				if(timer) clearTimeout(timer);
 				timer = setTimeout(NavUpdate,1500);
 			}

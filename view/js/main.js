@@ -1,6 +1,55 @@
 
 function confirmDelete() { return confirm(aStr.delitem); }
 
+function handle_comment_form(e) {
+	e.stopPropagation();
+
+	//handle eventual expanded forms
+	var expanded = $('.comment-edit-text.expanded');
+	var i = 0;
+
+	if(expanded.length) {
+		expanded.each(function() {
+			var ex_form = $(expanded[i].form);
+			var ex_fields = ex_form.find(':input[type=text], textarea');
+			var ex_fields_empty = true;
+
+			ex_fields.each(function() {
+				if($(this).val() != '')
+					ex_fields_empty = false;
+			});
+			if(ex_fields_empty) {
+				ex_form.find('.comment-edit-text').removeClass('expanded').attr('placeholder', aStr.comment);
+				ex_form.find(':not(.comment-edit-text)').hide();
+			}
+			i++
+		});
+	}
+
+	// handle clicked form
+	var form = $(this);
+	var fields = form.find(':input[type=text], textarea');
+	var fields_empty = true;
+
+	if(form.find('.comment-edit-text').length) {
+		form.find('.comment-edit-text').addClass('expanded').removeAttr('placeholder');
+		form.find(':not(:visible)').show();
+	}
+
+	// handle click outside of form (close empty forms)
+	$(document).on('click', function(e) {
+		fields.each(function() {
+			if($(this).val() != '')
+				fields_empty = false;
+		});
+		if(fields_empty) {
+			form.find('.comment-edit-text').removeClass('expanded').attr('placeholder', aStr.comment);
+			form.find(':not(.comment-edit-text)').hide();
+		}
+	});
+}
+
+/*
 function commentOpenUI(obj, id) {
 	$(document).unbind( "click.commentOpen", handler );
 
@@ -44,8 +93,7 @@ function commentCloseUI(obj, id) {
 function commentOpen(obj, id) {
 	if(obj.value == aStr.comment) {
 		obj.value = '';
-		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
-		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+		$("#comment-edit-text-" + id).addClass("expanded");
 		$("#mod-cmnt-wrap-" + id).show();
 		$("#comment-tools-" + id).show();
 		$("#comment-edit-anon-" + id).show();
@@ -53,12 +101,11 @@ function commentOpen(obj, id) {
 	}
 	return false;
 }
-
+*/
 function commentClose(obj, id) {
 	if(obj.value === '') {
 		obj.value = aStr.comment;
-		$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
-		$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
+		$("#comment-edit-text-" + id).removeClass("expanded");
 		$("#mod-cmnt-wrap-" + id).hide();
 		$("#comment-tools-" + id).hide();
 		$("#comment-edit-anon-" + id).hide();
@@ -66,6 +113,7 @@ function commentClose(obj, id) {
 	}
 	return false;
 }
+
 
 function showHideCommentBox(id) {
 	if( $('#comment-edit-form-' + id).is(':visible')) {
@@ -79,8 +127,7 @@ function commentInsert(obj, id) {
 	var tmpStr = $("#comment-edit-text-" + id).val();
 	if(tmpStr == '$comment') {
 		tmpStr = '';
-		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
-		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+		$("#comment-edit-text-" + id).addClass("expanded");
 		openMenu("comment-tools-" + id);
 	}
 	var ins = $(obj).html();
@@ -101,8 +148,7 @@ function insertbbcomment(comment, BBcode, id) {
 	var tmpStr = $("#comment-edit-text-" + id).val();
 	if(tmpStr == comment) {
 		tmpStr = "";
-		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
-		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+		$("#comment-edit-text-" + id).addClass("expanded");
 		openMenu("comment-tools-" + id);
 		$("#comment-edit-text-" + id).val(tmpStr);
 	}
@@ -160,8 +206,7 @@ function insertCommentURL(comment, id) {
 			var tmpStr = $("#comment-edit-text-" + id).val();
 			if(tmpStr == comment) {
 				tmpStr = "";
-				$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
-				$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+				$("#comment-edit-text-" + id).addClass("expanded");
 				openMenu("comment-tools-" + id);
 				$("#comment-edit-text-" + id).val(tmpStr);
 			}
@@ -183,8 +228,7 @@ function qCommentInsert(obj, id) {
 	var tmpStr = $("#comment-edit-text-" + id).val();
 	if(tmpStr == aStr.comment) {
 		tmpStr = '';
-		$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
-		$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+		$("#comment-edit-text-" + id).addClass("expanded");
 		openMenu("comment-edit-submit-wrapper-" + id);
 	}
 	var ins = $(obj).val();
@@ -728,7 +772,7 @@ function collapseHeight() {
 function liveUpdate() {
 	if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
 	if((src === null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
-	if(($('.comment-edit-text-full').length) || (in_progress)) {
+	if(($('.comment-edit-text.expanded').length) || (in_progress)) {
 		if(livetime) {
 			clearTimeout(livetime);
 		}
@@ -1312,8 +1356,9 @@ Array.prototype.remove = function(item) {
 	return this.push.apply(this, rest);
 };
 
-
 $(document).ready(function() {
+
+	$(document).on('click focus', '.comment-edit-form', handle_comment_form);
 
 	jQuery.timeago.settings.strings = {
 		prefixAgo     : aStr['t01'],

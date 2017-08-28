@@ -758,9 +758,9 @@ class ThreadItem {
 			'$sourceapp' => \App::$sourcename,
 			'$observer' => get_observer_hash(),
 			'$anoncomments' => (($conv->get_mode() === 'channel' && perm_is_allowed($conv->get_profile_owner(),'','post_comments')) ? true : false),
-			'$anonname' => [ 'anonname', t('Your full name (required)'),'','','','onBlur="commentCloseUI(this,\'' . $this->get_id() . '\')"' ],
-			'$anonmail' => [ 'anonmail', t('Your email address (required)'),'','','','onBlur="commentCloseUI(this,\'' . $this->get_id() . '\')"' ],
-			'$anonurl'  => [ 'anonurl',  t('Your website URL (optional)'),'','','','onBlur="commentCloseUI(this,\'' . $this->get_id() . '\')"' ]
+			'$anonname' => [ 'anonname', t('Your full name (required)') ],
+			'$anonmail' => [ 'anonmail', t('Your email address (required)') ],
+			'$anonurl'  => [ 'anonurl',  t('Your website URL (optional)') ]
 		));
 
 		return $comment_box;

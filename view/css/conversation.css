@@ -183,24 +183,19 @@ a.wall-item-name-link {
 
 /* comment_item */
 
-.comment-edit-text-empty,
-.comment-edit-text-full {
+
+.comment-edit-text {
 	padding: 0.5rem;
 	width: 100%;
 	display: inherit;
-}
-
-.comment-edit-text-empty {
-	height: 2rem;
 	line-height: 1;
-	overflow: hidden;
+	height: 2rem;
 	resize: none;
 }
 
-.comment-edit-text-full {
-	height: 7rem;
+.comment-edit-text.expanded {
 	line-height: 1.25;
-	overflow: auto;
+	height: 7rem;
 	resize: vertical;
 }
 

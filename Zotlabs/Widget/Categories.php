@@ -19,7 +19,7 @@ class Categories {
 		}
 
 		$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
-		$srchurl = \App::$query_string;
+		$srchurl = (($cards) ? \App::$argv[0] . '/' . \App::$argv[1] : \App::$query_string);
 		$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 		$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 

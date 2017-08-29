@@ -10,7 +10,7 @@ class LDSignatures {
 	static function verify($data,$pubkey) {
 
 		$ohash = self::hash(self::signable_options($data['signature']));
-		$dhash = self::hash(self::signable_data($data['signature']));
+		$dhash = self::hash(self::signable_data($data));
 
 		return rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
 	}

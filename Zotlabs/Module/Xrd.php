@@ -57,7 +57,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 			'$poco_url'    => z_root() . '/poco/'          . $r[0]['channel_address'],
 			'$photo'       => z_root() . '/photo/profile/l/' . $r[0]['channel_id'],
 			'$modexp'      => 'data:application/magic-public-key,'  . $salmon_key,
-			'$subscribe'   => z_root() . '/follow?f=&url={uri}',
+			'$subscribe'   => z_root() . '/follow?f=&amp;url={uri}',
 		));
 	
 	

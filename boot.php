@@ -64,7 +64,7 @@ define ( 'PROJECT_BASE',   __DIR__ );
  * This can be used in HTML and JavaScript where needed a line break.
  */
 define ( 'EOL',                    '<br>' . "\r\n"        );
-define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z'       );
+define ( 'ATOM_TIME',              'Y-m-d\\TH:i:s\\Z'     ); // aka ISO 8601 "Zulu"
 define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000); // A directory client

@@ -651,7 +651,7 @@ function logger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 
-	$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
+	$s = datetime_convert('UTC','UTC', 'now', ATOM_TIME) . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 	$pluginfo = array('filename' => $logfile, 'loglevel' => $level, 'message' => $s,'priority' => $priority, 'logged' => false);
 
 	if(! (App::$module == 'setup'))
@@ -679,7 +679,7 @@ function btlogger($msg, $level = LOGGER_NORMAL, $priority = LOG_INFO) {
 	if(file_exists(BTLOGGER_DEBUG_FILE) && is_writable(BTLOGGER_DEBUG_FILE)) {
 		$stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
-		$s = datetime_convert() . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
+		$s = datetime_convert('UTC','UTC', 'now', ATOM_TIME) . ':' . log_priority_str($priority) . ':' . session_id() . ':' . $where . $msg . PHP_EOL;
 		@file_put_contents(BTLOGGER_DEBUG_FILE, $s, FILE_APPEND);
 	}
 
@@ -750,7 +750,7 @@ function dlogger($msg, $level = 0) {
 	$where = basename($stack[0]['file']) . ':' . $stack[0]['line'] . ':' . $stack[1]['function'] . ': ';
 
 
-	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
+	@file_put_contents($logfile, datetime_convert('UTC','UTC', 'now', ATOM_TIME) . ':' . session_id() . ' ' . $where . $msg . PHP_EOL, FILE_APPEND);
 }
 
 
@@ -2966,6 +2966,9 @@ function flatten_array_recursive($arr) {
  * @param string $s Text to highlight
  * @param string $lang Which language should be highlighted
  * @return string
+ *     Important: The returned text has the text pattern 'http' translated to '%eY9-!' which should be converted back
+ * after further processing. This was done to prevent oembed links from occurring inside code blocks. 
+ * See include/bbcode.php
  */
 function text_highlight($s, $lang) {
 

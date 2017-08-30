@@ -659,14 +659,23 @@ class Item extends \Zotlabs\Web\Controller {
 	// BBCODE end alert
 	
 		if(strlen($categories)) {
+
 			$cats = explode(',',$categories);
 			foreach($cats as $cat) {
+
+				if($webpage == ITEM_TYPE_CARD) {
+					$catlink = z_root() . '/cards/' . $channel['channel_address'] . '?f=&cat=' . urlencode(trim($cat));
+				}
+				else {
+					$catlink = $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat));
+				}
+
 				$post_tags[] = array(
 					'uid'   => $profile_uid, 
 					'ttype' => TERM_CATEGORY,
 					'otype' => TERM_OBJ_POST,
 					'term'  => trim($cat),
-					'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
+					'url'   => $catlink
 				); 				
 			}
 		}

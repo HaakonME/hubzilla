@@ -23,6 +23,7 @@ class LDSignatures {
 	static function sign($data,$channel) {
 		$options = [
 			'type' => 'RsaSignature2017',
+			'nonce' => random_string(64),
 			'creator' => z_root() . '/channel/' . $channel['channel_address'] . '/public_key_pem',
 			'created' => datetime_convert('UTC','UTC', 'now', 'Y-m-d\Th:i:s\Z')
 		];

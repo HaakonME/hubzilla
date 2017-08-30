@@ -15,7 +15,10 @@ class LDSignatures {
 		return rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
 	}
 
-
+	static function dopplesign(&$data,$channel) {
+		$data['magicEnv'] = self::salmon_sign($data,$channel);
+		return self::sign($data,$channel);
+	}
 
 	static function sign($data,$channel) {
 		$options = [
@@ -77,5 +80,35 @@ class LDSignatures {
 
 		return jsonld_normalize($data,[ 'algorithm' => 'URDNA2015', 'format' => 'application/nquads' ]);
 	}
+
+	static function salmon_sign($data,$channel) {
+
+		$data      = json_encode($data,JSON_UNESCAPED_SLASHES);
+		$data      = base64url_encode($data, false); // do not strip padding
+		$data_type = 'application/activity+json';
+		$encoding  = 'base64url';
+		$algorithm = 'RSA-SHA256';
+		$keyhash   = base64url_encode(z_root() . '/channel/' . $channel['channel_address']);
+
+		$data = str_replace(array(" ","\t","\r","\n"),array("","","",""),$data);
+
+		// precomputed base64url encoding of data_type, encoding, algorithm concatenated with periods
+
+		$precomputed = '.' . base64url_encode($data_type,false) . '.YmFzZTY0dXJs.UlNBLVNIQTI1Ng==';
+
+		$signature  = base64url_encode(rsa_sign($data . $precomputed,$channel['channel_prvkey']));
+
+		return ([
+			'meData'      => $data,
+			'meDataType'  => $data_type,
+			'meEncoding'  => $encoding,
+			'meAlgorithm' => $algorithm,
+			'meCreator'   => z_root() . '/channel/' . $channel['channel_address'] . '/public_key_pem',
+			'meSignatureValue' => $signature
+		]);
+
+	}
+
+
 
 }

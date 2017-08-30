@@ -1255,6 +1255,9 @@ function bbcode($Text, $preserve_nl = false, $tryoembed = true, $cache = false) 
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_unspacefy_and_trim', $Text);
 	}
 
+	// replace escaped links in code= blocks
+	$Text = str_replace('%eY9-!','http', $Text);
+
 	$Text = preg_replace('/\[\&amp\;([#a-z0-9]+)\;\]/', '&$1;', $Text);
 
 	// fix any escaped ampersands that may have been converted into links

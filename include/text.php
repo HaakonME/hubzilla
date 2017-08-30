@@ -2986,6 +2986,8 @@ function text_highlight($s, $lang) {
 	else
 		$o = $s;
 
+	$o = str_replace('http','%eY9-!',$o);
+
 	return('<code>' . $o . '</code>');
 }
 

@@ -84,6 +84,7 @@ class LDSignatures {
 
 	static function salmon_sign($data,$channel) {
 
+		$arr       = $data;
 		$data      = json_encode($data,JSON_UNESCAPED_SLASHES);
 		$data      = base64url_encode($data, false); // do not strip padding
 		$data_type = 'application/activity+json';
@@ -100,6 +101,7 @@ class LDSignatures {
 		$signature  = base64url_encode(rsa_sign($data . $precomputed,$channel['channel_prvkey']));
 
 		return ([
+			'id'          => $arr['id'],
 			'meData'      => $data,
 			'meDataType'  => $data_type,
 			'meEncoding'  => $encoding,

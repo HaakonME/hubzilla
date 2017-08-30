@@ -1073,14 +1073,9 @@ img.mail-conv-sender-photo {
 }
 
 
-.comment-edit-text-empty,
-.comment-edit-text-full {
+.comment-edit-text {
 	border: 1px solid #ccc;
 	border-radius: $radius;
-}
-
-.comment-edit-text-empty {
-	color: gray;
 }
 
 .divgrow-showmore {

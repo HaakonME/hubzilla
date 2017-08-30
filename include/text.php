@@ -2485,7 +2485,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		if(($t2) && (! $diaspora)) {
 			//get the id
 
-			$tagcid = substr($newname,$t2 + 1);
+			$tagcid = urldecode(substr($newname,$t2 + 1));
 
 			if(strrpos($tagcid,' '))
 				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));

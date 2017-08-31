@@ -1,6 +1,8 @@
 <?php
 namespace Zotlabs\Module;
 
+require_once('include/security.php');
+
 // oembed provider
 
 

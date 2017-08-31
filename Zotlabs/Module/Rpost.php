@@ -90,8 +90,6 @@ class Rpost extends \Zotlabs\Web\Controller {
 		}
 	
 		$plaintext = true;
-	//	if(feature_enabled(local_channel(),'richtext'))
-	//		$plaintext = false;
 	
 		if(array_key_exists('type', $_REQUEST) && $_REQUEST['type'] === 'html') {
 			require_once('include/html2bbcode.php');
@@ -112,26 +110,25 @@ class Rpost extends \Zotlabs\Web\Controller {
 		}
 	
 		$x = array(
-			'is_owner' => true,
-			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
-			'default_location' => $channel['channel_location'],
-			'nickname' => $channel['channel_address'],
-			'lockstate' => (($acl->is_private()) ? 'lock' : 'unlock'),
-			'acl' => populate_acl($channel_acl, true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post'),
-			'permissions' => $channel_acl,
-			'bang' => '',
-			'visitor' => true,
-			'profile_uid' => local_channel(),
-			'title' => $_REQUEST['title'],
-			'body' => $_REQUEST['body'],
-			'attachment' => $_REQUEST['attachment'],
-			'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
-			'return_path' => 'rpost/return',
-			'bbco_autocomplete' => 'bbcode',
-			'editor_autocomplete'=> true,
-			'bbcode' => true,
-			'jotnets' => true
-
+			'is_owner'            => true,
+			'allow_location'      => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
+			'default_location'    => $channel['channel_location'],
+			'nickname'            => $channel['channel_address'],
+			'lockstate'           => (($acl->is_private()) ? 'lock' : 'unlock'),
+			'acl'                 => populate_acl($channel_acl, true, \Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_stream'), get_post_aclDialogDescription(), 'acl_dialog_post'),
+			'permissions'         => $channel_acl,
+			'bang'                => '',
+			'visitor'             => true,
+			'profile_uid'         => local_channel(),
+			'title'               => $_REQUEST['title'],
+			'body'                => $_REQUEST['body'],
+			'attachment'          => $_REQUEST['attachment'],
+			'source'              => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
+			'return_path'         => 'rpost/return',
+			'bbco_autocomplete'   => 'bbcode',
+			'editor_autocomplete' => true,
+			'bbcode'              => true,
+			'jotnets'             => true
 		);
 	
 		$editor = status_editor($a,$x);

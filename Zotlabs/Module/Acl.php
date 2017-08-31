@@ -324,8 +324,11 @@ class Acl extends \Zotlabs\Web\Controller {
 			$r = array();
 	
 		if($r) {
-			foreach($r as $g){
+			foreach($r as $g) {
 	
+				if(($g['network'] === 'rss') && ($type != 'a'))
+					continue;
+
 				$g['hash'] = urlencode($g['hash']);
 	
 				if(in_array($g['hash'],$permitted) && $type == 'c' && (! $noforums)) {

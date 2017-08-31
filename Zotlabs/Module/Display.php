@@ -76,7 +76,6 @@ class Display extends \Zotlabs\Web\Controller {
 			$o = '<div id="jot-popup">';
 			$o .= status_editor($a,$x);
 			$o .= '</div>';
-	
 		}
 	
 		// This page can be viewed by anybody so the query could be complicated
@@ -181,6 +180,7 @@ class Display extends \Zotlabs\Web\Controller {
 				'href'  => z_root() . '/oep?f=&url=' . urlencode(z_root() . '/' . \App::$query_string),
 				'title' => 'oembed'
 			]);
+
 		}
 	
 		$observer_hash = get_observer_hash();
@@ -189,7 +189,6 @@ class Display extends \Zotlabs\Web\Controller {
 		$sql_extra = public_permissions_sql($observer_hash);
 
 		if(($update && $load) || ($checkjs->disabled())) {
-	
 	
 			$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']),intval(\App::$pager['start']));
 	
@@ -224,7 +223,6 @@ class Display extends \Zotlabs\Web\Controller {
 					if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
 						$sysid = 0;
 
-	
 					$r = q("SELECT item.id as item_id from item
 						WHERE mid = '%s'
 						AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
@@ -237,7 +235,6 @@ class Display extends \Zotlabs\Web\Controller {
 						dbesc($target_item['parent_mid']),
 						intval($sysid)
 					);
-
 				}
 			}
 		}
@@ -250,6 +247,7 @@ class Display extends \Zotlabs\Web\Controller {
 			$sysid = $sys['channel_id'];
 
 			if(local_channel()) {
+
 				$r = q("SELECT item.parent AS item_id from item
 					WHERE uid = %d
 					and parent_mid = '%s'
@@ -269,12 +267,12 @@ class Display extends \Zotlabs\Web\Controller {
 				// make that content unsearchable by ensuring the owner_xchan can't match
 				if(! perm_is_allowed($sysid,$observer_hash,'view_stream'))
 					$sysid = 0;
-	
+
 				$r = q("SELECT item.parent AS item_id from item
 					WHERE parent_mid = '%s'
 					AND (((( item.allow_cid = ''  AND item.allow_gid = '' AND item.deny_cid  = '' 
 					AND item.deny_gid  = '' AND item_private = 0 ) 
-					and owner_xchan in ( " . stream_perms_xchans(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+					and uid in ( " . stream_perms_api_uids(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 					OR uid = %d )
 					$sql_extra )
 					$item_normal
@@ -292,7 +290,7 @@ class Display extends \Zotlabs\Web\Controller {
 		}
 	
 		if($r) {
-	
+
 			$parents_str = ids_to_querystr($r,'item_id');
 			if($parents_str) {
 	
@@ -309,7 +307,6 @@ class Display extends \Zotlabs\Web\Controller {
 		} else {
 			$items = array();
 		}
-	
 	
 		if ($checkjs->disabled()) {
 			$o .= conversation($items, 'display', $update, 'traditional');

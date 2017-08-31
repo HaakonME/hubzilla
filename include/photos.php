@@ -595,7 +595,7 @@ function photos_album_exists($channel_id, $observer_hash, $album) {
 
 	// partial backward compatibility with Hubzilla < 2.4 when we used the filename only 
 	// (ambiguous which would get chosen if you had two albums of the same name in different directories)
-	if(!$r) {
+	if(!$r && ctype_xdigit($album)) {
 		$r = q("SELECT folder, hash, is_dir, filename, os_path, display_path FROM attach WHERE filename = '%s' AND is_dir = 1 AND uid = %d $sql_extra limit 1",
 			dbesc(hex2bin($album)),
 			intval($channel_id)

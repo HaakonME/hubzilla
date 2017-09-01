@@ -50,7 +50,7 @@ function api_login(&$a){
 
 		/* Signature authentication */
 
-		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,5) === 'Signature') {
+		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,9) === 'Signature') {
 			$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
 			if($sigblock) {
 				$keyId = $sigblock['keyId'];

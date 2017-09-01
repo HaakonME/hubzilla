@@ -25,6 +25,7 @@ class Helpindex {
 
 
 		// TODO: Implement support for translations in hierarchical table of content files
+		/*
 		if(argc() > 2) {
 			$path = '';
 			for($x = 1; $x < argc(); $x ++) {
@@ -36,6 +37,7 @@ class Helpindex {
 					$levels[] = preg_replace('/\<ul(.*?)\>/','<ul class="nav nav-pills flex-column">',$y);
 			}
 		}
+		*/
 
 		if($level_0)
 			$o .= $level_0;

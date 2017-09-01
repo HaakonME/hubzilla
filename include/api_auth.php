@@ -33,21 +33,15 @@ function api_login(&$a){
 		
 	// workarounds for HTTP-auth in CGI mode
 
-	if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
-		$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"],6)) ;
-		if(strlen($userpass)) {
-			list($name, $password) = explode(':', $userpass);
-			$_SERVER['PHP_AUTH_USER'] = $name;
-			$_SERVER['PHP_AUTH_PW'] = $password;
-		}
-	}
-
-	if(x($_SERVER,'HTTP_AUTHORIZATION')) {
-		$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"],6)) ;
-		if(strlen($userpass)) {
-			list($name, $password) = explode(':', $userpass);
-			$_SERVER['PHP_AUTH_USER'] = $name;
-			$_SERVER['PHP_AUTH_PW'] = $password;
+	foreach([ 'REDIRECT_REMOTE_USER', 'HTTP_AUTHORIZATION' ] as $head) {
+		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,5) === 'Basic') {
+			$userpass = @base64_decode(substr(trim($_SERVER[$head]),6)) ;
+			if(strlen($userpass)) {
+				list($name, $password) = explode(':', $userpass);
+				$_SERVER['PHP_AUTH_USER'] = $name;
+				$_SERVER['PHP_AUTH_PW']   = $password;
+			}
+			break;
 		}
 	}
 

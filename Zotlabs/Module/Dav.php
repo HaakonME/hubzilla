@@ -41,6 +41,11 @@ class Dav extends \Zotlabs\Web\Controller {
 			/* Signature authentication */
 
 			if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,9) === 'Signature') {
+				if($head !== 'HTTP_AUTHORIZATION') {
+					$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
+					continue;
+				}
+
 				$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
 				if($sigblock) {
 					$keyId = $sigblock['keyId'];
@@ -52,19 +57,17 @@ class Dav extends \Zotlabs\Web\Controller {
 							$c = channelx_by_hash($r[0]['hubloc_hash']);
 							if($c) {
 								$a = q("select * from account where account_id = %d limit 1",
-									intval($c[0]['channel_account_id'])
+									intval($c['channel_account_id'])
 								);
 								if($a) {
-									$record = [ 'channel' => $c[0], 'account' => $a[0] ];
-									$channel_login = $c[0]['channel_id'];
+									$record = [ 'channel' => $c, 'account' => $a[0] ];
+									$channel_login = $c['channel_id'];
 								}
 							}
 						}
 						if(! $record)
 							continue;
-						if($head !== 'HTTP_AUTHORIZATION') {
-							$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
-						}
+
 						if($record) {
 							$verified = \Zotlabs\Web\HTTPSig::verify('',$record['channel']['channel_pubkey']);
 							if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {

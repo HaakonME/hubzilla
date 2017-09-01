@@ -8,6 +8,7 @@ function api_login(&$a){
 
 	$record = null;
 	$remote_auth = false;
+	$sigblock = null;
 
 	require_once('include/oauth.php');
 
@@ -51,6 +52,11 @@ function api_login(&$a){
 		/* Signature authentication */
 
 		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,9) === 'Signature') {
+			if($head !== 'HTTP_AUTHORIZATION') {
+				$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
+				continue;
+			}
+
 			$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
 			if($sigblock) {
 				$keyId = $sigblock['keyId'];
@@ -62,11 +68,11 @@ function api_login(&$a){
 						$c = channelx_by_hash($r[0]['hubloc_hash']);
 						if($c) {
 							$a = q("select * from account where account_id = %d limit 1",
-								intval($c[0]['channel_account_id'])
+								intval($c['channel_account_id'])
 							);
 							if($a) {
-								$record = [ 'channel' => $c[0], 'account' => $a[0] ];
-								$channel_login = $c[0]['channel_id'];
+								$record = [ 'channel' => $c, 'account' => $a[0] ];
+								$channel_login = $c['channel_id'];
 							}
 							else {
 								continue;
@@ -80,9 +86,6 @@ function api_login(&$a){
 						continue;
 					}
 
-					if($head !== 'HTTP_AUTHORIZATION') {
-						$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
-					}
 					if($record) {					
 						$verified = \Zotlabs\Web\HTTPSig::verify('',$record['channel']['channel_pubkey']);
 						if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {
@@ -127,8 +130,8 @@ function api_login(&$a){
 }
 
 
-function retry_basic_auth() {
-	header('WWW-Authenticate: Basic realm="Hubzilla"');
+function retry_basic_auth($method = 'Basic') {
+	header('WWW-Authenticate: ' . $method . ' realm="Hubzilla"');
 	header('HTTP/1.0 401 Unauthorized');
 	echo('This api requires login');
 	killme();

@@ -145,7 +145,7 @@ class HTTPSig {
 
 
 
-	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$alg = 'sha256') {
+	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$auth = false,$alg = 'sha256') {
 
 		$return_headers = [];
 
@@ -155,8 +155,14 @@ class HTTPSig {
 
 		$x = self::sign($request,$head,$prvkey,$alg);			
 
-		$sighead = 'Signature: keyId="' . $keyid . '",algorithm="' . $algorithm
+		if($auth) {
+			$sighead = 'Authorization: Signature keyId="' . $keyid . '",algorithm="' . $algorithm
 			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+		}
+		else {
+			$sighead = 'Signature: keyId="' . $keyid . '",algorithm="' . $algorithm
+			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+		}
 
 		if($head) {
 			foreach($head as $k => $v) {

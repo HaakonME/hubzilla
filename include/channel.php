@@ -1616,13 +1616,15 @@ function get_my_address() {
 function zid_init() {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
-		Zotlabs\Daemon\Master::Summon(array('Gprobe',bin2hex($tmp_str)));
 		$arr = array('zid' => $tmp_str, 'url' => App::$cmd);
 		call_hooks('zid_init',$arr);
 		if(! local_channel()) {
 			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
 				dbesc($tmp_str)
 			);
+			if(! $r) {
+				Zotlabs\Daemon\Master::Summon(array('Gprobe',bin2hex($tmp_str)));
+			}
 			if($r && remote_channel() && remote_channel() === $r[0]['hubloc_hash'])
 				return;
 			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);

@@ -17,7 +17,7 @@ class Gprobe {
 		if(! strpos($url,'@'))
 			return;
 
-		$r = q("select * from xchan where xchan_addr = '%s' limit 1",
+		$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
 			dbesc($url)
 		);
 

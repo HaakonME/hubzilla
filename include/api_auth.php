@@ -7,6 +7,8 @@
 function api_login(&$a){
 
 	$record = null;
+	$remote_auth = false;
+	$sigblock = null;
 
 	require_once('include/oauth.php');
 
@@ -33,21 +35,66 @@ function api_login(&$a){
 		
 	// workarounds for HTTP-auth in CGI mode
 
-	if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
-		$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"],6)) ;
-		if(strlen($userpass)) {
-			list($name, $password) = explode(':', $userpass);
-			$_SERVER['PHP_AUTH_USER'] = $name;
-			$_SERVER['PHP_AUTH_PW'] = $password;
-		}
-	}
+	foreach([ 'REDIRECT_REMOTE_USER', 'HTTP_AUTHORIZATION' ] as $head) {
 
-	if(x($_SERVER,'HTTP_AUTHORIZATION')) {
-		$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"],6)) ;
-		if(strlen($userpass)) {
-			list($name, $password) = explode(':', $userpass);
-			$_SERVER['PHP_AUTH_USER'] = $name;
-			$_SERVER['PHP_AUTH_PW'] = $password;
+		/* Basic authentication */
+
+		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,5) === 'Basic') {
+			$userpass = @base64_decode(substr(trim($_SERVER[$head]),6)) ;
+			if(strlen($userpass)) {
+				list($name, $password) = explode(':', $userpass);
+				$_SERVER['PHP_AUTH_USER'] = $name;
+				$_SERVER['PHP_AUTH_PW']   = $password;
+			}
+			break;
+		}
+
+		/* Signature authentication */
+
+		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,9) === 'Signature') {
+			if($head !== 'HTTP_AUTHORIZATION') {
+				$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
+				continue;
+			}
+
+			$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
+			if($sigblock) {
+				$keyId = $sigblock['keyId'];
+				if($keyId) {
+					$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+						dbesc($keyId)
+					);
+					if($r) {
+						$c = channelx_by_hash($r[0]['hubloc_hash']);
+						if($c) {
+							$a = q("select * from account where account_id = %d limit 1",
+								intval($c['channel_account_id'])
+							);
+							if($a) {
+								$record = [ 'channel' => $c, 'account' => $a[0] ];
+								$channel_login = $c['channel_id'];
+							}
+							else {
+								continue;
+							}
+						}
+						else {
+							continue;
+						}
+					}
+					else {
+						continue;
+					}
+
+					if($record) {					
+						$verified = \Zotlabs\Web\HTTPSig::verify('',$record['channel']['channel_pubkey']);
+						if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {
+							$record = null;
+						}
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -63,8 +110,6 @@ function api_login(&$a){
 			$channel_login = $record['channel']['channel_id'];
 		}
 	}
-
-
 
 	if($record['account']) {
 		authenticate_success($record['account']);
@@ -85,8 +130,8 @@ function api_login(&$a){
 }
 
 
-function retry_basic_auth() {
-	header('WWW-Authenticate: Basic realm="Hubzilla"');
+function retry_basic_auth($method = 'Basic') {
+	header('WWW-Authenticate: ' . $method . ' realm="Hubzilla"');
 	header('HTTP/1.0 401 Unauthorized');
 	echo('This api requires login');
 	killme();

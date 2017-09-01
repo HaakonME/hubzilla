@@ -119,6 +119,18 @@ class Router {
 
 			if(! (\App::$module_loaded)) {
 
+				// undo the setting of a letsencrypt acme-challenge rewrite rule
+				// which blocks access to our .well-known routes.
+				// Also provide a config setting for sites that have a legitimate need
+				// for a custom .htaccess in the .well-known directory; but they should
+				// make the file read-only so letsencrypt doesn't modify it
+
+				if(strpos($_SERVER['REQUEST_URI'],'/.well-known/') === 0) {
+					if(file_exists('.well-known/.htaccess') && get_config('system','fix_apache_acme',true)) {
+						rename('.well-known/.htaccess','.well-known/.htaccess.old');
+					}
+				}
+
 				$x = [ 
 					'module' => $module, 
 					'installed' => \App::$module_loaded, 

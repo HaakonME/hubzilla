@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1193 );
+define( 'UPDATE_VERSION' , 1194 );
 
 /**
  *
@@ -2972,6 +2972,20 @@ function update_r1192() {
 	}
 	else {
 		$r1 = q("ALTER TABLE item ADD INDEX (obj_type)");
+	}
+
+	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1193() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("CREATE INDEX item_uid_unseen ON item (uid, item_unseen)");
+	}
+	else {
+		$r1 = q("ALTER TABLE item ADD INDEX uid_item_unseen (uid, item_unseen);");
 	}
 
 	if($r1)

@@ -281,7 +281,7 @@ function closeMenu(theID) {
 function markRead(notifType) {
 	$.get('ping?f=&markRead='+notifType);
 	if(timer) clearTimeout(timer);
-	$('#' + notifType + '-update').html('');
+	$('.' + notifType + '-button').hide();
 	timer = setTimeout(NavUpdate,2000);
 }
 
@@ -446,13 +446,13 @@ function NavUpdate() {
 
 			if(data.network == 0) {
 				data.network = '';
-				$('.net-update, .net-button').hide();
+				$('.network-update, .network-button').hide();
 				document.title = savedTitle;
 			} else {
-				$('.net-update, .net-button').show();
+				$('.network-update, .network-button').show();
 				document.title = '(' + data.network + ') ' + savedTitle;
 			}
-			$('.net-update').html(data.network);
+			$('.network-update').html(data.network);
 			
 			if(data.pubs == 0) {
 				data.pubs = '';

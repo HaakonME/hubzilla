@@ -7,6 +7,7 @@
 function api_login(&$a){
 
 	$record = null;
+	$remote_auth = false;
 
 	require_once('include/oauth.php');
 
@@ -34,6 +35,9 @@ function api_login(&$a){
 	// workarounds for HTTP-auth in CGI mode
 
 	foreach([ 'REDIRECT_REMOTE_USER', 'HTTP_AUTHORIZATION' ] as $head) {
+
+		/* Basic authentication */
+
 		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,5) === 'Basic') {
 			$userpass = @base64_decode(substr(trim($_SERVER[$head]),6)) ;
 			if(strlen($userpass)) {
@@ -42,6 +46,52 @@ function api_login(&$a){
 				$_SERVER['PHP_AUTH_PW']   = $password;
 			}
 			break;
+		}
+
+		/* Signature authentication */
+
+		if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,5) === 'Signature') {
+			$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
+			if($sigblock) {
+				$keyId = $sigblock['keyId'];
+				if($keyId) {
+					$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+						dbesc($keyId)
+					);
+					if($r) {
+						$c = channelx_by_hash($r[0]['hubloc_hash']);
+						if($c) {
+							$a = q("select * from account where account_id = %d limit 1",
+								intval($c[0]['channel_account_id'])
+							);
+							if($a) {
+								$record = [ 'channel' => $c[0], 'account' => $a[0] ];
+								$channel_login = $c[0]['channel_id'];
+							}
+							else {
+								continue;
+							}
+						}
+						else {
+							continue;
+						}
+					}
+					else {
+						continue;
+					}
+
+					if($head !== 'HTTP_AUTHORIZATION') {
+						$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
+					}
+					if($record) {					
+						$verified = \Zotlabs\Web\HTTPSig::verify('',$record['channel']['channel_pubkey']);
+						if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {
+							$record = null;
+						}
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -57,8 +107,6 @@ function api_login(&$a){
 			$channel_login = $record['channel']['channel_id'];
 		}
 	}
-
-
 
 	if($record['account']) {
 		authenticate_success($record['account']);

@@ -64,6 +64,8 @@ class Cdav extends \Zotlabs\Web\Controller {
 								if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {
 									$record = null;
 								}
+// requires security review
+$record = null;
 								if($record['account']) {
 							        authenticate_success($record['account']);
 							        if($channel_login) {

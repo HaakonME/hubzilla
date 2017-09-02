@@ -85,7 +85,8 @@ function api_login(&$a){
 					else {
 						continue;
 					}
-
+// requires security review
+$record = null;
 					if($record) {					
 						$verified = \Zotlabs\Web\HTTPSig::verify('',$record['channel']['channel_pubkey']);
 						if(! ($verified && $verified['header_signed'] && $verified['header_valid'])) {

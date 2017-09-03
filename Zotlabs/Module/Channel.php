@@ -169,6 +169,7 @@ class Channel extends \Zotlabs\Web\Controller {
 		 */
 
 		$item_normal = item_normal();
+		$item_normal_update = item_normal_update();
 		$sql_extra = item_permissions_sql(\App::$profile['profile_uid']);
 
 		if(get_pconfig(\App::$profile['profile_uid'],'system','channel_list_mode') && (! $mid))
@@ -198,7 +199,7 @@ class Channel extends \Zotlabs\Web\Controller {
 		if(($update) && (! $load)) {
 
 			if($mid) {
-				$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal
+				$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal_update
 					AND item_wall = 1 $simple_update $sql_extra limit 1",
 					dbesc($mid . '%'),
 					intval(\App::$profile['profile_uid'])
@@ -208,7 +209,7 @@ class Channel extends \Zotlabs\Web\Controller {
 			else {
 				$r = q("SELECT distinct parent AS item_id, created from item
 					left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
-					WHERE uid = %d $item_normal
+					WHERE uid = %d $item_normal_update
 					AND item_wall = 1 $simple_update
 					AND (abook.abook_blocked = 0 or abook.abook_flags is null)
 					$sql_extra
@@ -241,7 +242,7 @@ class Channel extends \Zotlabs\Web\Controller {
 
 			if($load || ($checkjs->disabled())) {
 				if($mid) {
-					$r = q("SELECT parent AS item_id from item where mid like '%s' and uid = %d $item_normal
+					$r = q("SELECT distinct parent AS item_id from item where mid like '%s' and uid = %d $item_normal
 						AND item_wall = 1 $sql_extra limit 1",
 						dbesc($mid . '%'),
 						intval(\App::$profile['profile_uid'])

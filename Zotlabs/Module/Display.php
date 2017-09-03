@@ -185,6 +185,7 @@ class Display extends \Zotlabs\Web\Controller {
 	
 		$observer_hash = get_observer_hash();
 		$item_normal = item_normal();
+		$item_normal_update = item_normal_update();
 	
 		$sql_extra = public_permissions_sql($observer_hash);
 
@@ -251,7 +252,7 @@ class Display extends \Zotlabs\Web\Controller {
 				$r = q("SELECT item.parent AS item_id from item
 					WHERE uid = %d
 					and parent_mid = '%s'
-					$item_normal
+					$item_normal_update
 					$simple_update
 					limit 1",
 					intval(local_channel()),
@@ -275,7 +276,7 @@ class Display extends \Zotlabs\Web\Controller {
 					and uid in ( " . stream_perms_api_uids(($observer_hash) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
 					OR uid = %d )
 					$sql_extra )
-					$item_normal
+					$item_normal_update
 					$simple_update
 					limit 1",
 					dbesc($target_item['parent_mid']),

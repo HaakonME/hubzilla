@@ -330,8 +330,7 @@ class Display extends \Zotlabs\Web\Controller {
 		
 		if((($update && $load) || $checkjs->disabled()) && (! $items))  {
 			
-			$r = q("SELECT id, item_flags FROM item WHERE id = '%s' OR mid = '%s' LIMIT 1",
-				dbesc($item_hash),
+			$r = q("SELECT id, item_deleted FROM item WHERE mid = '%s' LIMIT 1",
 				dbesc($item_hash)
 			);
 			if($r) {

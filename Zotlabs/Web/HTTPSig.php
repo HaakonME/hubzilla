@@ -24,8 +24,9 @@ class HTTPSig {
 
 	static function verify($data,$key = '') {
 
-		$body = $data;
-		$headers = null;
+		$body      = $data;
+		$headers   = null;
+		$spoofable = false;
 
 		$result = [
 			'signer'         => '',
@@ -80,6 +81,9 @@ class HTTPSig {
 			if(array_key_exists($h,$headers)) {
 				$signed_data .= $h . ': ' . $headers[$h] . "\n";
 			}
+			if(strpos($h,'.')) {
+				$spoofable = true;
+			}
 		}
 		$signed_data = rtrim($signed_data,"\n");
 
@@ -101,7 +105,8 @@ class HTTPSig {
 		if($x === false)
 			return $result;
 
-		$result['header_valid'] = true;
+		if(! $spoofable)
+			$result['header_valid'] = true;
 
 		if(in_array('digest',$signed_headers)) {
 			$result['content_signed'] = true;

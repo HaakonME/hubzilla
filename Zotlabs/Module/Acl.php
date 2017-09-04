@@ -352,7 +352,7 @@ class Acl extends \Zotlabs\Web\Controller {
 					"id"	   => $g['id'],
 					"xid"      => $g['hash'],
 					"link"     => $g['nick'],
-					"nick"     => (($g['nick']) ? substr($g['nick'],0,strpos($g['nick'],'@')) : t('RSS')),
+					"nick"     => (($g['nick']) ? substr($g['nick'],0,strpos($g['nick'],'@')) : $g['nick']),
 					"self"     => (intval($g['abook_self']) ? 'abook-self' : ''),
 					"taggable" => '',
 					"label"    => '',

@@ -115,6 +115,14 @@ class Auth {
 		$this->remote_hub           = $hubloc['hubloc_url'];
 		$this->dnt                  = 0;
 
+		if(! $this->sec) {
+			logger('missing security context.');
+			if($this->test)
+				$this->Debug('missing security context.');
+			return false;
+		}
+
+
 		// check credentials and access
 
 		// If they are already authenticated and haven't changed credentials,

@@ -46,7 +46,6 @@
 					<div class="section-content-tools-wrapper">
 						{{include file="field_select_grouped.tpl" field=$role}}
 						<div id="advanced-perm" style="display:{{if $permissions_set}}none{{else}}block{{/if}};">
-
 							<div class="form-group">
 								<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#apsModal">{{$lbl_p2macro}}</button>
 							</div>
@@ -54,8 +53,8 @@
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 											<h4 class="modal-title">{{$lbl_p2macro}}</h4>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										</div>
 										<div class="modal-body">
 										{{foreach $permiss_arr as $permit}}

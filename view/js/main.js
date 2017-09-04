@@ -972,8 +972,6 @@ function notify_popup_loader(notifyType) {
 			window.location.href=window.location.href;
 		}
 
-		console.log(data);
-
 		if(data.notify.length == 0){
 			$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
 		} else {

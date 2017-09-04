@@ -182,6 +182,12 @@ function item_normal_search() {
 		and item.item_blocked = 0 ";
 }
 
+function item_normal_update() {
+	return " and item.item_hidden = 0 and item.item_type = 0
+		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
+		and item.item_blocked = 0 ";
+}
+
 
 /**
  * @brief

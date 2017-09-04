@@ -621,6 +621,7 @@ create index "item_edited" on item ("edited");
 create index "item_received" on item ("received");
 create index "item_uid_commented" on item ("uid","commented");
 create index "item_uid_created" on item ("uid","created");
+create index "item_uid_unseen" on item ("uid","item_unseen");
 create index "item_changed" on item ("changed");
 create index "item_comments_closed" on item ("comments_closed");
 create index "item_aid" on item ("aid");

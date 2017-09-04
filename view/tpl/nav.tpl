@@ -75,10 +75,10 @@
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
-		<li class="nav-item dropdown net-button" style="display: none;">
+		<li class="nav-item dropdown network-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
 				<i class="fa fa-fw fa-th"></i>
-				<span class="badge badge-pill badge-secondary net-update"></span>
+				<span class="badge badge-pill badge-secondary network-update"></span>
 			</a>
 			<div id="nav-network-menu" class="dropdown-menu" rel="network">
 				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>

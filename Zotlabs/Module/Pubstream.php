@@ -21,6 +21,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			return;
 	
 		$item_normal = item_normal();
+		$item_normal_update = item_normal_update();
 
 		$static = ((array_key_exists('static',$_REQUEST)) ? intval($_REQUEST['static']) : 0);
 
@@ -134,7 +135,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 				$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
 					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE true $uids $item_normal
+					WHERE true $uids $item_normal_update
 					AND item.parent = item.id $simple_update
 					and (abook.abook_blocked = 0 or abook.abook_flags is null)
 					$sql_extra3 $sql_extra $sql_nets"

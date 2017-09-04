@@ -43,6 +43,12 @@ class Auth {
 			$this->Finalise();
 		}
 
+		if(strpbrk($this->sec,'.:')) {
+			logger('illegal security context');
+			$this->Debug('illegal security context.');
+			$this->Finalise();
+		}
+
 		$x = $this->GetHublocs($this->address);
 
 		if($x) {
@@ -153,6 +159,7 @@ class Auth {
 			dbesc($hubloc['hubloc_url'])
 		);
 
+		// needs a nonce!!!!
 		$p = zot_build_packet($channel,$type = 'auth_check', 
 			array(array('guid' => $hubloc['hubloc_guid'],'guid_sig' => $hubloc['hubloc_guid_sig'])), 
 			$hubloc['hubloc_sitekey'], (($x) ? $x[0]['site_crypto'] : ''), $this->sec);

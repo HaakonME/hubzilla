@@ -126,9 +126,16 @@ class HTTPSig {
 
 	function get_activitypub_key($id) {
 
-		$x = q("select xchan_pubkey from xchan where xchan_hash = '%s' and xchan_network = 'activitypub' ",
-			dbesc($id)
-		);
+		if(strpos($id,'acct:') === 0) {
+			$x = q("select xchan_pubkey from xchan left join hubloc on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+				dbesc(str_replace('acct:','',$id))
+			);
+		}
+		else {
+			$x = q("select xchan_pubkey from xchan where xchan_hash = '%s' and xchan_network = 'activitypub' ",
+				dbesc($id)
+			);
+		}
 
 		if($x && $x[0]['xchan_pubkey']) {
 			return ($x[0]['xchan_pubkey']);

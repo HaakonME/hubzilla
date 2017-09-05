@@ -120,9 +120,10 @@ class Finger {
 			return $ret;
 		}
 
-		$verify = \Zotlabs\Web\HTTPSig::verify($result);
-		
 		$x = json_decode($result['body'], true);
+
+		$verify = \Zotlabs\Web\HTTPSig::verify($result,(($x) ? $x['key'] : '');
+		
 		if($x && (! $verify['header_valid'])) {
 			$signed_token = ((is_array($x) && array_key_exists('signed_token', $x)) ? $x['signed_token'] : null);
 			if($signed_token) {

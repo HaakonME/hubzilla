@@ -83,7 +83,7 @@ define ( 'DIRECTORY_FALLBACK_MASTER',  'https://gravizot.de');
 $DIRECTORY_FALLBACK_SERVERS = array( 
 	'https://hubzilla.zottel.net',
 	'https://my.federated.social',
-	'https://hubzilla.nl',
+	//'https://hubzilla.nl',
 	'https://gravizot.de'
 );
 

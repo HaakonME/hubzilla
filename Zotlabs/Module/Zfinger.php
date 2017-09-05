@@ -25,7 +25,8 @@ class Zfinger extends \Zotlabs\Web\Controller {
 		if($chan) {
 			$hash = \Zotlabs\Web\HTTPSig::generate_digest($ret,false);
 			$headers['Digest'] = 'SHA-256=' . $hash;  
-			\Zotlabs\Web\HTTPSig::create_sig('',$headers,$chan['channel_prvkey'],z_root() . '/channel/' . $chan['channel_address'],true);
+			\Zotlabs\Web\HTTPSig::create_sig('',$headers,$chan['channel_prvkey'],
+				'acct:' . $chan['channel_address'] . '@' . \App::get_hostname(),true);
 		}
 		else {
 			foreach($headers as $k => $v) {

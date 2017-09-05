@@ -22,6 +22,7 @@ class Finger {
 	 *
 	 * @return zotinfo array (with 'success' => true) or array('success' => false);
 	 */
+
 	static public function run($webbie, $channel = null, $autofallback = true) {
 
 		$ret = array('success' => false);
@@ -84,18 +85,27 @@ class Finger {
 				'token'      => self::$token
 			);
 
-			$result = z_post_url($url . $rhs,$postvars);
+			$headers = [];
+			$headers['X-Zot-Channel'] = $channel['channel_address'] . '@' . \App::get_hostname();
+			$headers['X-Zot-Nonce']   = random_string();
+			$xhead = \Zotlabs\Web\HTTPSig::create_sig('',$headers,$channel['channel_prvkey'],
+				'acct:' . $channel['channel_address'] . '@' . \App::get_hostname(),false);
+
+			$retries = 0;
+
+			$result = z_post_url($url . $rhs,$postvars,$retries, [ 'headers' => $xhead ]);
 
 			if ((! $result['success']) && ($autofallback)) {
 				if ($https) {
 					logger('zot_finger: https failed. falling back to http');
-					$result = z_post_url('http://' . $host . $rhs,$postvars);
+					$result = z_post_url('http://' . $host . $rhs,$postvars, $retries, [ 'headers' => $xhead ]);
 				}
 			}
-		} else {
+		} 
+		else {
 			$rhs .= '?f=&address=' . urlencode($address) . '&token=' . self::$token;
 
-			$result =  z_fetch_url($url . $rhs);
+			$result = z_fetch_url($url . $rhs);
 			if((! $result['success']) && ($autofallback)) {
 				if($https) {
 					logger('zot_finger: https failed. falling back to http');
@@ -110,8 +120,10 @@ class Finger {
 			return $ret;
 		}
 
+		$verify = \Zotlabs\Web\HTTPSig::verify($result);
+		
 		$x = json_decode($result['body'], true);
-		if($x) {
+		if($x && (! $verify['header_valid'])) {
 			$signed_token = ((is_array($x) && array_key_exists('signed_token', $x)) ? $x['signed_token'] : null);
 			if($signed_token) {
 				$valid = rsa_verify('token.' . self::$token, base64url_decode($signed_token), $x['key']);

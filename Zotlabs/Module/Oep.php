@@ -172,7 +172,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		if(! perm_is_allowed($channel['channel_id'],get_observer_hash(),'view_pages'))
 			return $ret;
 
-		$sql_extra = items_permissions_sql($channel['channel_id'],get_observer_hash());
+		$sql_extra = item_permissions_sql($channel['channel_id'],get_observer_hash());
 
 		$r = q("select * from iconfig where iconfig.cat = 'system' and iconfig.k = 'CARD' and iconfig.v = '%s' limit 1",
 			dbesc($res)
@@ -183,7 +183,7 @@ class Oep extends \Zotlabs\Web\Controller {
 		else {
 			return $ret;
 		}
-				
+
 		$r = q("select * from item 
 			where item.uid = %d and item_type = %d 
 			$sql_extra order by item.created desc",

@@ -327,11 +327,16 @@ function bb_ShareAttributes($match) {
 	if ($avatar != "")
 		$headline .= '<a href="' . zid($profile) . '" ><img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" /></a>';
 
+	if(strpos($link,'/cards/'))
+		$type = t('card');
+	else
+		$type = t('post');
+
 	// Bob Smith wrote the following post 2 hours ago
 
 	$fmt = sprintf( t('%1$s wrote the following %2$s %3$s'),
 		'<a href="' . zid($profile) . '" >' . $author . '</a>',
-		'<a href="' . zid($link) . '" >' . t('post') . '</a>',
+		'<a href="' . zid($link) . '" >' . $type . '</a>',
 		$reldate
 	);
 

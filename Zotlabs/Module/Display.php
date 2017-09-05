@@ -89,7 +89,7 @@ class Display extends \Zotlabs\Web\Controller {
 		if($decoded)
 			$item_hash = $decoded;
 
-		$r = q("select id, uid, mid, parent_mid, item_type, item_deleted from item where mid like '%s' limit 1",
+		$r = q("select id, uid, mid, parent_mid, thr_parent, verb, item_type, item_deleted from item where mid like '%s' limit 1",
 			dbesc($item_hash . '%')
 		);
 	
@@ -165,7 +165,8 @@ class Display extends \Zotlabs\Web\Controller {
 				'$dend' => '',
 				'$dbegin' => '',
 				'$verb' => '',
-				'$mid' => $item_hash
+				//if the target item is not a post (eg a like) want to address its thread parent
+				'$mid' => (($target_item['verb'] == ACTIVITY_POST) ? $item_hash : $target_item['thr_parent'])
 			));
 
 			head_add_link([ 

@@ -1984,14 +1984,14 @@ function is_a_date_arg($s) {
 }
 
 function legal_webbie($s) {
-	if(! strlen($s))
+	if(! $s)
 		return '';
 
-	// WARNING: This regex will not work in a federated environment.
+	// WARNING: This regex may not work in a federated environment.
 	// You will probably want something like 
 	// preg_replace('/([^a-z0-9\_])/','',strtolower($s));
 
-	$r = preg_replace('/([^a-z0-9\-\_\.])/','',strtolower($s));
+	$r = preg_replace('/([^a-z0-9\-\_])/','',strtolower($s));
 
 	$x = [ 'input' => $s, 'output' => $r ];
 	call_hooks('legal_webbie',$x);
@@ -2003,7 +2003,7 @@ function legal_webbie_text() {
 
 	// WARNING: This will not work in a federated environment.
 
-	$s = t('a-z, 0-9, -, _, and . only');
+	$s = t('a-z, 0-9, -, and _ only');
 
 	$x = [ 'text' => $s ];
 	call_hooks('legal_webbie_text',$x);

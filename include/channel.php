@@ -52,7 +52,7 @@ function identity_check_service_class($account_id) {
  *
  * This action is pluggable.
  * We're currently only checking for an empty name or one that exceeds our
- * storage limit (255 chars). 255 chars is probably going to create a mess on
+ * storage limit (191 chars). 191 chars is probably going to create a mess on
  * some pages.
  * Plugins can set additional policies such as full name requirements, character
  * sets, multi-byte length, etc.
@@ -67,7 +67,7 @@ function validate_channelname($name) {
 	if (! $name)
 		return t('Empty name');
 
-	if (strlen($name) > 255)
+	if (mb_strlen($name) > 191)
 		return t('Name too long');
 
 	$arr = ['name' => $name];

@@ -108,7 +108,7 @@ class Getfile extends \Zotlabs\Web\Controller {
 			
 		$unsafe_types = array('text/html','text/css','application/javascript');
 	
-		if(in_array($r['data']['filetype'],$unsafe_types)) {
+		if(in_array($r['data']['filetype'],$unsafe_types) && (! channel_codeallowed($channel['channel_id']))) {
 				header('Content-type: text/plain');
 		}
 		else {

@@ -652,7 +652,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `received` (`received`),
   KEY `uid_commented` (`uid`, `commented`),
   KEY `uid_created` (`uid`, `created`),
-  KEY `uid_item_unseen` (`uid`, `item_unseen`);
+  KEY `uid_item_unseen` (`uid`, `item_unseen`),
   KEY `aid` (`aid`),
   KEY `owner_xchan` (`owner_xchan`),
   KEY `author_xchan` (`author_xchan`),

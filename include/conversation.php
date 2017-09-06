@@ -709,6 +709,7 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
+					'item_type' => intval($item['item_type']),			
 					'mode' => $mode,
 					'approve' => t('Approve'),
 					'delete' => t('Delete'),

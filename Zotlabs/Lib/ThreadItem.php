@@ -313,7 +313,8 @@ class ThreadItem {
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
-			'mode' => $mode,			
+			'mode' => $mode,
+			'item_type' => intval($item['item_type']),			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'body' => $body['html'],
 			'tags' => $body['tags'],

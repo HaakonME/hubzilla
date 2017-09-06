@@ -137,7 +137,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 	}
 
 	if ($secret) {
-		$data['secret'] = $secret;
+		$data['secret'] = preg_replace('/[^0-9a-fA-F]/','',$secret);
 		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey'],$sig_method));
 	}
 
@@ -4621,7 +4621,6 @@ function zot_reply_auth_check($data,$encrypted_packet) {
 	// First verify their signature. We will have obtained a zot-info packet from them as part of the sender
 	// verification.
 
-	// needs a nonce!!!!
 	if ((! $y) || (! rsa_verify($data['secret'], base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
 		logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
 		$ret['message'] .= 'sender not found or sig invalid ' . print_r($y,true) . EOL;

@@ -413,7 +413,7 @@ class ThreadItem {
 			'previewing' => ($conv->is_preview() ? true : false ),
 			'preview_lbl' => t('This is an unsaved preview'),
 			'wait' => t('Please wait'),
-			'submid' => str_replace(['+','='], ['',''], base64_encode(substr($item['mid'],0,32))),
+			'submid' => str_replace(['+','='], ['',''], base64_encode($item['mid'])),
 			'thread_level' => $thread_level
 		);
 

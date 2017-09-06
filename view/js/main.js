@@ -698,9 +698,9 @@ function updateConvItems(mode,data) {
 
 	// auto-scroll to a particular comment in a thread (designated by mid) when in single-thread mode
 	// use the same method to generate the submid as we use in ThreadItem, 
-	// substr(0,32) + base64_encode + replace(['+','='],['','']);
+	// base64_encode + replace(['+','='],['','']);
 	var submid = bParam_mid;
-	var submid_encoded = ((submid.length) ? submid.substring(0,32) : 'abcdefg');
+	var submid_encoded = ((submid.length) ? submid : 'abcdefg');
 	submid_encoded = window.btoa(submid_encoded);
 	submid_encoded = submid_encoded.replace(/[\+\=]/g,'');
 	if($('.item_' + submid_encoded).length && !$('.item_' + submid_encoded).hasClass('toplevel_item') && mode == 'replace') {

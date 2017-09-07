@@ -134,7 +134,7 @@ class Display extends \Zotlabs\Web\Controller {
 
 			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
 
-			//if the target item is not a post (eg a like) want to address its thread parent
+			//if the target item is not a post (eg a like) we want to address its thread parent
 			$mid = (($target_item['verb'] == ACTIVITY_POST) ? $item_hash : $target_item['thr_parent']);
 
 			//if we got a decoded hash we must encode it again before handing to javascript 

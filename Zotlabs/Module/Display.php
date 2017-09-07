@@ -133,7 +133,14 @@ class Display extends \Zotlabs\Web\Controller {
 		if((! $update) && (! $load)) {
 
 			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
-	
+
+			//if the target item is not a post (eg a like) want to address its thread parent
+			$mid = (($target_item['verb'] == ACTIVITY_POST) ? $item_hash : $target_item['thr_parent']);
+
+			//if we got a decoded hash we must encode it again before handing to javascript 
+			if($decoded)
+				$mid = 'b64.' . base64url_encode($mid);
+
 			$o .= '<div id="live-display"></div>' . "\r\n";
 			$o .= "<script> var profile_uid = " . ((intval(local_channel())) ? local_channel() : (-1))
 				. "; var netargs = '?f='; var profile_page = " . \App::$pager['page'] . "; </script>\r\n";
@@ -165,8 +172,7 @@ class Display extends \Zotlabs\Web\Controller {
 				'$dend' => '',
 				'$dbegin' => '',
 				'$verb' => '',
-				//if the target item is not a post (eg a like) want to address its thread parent
-				'$mid' => (($target_item['verb'] == ACTIVITY_POST) ? $item_hash : $target_item['thr_parent'])
+				'$mid' => $mid
 			));
 
 			head_add_link([ 
@@ -323,6 +329,7 @@ class Display extends \Zotlabs\Web\Controller {
 			$r = q("SELECT id, item_deleted FROM item WHERE mid = '%s' LIMIT 1",
 				dbesc($item_hash)
 			);
+
 			if($r) {
 				if(intval($r[0]['item_deleted'])) {
 					notice( t('Item has been removed.') . EOL );

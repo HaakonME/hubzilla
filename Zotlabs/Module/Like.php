@@ -255,7 +255,7 @@ class Like extends \Zotlabs\Web\Controller {
 			// get the item. Allow linked photos (which are normally hidden) to be liked
 	
 			$r = q("SELECT * FROM item WHERE id = %d 
-				and item_type = 0 and item_deleted = 0 and item_unpublished = 0 
+				and (item_type = 0 or item_type = 6) and item_deleted = 0 and item_unpublished = 0 
 				and item_delayed = 0 and item_pending_remove = 0 and item_blocked = 0 LIMIT 1",
 				intval($item_id)
 			);

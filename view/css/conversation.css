@@ -1,3 +1,4 @@
+
 /* jot */
 
 .jothidden input[type="text"] {
@@ -301,4 +302,13 @@ img.smiley.emoji:hover {
 
 #filer_save {
 	margin-left: 15px;
+}
+
+
+
+/* general over-rides */
+
+/* prevent horizontal scrollbars in code blocks */
+code {
+	white-space: pre-wrap;
 }

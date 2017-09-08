@@ -137,7 +137,6 @@ input, optgroup, select, textarea {
 pre code {
 	border: none;
 	padding: 1em 1.5em;
-	border-radius: $radius;
 }
 
 code {
@@ -149,6 +148,7 @@ pre {
 	background: #F5F5F5;
 	color: #333;
 	border:1px solid #ccc;
+	border-radius: $radius;
 }
 
 .heart {

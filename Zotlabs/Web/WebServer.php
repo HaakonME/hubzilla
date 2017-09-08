@@ -70,6 +70,12 @@ class WebServer {
 			}
 		}
 
+		if((x($_REQUEST,'owt')) && (! \App::$install)) {
+			$token = $_REQUEST['owt'];
+			\App::$query_string = strip_query_param(\App::$query_string,'owt');
+			owt_init($token);
+		}
+
 		if((x($_SESSION, 'authenticated')) || (x($_POST, 'auth-params')) || (\App::$module === 'login'))
 			require('include/auth.php');
 

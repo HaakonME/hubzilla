@@ -91,6 +91,9 @@ class HTTPSig {
 		if($sig_block['algorithm'] === 'rsa-sha256') {
 			$algorithm = 'sha256';
 		}
+		if($sig_block['algorithm'] === 'rsa-sha512') {
+			$algorithm = 'sha512';
+		}
 
 		if(! $key) {
 			$result['signer'] = $sig_block['keyId'];
@@ -113,6 +116,8 @@ class HTTPSig {
 			$digest = explode('=', $headers['digest']);
 			if($digest[0] === 'SHA-256')
 				$hashalg = 'sha256';
+			if($digest[0] === 'SHA-512')
+				$hashalg = 'sha512';
 
 			// The explode operation will have stripped the '=' padding, so compare against unpadded base64 
 			if(rtrim(base64_encode(hash($hashalg,$body,true)),'=') === $digest[1]) {
@@ -163,6 +168,9 @@ class HTTPSig {
 
 		if($alg === 'sha256') {
 			$algorithm = 'rsa-sha256';
+		}
+		if($alg === 'sha512') {
+			$algorithm = 'rsa-sha512';
 		}
 
 		$x = self::sign($request,$head,$prvkey,$alg);			

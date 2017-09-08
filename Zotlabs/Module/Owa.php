@@ -1,0 +1,57 @@
+<?php
+
+
+namespace Zotlabs\Module;
+
+
+
+class Owa extends \Zotlabs\Web\Controller {
+
+	function init() {
+		foreach([ 'REDIRECT_REMOTE_USER', 'HTTP_AUTHORIZATION' ] as $head) {
+
+			if(array_key_exists($head,$_SERVER) && substr(trim($_SERVER[$head]),0,9) === 'Signature') {
+				if($head !== 'HTTP_AUTHORIZATION') {
+					$_SERVER['HTTP_AUTHORIZATION'] = $_SERVER[$head];
+					continue;
+				}
+
+				$sigblock = \Zotlabs\Web\HTTPSig::parse_sigheader($_SERVER[$head]);
+				if($sigblock) {
+					$keyId = $sigblock['keyId'];
+
+					if($keyId) {
+						$r = q("select * from hubloc left join xchan on hubloc_hash = xchan_hash 
+							where hubloc_addr = '%s' limit 1",
+							dbesc(str_replace('acct:','',$keyId))
+						);
+						if($r) {
+							$hubloc = $r[0];
+							$verified = \Zotlabs\Web\HTTPSig::verify('',$hubloc['xchan_pubkey']);
+
+logger('verified: ' . print_r($verified,true));
+
+							if($verified && $verified['header_signed'] && $verified['header_valid']) {
+								$token = random_string(32);
+								\Zotlabs\Zot\Verify::create('owt',0,token,$r[0]['hubloc_hash']);
+								$x = json_encode([ 'success' => true, 'token' => $token ]);
+								header('Content-Type: application/x-zot+json');
+								echo $x;
+								killme();
+							}
+						}
+					}
+				}
+				$x = json_encode([ 'success' => false ]);
+				header('Content-Type: application/x-zot+json');
+				echo $x;
+				killme();	
+			}
+		}
+
+		$x = json_encode([ 'success' => false ]);
+		header('Content-Type: application/x-zot+json');
+		echo $x;
+		killme();	
+	}
+}

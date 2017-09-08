@@ -144,6 +144,9 @@ class Magic extends \Zotlabs\Web\Controller {
 					'acct:' . $channel['channel_address'] . '@' . \App::get_hostname(),false,true,'sha512');
 
 				$x = z_fetch_url($basepath . '/owa',false,$redirects,[ 'headers' => $headers ]);
+
+			logger('owtfetch: ' . print_r($x,true));
+
 				if($x['success']) {
 					$j = json_decode($x['body'],true);
 					if($j['success'] && $j['token']) {

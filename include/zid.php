@@ -296,6 +296,13 @@ function owt_init($token) {
 		$_SESSION['DNT'] = 1;
 	}
 
-	logger('owa success!');
+	$arr = array('xchan' => $hubloc, 'url' => \App::query_string, 'session' => $_SESSION);
+	call_hooks('magic_auth_success',$arr);
+	\App::set_observer($hubloc);
+	require_once('include/security.php');
+	\App::set_groups(init_groups_visitor($_SESSION['visitor_id']));
+	info(sprintf( t('Welcome %s. Remote authentication successful.'),$hubloc['xchan_name']));
+	logger('OpenWebAuth: auth success from ' . $hubloc['xchan_addr']);
+
 
 }

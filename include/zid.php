@@ -239,6 +239,7 @@ function owt_init($token) {
 	\Zotlabs\Zot\Verify::purge('owt','3 MINUTE');
 
 	$ob_hash = \Zotlabs\Zot\Verify::get_meta('owt',0,$token);
+
 	if($ob_hash === false) {
 		return;
 	}
@@ -250,7 +251,7 @@ function owt_init($token) {
 
 	if(! $r) {
 		// finger them if they can't be found.
-		$j = Finger::run($ob_hash, null);
+		$j = \Zotlabs\Zot\Finger::run($ob_hash, null);
 		if ($j['success']) {
 			import_xchan($j);
 			$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash
@@ -264,6 +265,8 @@ function owt_init($token) {
 		return;	
 	}
 	$hubloc = $r[0];
+
+	$_SESSION['authenticated'] = 1;
 
 	$delegate_success = false;
 	if($_REQUEST['delegate']) {

@@ -33,7 +33,7 @@ class Verify {
 
 
 	function get_meta($type,$channel_id,$token) {
-		$r = q("select id from verify where vtype = '%s' and channel = %d and token = '%s' limit 1",
+		$r = q("select id, meta from verify where vtype = '%s' and channel = %d and token = '%s' limit 1",
 			dbesc($type),
 			intval($channel_id),
 			dbesc($token)

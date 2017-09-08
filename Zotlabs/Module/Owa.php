@@ -33,7 +33,7 @@ logger('verified: ' . print_r($verified,true));
 
 							if($verified && $verified['header_signed'] && $verified['header_valid']) {
 								$token = random_string(32);
-								\Zotlabs\Zot\Verify::create('owt',0,token,$r[0]['hubloc_hash']);
+								\Zotlabs\Zot\Verify::create('owt',0,$token,$r[0]['hubloc_addr']);
 								$x = json_encode([ 'success' => true, 'token' => $token ]);
 								header('Content-Type: application/x-zot+json');
 								echo $x;

@@ -115,7 +115,7 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 		App::$profile_uid = $xchan['channel_id'];
 
 	$url = (($observer) 
-		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
+		? z_root() . '/magic?f=&owa=1&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
 		: $xchan['xchan_url']
 	);
 					

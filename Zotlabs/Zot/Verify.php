@@ -31,6 +31,22 @@ class Verify {
 		return false;
 	}
 
+
+	function get_meta($type,$channel_id,$token) {
+		$r = q("select id, meta from verify where vtype = '%s' and channel = %d and token = '%s' limit 1",
+			dbesc($type),
+			intval($channel_id),
+			dbesc($token)
+		);
+		if($r) {
+			q("delete from verify where id = %d",
+				intval($r[0]['id'])
+			);
+			return $r[0]['meta']; 
+		}
+		return false;
+	}
+
 	function purge($type,$interval) {
 		q("delete from verify where vtype = '%s' and created < %s - INTERVAL %s",
 			dbesc($type),

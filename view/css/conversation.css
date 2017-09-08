@@ -1,3 +1,4 @@
+
 /* jot */
 
 .jothidden input[type="text"] {
@@ -273,6 +274,7 @@ code {
 	font-size: 1em;
 	padding: 1em 1.5em;
 	display: block;
+	white-space: pre-wrap;
 }
 
 code.inline-code {

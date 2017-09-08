@@ -225,6 +225,17 @@ function oembed_fetch_url($embedurl){
 		if($j['html']) {
 			$orig = $j['html'];
 			$allow_position = (($is_matrix) ? true : false);
+
+			// some sites wrap their entire embed in an iframe
+			// which we will purify away and which we provide anyway.
+			// So if we see this, grab the frame src url and use that 
+			// as the embed content - which will still need to be purified.
+
+			if(preg_match('#<iframe(.*?)src=[\'\"](.?*)[\'\"]#',$matches,$j['html'])) {
+				$x = z_fetch_url($matches[2]);
+				$j['html'] = $x['body'];
+			}
+			
 			$j['html'] = purify_html($j['html'],$allow_position);
 			if($j['html'] != $orig) {
 				logger('oembed html was purified. original: ' . $orig . ' purified: ' . $j['html'], LOGGER_DEBUG, LOG_INFO); 

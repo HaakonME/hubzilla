@@ -602,6 +602,11 @@ function import_items($channel, $items, $sync = false, $relocate = null) {
 			if(! $item)
 				continue;
 
+			// deprecated
+
+			if(array_key_exists('diaspora_meta',$item))
+				unset($item['diaspora_meta']);
+
 			if($relocate && $item['mid'] === $item['parent_mid']) {
 				item_url_replace($channel,$item,$relocate['url'],z_root(),$relocate['channel_address']);
 			}

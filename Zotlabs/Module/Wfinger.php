@@ -30,9 +30,15 @@ class Wfinger extends \Zotlabs\Web\Controller {
 		$resource = $_REQUEST['resource'];
 		logger('webfinger: ' . $resource,LOGGER_DEBUG);
 	
+
+		$root_resource  = false;
+
+		if(strcasecmp(rtrim($resource,'/'),z_root()) === 0)
+			$root_resource = true;
+
 		$r = null;
 	
-		if($resource) {
+		if(($resource) && (! $root_resource)) {
 	
 			if(strpos($resource,'acct:') === 0) {
 				$channel = str_replace('acct:','',$resource);
@@ -60,7 +66,25 @@ class Wfinger extends \Zotlabs\Web\Controller {
 	
 		header('Access-Control-Allow-Origin: *');
 	
+
+		if($root_resource) {
+			$result['subject'] = $resource;
+			$result['properties'] = [
+					'https://w3id.org/security/v1#publicKeyPem' => get_config('system','pubkey')
+			];
+			$result['links'] = [
+				[
+					'rel'  => 'http://purl.org/openwebauth/v1',
+					'type' => 'application/x-zot+json',
+					'href' => z_root() . '/owa',
+				],
+			];
+
+
+
 	
+		}
+
 		if($resource && $r) {
 	
 			$h = q("select hubloc_addr from hubloc where hubloc_hash = '%s' and hubloc_deleted = 0",
@@ -84,7 +108,8 @@ class Wfinger extends \Zotlabs\Web\Controller {
 	
 			$result['properties'] = [
 					'http://webfinger.net/ns/name'   => $r[0]['channel_name'],
-					'http://xmlns.com/foaf/0.1/name' => $r[0]['channel_name']
+					'http://xmlns.com/foaf/0.1/name' => $r[0]['channel_name'],
+					'https://w3id.org/security/v1#publicKeyPem' => $r[0]['xchan_pubkey']
 			];
 	
 			foreach($aliases as $alias) 
@@ -124,6 +149,13 @@ class Wfinger extends \Zotlabs\Web\Controller {
 					'rel'  => 'http://purl.org/zot/protocol',
 					'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
 				],
+
+				[
+					'rel'  => 'http://purl.org/openwebauth/v1',
+					'type' => 'application/x-zot+json',
+					'href' => z_root() . '/owa',
+				],
+
 	
 				[
 					'rel'  => 'magic-public-key',
@@ -136,14 +168,16 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				$result['zot'] = zotinfo( [ 'address' => $r[0]['xchan_addr'] ]);
 			}
 		}
-		else {
+
+		if(! $result) {
 			header($_SERVER["SERVER_PROTOCOL"] . ' ' . 400 . ' ' . 'Bad Request');
 			killme();
 		}
 	
 		$arr = [ 'channel' => $r[0], 'request' => $_REQUEST, 'result' => $result ];
 		call_hooks('webfinger',$arr);
-	
+
+
 		json_return_and_die($arr['result'],'application/jrd+json');
 	
 	}

@@ -17,6 +17,7 @@ class Magic extends \Zotlabs\Web\Controller {
 		$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
 		$test = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
 		$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev'])  : 0);
+		$owa  = ((x($_REQUEST,'owa'))  ? intval($_REQUEST['owa'])  : 0);
 		$delegate = ((x($_REQUEST,'delegate')) ? $_REQUEST['delegate']  : '');
 	
 		$parsed = parse_url($dest);
@@ -132,12 +133,44 @@ class Magic extends \Zotlabs\Web\Controller {
 		if(local_channel()) {
 			$channel = \App::get_channel();
 	
+			// OpenWebAuth
+
+			if($owa) {
+
+				$headers = [];
+				$headers['Accept'] = 'application/x-zot+json' ;
+				$headers['X-Open-Web-Auth'] = random_string();
+				$headers = \Zotlabs\Web\HTTPSig::create_sig('',$headers,$channel['channel_prvkey'],
+					'acct:' . $channel['channel_address'] . '@' . \App::get_hostname(),false,true,'sha512');
+
+				$x = z_fetch_url($basepath . '/owa',false,$redirects,[ 'headers' => $headers ]);
+
+			logger('owtfetch: ' . print_r($x,true));
+
+				if($x['success']) {
+					$j = json_decode($x['body'],true);
+					if($j['success'] && $j['token']) {
+						$x = strpbrk($dest,'?&');
+						$args = (($x) ? '&owt=' . $j['token'] : '?f=&owt=' . $j['token']) . (($delegate) ? '&delegate=1' : '');
+						goaway($dest . $args);
+					}
+				}
+				goaway($dest);
+			}
+
+
 			$token = random_string();
+
 //			$token_sig = base64url_encode(rsa_sign($token,$channel['channel_prvkey']));
-	 
 //			$channel['token'] = $token;
 //			$channel['token_sig'] = $token_sig;
 	
+
+
+
+
+
+
 			\Zotlabs\Zot\Verify::create('auth',$channel['channel_id'],$token,$x[0]['hubloc_url']);
 	
 			$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode(channel_reddress($channel))

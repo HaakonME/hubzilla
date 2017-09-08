@@ -151,7 +151,7 @@ class Magic extends \Zotlabs\Web\Controller {
 					$j = json_decode($x['body'],true);
 					if($j['success'] && $j['token']) {
 						$x = strpbrk($dest,'?&');
-						$args = (($x) ? '&owt=' . $token : '?f=&owt=' . $token) . (($delegate) ? '&delegate=1' : '');
+						$args = (($x) ? '&owt=' . $j['token'] : '?f=&owt=' . $j['token']) . (($delegate) ? '&delegate=1' : '');
 						goaway($dest . $args);
 					}
 				}

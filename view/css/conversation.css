@@ -274,6 +274,7 @@ code {
 	font-size: 1em;
 	padding: 1em 1.5em;
 	display: block;
+	white-space: pre-wrap;
 }
 
 code.inline-code {
@@ -302,13 +303,4 @@ img.smiley.emoji:hover {
 
 #filer_save {
 	margin-left: 15px;
-}
-
-
-
-/* general over-rides */
-
-/* prevent horizontal scrollbars in code blocks */
-code {
-	white-space: pre-wrap;
 }

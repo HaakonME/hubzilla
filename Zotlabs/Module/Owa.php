@@ -1,9 +1,16 @@
 <?php
 
-
 namespace Zotlabs\Module;
 
-
+/**
+ * OpenWebAuth verifier and token generator
+ * See https://macgirvin.com/wiki/mike/OpenWebAuth/Home
+ * Requests to this endpoint should be signed using HTTP Signatures
+ * using the 'Authorization: Signature' authentication method
+ * If the signature verifies a token is returned. 
+ *
+ * This token may be exchanged for an authenticated cookie. 
+ */
 
 class Owa extends \Zotlabs\Web\Controller {
 
@@ -29,8 +36,6 @@ class Owa extends \Zotlabs\Web\Controller {
 							$hubloc = $r[0];
 							$verified = \Zotlabs\Web\HTTPSig::verify('',$hubloc['xchan_pubkey']);
 
-logger('verified: ' . print_r($verified,true));
-
 							if($verified && $verified['header_signed'] && $verified['header_valid']) {
 								$token = random_string(32);
 								\Zotlabs\Zot\Verify::create('owt',0,$token,$r[0]['hubloc_addr']);
@@ -42,13 +47,8 @@ logger('verified: ' . print_r($verified,true));
 						}
 					}
 				}
-				$x = json_encode([ 'success' => false ]);
-				header('Content-Type: application/x-zot+json');
-				echo $x;
-				killme();	
 			}
 		}
-
 		$x = json_encode([ 'success' => false ]);
 		header('Content-Type: application/x-zot+json');
 		echo $x;

@@ -194,7 +194,7 @@ class Channel extends \Zotlabs\Web\Controller {
 			$simple_update = '';
 
 		if($static && $simple_update)
-			$simple_update .= " and item_thread_top = 1 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
+			$simple_update .= " and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
 
 		if(($update) && (! $load)) {
 

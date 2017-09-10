@@ -478,6 +478,7 @@ class Network extends \Zotlabs\Web\Controller {
 	
 			}
 			else {
+
 				// this is an update
 				$r = q("SELECT item.parent AS item_id FROM item
 					left join abook on ( item.owner_xchan = abook.abook_xchan $abook_uids )
@@ -510,7 +511,7 @@ class Network extends \Zotlabs\Web\Controller {
 			else {
 				$items = array();
 			}
-	
+
 			if($page_mode === 'list') {
 	
 				/**

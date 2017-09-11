@@ -231,7 +231,7 @@ function oembed_fetch_url($embedurl){
 			// So if we see this, grab the frame src url and use that 
 			// as the embed content - which will still need to be purified.
 
-			if(preg_match('#<iframe(.*?)src=[\'\"](.?*)[\'\"]#',$matches,$j['html'])) {
+			if(preg_match('#<iframe(.*?)src=[\'\"](.*?)[\'\"]#',$matches,$j['html'])) {
 				$x = z_fetch_url($matches[2]);
 				$j['html'] = $x['body'];
 			}

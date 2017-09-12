@@ -21,6 +21,7 @@ class LDSignatures {
 	}
 
 	static function sign($data,$channel) {
+
 		$options = [
 			'type' => 'RsaSignature2017',
 			'nonce' => random_string(64),
@@ -46,7 +47,7 @@ class LDSignatures {
 		if($data) {
 			foreach($data as $k => $v) {
 				if(! in_array($k,[ 'signature' ])) {
-					$newopts[$k] = $v;
+					$newdata[$k] = $v;
 				}
 			}
 		}
@@ -68,6 +69,7 @@ class LDSignatures {
 	}
 
 	static function hash($obj) {
+
 		return hash('sha256',self::normalise($obj));
 	}
 

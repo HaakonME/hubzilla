@@ -13,7 +13,9 @@ class ActivityStreams {
 	public $tgt    = null;
 	public $origin = null;
 	public $owner  = null;
-
+	public $signer = null;
+	public $ldsig  = null;
+	public $sigok  = false;
 	public $recips = null;
 
 	function __construct($string) {
@@ -31,6 +33,14 @@ class ActivityStreams {
 			$this->tgt    = $this->get_compound_property('target');
 			$this->origin = $this->get_compound_property('origin');
 			$this->recips = $this->collect_recips();
+
+			$this->ldsig = $this->get_compound_property('signature');
+			if($this->ldsig) {
+				$this->signer = $this->get_compound_property('creator',$this->ldsig);
+				if($this->signer && $this->signer['publicKey'] && $this->signer['publicKey']['publicKeyPem']) {
+					$this->sigok = \Zotlabs\Lib\LDSignatures::verify($this->data,$this->signer['publicKey']['publicKeyPem']);
+				}
+			}
 
 			if(($this->type === 'Note') && (! $this->obj)) {
 				$this->obj = $this->data;

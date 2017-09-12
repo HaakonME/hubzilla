@@ -170,7 +170,7 @@ EOT;
 
 	if(local_channel()) {
 
-		$nav['network'] = array('network', t('Grid'), "", t('Your grid'),'network_nav_btn');
+		$nav['network'] = array('network', t('Activity'), "", t('Network Activity'),'network_nav_btn');
 		$nav['network']['all'] = [ 'network', t('View your network activity'), '','' ];
 		$nav['network']['mark'] = array('', t('Mark all activity notifications seen'), '','');
 

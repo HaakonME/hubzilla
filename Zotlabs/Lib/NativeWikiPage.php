@@ -55,7 +55,12 @@ class NativeWikiPage {
 	}
 
 
-	static public function create_page($channel_id, $observer_hash, $name, $resource_id) {
+	static public function create_page($channel_id, $observer_hash, $name, $resource_id, $mimetype = 'text/bbcode') {
+
+		logger('mimetype: ' . $mimetype);
+
+		if(! in_array($mimetype,[ 'text/markdown','text/bbcode','text/plain','text/html']))
+			$mimetype = 'text/markdown;
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 
@@ -68,6 +73,7 @@ class NativeWikiPage {
 		$arr = [];
 		$arr['uid']           = $channel_id;
 		$arr['author_xchan']  = $observer_hash;
+		$arr['mimetype']      = $mimetype;
 		$arr['resource_type'] = 'nwikipage';
 		$arr['resource_id']   = $resource_id;
 		$arr['allow_cid']     = $w['wiki']['allow_cid'];

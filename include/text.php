@@ -1786,15 +1786,15 @@ function layout_select($channel_id, $current = '') {
 }
 
 
-function mimetype_select($channel_id, $current = 'text/bbcode') {
+function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null) {
 
-	$x = array(
+	$x = (($choices) ? $choices : [
 		'text/bbcode',
 		'text/html',
 		'text/markdown',
 		'text/plain',
 		'application/x-pdl'
-	);
+	]);
 
 
 	if((App::$is_sys) || (channel_codeallowed($channel_id) && $channel_id == local_channel())){

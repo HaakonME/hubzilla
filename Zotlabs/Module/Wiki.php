@@ -406,7 +406,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$r = Zlib\NativeWiki::create_wiki($owner, $observer_hash, $wiki, $acl);
 			if($r['success']) {
 				Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$r['item_id'],$r['item']['resource_id']);
-				$homePage = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash,'Home', $r['item']['resource_id']);
+				$homePage = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash,'Home', $r['item']['resource_id'], $wiki['mimeType']);
 				if(! $homePage['success']) {
 					notice( t('Wiki created, but error creating Home page.'));
 					goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName']);
@@ -445,11 +445,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 		// Create a page
 		if ((argc() === 4) && (argv(2) === 'create') && (argv(3) === 'page')) {
 
+			$mimetype = $_POST['mimetype'];
+
 			$resource_id = $_POST['resource_id']; 
 			// Determine if observer has permission to create a page
+			
 
-
-			$perms = Zlib\NativeWiki::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash);
+			$perms = Zlib\NativeWiki::get_permissions($resource_id, intval($owner['channel_id']), $observer_hash, $mimetype);
 			if(! $perms['write']) {
 				logger('Wiki write permission denied. ' . EOL);
 				json_return_and_die(array('success' => false));					
@@ -459,7 +461,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			if(urlencode(escape_tags($_POST['pageName'])) === '') {				
 				json_return_and_die(array('message' => 'Error creating page. Invalid name.', 'success' => false));
 			}
-			$page = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash, $name, $resource_id);
+			$page = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash, $name, $resource_id, $mimetype);
 
 			if($page['item_id']) {
 				$commit = Zlib\NativeWikiPage::commit(array(

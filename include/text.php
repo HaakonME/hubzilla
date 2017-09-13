@@ -1786,7 +1786,7 @@ function layout_select($channel_id, $current = '') {
 }
 
 
-function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null) {
+function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null, $element = 'mimetype') {
 
 	$x = (($choices) ? $choices : [
 		'text/bbcode',
@@ -1807,7 +1807,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null)
 	}
 
 	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
-		'$field'	=> array('mimetype', t('Page content type'), $selected, '', $options)
+		'$field'	=> array( $element, t('Page content type'), $selected, '', $options)
 	));
 
 	return $o;

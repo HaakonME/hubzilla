@@ -259,7 +259,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 					goaway(z_root() . '/' . argv(0) . '/' . argv(1) );
 				}
 
-				$mimeType = $p['mimeType'];
+				$mimeType = $p['pageMimeType'];
 
 				$sampleContent = (($mimeType == 'text/bbcode') ? '[h3]' . t('New page') . '[/h3]' : '### ' . t('New page'));
 
@@ -323,7 +323,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$modalerroralbum' => t('Error getting album'),
 		));
 
-		if($p['mimeType'] != 'text/bbcode')
+		if($p['pageMimeType'] != 'text/bbcode')
 			head_add_js('/library/ace/ace.js');	// Ace Code Editor
 
 		return $o;
@@ -347,11 +347,12 @@ class Wiki extends \Zotlabs\Web\Controller {
 		if((argc() > 2) && (argv(2) === 'preview')) {
 			$content = $_POST['content'];
 			$resource_id = $_POST['resource_id'];
+
 			$w = Zlib\NativeWiki::get_wiki($owner['channel_id'],$observer_hash,$resource_id);
 
 			$wikiURL = argv(0) . '/' . argv(1) . '/' . $w['urlName'];
 
-			$mimeType = $w['mimeType'];
+			$mimeType = $_POST['mimetype'];
 
 			if($mimeType == 'text/bbcode') {
 				$html = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))),$wikiURL);

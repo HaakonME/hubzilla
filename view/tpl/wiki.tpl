@@ -183,7 +183,8 @@
 			{{else}}
 			content: editor.val(),
 			{{/if}}
-			resource_id: window.wiki_resource_id
+			resource_id: window.wiki_resource_id,
+			mimetype: '{{$mimeType}}'
 		},
 		function (data) {
 		if (data.success) {

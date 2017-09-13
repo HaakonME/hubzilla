@@ -16,7 +16,8 @@ class LDSignatures {
 	}
 
 	static function dopplesign(&$data,$channel) {
-		$data['magicEnv'] = self::salmon_sign($data,$channel);
+	// remove for the time being - performance issues
+	//	$data['magicEnv'] = self::salmon_sign($data,$channel);
 		return self::sign($data,$channel);
 	}
 

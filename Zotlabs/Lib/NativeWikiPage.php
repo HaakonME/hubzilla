@@ -60,7 +60,7 @@ class NativeWikiPage {
 		logger('mimetype: ' . $mimetype);
 
 		if(! in_array($mimetype,[ 'text/markdown','text/bbcode','text/plain','text/html']))
-			$mimetype = 'text/markdown;
+			$mimetype = 'text/markdown';
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 

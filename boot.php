@@ -82,7 +82,7 @@ define ( 'ZOT6_COMPLIANT',             0x1000);
 define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
 define ( 'DIRECTORY_FALLBACK_MASTER',  'https://gravizot.de');
 
-$DIRECTORY_FALLBACK_SERVERS = array( 
+$DIRECTORY_FALLBACK_SERVERS = array(
 	'https://hubzilla.zottel.net',
 	'https://my.federated.social',
 	//'https://hubzilla.nl',
@@ -207,7 +207,7 @@ define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
 define ( 'PAGE_SYSTEM',            0x1000 );
-define ( 'PAGE_HUBADMIN',          0x2000 ); // set this to indicate a preferred admin channel rather than the 
+define ( 'PAGE_HUBADMIN',          0x2000 ); // set this to indicate a preferred admin channel rather than the
 											 // default channel of any accounts with the admin role.
 define ( 'PAGE_REMOVED',           0x8000 );
 
@@ -615,6 +615,8 @@ function sys_boot() {
 		define( 'DEFAULT_NOTIFY_ICON', '/images/rm-32.png' );
 	}
 
+	App::head_set_icon(DEFAULT_PLATFORM_ICON);
+
 	/*
 	 * Try to open the database;
 	 */
@@ -945,8 +947,6 @@ class App {
 		self::$is_mobile = $mobile_detect->isMobile();
 		self::$is_tablet = $mobile_detect->isTablet();
 
-		self::head_set_icon(DEFAULT_PLATFORM_ICON);
-
 		/*
 		 * register template engines
 		 */
@@ -1122,7 +1122,7 @@ class App {
 		 * being first
 		 */
 
-		self::$page['htmlhead'] = replace_macros(get_markup_template('head.tpl'), 
+		self::$page['htmlhead'] = replace_macros(get_markup_template('head.tpl'),
 			[
 				'$preload_images'  => $preload_images,
 				'$user_scalable'   => $user_scalable,
@@ -1154,7 +1154,7 @@ class App {
 	public static function register_template_engine($class, $name = '') {
 		if(! $name) {
 			$v = get_class_vars($class);
-			if(x($v, "name")) { 
+			if(x($v, "name")) {
 				$name = $v['name'];
 			}
 		}
@@ -1196,7 +1196,7 @@ class App {
 			}
 		}
 
-		echo "template engine <tt>$template_engine</tt> is not registered!\n"; 
+		echo "template engine <tt>$template_engine</tt> is not registered!\n";
 		killme();
 	}
 
@@ -1323,7 +1323,7 @@ function os_mkdir($path, $mode = 0777, $recursive = false) {
 	$oldumask = @umask(0);
 	$result = @mkdir($path, $mode, $recursive);
 	@umask($oldumask);
-	return $result; 
+	return $result;
 }
 
 
@@ -1673,8 +1673,8 @@ function get_account_id() {
  * @return int|bool channel_id or false
  */
 function local_channel() {
-	if(session_id() 
-		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+	if(session_id()
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated']
 		&& array_key_exists('uid',$_SESSION) && intval($_SESSION['uid']))
 		return intval($_SESSION['uid']);
 
@@ -1694,8 +1694,8 @@ function local_channel() {
  * @return string|bool visitor_id or false
  */
 function remote_channel() {
-	if(session_id() 
-		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated'] 
+	if(session_id()
+		&& array_key_exists('authenticated',$_SESSION) && $_SESSION['authenticated']
 		&& array_key_exists('visitor_id',$_SESSION) && $_SESSION['visitor_id'])
 		return $_SESSION['visitor_id'];
 
@@ -1714,8 +1714,8 @@ function notice($s) {
 
 	if(! x($_SESSION, 'sysmsg')) $_SESSION['sysmsg'] = array();
 
-	// ignore duplicated error messages which haven't yet been displayed 
-	// - typically seen as multiple 'permission denied' messages 
+	// ignore duplicated error messages which haven't yet been displayed
+	// - typically seen as multiple 'permission denied' messages
 	// as a result of auto-reloading a protected page with &JS=1
 
 	if(in_array($s,$_SESSION['sysmsg']))
@@ -1737,7 +1737,7 @@ function notice($s) {
 function info($s) {
 	if(! session_id())
 		return;
-	if(! x($_SESSION, 'sysmsg_info')) 
+	if(! x($_SESSION, 'sysmsg_info'))
 		$_SESSION['sysmsg_info'] = array();
 	if(App::$interactive)
 		$_SESSION['sysmsg_info'][] = $s;
@@ -1813,7 +1813,7 @@ function proc_run(){
 		proc_close(proc_open($cmd, array(), $foo));
 	}
 	else {
-		if(get_config('system','use_proc_open')) 
+		if(get_config('system','use_proc_open'))
 			proc_close(proc_open($cmdline ." &", array(), $foo));
 		else
 			exec($cmdline . ' > /dev/null &');
@@ -1826,8 +1826,8 @@ function proc_run(){
  * @return bool true if we run on M$ Windows
  *
  * It's possible you might be able to run on WAMP or XAMPP, and this
- * has been accomplished, but is not officially supported. Good luck. 
- * 
+ * has been accomplished, but is not officially supported. Good luck.
+ *
  */
 function is_windows() {
 	return ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? true : false);
@@ -2176,7 +2176,7 @@ function construct_page() {
 	if(App::$config['system']['x_security_headers']) {
 		header("X-Frame-Options: SAMEORIGIN");
 		header("X-Xss-Protection: 1; mode=block;");
-		header("X-Content-Type-Options: nosniff");	
+		header("X-Content-Type-Options: nosniff");
 	}
 
 	if(App::$config['system']['public_key_pins']) {
@@ -2289,7 +2289,7 @@ function z_check_cert() {
 				cert_bad_email();
 		}
 	}
-} 
+}
 
 
 /**
@@ -2398,7 +2398,7 @@ function check_for_new_perms() {
 function check_cron_broken() {
 
 	$d = get_config('system','lastcron');
-	
+
 	if((! $d) || ($d < datetime_convert('UTC','UTC','now - 4 hours'))) {
 		Zotlabs\Daemon\Master::Summon(array('Cron'));
 		set_config('system','lastcron',datetime_convert());
@@ -2443,9 +2443,8 @@ function check_cron_broken() {
 
 function observer_prohibited($allow_account = false) {
 
-	if($allow_account) 
+	if($allow_account)
 		return (((get_config('system','block_public')) && (! get_account_id()) && (! remote_channel())) ? true : false );
 	return (((get_config('system','block_public')) && (! local_channel()) && (! remote_channel())) ? true : false );
 
 }
-

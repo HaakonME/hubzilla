@@ -21,6 +21,7 @@
 	<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
 		<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
 			<input type="hidden" name="resource_id" value="{{$resource_id}}">
+			{{$mimetype}}
 			{{include file="field_input.tpl" field=$pageName}}
 			<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
 		</form>
@@ -33,7 +34,7 @@
 {{if $canadd}}
 <script>
 	$('#new-page-submit').click(function (ev) {
-		$.post("wiki/{{$channel_address}}/create/page", {pageName: $('#id_pageName').val(), resource_id: window.wiki_resource_id},
+		$.post("wiki/{{$channel_address}}/create/page", {pageName: $('#id_pageName').val(), resource_id: window.wiki_resource_id, mimetype: $('#id_mimetype').val() },
 		function(data) {
 			if(data.success) {
 				window.location = data.url;

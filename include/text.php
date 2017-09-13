@@ -1786,15 +1786,15 @@ function layout_select($channel_id, $current = '') {
 }
 
 
-function mimetype_select($channel_id, $current = 'text/bbcode') {
+function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null, $element = 'mimetype') {
 
-	$x = array(
+	$x = (($choices) ? $choices : [
 		'text/bbcode',
 		'text/html',
 		'text/markdown',
 		'text/plain',
 		'application/x-pdl'
-	);
+	]);
 
 
 	if((App::$is_sys) || (channel_codeallowed($channel_id) && $channel_id == local_channel())){
@@ -1807,7 +1807,7 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 	}
 
 	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(
-		'$field'	=> array('mimetype', t('Page content type'), $selected, '', $options)
+		'$field'	=> array( $element, t('Page content type'), $selected, '', $options)
 	));
 
 	return $o;

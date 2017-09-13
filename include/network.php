@@ -411,7 +411,7 @@ function http_status($val, $msg = '') {
 	if ($val >= 200 && $val < 300)
 		$msg = (($msg) ? $msg : 'OK');
 
-	logger('' . $val . ' ' . $msg);
+	logger(\App::$query_string . ':' . $val . ' ' . $msg);
 	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $val . ' ' . $msg);
 }
 

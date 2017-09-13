@@ -55,7 +55,12 @@ class NativeWikiPage {
 	}
 
 
-	static public function create_page($channel_id, $observer_hash, $name, $resource_id) {
+	static public function create_page($channel_id, $observer_hash, $name, $resource_id, $mimetype = 'text/bbcode') {
+
+		logger('mimetype: ' . $mimetype);
+
+		if(! in_array($mimetype,[ 'text/markdown','text/bbcode','text/plain','text/html' ]))
+			$mimetype = 'text/markdown';
 
 		$w = Zlib\NativeWiki::get_wiki($channel_id, $observer_hash, $resource_id);
 
@@ -68,6 +73,7 @@ class NativeWikiPage {
 		$arr = [];
 		$arr['uid']           = $channel_id;
 		$arr['author_xchan']  = $observer_hash;
+		$arr['mimetype']      = $mimetype;
 		$arr['resource_type'] = 'nwikipage';
 		$arr['resource_id']   = $resource_id;
 		$arr['allow_cid']     = $w['wiki']['allow_cid'];
@@ -167,10 +173,11 @@ class NativeWikiPage {
 			$content = $item['body'];
 
 			return [ 
-				'content' => $content,
-				'mimeType' => $w['mimeType'], 
-				'message' => '', 
-				'success' => true
+				'content'      => $content,
+				'mimeType'     => $w['mimeType'],
+				'pageMimeType' => $item['mimetype'], 
+				'message'      => '', 
+				'success'      => true
 			];
 		}
 	
@@ -333,7 +340,6 @@ class NativeWikiPage {
 			return array('message' => t('Error reading wiki'), 'success' => false);
 		}
 
-		$mimetype = $w['mimeType'];
 	
 		// fetch the most recently saved revision. 
 
@@ -341,6 +347,8 @@ class NativeWikiPage {
 		if(! $item) {
 			return array('message' => t('Page not found'), 'success' => false);
 		}
+
+		$mimetype = $item['mimetype'];
 
 		// change just the fields we need to change to create a revision; 
 

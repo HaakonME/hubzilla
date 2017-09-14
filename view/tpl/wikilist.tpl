@@ -30,7 +30,7 @@
 				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
 				<th width="1%" class="wikis-index-tool"></th>
-				<!-- th width="1%" class="wikis-index-tool"></th -->
+				<th width="1%" class="wikis-index-tool"></th>
 				{{if $owner}}
 				<th width="1%"></th>
 				{{/if}}
@@ -45,7 +45,7 @@
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>
-				<!-- td class="wiki-index-tool"><i class="fa fa-download fakelink" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td -->
+				<td class="wiki-index-tool"><i class="fa fa-download fakelink" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
 				{{if $owner}}
 				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
 				{{/if}}

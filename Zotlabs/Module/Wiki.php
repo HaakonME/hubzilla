@@ -113,12 +113,13 @@ class Wiki extends \Zotlabs\Web\Controller {
 		$o = '';
 
 		// Download a wiki
-/*
+
 		if((argc() > 3) && (argv(2) === 'download') && (argv(3) === 'wiki')) {
 
 			$resource_id = argv(4);
+			$w = Zlib\NativeWiki::get_wiki($owner['channel_id'],$observer_hash,$resource_id);
 
-			$w = Zlib\NativeWiki::get_wiki($owner,$observer_hash,$resource_id);
+//			$w = Zlib\NativeWiki::get_wiki($owner,$observer_hash,$resource_id);
 			if(! $w['htmlName']) {
 				notice(t('Error retrieving wiki') . EOL);
 			}
@@ -133,8 +134,35 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$zip_filename = $w['urlName'];
 			$zip_filepath = '/tmp/' . $zip_folder_name . '/' . $zip_filename;
 
+
 			// Generate the zip file
-			ZLib\ExtendedZip::zipTree($w['path'], $zip_filepath, \ZipArchive::CREATE);
+
+			$zip = new \ZipArchive;
+			$r = $zip->open($zip_filepath, \ZipArchive::CREATE);
+			if($r === true) {
+				$i = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s'",
+					dbesc($resource_id)
+				);
+				if($i) {
+					foreach($i as $iv) {
+						if($iv['mimetype'] === 'text/plain') {
+							$content = html_entity_decode($iv['body'],ENT_COMPAT,'UTF-8');
+						}
+						elseif($iv['mimetype'] === 'text/bbcode') {
+							$content = html_entity_decode($iv['body'],ENT_COMPAT,'UTF-8');
+						}
+						elseif($iv['mimetype'] === 'text/markdown') {
+							$content = html_entity_decode(\Zlib\MarkdownSoap::unescape($iv['body']),ENT_COMPAT,'UTF-8');
+						}
+						$fname = get_iconfig($iv['id'],'nwikipage','pagetitle') . Zlib\NativeWikiPage::get_file_ext($iv);
+						$zip->addFromString($fname,$content);
+					}
+
+
+				}
+
+			}
+			$zip->close();
 
 			// Output the file for download
 
@@ -153,7 +181,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			killme();
 
 		}
-*/
+
 		switch(argc()) {
 			case 2:
 				$wikis = Zlib\NativeWiki::listwikis($owner, get_observer_hash());

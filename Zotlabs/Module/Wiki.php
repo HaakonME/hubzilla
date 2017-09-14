@@ -170,7 +170,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$create' => t('Create New'),
 						'$submit' => t('Submit'),
 						'$wikiName' => array('wikiName', t('Wiki name')),
-						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => 'Markdown', 'text/bbcode' => 'BB Code']),
+						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => t('Markdown'), 'text/bbcode' => t('BBcode'), 'text/plain' => t('Text') ]),
 						'$name' => t('Name'),
 						'$type' => t('Type'),
 						'$lockstate' => $x['lockstate'],
@@ -262,6 +262,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$mimeType = $p['pageMimeType'];
 
 				$sampleContent = (($mimeType == 'text/bbcode') ? '[h3]' . t('New page') . '[/h3]' : '### ' . t('New page'));
+				if($mimeType === 'text/plain')
+					$sampleContent = t('New page');
 
 				$content = (($p['content'] == '') ? $sampleContent : $p['content']);
 
@@ -269,7 +271,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 				if($mimeType == 'text/bbcode') {
 					$renderedContent = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))), argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
 				}
-				else {
+				elseif($mimeType === 'text/plain') {
+					$renderedContent = str_replace(["\n",' ',"\t"],[EOL,'&nbsp;','&nbsp;&nbsp;&nbsp;&nbsp;'],htmlentities($content,ENT_COMPAT,'UTF-8',false));
+				}
+				elseif($mimeType === 'text/markdown') {
 					$content = Zlib\MarkdownSoap::unescape($content);
 					$html = Zlib\NativeWikiPage::generate_toc(zidify_text(MarkdownExtra::defaultTransform(Zlib\NativeWikiPage::bbcode($content))));
 					$renderedContent = Zlib\NativeWikiPage::convert_links($html, argv(0) . '/' . argv(1) . '/' . $wikiUrlName);
@@ -323,7 +328,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$modalerroralbum' => t('Error getting album'),
 		));
 
-		if($p['pageMimeType'] != 'text/bbcode')
+		if($p['pageMimeType'] === 'text/markdown')
 			head_add_js('/library/ace/ace.js');	// Ace Code Editor
 
 		return $o;
@@ -354,11 +359,10 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 			$mimeType = $_POST['mimetype'];
 
-			if($mimeType == 'text/bbcode') {
+			if($mimeType === 'text/bbcode') {
 				$html = Zlib\NativeWikiPage::convert_links(zidify_links(smilies(bbcode($content))),$wikiURL);
 			}
-			else {
-
+			elseif($mimeType === 'text/markdown') {
 				$bb = Zlib\NativeWikiPage::bbcode($content);
 				$x = new ZLib\MarkdownSoap($bb);
 				$md = $x->clean();
@@ -366,6 +370,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 				$html = MarkdownExtra::defaultTransform($md);
 				$html = Zlib\NativeWikiPage::generate_toc(zidify_text($html));
 				$html = Zlib\NativeWikiPage::convert_links($html,$wikiURL);
+			}
+			elseif($mimeType === 'text/plain') {
+				$html = str_replace(["\n",' ',"\t"],[EOL,'&nbsp;','&nbsp;&nbsp;&nbsp;&nbsp;'],htmlentities($content,ENT_COMPAT,'UTF-8',false));
 			}
 			json_return_and_die(array('html' => $html, 'success' => true));
 		}

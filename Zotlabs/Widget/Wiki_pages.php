@@ -50,7 +50,7 @@ class Wiki_pages {
 				'$canadd' => $can_create,
 				'$candel' => $can_delete,
 				'$addnew' => t('Add new page'),
-				'$mimetype' => mimetype_select(0,$w['mimeType'], [ 'text/markdown','text/bbcode' ]),
+				'$mimetype' => mimetype_select(0,$w['mimeType'], [ 'text/markdown','text/bbcode', 'text/plain' ]),
 				'$pageName' => array('pageName', t('Page name')),
 				'$refresh' => $arr['refresh']
 		));

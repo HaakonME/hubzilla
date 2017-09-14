@@ -4188,6 +4188,7 @@ function zot_site_info($channel = null) {
 	$ret['site']['url'] = z_root();
 	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$signing_key,$sig_method));
 	$ret['site']['zot_auth'] = z_root() . '/magic';
+	$ret['site']['key'] = get_config('system','pubkey');
 
 	$dirmode = get_config('system','directory_mode');
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))

@@ -95,13 +95,18 @@ class HTTPSig {
 			$algorithm = 'sha512';
 		}
 
+		if($key && function_exists($key)) {
+			$result['signer'] = $sig_block['keyId'];
+			$key = $key($sig_block['keyId']);
+		}
+
 		if(! $key) {
 			$result['signer'] = $sig_block['keyId'];
 			$key = self::get_activitypub_key($sig_block['keyId']);
 		}
 
 		if(! $key)
-			return null;
+			return $result;
 
 		$x = rsa_verify($signed_data,$sig_block['signature'],$key,$algorithm);
 

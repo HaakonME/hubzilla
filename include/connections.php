@@ -629,13 +629,20 @@ function get_vcard_array($vc,$id) {
 	if($vc->ADR) {
 		foreach($vc->ADR as $adr) {
 			$type = (($adr['TYPE']) ? vcard_translate_type((string)$adr['TYPE']) : '');
-			$adrs[] = [
+			$entry = [
 				'type' => $type,
 				'address' => $adr->getParts()
 			];
-			$last_entry = end($adrs);
-			if($last_entry && is_array($adrs[$last_entry]['address']))
-				array_walk($adrs[$last_entry]['address'],'array_escape_tags');
+
+			if(is_array($entry['address'])) {
+				array_walk($entry['address'],'array_escape_tags');
+			}
+			else { 
+				$entry['address'] = (string) escape_tags($entry['address']);
+			}
+
+			$adrs[] = $entry;
+				
 		}
 	}
 

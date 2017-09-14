@@ -170,9 +170,9 @@ EOT;
 
 	if(local_channel()) {
 
-		$nav['network'] = array('network', t('Grid'), "", t('Your grid'),'network_nav_btn');
-		$nav['network']['all'] = [ 'network', t('View your network/grid'), '','' ];
-		$nav['network']['mark'] = array('', t('Mark all grid notifications seen'), '','');
+		$nav['network'] = array('network', t('Activity'), "", t('Network Activity'),'network_nav_btn');
+		$nav['network']['all'] = [ 'network', t('View your network activity'), '','' ];
+		$nav['network']['mark'] = array('', t('Mark all activity notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'),'home_nav_btn');
 		$nav['home']['all'] = [ 'channel/' . $channel['channel_address'], t('View your channel home'), '' , '' ];

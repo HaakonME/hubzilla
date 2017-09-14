@@ -455,7 +455,9 @@
 		window.editor.on("input", function() {
 			$('#save-page').removeClass('disabled');
 		});
+		{{if $mimeType == 'text/bbcode'}}
 		window.editor.bbco_autocomplete('bbcode');
+		{{/if}}
 		{{/if}}
 	});
 

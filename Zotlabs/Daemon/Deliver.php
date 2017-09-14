@@ -53,22 +53,29 @@ class Deliver {
 						remove_queue_item($r[0]['outq_hash']);
 
 						if($dresult && is_array($dresult)) {
-							foreach($dresult as $xx) {
-								if(is_array($xx) && array_key_exists('message_id',$xx)) {
-									if(delivery_report_is_storable($xx)) {
-										q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
-											dbesc($xx['message_id']),
-											dbesc($xx['location']),
-											dbesc($xx['recipient']),
-											dbesc($xx['status']),
-											dbesc(datetime_convert($xx['date'])),
-											dbesc($xx['sender'])
-										);
+							if(array_key_exists('iv',$dresult)) {
+								$dresult = json_decode(crypto_unencapsulate($dresult,get_config('system','prvkey')),true);
+							}
+							if(! $dresult) {
+								logger('dreport decryption failure');
+							}
+							else {
+								foreach($dresult as $xx) {
+									if(is_array($xx) && array_key_exists('message_id',$xx)) {
+										if(delivery_report_is_storable($xx)) {
+											q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
+												dbesc($xx['message_id']),
+												dbesc($xx['location']),
+												dbesc($xx['recipient']),
+												dbesc($xx['status']),
+												dbesc(datetime_convert($xx['date'])),
+												dbesc($xx['sender'])
+											);
+										}
 									}
 								}
 							}
 						}
-
 						q("delete from dreport where dreport_queue = '%s'",
 							dbesc($argv[$x])
 						);

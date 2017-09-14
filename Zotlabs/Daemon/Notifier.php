@@ -492,7 +492,7 @@ class Notifier {
 		// Now we have collected recipients (except for external mentions, FIXME)
 		// Let's reduce this to a set of hubs; checking that the site is not dead.
 
-		$r = q("select hubloc.*, site.site_crypto from hubloc left join site on site_url = hubloc_url where hubloc_hash in (" . implode(',',$recipients) . ") 
+		$r = q("select hubloc.*, site.site_crypto, site.site_flags from hubloc left join site on site_url = hubloc_url where hubloc_hash in (" . implode(',',$recipients) . ") 
 			and hubloc_error = 0 and hubloc_deleted = 0 and ( site_dead = 0 OR site_dead is null ) "
 		);		
  

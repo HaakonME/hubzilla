@@ -2875,8 +2875,13 @@ function import_site($arr, $pubkey) {
 		$site_directory = DIRECTORY_MODE_NORMAL;
 	}
 
+	$site_flags = $site_directory;
+
+	if(array_key_exists('zot',$arr) && ((float) $arr['zot']) >= 6.0)
+		$site_flags = ($site_flags & ZOT6_COMPLIANT); 
+
 	if($exists) {
-		if(($siterecord['site_flags'] != $site_directory)
+		if(($siterecord['site_flags'] != $site_flags)
 			|| ($siterecord['site_access'] != $access_policy)
 			|| ($siterecord['site_directory'] != $directory_url)
 			|| ($siterecord['site_sellpage'] != $sellpage)
@@ -2896,7 +2901,7 @@ function import_site($arr, $pubkey) {
 			$r = q("update site set site_dead = 0, site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s', site_realm = '%s', site_type = %d, site_project = '%s', site_version = '%s', site_crypto = '%s'
 				where site_url = '%s'",
 				dbesc($site_location),
-				intval($site_directory),
+				intval($site_flags),
 				intval($access_policy),
 				dbesc($directory_url),
 				intval($register_policy),
@@ -2929,7 +2934,7 @@ function import_site($arr, $pubkey) {
 				'site_location'  => $site_location,
 				'site_url'       => $url,
 				'site_access'    => intval($access_policy),
-				'site_flags'     => intval($site_directory),
+				'site_flags'     => intval($site_flags),
 				'site_update'    => datetime_convert(),
 				'site_directory' => $directory_url,
 				'site_register'  => intval($register_policy),
@@ -4161,9 +4166,27 @@ function zotinfo($arr) {
 	if($x)
 		$ret['locations'] = $x;
 
-	$ret['site'] = array();
+	$ret['site'] = zot_site_info($e);
+
+
+	check_zotinfo($e,$x,$ret);
+
+
+	call_hooks('zot_finger',$ret);
+	return($ret);
+
+}
+
+
+function zot_site_info($channel = null) {
+
+	$signing_key = (($channel) ? $channel['channel_prvkey'] : get_config('system','prvkey'));
+	$sig_method = get_config('system','signature_algorithm','sha256');
+
+	$ret = [];
+	$ret['site'] = [];
 	$ret['site']['url'] = z_root();
-	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey'],$sig_method));
+	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$signing_key,$sig_method));
 	$ret['site']['zot_auth'] = z_root() . '/magic';
 
 	$dirmode = get_config('system','directory_mode');
@@ -4182,6 +4205,12 @@ function zotinfo($arr) {
 
 	$ret['site']['encryption'] = crypto_methods();
 	$ret['site']['signing'] = signing_methods();
+	if(function_exists('zotvi_load')) {
+		$ret['site']['zot'] = '6.0';
+	}
+	else {
+		$ret['site']['zot'] = ZOT_REVISION;
+	}
 
 	// hide detailed site information if you're off the grid
 
@@ -4234,14 +4263,9 @@ function zotinfo($arr) {
 
 	}
 
-	check_zotinfo($e,$x,$ret);
-
-
-	call_hooks('zot_finger',$ret);
-	return($ret);
+	return $ret['site'];
 
 }
-
 
 function check_zotinfo($channel,$locations,&$ret) {
 

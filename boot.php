@@ -608,11 +608,11 @@ function sys_boot() {
 
 
 	if(! defined('DEFAULT_PLATFORM_ICON')) {
-		define( 'DEFAULT_PLATFORM_ICON', '/images/rm-32.png' );
+		define( 'DEFAULT_PLATFORM_ICON', '/images/hz-32.png' );
 	}
 
 	if(! defined('DEFAULT_NOTIFY_ICON')) {
-		define( 'DEFAULT_NOTIFY_ICON', '/images/rm-32.png' );
+		define( 'DEFAULT_NOTIFY_ICON', '/images/hz-white-64.png' );
 	}
 
 	App::head_set_icon(DEFAULT_PLATFORM_ICON);

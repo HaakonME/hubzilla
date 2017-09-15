@@ -7,6 +7,7 @@ require_once('include/zot.php');
 require_once('include/crypto.php');
 require_once('include/menu.php');
 require_once('include/perm_upgrade.php');
+require_once('include/photo/photo_driver.php');
 
 /**
  * @brief Called when creating a new channel.
@@ -271,6 +272,17 @@ function create_identity($arr) {
 	if(! $r) {
 		$ret['message'] = t('Unable to retrieve created identity');
 		return $ret;
+	}
+
+	$a = q("select * from account where account_id = %d",
+		intval($arr['account_id'])
+	);
+
+	$z = [ 'account' => $a[0], 'channel' = $r[0], 'photo_url' => '' ];
+	call_hooks('create_channel_photo',$z);
+ 
+	if($z['photo_url']) {
+		import_channel_photo_from_url($z['photo_url'],$arr['account_id'],$r[0]['channel_id']);
 	}
 
 	if($role_permissions && array_key_exists('limits',$role_permissions))

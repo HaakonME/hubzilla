@@ -637,6 +637,36 @@ function import_xchan_photo($photo,$xchan,$thing = false) {
 
 }
 
+function import_channel_photo_from_url($photo,$aid,$uid) {
+
+	if($photo) {
+		$filename = basename($photo);
+
+		$result = z_fetch_url($photo,true);
+
+		if($result['success']) {
+			$img_str = $result['body'];
+			$type = guess_image_type($photo, $result['header']);
+
+			$h = explode("\n",$result['header']);
+			if($h) {
+				foreach($h as $hl) {
+					if(stristr($hl,'content-type:')) {
+						if(! stristr($hl,'image/')) {
+							$photo_failure = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	else {
+		$photo_failure = true;
+	}
+
+	import_channel_photo($img_str,$type,$aid,$uid);
+
+}
 
 
 function import_channel_photo($photo,$type,$aid,$uid) {

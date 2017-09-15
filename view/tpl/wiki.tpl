@@ -1,6 +1,7 @@
 <div class="generic-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
 	<div class="section-title-wrapper">
 		<div class="pull-right">
+			<span class="wiki-typename">[{{$typename}}]&nbsp;</span>
 			{{if $showPageControls}}
 			<div id="page-tools" class="btn-group" style="display: none;">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">

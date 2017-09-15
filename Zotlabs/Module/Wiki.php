@@ -201,12 +201,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$mimeType' => array('mimeType', t('Content type'), '', '', ['text/markdown' => t('Markdown'), 'text/bbcode' => t('BBcode'), 'text/plain' => t('Text') ]),
 						'$name' => t('Name'),
 						'$type' => t('Type'),
+						'$unlocked' => t('Any&nbsp;type'),
 						'$lockstate' => $x['lockstate'],
 						'$acl' => $x['acl'],
 						'$allow_cid' => $x['allow_cid'],
 						'$allow_gid' => $x['allow_gid'],
 						'$deny_cid' => $x['deny_cid'],
 						'$deny_gid' => $x['deny_gid'],
+						'$typelock' => array('typelock', t('Lock content type'), '', '', array(t('No'), t('Yes'))),
 						'$notify' => array('postVisible', t('Create a status post for this wiki'), '', '', array(t('No'), t('Yes')))
 					));
 
@@ -323,6 +325,9 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$cancel' => t('Cancel')
 		));
 
+		$types = [ 'text/bbcode' => t('BBcode'), 'text/markdown' => t('Markdown'), 'text/plain' => 'Text' ];
+		$currenttype = $types[$mimeType];
+
 		$placeholder = t('Short description of your changes (optional)');
 				
 		$o .= replace_macros(get_markup_template('wiki.tpl'),array(
@@ -337,6 +342,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			'$resource_id' => $resource_id,
 			'$page' => $pageUrlName,
 			'$mimeType' => $mimeType,
+			'$typename' => $currenttype,
 			'$content' => $content,
 			'$renderedContent' => $renderedContent,
 			'$pageRename' => array('pageRename', t('New page name'), '', ''),
@@ -422,6 +428,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$wiki['htmlName']    = escape_tags($_POST['wikiName']);
 			$wiki['urlName']     = urlencode(urlencode($_POST['wikiName'])); 
 			$wiki['mimeType']    = $_POST['mimeType'];
+			$wiki['typelock']    = $_POST['typelock'];
 
 			if($wiki['urlName'] === '') {				
 				notice( t('Error creating wiki. Invalid name.') . EOL);

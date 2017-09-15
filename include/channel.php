@@ -278,7 +278,7 @@ function create_identity($arr) {
 		intval($arr['account_id'])
 	);
 
-	$z = [ 'account' => $a[0], 'channel' = $r[0], 'photo_url' => '' ];
+	$z = [ 'account' => $a[0], 'channel' => $r[0], 'photo_url' => '' ];
 	call_hooks('create_channel_photo',$z);
  
 	if($z['photo_url']) {

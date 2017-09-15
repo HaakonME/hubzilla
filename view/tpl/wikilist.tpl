@@ -40,32 +40,34 @@
 			<tr class="wikis-index-row">
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
 				<td>{{if $wiki.typelock}}{{$wiki.mimeType}}{{else}}{{$unlocked}}{{/if}}</td>
-				<td class="wiki-index-tool dropdown">
-					{{if $wiki.lock}}
-					<button class="btn btn-default btn-sm" onclick="lockview('item',{{$wiki.id}});"><i class="fa fa-lock lockview" data-toggle="dropdown" ></i></button>
+				<td class="wikis-index-tool"><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
+				<td class="wikis-index-tool dropdown">
+					{{if $wiki.lockstate == 'lock'}}
+					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i>
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>
-				<td class="wiki-index-tool"><button class="btn btn-default btn-sm" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"><i class="fa fa-download fakelink" ></i></button></td>
+				<td class="wikis-index-tool"><i class="fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
 				{{if $owner}}
-				<td>&nbsp;</td>
-				<td><button class="btn btn-default btn-sm" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"><i class="fa fa-trash-o drop-icons" ></i></button></td>
+				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
 				{{/if}}
 			</tr>
-			<tr>
-				<td colspan="4">
-					<form id="edit-wiki-form-{{$wiki.id}}" method="post" action="wiki/{{$channel}}/update/wiki" class="acl-form" data-form_id="edit-wiki-form-{{$wiki.id}}" data-allow_cid='{{$wiki.allow_cid}}' data-allow_gid='{{$wiki.allow_gid}}' data-deny_cid='{{$wiki.deny_cid}}' data-deny_gid='{{$wiki.deny_gid}}'>
+			{{if $owner}}
+			<tr id="wikis-index-edit-{{$wiki.id}}" style="display:none">
+				<td colspan="6">
+					<form id="edit-wiki-form-{{$wiki.id}}" method="post" action="wiki/{{$channel}}/update/wiki" class="acl-form" data-form_id="edit-wiki-form-{{$wiki.id}}" data-allow_cid='{{$wiki.json_allow_cid}}' data-allow_gid='{{$wiki.json_allow_gid}}' data-deny_cid='{{$wiki.json_deny_cid}}' data-deny_gid='{{$wiki.json_deny_gid}}'>
+						<input type="hidden" name="origRawName" value="{{$wiki.title}}">
+						{{include file="field_input.tpl" field=['updateRawName', 'Edit Wiki Name', $wiki.title]}}
 						<div class="btn-group float-right">
-							{{if $lockstate}}
 							<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
-								<i class="jot-perms-icon fa fa-{{$lockstate}}"></i>
+								<i class="jot-perms-icon fa fa-{{$wiki.lockstate}}"></i>
 							</button>
-							{{/if}}
 							<button class="btn btn-primary btn-sm" type="submit" value="edit">Submit</button>
 						</div>						
 					</form>
 				</td>
 			</tr>
+			{{/if}}
 			{{/foreach}}
 		</table>
 	</div>

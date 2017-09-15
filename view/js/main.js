@@ -262,6 +262,14 @@ function openClose(theID) {
 	}
 }
 
+function openCloseTR(theID) {
+	if(document.getElementById(theID).style.display == "table-row") {
+		document.getElementById(theID).style.display = "none";
+	} else {
+		document.getElementById(theID).style.display = "table-row";
+	}
+}
+
 function closeOpen(theID) {
 	if(document.getElementById(theID).style.display == "none") {
 		document.getElementById(theID).style.display = "block";

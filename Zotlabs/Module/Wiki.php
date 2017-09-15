@@ -152,7 +152,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 							$content = html_entity_decode($iv['body'],ENT_COMPAT,'UTF-8');
 						}
 						elseif($iv['mimetype'] === 'text/markdown') {
-							$content = html_entity_decode(\Zlib\MarkdownSoap::unescape($iv['body']),ENT_COMPAT,'UTF-8');
+							$content = html_entity_decode(Zlib\MarkdownSoap::unescape($iv['body']),ENT_COMPAT,'UTF-8');
 						}
 						$fname = get_iconfig($iv['id'],'nwikipage','pagetitle') . Zlib\NativeWikiPage::get_file_ext($iv);
 						$zip->addFromString($fname,$content);
@@ -185,6 +185,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 		switch(argc()) {
 			case 2:
 				$wikis = Zlib\NativeWiki::listwikis($owner, get_observer_hash());
+
 				if($wikis) {
 					$o .= replace_macros(get_markup_template('wikilist.tpl'), array(
 						'$header' => t('Wikis'),
@@ -473,36 +474,40 @@ class Wiki extends \Zotlabs\Web\Controller {
 				goaway('/' . argv(0) . '/' . $nick . '/');
 			}
 
-			if($wiki['urlName'] === '') {				
+			$arr = [];
+
+			$arr['urlName'] = urlencode(urlencode($_POST['origRawName']));
+
+			if($_POST['updateRawName'])
+				$arr['updateRawName'] = $_POST['updateRawName'];
+
+			if(($arr['urlName'] || $arr['updateRawName']) === '') {
 				notice( t('Error updating wiki. Invalid name.') . EOL);
 				goaway('/wiki');
 				return; //not reached
 			}
 
-			$exists = Zlib\NativeWiki::exists_by_name($owner['channel_id'], $wiki['urlName']);
-			if($exists['id']) {
+			$wiki = Zlib\NativeWiki::exists_by_name($owner['channel_id'], $arr['urlName']);
+
+			if($wiki['resource_id']) {
+
+				$arr['resource_id'] = $wiki['resource_id'];
 				
-				// Get ACL for permissions
 				$acl = new \Zotlabs\Access\AccessList($owner);
 				$acl->set_from_array($_POST);
-				$r = Zlib\NativeWiki::create_wiki($owner, $observer_hash, $wiki, $acl);
+
+				$r = Zlib\NativeWiki::update_wiki($owner['channel_id'], $observer_hash, $arr, $acl);
 				if($r['success']) {
 					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$r['item_id'],$r['item']['resource_id']);
-					$homePage = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash,'Home', $r['item']['resource_id'], $wiki['mimeType']);
-					if(! $homePage['success']) {
-						notice( t('Wiki created, but error creating Home page.'));
-						goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName']);
-					}
-					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$homePage['item_id'],$r['item']['resource_id']);
-					goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName'] . '/' . $homePage['page']['urlName']);
+					goaway(z_root() . '/wiki/' . $nick);
 				}
 				else {
-					notice( t('Error creating wiki'));
+					notice( t('Error updating wiki'));
 					goaway(z_root() . '/wiki');
 				}
 
 			}
-
+			goaway(z_root() . '/wiki');
 		}
 
 		// Delete a wiki

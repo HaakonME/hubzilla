@@ -19,17 +19,17 @@ class NativeWiki {
 		if($wikis) {
 			foreach($wikis as &$w) {
 
-				$w['allow_cid']  = acl2json($w['allow_cid']);
-				$w['allow_gid']  = acl2json($w['allow_gid']);
-				$w['deny_cid']   = acl2json($w['deny_cid']);
-				$w['deny_gid']   = acl2json($w['deny_gid']);
+				$w['json_allow_cid']  = acl2json($w['allow_cid']);
+				$w['json_allow_gid']  = acl2json($w['allow_gid']);
+				$w['json_deny_cid']   = acl2json($w['deny_cid']);
+				$w['json_deny_gid']   = acl2json($w['deny_gid']);
 
 				$w['rawName']  = get_iconfig($w, 'wiki', 'rawName');
 				$w['htmlName'] = escape_tags($w['rawName']);
 				$w['urlName']  = urlencode(urlencode($w['rawName']));
 				$w['mimeType'] = get_iconfig($w, 'wiki', 'mimeType');
 				$w['typelock'] = get_iconfig($w, 'wiki', 'typelock');
-				$w['lock']     = (($w['item_private'] || $w['allow_cid'] || $w['allow_gid'] || $w['deny_cid'] || $w['deny_gid']) ? true : false);
+				$w['lockstate']     = (($w['allow_cid'] || $w['allow_gid'] || $w['deny_cid'] || $w['deny_gid']) ? 'lock' : 'unlock');
 			}
 		}
 		// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
@@ -101,6 +101,47 @@ class NativeWiki {
 		if($item_id) {
 			\Zotlabs\Daemon\Master::Summon(array('Notifier', 'activity', $item_id));
 			return array('item' => $post['item'], 'item_id' => $item_id, 'success' => true);
+		}
+		else {
+			return array('item' => null, 'success' => false);
+		}
+	}
+
+	function update_wiki($channel_id, $observer_hash, $arr, $acl) {
+
+		$w = self::get_wiki($channel_id, $observer_hash, $arr['resource_id']);
+		$item = $w['wiki'];
+
+		if(! $item) {
+			return array('item' => null, 'success' => false);
+		}
+
+		$x = $acl->get();
+
+		$item['allow_cid']    = $x['allow_cid'];
+		$item['allow_gid']    = $x['allow_gid'];
+		$item['deny_cid']     = $x['deny_cid'];
+		$item['deny_gid']     = $x['deny_gid'];
+		$item['item_private'] = intval($acl->is_private());
+
+		if($item['title'] !== $arr['updateRawName']) {
+			$update_title = true;
+			$item['title'] = $arr['updateRawName'];
+		}
+
+		$update = item_store_update($item);
+
+		$item_id = $update['item_id'];
+
+		if($update['item_id']) {
+			info( t('Wiki updated successfully'));
+			if($update_title) {
+				// Update the wiki name information using iconfig.
+				if(! set_iconfig($update['item_id'], 'wiki', 'rawName', $arr['updateRawName'], true)) {
+					return array('item' => null, 'success' => false);
+				}
+			}
+			return array('item' => $update['item'], 'item_id' => $update['item_id'], 'success' => $update['success']);
 		}
 		else {
 			return array('item' => null, 'success' => false);

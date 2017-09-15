@@ -20,7 +20,6 @@
 				</div>
 			</div>
 		</form>
-		{{$acl}}
 		<div class="clear"></div>
 	</div>
 	{{/if}}
@@ -50,10 +49,25 @@
 				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
 				{{/if}}
 			</tr>
+			<tr>
+				<td colspan="4">
+					<form id="edit-wiki-form-{{$wiki.id}}" method="post" action="wiki/{{$channel}}/update/wiki" class="acl-form" data-form_id="edit-wiki-form-{{$wiki.id}}" data-allow_cid='{{$wiki.allow_cid}}' data-allow_gid='{{$wiki.allow_gid}}' data-deny_cid='{{$wiki.deny_cid}}' data-deny_gid='{{$wiki.deny_gid}}'>
+						<div class="btn-group float-right">
+							{{if $lockstate}}
+							<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
+								<i class="jot-perms-icon fa fa-{{$lockstate}}"></i>
+							</button>
+							{{/if}}
+							<button class="btn btn-primary btn-sm" type="submit" value="edit">Submit</button>
+						</div>						
+					</form>
+				</td>
+			</tr>
 			{{/foreach}}
 		</table>
 	</div>
 </div>
+{{$acl}}
 <script>
 	{{if $owner}}
 	function wiki_delete_wiki(wikiHtmlName, resource_id) {

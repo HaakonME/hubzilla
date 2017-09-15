@@ -428,6 +428,48 @@ class Wiki extends \Zotlabs\Web\Controller {
 			}
 		}
 
+		// Update a wiki
+		// /wiki/channel/update/wiki
+		if ((argc() > 3) && (argv(2) === 'update') && (argv(3) === 'wiki')) {
+			// Only the channel owner can update a wiki, at least until we create a 
+			// more detail permissions framework
+
+			if (local_channel() !== intval($owner['channel_id'])) {
+				goaway('/' . argv(0) . '/' . $nick . '/');
+			}
+
+			if($wiki['urlName'] === '') {				
+				notice( t('Error updating wiki. Invalid name.') . EOL);
+				goaway('/wiki');
+				return; //not reached
+			}
+
+			$exists = Zlib\NativeWiki::exists_by_name($owner['channel_id'], $wiki['urlName']);
+			if($exists['id']) {
+				
+				// Get ACL for permissions
+				$acl = new \Zotlabs\Access\AccessList($owner);
+				$acl->set_from_array($_POST);
+				$r = Zlib\NativeWiki::create_wiki($owner, $observer_hash, $wiki, $acl);
+				if($r['success']) {
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$r['item_id'],$r['item']['resource_id']);
+					$homePage = Zlib\NativeWikiPage::create_page($owner['channel_id'],$observer_hash,'Home', $r['item']['resource_id'], $wiki['mimeType']);
+					if(! $homePage['success']) {
+						notice( t('Wiki created, but error creating Home page.'));
+						goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName']);
+					}
+					Zlib\NativeWiki::sync_a_wiki_item($owner['channel_id'],$homePage['item_id'],$r['item']['resource_id']);
+					goaway(z_root() . '/wiki/' . $nick . '/' . $wiki['urlName'] . '/' . $homePage['page']['urlName']);
+				}
+				else {
+					notice( t('Error creating wiki'));
+					goaway(z_root() . '/wiki');
+				}
+
+			}
+
+		}
+
 		// Delete a wiki
 		if ((argc() > 3) && (argv(2) === 'delete') && (argv(3) === 'wiki')) {
 

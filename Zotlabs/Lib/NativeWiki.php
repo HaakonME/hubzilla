@@ -18,11 +18,18 @@ class NativeWiki {
 
 		if($wikis) {
 			foreach($wikis as &$w) {
+
+				$w['allow_cid']  = acl2json($w['allow_cid']);
+				$w['allow_gid']  = acl2json($w['allow_gid']);
+				$w['deny_cid']   = acl2json($w['deny_cid']);
+				$w['deny_gid']   = acl2json($w['deny_gid']);
+
 				$w['rawName']  = get_iconfig($w, 'wiki', 'rawName');
 				$w['htmlName'] = escape_tags($w['rawName']);
 				$w['urlName']  = urlencode(urlencode($w['rawName']));
 				$w['mimeType'] = get_iconfig($w, 'wiki', 'mimeType');
-				$w['lock']     = (($w['item_private'] || $w['allow_cid'] || $w['allow_gid'] || $w['deny_cid'] || $w['deny_gid']) ? true : false);
+
+
 			}
 		}
 		// TODO: query db for wikis the observer can access. Return with two lists, for read and write access

@@ -124,6 +124,8 @@ class NativeWiki {
 		$item['deny_gid']     = $x['deny_gid'];
 		$item['item_private'] = intval($acl->is_private());
 
+		$update_title = false;
+
 		if($item['title'] !== $arr['updateRawName']) {
 			$update_title = true;
 			$item['title'] = $arr['updateRawName'];

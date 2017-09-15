@@ -49,7 +49,7 @@ require_once('include/hubloc.php');
 require_once('include/attach.php');
 
 define ( 'PLATFORM_NAME',           'hubzilla' );
-define ( 'STD_VERSION',             '2.7.2' );
+define ( 'STD_VERSION',             '2.7.3' );
 define ( 'ZOT_REVISION',            '1.3' );
 
 define ( 'DB_UPDATE_VERSION',       1195  );

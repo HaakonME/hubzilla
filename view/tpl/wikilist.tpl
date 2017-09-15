@@ -10,6 +10,7 @@
 		<form id="new-wiki-form" action="wiki/{{$channel}}/create/wiki" method="post" class="acl-form" data-form_id="new-wiki-form" data-allow_cid='{{$allow_cid}}' data-allow_gid='{{$allow_gid}}' data-deny_cid='{{$deny_cid}}' data-deny_gid='{{$deny_gid}}'>
 			{{include file="field_input.tpl" field=$wikiName}}
 			{{include file="field_select.tpl" field=$mimeType}}
+			{{include file="field_checkbox.tpl" field=$typelock}}
 			{{include file="field_checkbox.tpl" field=$notify}}
 			<div>
 				<div class="btn-group pull-right">
@@ -29,7 +30,8 @@
 				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
 				<th width="1%" class="wikis-index-tool"></th>
-				<!-- th width="1%" class="wikis-index-tool"></th -->
+				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%" class="wikis-index-tool"></th>
 				{{if $owner}}
 				<th width="1%"></th>
 				{{/if}}
@@ -37,16 +39,17 @@
 			{{foreach $wikis as $wiki}}
 			<tr class="wikis-index-row">
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
-				<td>{{$wiki.mimeType}}</td>
+				<td>{{if $wiki.typelock}}{{$wiki.mimeType}}{{else}}{{$unlocked}}{{/if}}</td>
 				<td class="wiki-index-tool dropdown">
 					{{if $wiki.lock}}
-					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i></button>
+					<button class="btn btn-default btn-sm" onclick="lockview('item',{{$wiki.id}});"><i class="fa fa-lock lockview" data-toggle="dropdown" ></i></button>
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>
-				<!-- td class="wiki-index-tool"><i class="fa fa-download fakelink" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td -->
+				<td class="wiki-index-tool"><button class="btn btn-default btn-sm" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"><i class="fa fa-download fakelink" ></i></button></td>
 				{{if $owner}}
-				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
+				<td>&nbsp;</td>
+				<td><button class="btn btn-default btn-sm" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"><i class="fa fa-trash-o drop-icons" ></i></button></td>
 				{{/if}}
 			</tr>
 			<tr>

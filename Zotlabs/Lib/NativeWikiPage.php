@@ -607,11 +607,11 @@ class NativeWikiPage {
 	}
 	
 	static public function get_file_ext($arr) {
-		if($arr['mimeType'] === 'text/bbcode')
+		if($arr['mimetype'] === 'text/bbcode')
 			return '.bb';
-		elseif($arr['mimeType'] === 'text/markdown')
+		elseif($arr['mimetype'] === 'text/markdown')
 			return '.md';
-		elseif($arr['mimeType'] === 'text/plain')
+		elseif($arr['mimetype'] === 'text/plain')
 			return '.txt';
 
 	}

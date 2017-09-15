@@ -28,8 +28,8 @@ class NativeWiki {
 				$w['htmlName'] = escape_tags($w['rawName']);
 				$w['urlName']  = urlencode(urlencode($w['rawName']));
 				$w['mimeType'] = get_iconfig($w, 'wiki', 'mimeType');
-
-
+				$w['typelock'] = get_iconfig($w, 'wiki', 'typelock');
+				$w['lock']     = (($w['item_private'] || $w['allow_cid'] || $w['allow_gid'] || $w['deny_cid'] || $w['deny_gid']) ? true : false);
 			}
 		}
 		// TODO: query db for wikis the observer can access. Return with two lists, for read and write access
@@ -91,7 +91,9 @@ class NativeWiki {
 		if(! set_iconfig($arr, 'wiki', 'mimeType', $wiki['mimeType'], true)) {
 			return array('item' => null, 'success' => false);
 		}
-	
+
+		set_iconfig($arr,'wiki','typelock',$wiki['typelock'],true);
+
 		$post = item_store($arr);
 
 		$item_id = $post['item_id'];
@@ -157,13 +159,15 @@ class NativeWiki {
 			// Get wiki metadata
 			$rawName  = get_iconfig($w, 'wiki', 'rawName');
 			$mimeType = get_iconfig($w, 'wiki', 'mimeType');
+			$typelock = get_iconfig($w, 'wiki', 'typelock');
 
 			return array(
-				'wiki' => $w,
-				'rawName' => $rawName,
+				'wiki'     => $w,
+				'rawName'  => $rawName,
 				'htmlName' => escape_tags($rawName),
-				'urlName' => urlencode(urlencode($rawName)),
-				'mimeType' => $mimeType
+				'urlName'  => urlencode(urlencode($rawName)),
+				'mimeType' => $mimeType,
+				'typelock' => $typelock
 			);
 		}
 	}

@@ -21,7 +21,11 @@
 	<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
 		<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
 			<input type="hidden" name="resource_id" value="{{$resource_id}}">
+			{{if $typelock}}
+			<input type="hidden" name="mimetype" value="{{$lockedtype}}">
+			{{else}}
 			{{$mimetype}}
+			{{/if}}
 			{{include file="field_input.tpl" field=$pageName}}
 			<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
 		</form>

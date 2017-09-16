@@ -627,6 +627,7 @@ create index "item_comments_closed" on item ("comments_closed");
 create index "item_aid" on item ("aid");
 create index "item_owner_xchan" on item ("owner_xchan");
 create index "item_author_xchan" on item ("author_xchan");
+create index "item_resource_id" on item ("resource_id");
 create index "item_resource_type" on item ("resource_type");
 create index "item_restrict" on item ("item_restrict");
 create index "item_flags" on item ("item_flags");

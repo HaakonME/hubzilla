@@ -7,7 +7,7 @@
 		{{foreach $pages as $page}}
 		<li class="nav-item nav-item-hack" id="{{$page.link_id}}">
 			{{if $page.resource_id && $candel}}
-			<i class="nav-link widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.url}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
+			<i class="nav-link widget-nav-pills-icons fa fa-trash-o drop-icons" onclick="wiki_delete_page('{{$page.title}}', '{{$page.title}}', '{{$page.resource_id}}', '{{$page.link_id}}')"></i>
 			{{/if}}
 			<a class="nav-link" href="/wiki/{{$channel_address}}/{{$wikiname}}/{{$page.url}}">{{$page.title}}</a>
 		</li>

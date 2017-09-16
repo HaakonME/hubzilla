@@ -30,7 +30,9 @@
 				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
 				<th width="1%" class="wikis-index-tool"></th>
+				{{if $owner}}
 				<th width="1%" class="wikis-index-tool"></th>
+				{{/if}}
 				<th width="1%" class="wikis-index-tool"></th>
 				{{if $owner}}
 				<th width="1%"></th>
@@ -40,7 +42,9 @@
 			<tr class="wikis-index-row">
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
 				<td>{{if $wiki.typelock}}{{$wiki.mimeType}}{{else}}{{$unlocked}}{{/if}}</td>
+				{{if $owner}}
 				<td class="wikis-index-tool"><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
+				{{/if}}
 				<td class="wikis-index-tool dropdown">
 					{{if $wiki.lockstate == 'lock'}}
 					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i>

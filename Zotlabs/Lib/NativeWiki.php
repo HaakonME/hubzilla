@@ -135,6 +135,18 @@ class NativeWiki {
 
 		$item_id = $update['item_id'];
 
+		// update acl for any existing wiki pages
+
+		q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d where resource_type = 'nwikipage' and resource_id = '%s'",
+			dbesc($item['allow_cid']), 
+			dbesc($item['allow_gid']), 
+			dbesc($item['deny_cid']), 
+			dbesc($item['deny_gid']), 
+			dbesc($item['item_private']), 
+			dbesc($arr['resource_id'])
+		); 
+
+
 		if($update['item_id']) {
 			info( t('Wiki updated successfully'));
 			if($update_title) {

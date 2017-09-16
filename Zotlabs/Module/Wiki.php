@@ -140,11 +140,16 @@ class Wiki extends \Zotlabs\Web\Controller {
 			$zip = new \ZipArchive;
 			$r = $zip->open($zip_filepath, \ZipArchive::CREATE);
 			if($r === true) {
-				$i = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s'",
+				$pages = [];
+				$i = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' order by revision desc",
 					dbesc($resource_id)
 				);
+
 				if($i) {
 					foreach($i as $iv) {
+						if(in_array($iv['mid'],$pages))
+							continue;
+
 						if($iv['mimetype'] === 'text/plain') {
 							$content = html_entity_decode($iv['body'],ENT_COMPAT,'UTF-8');
 						}
@@ -156,6 +161,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 						}
 						$fname = get_iconfig($iv['id'],'nwikipage','pagetitle') . Zlib\NativeWikiPage::get_file_ext($iv);
 						$zip->addFromString($fname,$content);
+						$pages[] = $iv['mid'];
 					}
 
 

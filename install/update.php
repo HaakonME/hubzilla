@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1195 );
+define( 'UPDATE_VERSION' , 1196 );
 
 /**
  *
@@ -3007,4 +3007,18 @@ function update_r1194() {
 	}
 
 	return UPDATE_SUCCESS;
+}
+
+function update_r1195() {
+
+	if(ACTIVE_DBTYPE == DBTYPE_POSTGRES) {
+		$r1 = q("CREATE INDEX item_resource_id ON item (resource_id)");
+	}
+	else {
+		$r1 = q("ALTER TABLE item ADD INDEX (resource_id)");
+	}
+
+	if($r1)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 }

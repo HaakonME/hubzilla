@@ -656,6 +656,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `aid` (`aid`),
   KEY `owner_xchan` (`owner_xchan`),
   KEY `author_xchan` (`author_xchan`),
+  KEY `resource_id` (`resource_id`),
   KEY `resource_type` (`resource_type`),
   KEY `item_restrict` (`item_restrict`),
   KEY `item_flags` (`item_flags`),

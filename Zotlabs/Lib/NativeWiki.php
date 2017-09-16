@@ -160,6 +160,12 @@ class NativeWiki {
 			dbesc($resource_id)
 		);
 		if($r) {
+			$q = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s'",
+				dbesc($r[0]['resource_type'])
+			);
+			if($q) {
+				$r = array_merge($r,$q);
+			}
 			xchan_query($r);
 			$sync_item = fetch_post_tags($r);
 			build_sync_packet($uid,array('wiki' => array(encode_item($sync_item[0],true))));

@@ -3,6 +3,23 @@
 {{/if}}
 	<h3>{{$header}}</h3>
 	<ul class="nav nav-pills flex-column">
+		{{if $canadd}}
+			<li class="nav-item"><a class="nav-link" href="#" onclick="wiki_show_new_page_form(); return false;"><i class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
+		{{/if}}
+		{{if $canadd}}
+		<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
+			<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
+				<input type="hidden" name="resource_id" value="{{$resource_id}}">
+				{{if $typelock}}
+				<input type="hidden" name="mimetype" value="{{$lockedtype}}">
+				{{else}}
+				{{$mimetype}}
+				{{/if}}
+				{{include file="field_input.tpl" field=$pageName}}
+				<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
+			</form>
+		</div>
+		{{/if}}
 		{{if $pages}}
 		{{foreach $pages as $page}}
 		<li class="nav-item nav-item-hack" id="{{$page.link_id}}">
@@ -13,24 +30,7 @@
 		</li>
 		{{/foreach}}
 		{{/if}}
-		{{if $canadd}}
-		<li class="nav-item"><a class="nav-link" href="#" onclick="wiki_show_new_page_form(); return false;"><i class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
-		{{/if}}
 	</ul>
-	{{if $canadd}}
-	<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
-		<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
-			<input type="hidden" name="resource_id" value="{{$resource_id}}">
-			{{if $typelock}}
-			<input type="hidden" name="mimetype" value="{{$lockedtype}}">
-			{{else}}
-			{{$mimetype}}
-			{{/if}}
-			{{include file="field_input.tpl" field=$pageName}}
-			<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
-		</form>
-	</div>
-	{{/if}}
 {{if ! $refresh}}
 </div>
 {{/if}}

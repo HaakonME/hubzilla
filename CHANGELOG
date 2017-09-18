@@ -1,3 +1,11 @@
+Hubzilla 2.6.3 (2017-09-18)
+	- Fix anonymous comments/likes on photos - this is not yet implemented
+	- Fix favicon not displayed on certain pages
+	- Fix hubzilla logo icon for favicon and email notifications
+	- Fix an issue with displaying selected theme in settings/display
+	- [SECURITY] Restrict the input characters we accept in token verification strings to hex digits
+	- Remove hubzilla.nl from fallback directory servers
+
 Hubzilla 2.6.2 (2017-08-31)
 	- Fix webfinger returns invalid XML (github issue #851)
 

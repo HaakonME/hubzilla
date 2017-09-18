@@ -794,7 +794,7 @@ function get_tags($s) {
 
 	// match any double quoted tags
 
-	if(preg_match_all('/([@#]\&quot\;.*?\&quot\;)/',$s,$match)) {
+	if(preg_match_all('/([@#!]\&quot\;.*?\&quot\;)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			$ret[] = $mtch;
 		}
@@ -823,7 +823,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#!][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -2385,6 +2385,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
 	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
+	$termtype = ((strpos($tag,'!') === 0)   ? TERM_MENTION : $termtype);
 	$termtype = ((strpos($tag,'#^[') === 0) ? TERM_BOOKMARK : $termtype);
 
 	//is it a hash tag?
@@ -2441,10 +2442,16 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 	//is it a person tag?
 
-	if(strpos($tag,'@') === 0) {
+	$grouptag = false;
+
+	if(strpos($tag,'!') === 0) {
+		$grouptag = true;
+
+
+	if(strpos($tag,'@') === 0 || $grouptag) {
 
 		// The @! tag will alter permissions
-		$exclusive = ((strpos($tag,'!') === 1 && (! $diaspora)) ? true : false);
+		$exclusive = (((! $grouptag) && (strpos($tag,'!') === 1) && (! $diaspora)) ? true : false);
 
 		//is it already replaced?
 		if(strpos($tag,'[zrl='))

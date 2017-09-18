@@ -2446,7 +2446,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 
 	if(strpos($tag,'!') === 0) {
 		$grouptag = true;
-
+	}
 
 	if(strpos($tag,'@') === 0 || $grouptag) {
 

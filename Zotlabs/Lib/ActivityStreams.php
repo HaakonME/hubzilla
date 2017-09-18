@@ -17,6 +17,7 @@ class ActivityStreams {
 	public $ldsig  = null;
 	public $sigok  = false;
 	public $recips = null;
+	public $raw_recips = null;
 
 	function __construct($string) {
 
@@ -53,13 +54,21 @@ class ActivityStreams {
 		return $this->valid;
 	}
 
+	function set_recips($arr) {
+		$this->saved_recips = $arr;
+	}
+
 	function collect_recips($base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
 		$x = [];
 		$fields = [ 'to','cc','bto','bcc','audience'];
 		foreach($fields as $f) {
 			$y = $this->get_compound_property($f,$base,$namespace);
-			if($y)
+			if($y) {
 				$x = array_merge($x,$y);
+				if(! is_array($this->raw_recips))
+					$this->raw_recips = [];
+				$this->raw_recips[$f] = $x;
+			}
 		}						
 // not yet ready for prime time
 //		$x = $this->expand($x,$base,$namespace);

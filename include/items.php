@@ -2498,6 +2498,9 @@ function tag_deliver($uid, $item_id) {
 
 		$pattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
 
+		// statusnet style group tags 
+		$pattern2 = '/^|[^@]\!\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
+
 		if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
 			$max_forums = get_config('system','max_tagged_forums');
 			if(! $max_forums)

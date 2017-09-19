@@ -21,7 +21,7 @@ class NativeWikiPage {
 		$sql_extra = item_permissions_sql($channel_id,$observer_hash);
 
 		$r = q("select * from item where resource_type = 'nwikipage' and resource_id = '%s' and uid = %d and item_deleted = 0 
-			$sql_extra order by created asc",
+			$sql_extra order by title asc",
 			dbesc($resource_id),
 			intval($channel_id)
 		);
@@ -74,6 +74,7 @@ class NativeWikiPage {
 		$arr['uid']           = $channel_id;
 		$arr['author_xchan']  = $observer_hash;
 		$arr['mimetype']      = $mimetype;
+		$arr['title']         = $name;
 		$arr['resource_type'] = 'nwikipage';
 		$arr['resource_id']   = $resource_id;
 		$arr['allow_cid']     = $w['wiki']['allow_cid'];
@@ -139,7 +140,13 @@ class NativeWikiPage {
 		if($ic) {
 			foreach($ic as $c) {
 				set_iconfig($c['item_id'],'nwikipage','pagetitle',$pageNewName);
+				$ids[] = $c['item_id'];
 			}
+
+			$str_ids = implode(',', $ids);
+			q("update item set title = '%s' where id in ($str_ids)",
+				dbesc($pageNewName)
+			);
 
 			$page = [ 
 				'rawName'  => $pageNewName, 

@@ -1711,7 +1711,7 @@ function compat_photos_list($s) {
 	$found = preg_match_all('/\[[zi]mg(.*?)\](.*?)\[/ism',$s,$matches,PREG_SET_ORDER);
 
 	if($found) {
-		foreach($matches as $match) {
+		foreach($matches as $match) {			
 			$ret[] = [
 				'href' => $match[2],
 				'length' => 0,

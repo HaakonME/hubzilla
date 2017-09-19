@@ -161,7 +161,7 @@ class Notifier {
 			$packet_type = 'keychange';
 			$normal_mode = false;
 		}
-		elseif($cmd == 'permission_update' || $cmd == 'permission_reject' || $cmd == 'permission_accept'  || $cmd == 'permission_create') {
+		elseif(in_array($cmd, [ 'permission_update', 'permission_reject', 'permission_accept', 'permission_create' ])) {
 			// Get the (single) recipient	
 			$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_self = 0",
 				intval($item_id)

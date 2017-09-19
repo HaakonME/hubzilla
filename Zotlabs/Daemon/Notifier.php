@@ -59,6 +59,8 @@ require_once('include/bbcode.php');
  *
  * ZOT 
  *       permission_create      abook_id
+ *       permission_accept      abook_id
+ *       permission_reject      abook_id
  *       permission_update      abook_id
  *       refresh_all            channel_id
  *       purge_all              channel_id
@@ -171,8 +173,12 @@ class Notifier {
 				if($channel) {
 					$perm_update = array('sender' => $channel, 'recipient' => $r[0], 'success' => false, 'deliveries' => '');	
 
-					if($cmd == 'permission_create')
+					if($cmd === 'permission_create')
 						call_hooks('permissions_create',$perm_update);
+					elseif($cmd === 'permission_accept')
+						call_hooks('permissions_accept',$perm_update);
+					elseif($cmd === 'permission_reject')
+						call_hooks('permissions_reject',$perm_update);
 					else
 						call_hooks('permissions_update',$perm_update);
 

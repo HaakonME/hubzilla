@@ -8,7 +8,6 @@
 		$(document).ready(function(e){
 			noteText.on('change keyup keydown paste cut', function () {
 				noteText.height(0).height(noteText[0].scrollHeight);
-				$(document.body).trigger("sticky_kit:recalc");
 			}).change();
 		});
 

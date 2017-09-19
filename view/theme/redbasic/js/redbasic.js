@@ -16,12 +16,10 @@ $(document).ready(function() {
 	}
 	$('#css3-calc').remove(); // Remove the test element
 
-
-
 	if($(window).width() > 767) {
 		$('#left_aside_wrapper').stick_in_parent({
-			offset_top: $('nav').outerHeight(true) + 10,
-			parent: '#region_1',
+			offset_top: parseInt($('#region_1').css('padding-top')),
+			parent: 'main',
 			spacer: '#left_aside_spacer'
 		});
 	}

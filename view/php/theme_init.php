@@ -23,7 +23,7 @@ head_add_js('/library/jquery-textcomplete/jquery.textcomplete.js');
 
 head_add_js('/library/jquery.timeago.js');
 head_add_js('/library/readmore.js/readmore.js');
-head_add_js('/library/sticky-kit/sticky-kit.js');
+head_add_js('/library/sticky-kit/sticky-kit.min.js');
 head_add_js('/library/jgrowl/jquery.jgrowl_minimized.js');
 head_add_js('/library/cryptojs/components/core-min.js');
 head_add_js('/library/cryptojs/rollups/aes.js');

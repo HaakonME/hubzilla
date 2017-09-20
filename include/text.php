@@ -1789,21 +1789,21 @@ function layout_select($channel_id, $current = '') {
 function mimetype_select($channel_id, $current = 'text/bbcode', $choices = null, $element = 'mimetype') {
 
 	$x = (($choices) ? $choices : [
-		'text/bbcode',
-		'text/html',
-		'text/markdown',
-		'text/plain',
-		'application/x-pdl'
+		'text/bbcode'       => t('BBcode'),
+		'text/html'         => t('HTML'),
+		'text/markdown'     => t('Markdown'),
+		'text/plain'        => t('Text'),
+		'application/x-pdl' => t('Comanche Layout')
 	]);
 
 
 	if((App::$is_sys) || (channel_codeallowed($channel_id) && $channel_id == local_channel())){
-		$x[] = 'application/x-php';
+		$x['application/x-php'] = t('PHP');
 	}
 
-	foreach($x as $y) {
+	foreach($x as $y => $z) {
 		$selected = (($y == $current) ? ' selected="selected" ' : '');
-		$options .= '<option name="' . $y . '"' . $selected . '>' . $y . '</option>';
+		$options .= '<option value="' . $y . '"' . $selected . '>' . $z . '</option>';
 	}
 
 	$o = replace_macros(get_markup_template('field_select_raw.tpl'), array(

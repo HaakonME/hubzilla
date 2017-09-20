@@ -17,16 +17,21 @@
 			<li class="nav-item"><a class="nav-link" href="#" onclick="wiki_show_new_page_form(); return false;"><i class="fa fa-plus-circle"></i>&nbsp;{{$addnew}}</a></li>
 		{{/if}}
 		{{if $canadd}}
-		<div id="new-page-form-wrapper" class="sub-menu" style="display:none;">
+		<div id="new-page-form-wrapper" class="clearfix sub-menu" style="display:none;">
 			<form id="new-page-form" action="wiki/{{$channel_address}}/create/page" method="post" >
 				<input type="hidden" name="resource_id" value="{{$resource_id}}">
+				{{include file="field_input.tpl" field=$pageName}}
 				{{if $typelock}}
 				<input id="id_mimetype" type="hidden" name="mimetype" value="{{$lockedtype}}">
 				{{else}}
-				{{$mimetype}}
+				<div id="wiki_page_options" style="display: none">
+					{{$mimetype}}
+				</div>
+				<div class="float-right fakelink" onClick="openClose('wiki_page_options')">
+					{{$options}}
+				</div>
 				{{/if}}
-				{{include file="field_input.tpl" field=$pageName}}
-				<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >Submit</button>
+				<button id="new-page-submit" class="btn btn-primary" type="submit" name="submit" >{{$submit}}</button>
 			</form>
 		</div>
 		{{/if}}

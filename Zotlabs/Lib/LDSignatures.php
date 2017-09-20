@@ -82,6 +82,8 @@ class LDSignatures {
 		if(! is_object($data))
 			return '';
 
+		jsonld_set_document_loader('jsonld_document_loader');
+
 		return jsonld_normalize($data,[ 'algorithm' => 'URDNA2015', 'format' => 'application/nquads' ]);
 	}
 

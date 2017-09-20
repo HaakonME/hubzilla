@@ -29,11 +29,11 @@
 			<tr>
 				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{if $owner}}
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{/if}}
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{if $owner}}
 				<th width="1%"></th>
 				{{/if}}
@@ -43,15 +43,15 @@
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
 				<td>{{if $wiki.typelock}}{{$wiki.mimeType}}{{else}}{{$unlocked}}{{/if}}</td>
 				{{if $owner}}
-				<td class="wikis-index-tool"><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
+				<td><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
 				{{/if}}
-				<td class="wikis-index-tool dropdown">
+				<td class="dropdown">
 					{{if $wiki.lockstate == 'lock'}}
 					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i>
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>
-				<td class="wikis-index-tool"><i class="fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
+				<td><i class="fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
 				{{if $owner}}
 				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
 				{{/if}}

@@ -58,7 +58,7 @@ class ActivityStreams {
 		$this->saved_recips = $arr;
 	}
 
-	function collect_recips($base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+	function collect_recips($base = '',$namespace = ACTIVITYSTREAMS_JSONLD_REV) {
 		$x = [];
 		$fields = [ 'to','cc','bto','bcc','audience'];
 		foreach($fields as $f) {
@@ -75,7 +75,7 @@ class ActivityStreams {
 		return $x;
 	}
 
-	function expand($arr,$base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+	function expand($arr,$base = '',$namespace = ACTIVITYSTREAMS_JSONLD_REV) {
 		$ret = [];
 
 		// right now use a hardwired recursion depth of 5
@@ -135,7 +135,7 @@ class ActivityStreams {
 	}
 
 
-	function get_property_obj($property,$base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+	function get_property_obj($property,$base = '',$namespace = ACTIVITYSTREAMS_JSONLD_REV ) {
 		$prefix = $this->get_namespace($base,$namespace);
 		if($prefix === null)
 			return null;	
@@ -158,7 +158,7 @@ class ActivityStreams {
 		return null;
 	}
 
-	function get_compound_property($property,$base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+	function get_compound_property($property,$base = '',$namespace = ACTIVITYSTREAMS_JSONLD_REV) {
 		$x = $this->get_property_obj($property,$base,$namespace);
 		if($this->is_url($x)) {
 			$x = $this->fetch_property($x); 	
@@ -173,7 +173,7 @@ class ActivityStreams {
 		return false;
 	}
 
-	function get_primary_type($base = '',$namespace = 'https://www.w3.org/ns/activitystreams') {
+	function get_primary_type($base = '',$namespace = ACTIVITYSTREAMS_JSONLD_REV) {
 		if(! $base)
 			$base = $this->data;
 		$x = $this->get_property_obj('type',$base,$namespace);

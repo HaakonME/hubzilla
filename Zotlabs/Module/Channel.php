@@ -123,7 +123,7 @@ class Channel extends \Zotlabs\Web\Controller {
 
 			//$o .= profile_tabs($a, $is_owner, \App::$profile['channel_address']);
 
-			$o .= common_friends_visitor_widget(\App::$profile['profile_uid']);
+			// $o .= common_friends_visitor_widget(\App::$profile['profile_uid']);
 
 			if($channel && $is_owner) {
 				$channel_acl = array(

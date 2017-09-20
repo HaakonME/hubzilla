@@ -1,4 +1,4 @@
-<div class="profile-match-wrapper">
+<div class="generic-content-wrapper">
 	<div class="profile-match-photo">
 		<a href="{{$url}}">
 			<img src="{{$photo}}" alt="{{$name}}" width="80" height="80" title="{{$name}} [{{$url}}]" />

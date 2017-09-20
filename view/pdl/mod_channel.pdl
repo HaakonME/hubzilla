@@ -7,4 +7,7 @@
 [widget=categories][/widget]
 [widget=tagcloud_wall][var=limit]24[/var][/widget]
 [/region]
+[region=content]
+[widget=common_friends][/widget]
+[/region]
 

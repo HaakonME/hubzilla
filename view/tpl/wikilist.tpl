@@ -29,11 +29,11 @@
 			<tr>
 				<th width="96%">{{$name}}</th>
 				<th width="1%">{{$type}}</th>
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{if $owner}}
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{/if}}
-				<th width="1%" class="wikis-index-tool"></th>
+				<th width="1%"></th>
 				{{if $owner}}
 				<th width="1%"></th>
 				{{/if}}
@@ -43,15 +43,15 @@
 				<td><a href="/wiki/{{$channel}}/{{$wiki.urlName}}/Home" title="{{$view}}"{{if $wiki.active}} class="active"{{/if}}>{{$wiki.title}}</a></td>
 				<td>{{if $wiki.typelock}}{{$wiki.mimeType}}{{else}}{{$unlocked}}{{/if}}</td>
 				{{if $owner}}
-				<td class="wikis-index-tool"><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
+				<td><i class="fa fa-pencil" onclick="openCloseTR('wikis-index-edit-{{$wiki.id}}')"></i></td>
 				{{/if}}
-				<td class="wikis-index-tool dropdown">
+				<td class="dropdown">
 					{{if $wiki.lockstate == 'lock'}}
 					<i class="fa fa-lock lockview" data-toggle="dropdown" onclick="lockview('item',{{$wiki.id}});"></i>
 					<ul id="panel-{{$wiki.id}}" class="lockview-panel dropdown-menu dropdown-menu-right"></ul>
 					{{/if}}
 				</td>
-				<td class="wikis-index-tool"><i class="fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
+				<td><i class="fa fa-download" onclick="wiki_download_wiki('{{$wiki.resource_id}}'); return false;"></i></td>
 				{{if $owner}}
 				<td><i class="fa fa-trash-o drop-icons" onclick="wiki_delete_wiki('{{$wiki.title}}', '{{$wiki.resource_id}}'); return false;"></i></td>
 				{{/if}}
@@ -61,7 +61,7 @@
 				<td colspan="6">
 					<form id="edit-wiki-form-{{$wiki.id}}" method="post" action="wiki/{{$channel}}/update/wiki" class="acl-form" data-form_id="edit-wiki-form-{{$wiki.id}}" data-allow_cid='{{$wiki.json_allow_cid}}' data-allow_gid='{{$wiki.json_allow_gid}}' data-deny_cid='{{$wiki.json_deny_cid}}' data-deny_gid='{{$wiki.json_deny_gid}}'>
 						<input type="hidden" name="origRawName" value="{{$wiki.title}}">
-						{{include file="field_input.tpl" field=['updateRawName', 'Edit Wiki Name', $wiki.title]}}
+						{{include file="field_input.tpl" field=['updateRawName', $edit_wiki_name, $wiki.title]}}
 						<div class="btn-group float-right">
 							<button class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#aclModal" type="button">
 								<i class="jot-perms-icon fa fa-{{$wiki.lockstate}}"></i>

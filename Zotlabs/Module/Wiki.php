@@ -216,7 +216,8 @@ class Wiki extends \Zotlabs\Web\Controller {
 						'$deny_cid' => $x['deny_cid'],
 						'$deny_gid' => $x['deny_gid'],
 						'$typelock' => array('typelock', t('Lock content type'), '', '', array(t('No'), t('Yes'))),
-						'$notify' => array('postVisible', t('Create a status post for this wiki'), '', '', array(t('No'), t('Yes')))
+						'$notify' => array('postVisible', t('Create a status post for this wiki'), '', '', array(t('No'), t('Yes'))),
+						'$edit_wiki_name' => t('Edit Wiki Name')
 					));
 
 					return $o;

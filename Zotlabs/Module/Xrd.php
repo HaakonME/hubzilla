@@ -50,6 +50,7 @@ class Xrd extends \Zotlabs\Web\Controller {
 			'$accturi'     => $resource,
 			'$subject'     => $subject,
 			'$aliases'     => $aliases,
+			'$channel_url' => z_root() . '/channel/'       . $r[0]['channel_address'],
 			'$profile_url' => z_root() . '/channel/'       . $r[0]['channel_address'],
 			'$hcard_url'   => z_root() . '/hcard/'         . $r[0]['channel_address'],
 			'$atom'        => z_root() . '/ofeed/'         . $r[0]['channel_address'],

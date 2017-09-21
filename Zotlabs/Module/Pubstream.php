@@ -28,6 +28,8 @@ class Pubstream extends \Zotlabs\Web\Controller {
 	
 		if(! $update) {
 
+			nav_set_selected(t('Public Stream'));
+
 			$_SESSION['static_loadtime'] = datetime_convert();
 
 			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
@@ -108,7 +110,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			$simple_update = '';
 
 		if($static && $simple_update)
-            $simple_update .= " and item_thread_top = 0 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
+			$simple_update .= " and item_thread_top = 0 and author_xchan = '" . protect_sprintf(get_observer_hash()) . "' ";
 
 		//logger('update: ' . $update . ' load: ' . $load);
 	

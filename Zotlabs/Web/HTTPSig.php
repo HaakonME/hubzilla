@@ -20,7 +20,7 @@ class HTTPSig {
 		return $digest;
 	}
 
-	// See draft-cavage-http-signatures-07
+	// See draft-cavage-http-signatures-08
 
 	static function verify($data,$key = '') {
 

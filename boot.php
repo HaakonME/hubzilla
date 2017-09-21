@@ -782,6 +782,10 @@ class App {
 	public static $is_tablet = false;
 	public static $comanche;
 
+
+	public static $channel_links;
+
+
 	public static  $category;
 
 	// Allow themes to control internal parameters
@@ -929,6 +933,7 @@ class App {
 			self::$module = 'home';
 		}
 
+
 		/*
 		 * See if there is any page number information, and initialise
 		 * pagination
@@ -1026,6 +1031,19 @@ class App {
 		return self::$path;
 	}
 
+	public static function get_channel_links() {
+		$s = '';
+		$x = self::$channel_links;
+		if($x && is_array($x) && count($x)) {
+			foreach($x as $y) {
+				if($s) {
+					$s .= ',';
+				}
+				$s .= '<' . $y['url'] . '>;rel="' . $y['rel'] . '";type="' . $y['type'] . '"';
+			}
+		}
+		return $s;
+	}
 	public static function set_account($acct) {
 		self::$account = $acct;
 	}

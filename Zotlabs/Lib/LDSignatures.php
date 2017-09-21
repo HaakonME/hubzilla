@@ -12,7 +12,10 @@ class LDSignatures {
 		$ohash = self::hash(self::signable_options($data['signature']));
 		$dhash = self::hash(self::signable_data($data));
 
-		return rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
+		$x = rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
+		logger('LD-verify: ' . intval($x));
+
+		return $x;
 	}
 
 	static function dopplesign(&$data,$channel) {

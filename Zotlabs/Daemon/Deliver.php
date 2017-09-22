@@ -53,6 +53,7 @@ class Deliver {
 						remove_queue_item($r[0]['outq_hash']);
 
 						if($dresult && is_array($dresult)) {
+
 							if(array_key_exists('iv',$dresult)) {
 								$dresult = json_decode(crypto_unencapsulate($dresult,get_config('system','prvkey')),true);
 							}

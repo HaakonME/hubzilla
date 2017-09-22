@@ -206,7 +206,7 @@ class Site {
 		// directory server should not be set or settable unless we are a directory client
 
 		if($dirmode == DIRECTORY_MODE_NORMAL) {
-			$x = q("select site_url from site where site_flags in (%d,%d) and site_realm = '%s'",
+			$x = q("select site_url from site where site_flags in (%d,%d) and site_realm = '%s' and site_dead = 0",
 				intval(DIRECTORY_MODE_SECONDARY),
 				intval(DIRECTORY_MODE_PRIMARY),
 				dbesc($realm)

@@ -67,8 +67,10 @@ class HTTPSig {
 			$sig_block = self::parse_sigheader($headers['authorization']);
 		}
 
-		if(! $sig_block)
+		if(! $sig_block) {
+			logger('no signature provided.');
 			return $result;
+		}
 
 		logger('sig_block: ' . print_r($sig_block,true), LOGGER_DATA);
 

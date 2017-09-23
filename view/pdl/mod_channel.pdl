@@ -9,5 +9,6 @@
 [/region]
 [region=content]
 [widget=common_friends][/widget]
+$content
 [/region]
 

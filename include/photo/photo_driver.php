@@ -666,6 +666,7 @@ function import_channel_photo_from_url($photo,$aid,$uid) {
 
 	import_channel_photo($img_str,$type,$aid,$uid);
 
+	return $type;
 }
 
 

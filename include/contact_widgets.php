@@ -143,7 +143,7 @@ function cardcategories_widget($baseurl,$selected = '') {
 
 
 
-function common_friends_visitor_widget($profile_uid) {
+function common_friends_visitor_widget($profile_uid,$cnt = 10) {
 
 	if(local_channel() == $profile_uid)
 		return;
@@ -156,19 +156,20 @@ function common_friends_visitor_widget($profile_uid) {
 	require_once('include/socgraph.php');
 
 	$t = count_common_friends($profile_uid,$observer_hash);
+
 	if(! $t)
 		return;
 
-	$r = common_friends($profile_uid,$observer_hash,0,5,true);
+	$r = common_friends($profile_uid,$observer_hash,0,$cnt,true);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
-		'$desc' =>  sprintf( tt("%d connection in common", "%d connections in common", $t), $t),
-		'$base' => z_root(),
-		'$uid' => $profile_uid,
-		'$cid' => $observer,
-		'$linkmore' => (($t > 5) ? 'true' : ''),
-		'$more' => t('show more'),
-		'$items' => $r
+		'$desc'     => sprintf( t('Common connections: %d'), $t),
+		'$base'     => z_root(),
+		'$uid'      => $profile_uid,
+		'$cid'      => $observer,
+		'$linkmore' => (($t > $cnt) ? 'true' : ''),
+		'$more'     => t('show more'),
+		'$items'    => $r
 	)); 
 
 };

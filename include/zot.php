@@ -977,6 +977,18 @@ function zot_process_response($hub, $arr, $outq) {
 	}
 
 	if(is_array($x) && array_key_exists('delivery_report',$x) && is_array($x['delivery_report'])) {
+
+		if(array_key_exists('iv',$x['delivery_report'])) {
+			$j = crypto_unencapsulate($x['delivery_report'],get_config('system','prvkey'));
+			if($j) {
+				$x['delivery_report'] = json_decode($j,true); 
+			}
+			if(! (is_array($x['delivery_report']) && count($x['delivery_report']))) {
+				logger('encrypted delivery report could not be decrypted');
+				return;
+			}
+		}
+
 		foreach($x['delivery_report'] as $xx) {
 			if(is_array($xx) && array_key_exists('message_id',$xx) && delivery_report_is_storable($xx)) {
 				q("insert into dreport ( dreport_mid, dreport_site, dreport_recip, dreport_result, dreport_time, dreport_xchan ) values ( '%s', '%s','%s','%s','%s','%s' ) ",
@@ -1048,13 +1060,15 @@ function zot_fetch($arr) {
 
 	foreach($ret_hubs as $ret_hub) {
 
+		$secret = substr(preg_replace('/[^0-9a-fA-F]/','',$arr['secret']),0,64);
+
 		$data = [
 			'type'         => 'pickup',
 			'url'          => z_root(),
 			'callback_sig' => base64url_encode(rsa_sign(z_root() . '/post', get_config('system','prvkey'))),
 			'callback'     => z_root() . '/post',
-			'secret'       => $arr['secret'],
-			'secret_sig'   => base64url_encode(rsa_sign($arr['secret'], get_config('system','prvkey')))
+			'secret'       => $secret,
+			'secret_sig'   => base64url_encode(rsa_sign($secret, get_config('system','prvkey')))
 		];
 
 		$algorithm = zot_best_algorithm($ret_hub['site_crypto']);
@@ -1064,8 +1078,11 @@ function zot_fetch($arr) {
 
 		$result = zot_import($fetch, $arr['sender']['url']);
 
-		if($result)
+		if($result) {
+			$result = crypto_encapsulate(json_encode($result),$ret_hub['hubloc_sitekey'], $algorithm);
 			return $result;
+		}
+
 	}
 
 	return;

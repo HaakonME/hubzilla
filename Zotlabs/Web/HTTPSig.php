@@ -20,7 +20,7 @@ class HTTPSig {
 		return $digest;
 	}
 
-	// See draft-cavage-http-signatures-07
+	// See draft-cavage-http-signatures-08
 
 	static function verify($data,$key = '') {
 
@@ -48,7 +48,7 @@ class HTTPSig {
 		else {
 			$headers = [];
 			$headers['(request-target)'] = 
-				$_SERVER['REQUEST_METHOD'] . ' ' .
+				strtolower($_SERVER['REQUEST_METHOD']) . ' ' .
 				$_SERVER['REQUEST_URI'];
 			foreach($_SERVER as $k => $v) {
 				if(strpos($k,'HTTP_') === 0) {
@@ -67,8 +67,12 @@ class HTTPSig {
 			$sig_block = self::parse_sigheader($headers['authorization']);
 		}
 
-		if(! $sig_block)
+		if(! $sig_block) {
+			logger('no signature provided.');
 			return $result;
+		}
+
+		logger('sig_block: ' . print_r($sig_block,true), LOGGER_DATA);
 
 		$result['header_signed'] = true;
 
@@ -110,6 +114,8 @@ class HTTPSig {
 
 		$x = rsa_verify($signed_data,$sig_block['signature'],$key,$algorithm);
 
+		logger('verified: ' . $x, LOGGER_DEBUG);
+
 		if($x === false)
 			return $result;
 
@@ -129,6 +135,8 @@ class HTTPSig {
 				$result['content_valid'] = true;
 			}
 		}
+
+		logger('Content_Valid: ' . $result['content_valid']);
 
 		return $result;
 
@@ -167,7 +175,8 @@ class HTTPSig {
 
 
 
-	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$auth = false,$alg = 'sha256') {
+	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$auth = false,$alg = 'sha256', 
+		$crypt_key = null, $crypt_algo = 'aes256ctr') {
 
 		$return_headers = [];
 
@@ -178,15 +187,21 @@ class HTTPSig {
 			$algorithm = 'rsa-sha512';
 		}
 
-		$x = self::sign($request,$head,$prvkey,$alg);			
+		$x = self::sign($request,$head,$prvkey,$alg);
 
-		if($auth) {
-			$sighead = 'Authorization: Signature keyId="' . $keyid . '",algorithm="' . $algorithm
+		$headerval = keyId="' . $keyid . '",algorithm="' . $algorithm
 			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+
+		if($crypt_key) {
+			$x = crypto_encapsulate($headerval,$crypt_key,$crypt_alg);
+			$headerval = 'iv="' . $x['iv'] . '",key="' . $x['key'] . '",alg="' . $x['alg'] . '",data="' . $x['data'];
+		}
+			
+		if($auth) {
+			$sighead = 'Authorization: Signature ' . $headerval;
 		}
 		else {
-			$sighead = 'Signature: keyId="' . $keyid . '",algorithm="' . $algorithm
-			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+			$sighead = 'Signature: ' . $headerval;
 		}
 
 		if($head) {
@@ -241,8 +256,15 @@ class HTTPSig {
 	}
 
 	static function parse_sigheader($header) {
+
 		$ret = [];
 		$matches = [];
+
+		// if the header is encrypted, decrypt with (default) site private key and continue
+
+		if(preg_match('/iv="(.*?)"/ism',$header,$matches))
+			$header = self::decrypt_sigheader($header);
+
 		if(preg_match('/keyId="(.*?)"/ism',$header,$matches))
 			$ret['keyId'] = $matches[1];
 		if(preg_match('/algorithm="(.*?)"/ism',$header,$matches))
@@ -258,6 +280,32 @@ class HTTPSig {
  		return $ret;
 	}
 
+
+	static function decrypt_sigheader($header,$prvkey = null) {
+
+		$iv = $key = $alg = $data = null;
+
+		if(! $prvkey) {
+			$prvkey = get_config('system','prvkey');
+		}
+
+		$matches = [];
+
+		if(preg_match('/iv="(.*?)"/ism',$header,$matches))
+			$iv = $matches[1];
+		if(preg_match('/key="(.*?)"/ism',$header,$matches))
+			$key = $matches[1];
+		if(preg_match('/alg="(.*?)"/ism',$header,$matches))
+			$alg = $matches[1];
+		if(preg_match('/data="(.*?)"/ism',$header,$matches))
+			$data = $matches[1];
+
+		if($iv && $key && $alg && $data) {
+			return crypto_unencapsulate([ 'iv' => $iv, 'key' => $key, 'alg' => $alg, 'data' => $data ] , $prvkey);
+		}
+ 		return '';
+
+	}
 
 }
 

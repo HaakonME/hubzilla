@@ -36,7 +36,8 @@ class Pubsites extends \Zotlabs\Web\Controller {
 				$o .= '</tr>';
 				if($j['sites']) {
 					foreach($j['sites'] as $jj) {
-						if(! \Zotlabs\Lib\System::compatible_project($jj['project']))
+						$projectname = explode(' ',$jj['project']);
+						if(! \Zotlabs\Lib\System::compatible_project($projectname[0]))
 							continue;
 						if(strpos($jj['version'],' ')) {
 							$x = explode(' ', $jj['version']);

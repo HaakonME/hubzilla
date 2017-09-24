@@ -59,6 +59,8 @@ require_once('include/bbcode.php');
  *
  * ZOT 
  *       permission_create      abook_id
+ *       permission_accept      abook_id
+ *       permission_reject      abook_id
  *       permission_update      abook_id
  *       refresh_all            channel_id
  *       purge_all              channel_id
@@ -159,7 +161,7 @@ class Notifier {
 			$packet_type = 'keychange';
 			$normal_mode = false;
 		}
-		elseif($cmd == 'permission_update' || $cmd == 'permission_create') {
+		elseif(in_array($cmd, [ 'permission_update', 'permission_reject', 'permission_accept', 'permission_create' ])) {
 			// Get the (single) recipient	
 			$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_self = 0",
 				intval($item_id)
@@ -171,8 +173,12 @@ class Notifier {
 				if($channel) {
 					$perm_update = array('sender' => $channel, 'recipient' => $r[0], 'success' => false, 'deliveries' => '');	
 
-					if($cmd == 'permission_create')
+					if($cmd === 'permission_create')
 						call_hooks('permissions_create',$perm_update);
+					elseif($cmd === 'permission_accept')
+						call_hooks('permissions_accept',$perm_update);
+					elseif($cmd === 'permission_reject')
+						call_hooks('permissions_reject',$perm_update);
 					else
 						call_hooks('permissions_update',$perm_update);
 

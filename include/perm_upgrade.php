@@ -135,6 +135,9 @@ function translate_abook_perms_outbound(&$abook) {
 	$my_perms = 0;
 	$their_perms = 0;
 
+	if(! $abook)
+		return;
+
 	if(array_key_exists('abconfig',$abook) && is_array($abook['abconfig']) && $abook['abconfig']) {
 		foreach($abook['abconfig'] as $p) {
 			if($p['cat'] === 'their_perms') {

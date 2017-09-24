@@ -12,7 +12,10 @@ class LDSignatures {
 		$ohash = self::hash(self::signable_options($data['signature']));
 		$dhash = self::hash(self::signable_data($data));
 
-		return rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
+		$x = rsa_verify($ohash . $dhash,base64_decode($data['signature']['signatureValue']), $pubkey);
+		logger('LD-verify: ' . intval($x));
+
+		return $x;
 	}
 
 	static function dopplesign(&$data,$channel) {
@@ -35,7 +38,9 @@ class LDSignatures {
 		$options['signatureValue'] = base64_encode(rsa_sign($ohash . $dhash,$channel['channel_prvkey']));
 
 		$signed = array_merge([
-			'@context' => [ 'https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1' ],
+			'@context' => [ 
+				ACTIVITYSTREAMS_JSONLD_REV, 
+				'https://w3id.org/security/v1' ],
 			],$options);
 
 		return $signed;
@@ -81,6 +86,8 @@ class LDSignatures {
 
 		if(! is_object($data))
 			return '';
+
+		jsonld_set_document_loader('jsonld_document_loader');
 
 		return jsonld_normalize($data,[ 'algorithm' => 'URDNA2015', 'format' => 'application/nquads' ]);
 	}

@@ -33,17 +33,18 @@
 	width: 100%;
 }
 
+td i {
+	padding: 7px 5px;
+	cursor: pointer;
+}
+
 #wikis-index th:nth-child(1),
 #wikis-index td:nth-child(1){
 	padding: 7px 3px 7px 10px;
 }
 
-#wikis-index th:nth-child(6),
-#wikis-index td:nth-child(6){
-	padding: 7px 10px 7px 7px;
-}
-
-.wikis-index-tool {
-	padding: 7px 10px;
+#wikis-index th:nth-last-child(1),
+#wikis-index td:nth-last-child(1){
+	padding-right: 10px;
 }
 

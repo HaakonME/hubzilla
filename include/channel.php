@@ -278,11 +278,13 @@ function create_identity($arr) {
 		intval($arr['account_id'])
 	);
 
+	$photo_type = null;
+
 	$z = [ 'account' => $a[0], 'channel' => $r[0], 'photo_url' => '' ];
 	call_hooks('create_channel_photo',$z);
  
 	if($z['photo_url']) {
-		import_channel_photo_from_url($z['photo_url'],$arr['account_id'],$r[0]['channel_id']);
+		$photo_type = import_channel_photo_from_url($z['photo_url'],$arr['account_id'],$r[0]['channel_id']);
 	}
 
 	if($role_permissions && array_key_exists('limits',$role_permissions))
@@ -330,6 +332,7 @@ function create_identity($arr) {
 			'xchan_guid'       => $guid,
 			'xchan_guid_sig'   => $sig,
 			'xchan_pubkey'     => $key['pubkey'],
+			'xchan_photo_mimetype' => (($photo_type) ? $photo_type : 'image/png'),
 			'xchan_photo_l'    => z_root() . "/photo/profile/l/{$newuid}",
 			'xchan_photo_m'    => z_root() . "/photo/profile/m/{$newuid}",
 			'xchan_photo_s'    => z_root() . "/photo/profile/s/{$newuid}",

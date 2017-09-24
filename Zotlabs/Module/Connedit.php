@@ -248,6 +248,10 @@ class Connedit extends \Zotlabs\Web\Controller {
 			notice( t('Failed to update connection record.') . EOL);
 
 		if(! intval(\App::$poi['abook_self'])) {
+			if($new_friend) {
+				\Zotlabs\Daemon\Master::Summon( [ 'Notifier', 'permission_accept', $contact_id ] ); 
+			}
+
 			\Zotlabs\Daemon\Master::Summon( [ 
 				'Notifier', 
 				(($new_friend) ? 'permission_create' : 'permission_update'), 

@@ -1944,3 +1944,34 @@ function getBestSupportedMimeType($mimeTypes = null, $acceptedTypes = false) {
     // no mime-type found
     return null;
 }
+
+
+function jsonld_document_loader($url) {
+
+	// perform caching for jsonld normaliser
+
+	require_once('library/jsonld/jsonld.php');
+
+	$cachepath = 'store/[data]/ldcache';
+	if(! is_dir($cachepath))
+		os_mkdir($cachepath,STORAGE_DEFAULT_PERMISSIONS,true);
+
+	$filename = $cachepath . '/' . urlencode($url);
+	if(file_exists($filename) && filemtime($filename) > time() - (12 * 60 * 60)) {
+		return json_decode(file_get_contents($filename));
+	}
+
+	$r = jsonld_default_document_loader($url);
+	if($r) {
+		file_put_contents($filename,json_encode($r));
+		return $r;
+	}
+
+	logger('not found');
+	if(file_exists($filename)) {
+		return json_decode(file_get_contents($filename));
+	}
+
+	return [];
+
+}

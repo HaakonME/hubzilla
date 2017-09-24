@@ -811,6 +811,7 @@ function feed_get_reshare(&$res,$item) {
 		}
 	
 		$attach = $share['links'];
+
 		if($attach) {
 			foreach($attach as $att) {
 				if($att['rel'] === 'alternate') {
@@ -845,6 +846,10 @@ function feed_get_reshare(&$res,$item) {
 			}
 		}
 	
+		if((! $body) && ($share['alternate'])) {
+			$body = $share['alternate'];
+		}			
+
 		$res['body'] = "[share author='" . urlencode($share['author']) . 
 			"' profile='"    . $share['profile'] .
 			"' avatar='"     . $share['avatar']  .
@@ -1706,7 +1711,7 @@ function compat_photos_list($s) {
 	$found = preg_match_all('/\[[zi]mg(.*?)\](.*?)\[/ism',$s,$matches,PREG_SET_ORDER);
 
 	if($found) {
-		foreach($matches as $match) {
+		foreach($matches as $match) {			
 			$ret[] = [
 				'href' => $match[2],
 				'length' => 0,

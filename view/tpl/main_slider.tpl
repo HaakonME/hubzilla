@@ -1,4 +1,5 @@
 <div id="main-slider" class="slider" ><input id="main-range" type="text" name="cminmax" value="{{$val}}" /></div>
+<div id="profile-jot-text-loading" style="display:none;"></div>
 <script>
 $(document).ready(function() {
 	var old_cmin = 0;
@@ -19,6 +20,7 @@ $(document).ready(function() {
 
 	var slideTimer = null;
 	function networkRefresh() {
+
 		$("#profile-jot-text-loading").show();
 
 		if((document.readyState !== "complete") || (slideTimer !== null))

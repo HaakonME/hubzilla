@@ -1041,7 +1041,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 				$likebuttons = '';
 	
-				if($can_post || $can_comment) {
+				if($observer && ($can_post || $can_comment)) {
 					$likebuttons = [
 						'id'       => $link_item['id'],
 						'likethis' => t("I like this \x28toggle\x29"),
@@ -1053,7 +1053,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 				$comments = '';
 				if(! count($r)) {
-					if($can_post || $can_comment) {
+					if($observer && ($can_post || $can_comment)) {
 						$commentbox = replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
 							'$mode' => 'photos',
@@ -1172,7 +1172,7 @@ class Photos extends \Zotlabs\Web\Controller {
 	
 					}
 				
-					if($can_post || $can_comment) {
+					if($observer && ($can_post || $can_comment)) {
 						$commentbox = replace_macros($cmnt_tpl,array(
 							'$return_path' => '',
 							'$jsreload' => $return_url,

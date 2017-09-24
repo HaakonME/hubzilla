@@ -175,7 +175,8 @@ class HTTPSig {
 
 
 
-	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$auth = false,$alg = 'sha256') {
+	static function create_sig($request,$head,$prvkey,$keyid = 'Key',$send_headers = false,$auth = false,$alg = 'sha256', 
+		$crypt_key = null, $crypt_algo = 'aes256ctr') {
 
 		$return_headers = [];
 
@@ -186,15 +187,21 @@ class HTTPSig {
 			$algorithm = 'rsa-sha512';
 		}
 
-		$x = self::sign($request,$head,$prvkey,$alg);			
+		$x = self::sign($request,$head,$prvkey,$alg);
 
-		if($auth) {
-			$sighead = 'Authorization: Signature keyId="' . $keyid . '",algorithm="' . $algorithm
+		$headerval = keyId="' . $keyid . '",algorithm="' . $algorithm
 			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+
+		if($crypt_key) {
+			$x = crypto_encapsulate($headerval,$crypt_key,$crypt_alg);
+			$headerval = 'iv="' . $x['iv'] . '",key="' . $x['key'] . '",alg="' . $x['alg'] . '",data="' . $x['data'];
+		}
+			
+		if($auth) {
+			$sighead = 'Authorization: Signature ' . $headerval;
 		}
 		else {
-			$sighead = 'Signature: keyId="' . $keyid . '",algorithm="' . $algorithm
-			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
+			$sighead = 'Signature: ' . $headerval;
 		}
 
 		if($head) {
@@ -249,8 +256,15 @@ class HTTPSig {
 	}
 
 	static function parse_sigheader($header) {
+
 		$ret = [];
 		$matches = [];
+
+		// if the header is encrypted, decrypt with (default) site private key and continue
+
+		if(preg_match('/iv="(.*?)"/ism',$header,$matches))
+			$header = self::decrypt_sigheader($header);
+
 		if(preg_match('/keyId="(.*?)"/ism',$header,$matches))
 			$ret['keyId'] = $matches[1];
 		if(preg_match('/algorithm="(.*?)"/ism',$header,$matches))
@@ -266,6 +280,32 @@ class HTTPSig {
  		return $ret;
 	}
 
+
+	static function decrypt_sigheader($header,$prvkey = null) {
+
+		$iv = $key = $alg = $data = null;
+
+		if(! $prvkey) {
+			$prvkey = get_config('system','prvkey');
+		}
+
+		$matches = [];
+
+		if(preg_match('/iv="(.*?)"/ism',$header,$matches))
+			$iv = $matches[1];
+		if(preg_match('/key="(.*?)"/ism',$header,$matches))
+			$key = $matches[1];
+		if(preg_match('/alg="(.*?)"/ism',$header,$matches))
+			$alg = $matches[1];
+		if(preg_match('/data="(.*?)"/ism',$header,$matches))
+			$data = $matches[1];
+
+		if($iv && $key && $alg && $data) {
+			return crypto_unencapsulate([ 'iv' => $iv, 'key' => $key, 'alg' => $alg, 'data' => $data ] , $prvkey);
+		}
+ 		return '';
+
+	}
 
 }
 

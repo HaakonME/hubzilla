@@ -192,6 +192,16 @@ function string2bb(element) {
 			template: contact_format
 		};
 
+		// Autocomplete forums
+		forums = {
+			match: /(^|\s)(\!)([^ \n]+)$/,
+			index: 3,
+			search: function(term, callback) { contact_search(term, callback, backend_url, 'f', extra_channels, spinelement=false); },
+			replace: editor_replace,
+			template: contact_format
+		};
+
+
 		smilies = {
 			match: /(^|\s)(:[a-z_:]{2,})$/,
 			index: 2,
@@ -201,7 +211,7 @@ function string2bb(element) {
 			template: smiley_format
 		};
 		this.attr('autocomplete','off');
-		this.textcomplete([contacts,smilies], {className:'acpopup', zIndex:1020});
+		this.textcomplete([contacts,forums,smilies], {className:'acpopup', zIndex:1020});
 	};
 })( jQuery );
 

@@ -134,6 +134,8 @@ function format_term_for_display($term) {
 	$s = '';
 	if(($term['ttype'] == TERM_HASHTAG) || ($term['ttype'] == TERM_COMMUNITYTAG))
 		$s .= '#';
+	elseif($term['ttype'] == TERM_FORUM)
+		$s .= '!';
 	elseif($term['ttype'] == TERM_MENTION)
 		$s .= '@';
 	else

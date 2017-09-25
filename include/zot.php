@@ -1432,7 +1432,7 @@ function public_recips($msg) {
 		if($msg['message']['tags']) {
 			if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
 				foreach($msg['message']['tags'] as $tag) {
-					if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
+					if(($tag['type'] === 'mention' || $tag['type'] === 'forum') && (strpos($tag['url'],z_root()) !== false)) {
 						$address = basename($tag['url']);
 						if($address) {
 							$z = q("select channel_hash as hash from channel where channel_address = '%s'

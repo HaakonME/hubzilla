@@ -189,7 +189,7 @@ class HTTPSig {
 
 		$x = self::sign($request,$head,$prvkey,$alg);
 
-		$headerval = keyId="' . $keyid . '",algorithm="' . $algorithm
+		$headerval = 'keyId="' . $keyid . '",algorithm="' . $algorithm
 			. '",headers="' . $x['headers'] . '",signature="' . $x['signature'] . '"';
 
 		if($crypt_key) {

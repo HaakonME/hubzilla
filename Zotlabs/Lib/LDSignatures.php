@@ -88,8 +88,16 @@ class LDSignatures {
 			return '';
 
 		jsonld_set_document_loader('jsonld_document_loader');
+	
+		try {
+			$d = jsonld_normalize($data,[ 'algorithm' => 'URDNA2015', 'format' => 'application/nquads' ]);
+		}
+		catch (\Exception $e) {
+			logger('normalise error:' . print_r($e,true));
+			logger('normalise error: ' . print_r($data,true));
+		}
 
-		return jsonld_normalize($data,[ 'algorithm' => 'URDNA2015', 'format' => 'application/nquads' ]);
+		return $d;
 	}
 
 	static function salmon_sign($data,$channel) {

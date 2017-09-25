@@ -823,7 +823,7 @@ function get_tags($s) {
 	// Otherwise pull out single word tags. These can be @nickname, @first_last
 	// and #hash tags.
 
-	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#!][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
+	if(preg_match_all('/(?<![a-zA-Z0-9=\/\?\;])([@#\!][^ \x0D\x0A,;:?\[]+)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
@@ -2383,9 +2383,9 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 	$r = null;
 	$match = array();
 
-	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
-	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
-	$termtype = ((strpos($tag,'!') === 0)   ? TERM_MENTION : $termtype);
+	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG  : TERM_UNKNOWN);
+	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION  : $termtype);
+	$termtype = ((strpos($tag,'!') === 0)   ? TERM_FORUM    : $termtype);
 	$termtype = ((strpos($tag,'#^[') === 0) ? TERM_BOOKMARK : $termtype);
 
 	//is it a hash tag?
@@ -2623,8 +2623,15 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$url = $profile;
-			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum &&  ! $trailing_plus_name) ? '+' : '') . '[/zrl]';
-			$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+			if($grouptag) {
+				$newtag = '!' . '[zrl=' . $profile . ']' . $newname	. '[/zrl]';
+				$body = str_replace('!' . $name, $newtag, $body);
+			}
+			else {
+				$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum &&  ! $trailing_plus_name) ? '+' : '') . '[/zrl]';
+				$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+			}
+
 			//append tag to str_tags
 			if(! stristr($str_tags,$newtag)) {
 				if(strlen($str_tags))

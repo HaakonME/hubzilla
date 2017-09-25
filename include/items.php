@@ -1130,7 +1130,7 @@ function encode_item_xchan($xchan) {
 function encode_item_terms($terms,$mirror = false) {
 	$ret = array();
 
-	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK, TERM_COMMUNITYTAG );
+	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK, TERM_COMMUNITYTAG, TERM_FORUM );
 
 	if($mirror) {
 		$allowed_export_terms[] = TERM_PCATEGORY;
@@ -1178,7 +1178,7 @@ function decode_item_meta($meta) {
  * @return string
  */
 function termtype($t) {
-	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark', 'hierarchy', 'communitytag');
+	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark', 'hierarchy', 'communitytag', 'forum');
 
 	return(($types[$t]) ? $types[$t] : 'unknown');
 }
@@ -1226,6 +1226,9 @@ function decode_tags($t) {
 					break;
 				case 'communitytag':
 					$tag['ttype'] = TERM_COMMUNITYTAG;
+					break;
+				case 'forum':
+					$tag['ttype'] = TERM_FORUM;
 					break;
 				default:
 				case 'unknown':
@@ -2457,7 +2460,7 @@ function tag_deliver($uid, $item_id) {
 	 * Now we've got those out of the way. Let's see if this is a post that's tagged for re-delivery
 	 */
 
-	$terms = get_terms_oftype($item['term'],TERM_MENTION);
+	$terms = array_merge(get_terms_oftype($item['term'],TERM_MENTION),get_terms_oftype($item['term'],TERM_FORUM));
 
 	if($terms)
 		logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
@@ -2492,25 +2495,46 @@ function tag_deliver($uid, $item_id) {
 		$plustagged = false;
 		$matches = array();
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'],'/') . '\[\/zrl\]/';
+		$pattern = '/[\!@]\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'],'/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches))
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
+		// original red forum tagging sequence @forumname+
+		// standard forum tagging sequence !forumname
 
-		// statusnet style group tags 
-		$pattern2 = '/^|[^@]\!\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
+		$pluspattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
 
-		if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
-			$max_forums = get_config('system','max_tagged_forums');
-			if(! $max_forums)
-				$max_forums = 2;
-			$matched_forums = 0;
+		$forumpattern = '/\!\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\[\/zrl\]/';
+
+		$found = false;
+
+		$max_forums = get_config('system','max_tagged_forums');
+		if(! $max_forums)
+			$max_forums = 2;
+		$matched_forums = 0;
+		$matches = array();
+
+		if(preg_match_all($pluspattern,$body,$matches,PREG_SET_ORDER)) {
 			foreach($matches as $match) {
 				$matched_forums ++;
 				if($term['url'] === $match[1] && $term['term'] === $match[2]) {
 					if($matched_forums <= $max_forums) {
 						$plustagged = true;
+						$found = true;
+						break;
+					}
+					logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+				}
+			}
+		}
+
+		if(preg_match_all($forumpattern,$body,$matches,PREG_SET_ORDER)) {
+			foreach($matches as $match) {
+				$matched_forums ++;
+				if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+					if($matched_forums <= $max_forums) {
+						$plustagged = true;
+						$found = true;
 						break;
 					}
 					logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
@@ -2609,7 +2633,8 @@ function tgroup_check($uid,$item) {
 	if(! $u)
 		return false;
 
-	$terms = get_terms_oftype($item['term'],TERM_MENTION);
+
+	$terms = array_merge(get_terms_oftype($item['term'],TERM_MENTION),get_terms_oftype($item['term'],TERM_FORUM));
 
 	if($terms)
 		logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
@@ -2640,18 +2665,34 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
-//	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
-	$pattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
+	$pluspattern = '/@\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\+\[\/zrl\]/';
+
+	$forumpattern = '/\!\!?\[zrl\=([^\]]*?)\]((?:.(?!\[zrl\=))*?)\[\/zrl\]/';
+
 
 	$found = false;
+
+	$max_forums = get_config('system','max_tagged_forums');
+	if(! $max_forums)
+		$max_forums = 2;
+	$matched_forums = 0;
 	$matches = array();
 
-	if(preg_match_all($pattern,$body,$matches,PREG_SET_ORDER)) {
-		$max_forums = get_config('system','max_tagged_forums');
-		if(! $max_forums)
-			$max_forums = 2;
-		$matched_forums = 0;
+	if(preg_match_all($pluspattern,$body,$matches,PREG_SET_ORDER)) {
+		foreach($matches as $match) {
+			$matched_forums ++;
+			if($term['url'] === $match[1] && $term['term'] === $match[2]) {
+				if($matched_forums <= $max_forums) {
+					$found = true;
+					break;
+				}
+				logger('forum ' . $term['term'] . ' exceeded max_tagged_forums - ignoring');
+			}
+		}
+	}
+
+	if(preg_match_all($forumpattern,$body,$matches,PREG_SET_ORDER)) {
 		foreach($matches as $match) {
 			$matched_forums ++;
 			if($term['url'] === $match[1] && $term['term'] === $match[2]) {

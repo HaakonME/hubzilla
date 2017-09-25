@@ -126,3 +126,19 @@ function set_iconfig(&$item, $family, $key, $value, $sharing = false) {
 function del_iconfig(&$item, $family, $key) {
 	return Zlib\IConfig::Delete($item, $family, $key);
 }
+
+function load_sconfig($server_id) {
+	Zlib\SConfig::Load($server_id);
+}
+
+function get_sconfig($server_id, $family, $key, $default = false) {
+	return Zlib\SConfig::Get($server_id, $family, $key, $default);
+}
+
+function set_sconfig($server_id, $family, $key, $value) {
+	return Zlib\SConfig::Set($server_id, $family, $key, $value);
+}
+
+function del_sconfig($server_id, $family, $key) {
+	return Zlib\SConfig::Delete($server_id, $family, $key);
+}

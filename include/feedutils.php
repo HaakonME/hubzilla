@@ -1033,6 +1033,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 				if(! $datarray['mid'])
 					continue;
 
+				$item_parent_mid = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
+					dbesc($parent_mid),
+					intval($importer['channel_id'])
+				);
+
+
 				// This probably isn't an appropriate default but we're about to change it
 				// if it's wrong.
 
@@ -1128,18 +1134,12 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 						$datarray['parent_mid'] = $pmid;
 					}
 				}
-				if(! $pmid) {
-					$x = q("select parent_mid from item where mid = '%s' and uid = %d limit 1",
-						dbesc($parent_mid),
-						intval($importer['channel_id'])
-					);
-				
-					if($x) {
-						logger('find_parent: matched in-reply-to: ' . $parent_mid, LOGGER_DEBUG);
-						$pmid = $x[0]['parent_mid'];
-						$datarray['parent_mid'] = $pmid;
-					}
+				if(($item_parent_mid) && (! $pmid)) {
+					logger('find_parent: matched in-reply-to: ' . $parent_mid, LOGGER_DEBUG);
+					$pmid = $item_parent_mid[0]['parent_mid'];
+					$datarray['parent_mid'] = $pmid;
 				}
+
 				if((! $pmid) && $parent_link !== '') {
 					$f = feed_conversation_fetch($importer,$contact,$parent_link);
 					if($f) {
@@ -1161,6 +1161,7 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 							);
 				
 							if($x) {
+								$item_parent_mid = $x;
 								$pmid = $x[0]['parent_mid'];
 								$datarray['parent_mid'] = $pmid;
 							}
@@ -1242,6 +1243,13 @@ function consume_feed($xml, $importer, &$contact, $pass = 0) {
 					set_iconfig($datarray,'system','parent_mid',$parent_mid,true);
 				}
 				
+
+				// allow likes of comments
+
+				if($item_parent_mid && activity_match($datarray['verb'],ACTVITY_LIKE)) {
+					$datarray['thr_parent'] = $item_parent_mid[0]['parent_mid'];
+				}
+
 				$datarray['aid'] = $importer['channel_account_id'];
 				$datarray['uid'] = $importer['channel_id'];
 

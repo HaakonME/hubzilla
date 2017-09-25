@@ -761,9 +761,17 @@ function profiler($t1,$t2,$label) {
 
 
 function activity_match($haystack,$needle) {
-	if(($haystack === $needle) || ((basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
-		return true;
 
+	if(! is_array($needle))
+		$needle = [ $needle ];
+
+	if($needle) {
+		foreach($needle as $n) {
+			if(($haystack === $n) || (strtolower(basename($n)) === strtolower(basename($haystack)))) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
 

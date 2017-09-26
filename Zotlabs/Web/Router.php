@@ -178,24 +178,6 @@ class Router {
 		 */
 
 		if(\App::$module_loaded) {
-			if (( \App::$module === 'channel' ) && argc() > 1) {
-				\App::$channel_links = [
-					[
-						'rel' => 'lrdd',
-						'type' => 'application/xrd+xml',
-						'url' => z_root() . '/xrd?f=&uri=acct%3A' . argv(1) . '%40' . \App::get_hostname()
-					],
-					[
-						'rel' => 'jrd',
-						'type' => 'application/jrd+json',
-						'url' => z_root() . '/.well-known/webfinger?f=&resource=acct%3A' . argv(1) . '%40' . \App::get_hostname()
-					],
-				];
-				$x = [ 'channel_address' => argv(1), 'channel_links' => \App::$channel_links ]; 
-				call_hooks('channel_links', $x );
-				\App::$channel_links = $x['channel_links'];
-				header('Link: ' . \App::get_channel_links());
-			}
 
 			\App::$page['page_title'] = \App::$module;
 			$placeholder = '';

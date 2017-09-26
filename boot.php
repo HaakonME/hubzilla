@@ -921,6 +921,9 @@ class App {
 		 *
 		 * There will always be one argument. If provided a naked domain
 		 * URL, self::$argv[0] is set to "home".
+		 * 
+		 * If $argv[0] has a period in it, for example foo.json; rewrite
+		 * to module = 'foo' and set $_REQUEST['module_format'] = 'json';
 		 */
 
 		self::$argv = explode('/', self::$cmd);

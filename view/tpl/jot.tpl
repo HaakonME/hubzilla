@@ -168,9 +168,11 @@
 					</div>
 				</div>
 				{{/if}}
-			</div>
-			<div id="profile-rotator-wrapper" class="float-left">
-				<div id="profile-rotator"></div>
+				<div class="btn-group">
+					<div id="profile-rotator" class="mt-2 spinner-wrapper">
+						<div class="spinner s"></div>
+					</div>
+				</div>
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group float-right">
 				{{if $preview}}

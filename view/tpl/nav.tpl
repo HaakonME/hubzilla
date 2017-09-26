@@ -191,7 +191,9 @@
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>
 			</form>
-			<div id="nav-search-spinner"></div>
+			<div id="nav-search-spinner" class="spinner-wrapper">
+				<div class="spinner s"></div>
+			</div>
 		</li>
 		<li class="nav-item" id="nav-search-btn">
 			<a class="nav-link" href="#nav-search" title="{{$nav.search.3}}" onclick="openMenu('nav-search'); closeMenu('nav-search-btn'); $('#nav-search-text').focus(); return false;"><i class="fa fa-fw fa-search"></i></a>

@@ -68,10 +68,6 @@
 	border-top: 1px solid #ccc;
 }
 
-#profile-rotator {
-	padding: 15px 0px 0px 15px;
-}
-
 /* conversation */
 
 
@@ -139,11 +135,6 @@ a.wall-item-name-link {
 
 .item-tool {
 	cursor: pointer;
-}
-
-.like-rotator {
-	float: right;
-	margin: 16px;
 }
 
 .item-select {

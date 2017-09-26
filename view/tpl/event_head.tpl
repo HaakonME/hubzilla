@@ -67,11 +67,11 @@
 				showEvent(calEvent.id);
 			},
 			loading: function(isLoading, view) {
-				$('#events-spinner').spin('tiny');
-				$('#events-spinner > i').css('color', 'transparent');
+				$('#events-spinner').show();
+				$('#today-btn > i').hide();
 				if(!isLoading) {
-					$('#events-spinner').spin(false);
-					$('#events-spinner > i').css('color', '');
+					$('#events-spinner').hide();
+					$('#today-btn > i').show();
 					$('td.fc-day').dblclick(function() {
 						openMenu('form');
 						//window.location.href='/events/new?start='+$(this).data('date');

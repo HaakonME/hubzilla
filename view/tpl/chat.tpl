@@ -16,6 +16,9 @@
 	</div>
 	<div id="chatContainer" class="section-content-wrapper">
 		<div id="chatTopBar">
+			<div id="chat-top-spinner" class="spinner-wrapper">
+				<div class="spinner m"></div>
+			</div>
 			<div id="chatLineHolder"></div>
 		</div>
 		<div class="clear"></div>
@@ -25,7 +28,7 @@
 				<div class="form-group">
 					<textarea id="chatText" name="chat_text" class="form-control"></textarea>
 				</div>
-				<div id="chat-submit-wrapper">
+				<div id="chat-submit-wrapper" class="clearfix">
 					<div id="chat-submit" class="dropup pull-right">
 						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-cog"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="chat-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
@@ -42,7 +45,7 @@
 							{{/if}}
 						</div>
 					</div>
-					<div id="chat-tools" class="btn-toolbar pull-left">
+					<div id="chat-tools" class="btn-toolbar">
 						<div class="btn-group mr-2">
 							<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'chatText'); return false;">
 								<i class="fa fa-bold jot-icons"></i>
@@ -84,11 +87,12 @@
 								{{/if}}
 							</div>
 						</div>
+						<div class="btn-group">
+							<div id="chat-rotator" class="mt-2 spinner-wrapper">
+								<div class="spinner s"></div>
+							</div>
+						</div>
 					</div>
-					<div id="chat-rotator-wrapper" class="pull-left">
-						<div id="chat-rotator"></div>
-					</div>
-					<div class="clear"></div>
 				</div>
 			</form>
 		</div>
@@ -101,7 +105,7 @@ var last_chat = 0;
 var chat_timer = null;
 
 $(document).ready(function() {
-	$('#chatTopBar').spin('small');
+	$('#chat-top-spinner').show();
 	chat_timer = setTimeout(load_chats,300);
 	$('#chatroom_bookmarks, #vcard').hide();
 	$('#chatroom_list, #chatroom_members').show();
@@ -134,7 +138,7 @@ function load_chats() {
 		if(data.success && (! stopped)) {
 			update_inroom(data.inroom);
 			update_chats(data.chats);
-			$('#chatTopBar').spin(false);
+			$('#chat-top-spinner').hide();
 		}
 	});
 	
@@ -293,10 +297,10 @@ function toggleChatNotifications() {
 function chatJotGetLink() {
 	reply = prompt("{{$linkurl}}");
 	if(reply && reply.length) {
-		$('#chat-rotator').spin('tiny');
+		$('#chat-rotator').show();
 		$.get('linkinfo?f=&url=' + reply, function(data) {
 			addmailtext(data);
-			$('#chat-rotator').spin(false);
+			$('#chat-rotator').hide();
 		});
 	}
 }

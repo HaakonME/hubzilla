@@ -41,8 +41,8 @@
 		{{$form}}
     </div>
       <div class="clear"></div>
-    <div id="chat-rotator-wrapper" class="center-block">
-        <div id="chat-rotator"></div>
+    <div id="chat-rotator" class="spinner-wrapper">
+        <div class="spinner s"></div>
     </div>
     <div class="clear"></div>
 	<div class="section-content-wrapper-np">
@@ -75,11 +75,11 @@
       $("#generic-modal-ok-{{$newRepoModalID}}").addClass('btn-primary');
       var repoURL = $('#id_repoURL').val();
       var repoName = $('#id_repoName').val();
-      $('#chat-rotator').spin('tiny');
+      $('#chat-rotator').show();
       $.post(
         "/admin/plugins/addrepo", {repoURL: repoURL, repoName: repoName}, 
             function(response) {
-                $('#chat-rotator').spin(false);
+                $('#chat-rotator').hide();
                 if (response.success) {
                   var modalBody = $('#generic-modal-body-{{$newRepoModalID}}');
                   modalBody.html('<div>'+response.repo.readme+'</div>');

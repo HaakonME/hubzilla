@@ -5,7 +5,7 @@
 	</div>
 	<div class="section-content-wrapper">
 {{/if}}
-		<div id="prvmail-wrapper" >
+		<div id="prvmail-wrapper">
 			<input id="invisible-wall-file-upload" type="file" name="files" style="visibility:hidden;position:absolute;top:-50;left:-50;width:0;height:0;" multiple>
 			<form id="prvmail-form" action="mail" method="post" >
 				<input type="hidden" id="inp-prvmail-expires" name="expires" value="{{$defexpire}}" />
@@ -31,12 +31,12 @@
 					<label for="prvmail-text">{{$yourmessage}}</label>
 					<textarea class="form-control" id="prvmail-text" name="body"{{if $new}} style="height: 10em;"{{/if}}>{{$text}}</textarea>
 				</div>
-				<div id="prvmail-submit-wrapper" class="form-group">
+				<div id="prvmail-submit-wrapper" class="form-group clearfix">
 					<div id="prvmail-submit" class="float-right btn-group">
 						<button class="btn btn-outline-secondary btn-sm" id="prvmail-preview" title="{{$preview}}" onclick="preview_mail(); return false;"><i class="fa fa-eye"></i></button>
 						<button class="btn btn-primary btn-sm" type="submit" id="prvmail-submit" name="submit" value="{{$submit}}">{{$submit}}</button>
 					</div>
-					<div id="prvmail-tools" class="btn-toolbar float-left">
+					<div id="prvmail-tools" class="btn-toolbar">
 						<div class="btn-group mr-2">
 							<button id="main-editor-bold" class="btn btn-outline-secondary btn-sm" title="{{$bold}}" onclick="inserteditortag('b', 'prvmail-text'); return false;">
 								<i class="fa fa-bold jot-icons"></i>
@@ -63,7 +63,7 @@
 							</button>
 						</div>
 						{{if $feature_expire || $feature_encrypt}}
-						<div class="btn-group d-none d-lg-flex mr-2">
+						<div class="btn-group d-none d-lg-flex">
 							{{if $feature_expire}}
 							<button id="prvmail-expire-wrapper" class="btn btn-outline-secondary btn-sm" onclick="prvmailGetExpiry();return false;" >
 								<i id="prvmail-expires" class="fa fa-eraser jot-icons" title="{{$expires}}" ></i>
@@ -90,11 +90,12 @@
 								{{/if}}
 							</div>
 						</div>
+						<div class="btn-group">
+							<div id="prvmail-rotator" class="m-2 spinner-wrapper">
+								<div class="spinner s"></div>
+							</div>
+						</div>
 					</div>
-					<div id="prvmail-rotator-wrapper" class="float-left">
-						<div id="prvmail-rotator"></div>
-					</div>
-					<div class="clear"></div>
 				</div>
 				<div id="mail-preview-content" style="display: none;"></div>
 			</form>

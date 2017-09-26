@@ -6,10 +6,10 @@ var pretext = '{{$pretext}}';
 
 function initEditor(cb){
 	if (editor==false){
-		$("#profile-jot-text-loading").spin('small').show();
+		$("#profile-jot-text-loading").show();
 		{{$geotag}}
 		if(plaintext == 'none') {
-			$("#profile-jot-text-loading").spin(false).hide();
+			$("#profile-jot-text-loading").hide();
 			$("#profile-jot-text").css({ 'height': 200 });
 			{{if $bbco_autocomplete}}
 			$("#profile-jot-text").bbco_autocomplete('{{$bbco_autocomplete}}'); // autocomplete bbcode
@@ -80,7 +80,7 @@ function initEditor(cb){
 
 				ed.onInit.add(function(ed) {
 					ed.pasteAsPlainText = true;
-					$("#profile-jot-text-loading").spin(false).hide();
+					$("#profile-jot-text-loading").hide();
 					$(".jothidden").show();
 					if (typeof cb!="undefined") cb();
 				});
@@ -121,7 +121,7 @@ var activeCommentText = '';
 			dropZone: $('#profile-jot-text'),
 			maxChunkSize: 4 * 1024 * 1024,
 			add: function(e,data) {
-				$('#profile-rotator').spin('tiny');
+				$('#profile-rotator').show();
 				data.submit();
 			},
 			done: function(e,data) {
@@ -130,7 +130,7 @@ var activeCommentText = '';
 			},
 			stop: function(e,data) {
 				preview_post();
-				$('#profile-rotator').spin(false);
+				$('#profile-rotator').hide();
 			},
 		});
 
@@ -204,11 +204,11 @@ var activeCommentText = '';
                         reply = prompt("{{$linkurl}}");
                         if(reply && reply.length) {
                             reply = bin2hex(reply);
-                            $('#profile-rotator').spin('tiny');
+                            $('#profile-rotator').show();
                             $.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
                                     addeditortext(data);
 									preview_post();
-                                    $('#profile-rotator').spin(false);
+                                    $('#profile-rotator').hide();
                             });
                         }
                     }
@@ -254,12 +254,12 @@ var activeCommentText = '';
 		else {
 			if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
-			$('#like-rotator-' + id).spin('tiny');
+			$('#like-rotator-' + id).show();
 			$.get('{{$baseurl}}/share/' + id, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					addeditortext(data);
-					$('#like-rotator-' + id).spin(false);
+					$('#like-rotator-' + id).hide();
 					$(window).scrollTop(0);
 				});
 			});
@@ -312,17 +312,17 @@ var activeCommentText = '';
 
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
-			$('#profile-rotator').spin('tiny');
+			$('#profile-rotator').show();
 			$.get('{{$baseurl}}/linkinfo?f=&binurl=' + reply, function(data) {
 				if(commentwin) {
 					$(editwin).val( $(editwin).val() + data );
-					$('#profile-rotator').spin(false);
+					$('#profile-rotator').hide();
 				}
 				else {
 					if (!editor) $("#profile-jot-text").val("");
 					initEditor(function(){
 					addeditortext(data);
-					$('#profile-rotator').spin(false);
+					$('#profile-rotator').hide();
 					});
 				}
 			});

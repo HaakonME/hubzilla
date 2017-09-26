@@ -414,7 +414,7 @@ $(function() {
 
 function NavUpdate() {
 	if(liking)
-		$('.like-rotator').spin(false);
+		$('.like-rotator').hide();
 
 	if((! stopped) && (! mediaPlaying)) {
 		var pingCmd = 'ping' + ((localUser != 0) ? '?f=&uid=' + localUser : '');
@@ -657,7 +657,7 @@ function updateConvItems(mode,data) {
 
 	// reset rotators and cursors we may have set before reaching this place
 
-	$('.like-rotator').spin(false);
+	$('.like-rotator').hide();
 
 	if(commentBusy) {
 		commentBusy = false;
@@ -781,7 +781,7 @@ function collapseHeight() {
 
 function liveUpdate() {
 	if(typeof profile_uid === 'undefined') profile_uid = false; /* Should probably be unified with channelId defined in head.tpl */
-	if((src === null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
+	if((src === null) || (stopped) || (! profile_uid)) { $('.like-rotator').hide(); return; }
 	if(($('.comment-edit-text.expanded').length) || (in_progress)) {
 		if(livetime) {
 			clearTimeout(livetime);
@@ -810,7 +810,7 @@ function liveUpdate() {
 	update_url = buildCmd();
 
 	if(page_load) {
-		$("#page-spinner").spin('small');
+		$("#page-spinner").show();
 		if(bParam_page == 1)
 			update_mode = 'replace';
 		else
@@ -859,8 +859,8 @@ function liveUpdate() {
 				page_load = false;
 				scroll_next = false;
 				updateConvItems(update_mode,data);
-				$("#page-spinner").spin(false);
-				$("#profile-jot-text-loading").spin(false);
+				$("#page-spinner").hide();
+				$("#profile-jot-text-loading").hide();
 
 				// adjust scroll position if new content was added above viewport
 				if(update_mode === 'update') {
@@ -889,8 +889,8 @@ function liveUpdate() {
 			page_load = false;
 			scroll_next = false;
 			updateConvItems(update_mode,data);
-			$("#page-spinner").spin(false);
-			$("#profile-jot-text-loading").spin(false);
+			$("#page-spinner").hide();
+			$("#profile-jot-text-loading").hide();
 
 			in_progress = false;
 
@@ -930,14 +930,14 @@ function pageUpdate() {
 
 	update_url = baseurl + '/' + page_query + '/?f=&aj=1&page=' + bParam_page + extra_args ;
 
-	$("#page-spinner").spin('small');
+	$("#page-spinner").show();
 	update_mode = 'append';
 
 	$.get(update_url,function(data) {
 		page_load = false;
 		scroll_next = false;
 		updatePageItems(update_mode,data);
-		$("#page-spinner").spin(false);
+		$("#page-spinner").hide();
 		$(".autotime").timeago();
 		in_progress = false;
 	});
@@ -1014,7 +1014,7 @@ function notify_popup_loader(notifyType) {
 
 function dolike(ident, verb) {
 	unpause();
-	$('#like-rotator-' + ident.toString()).spin('tiny');
+	$('#like-rotator-' + ident.toString()).show();
 	$.get('like/' + ident.toString() + '?verb=' + verb, NavUpdate );
 	liking = 1;
 }
@@ -1044,7 +1044,7 @@ function dropItem(url, object) {
 
 function dosubthread(ident) {
 	unpause();
-	$('#like-rotator-' + ident.toString()).spin('tiny');
+	$('#like-rotator-' + ident.toString()).show();
 	$.get('subthread/sub/' + ident.toString(), NavUpdate );
 	liking = 1;
 }
@@ -1052,7 +1052,7 @@ function dosubthread(ident) {
 
 function dounsubthread(ident) {
 	unpause();
-	$('#like-rotator-' + ident.toString()).spin('tiny');
+	$('#like-rotator-' + ident.toString()).show();
 	$.get('subthread/unsub/' + ident.toString(), NavUpdate );
 	liking = 1;
 }
@@ -1061,7 +1061,7 @@ function dounsubthread(ident) {
 
 function dostar(ident) {
 	ident = ident.toString();
-	$('#like-rotator-' + ident).spin('tiny');
+	$('#like-rotator-' + ident).show();
 	$.get('starred/' + ident, function(data) {
 		if(data.result == 1) {
 			$('#starred-' + ident).addClass('starred');
@@ -1079,7 +1079,7 @@ function dostar(ident) {
 			$('#star-' + ident).removeClass('hidden');
 			$('#unstar-' + ident).addClass('hidden');
 		}
-		$('#like-rotator-' + ident).spin(false);
+		$('#like-rotator-' + ident).hide();
 	});
 }
 
@@ -1113,11 +1113,11 @@ function lockview(type, id) {
 function filestorage(event, nick, id) {
 	$('#cloud-index-' + last_filestorage_id).removeClass('cloud-index-active');
 	$('#perms-panel-' + last_filestorage_id).hide().html('');
-	$('#file-edit-' + id).spin('tiny');
+	$('#file-edit-' + id).show();
 	$.get('filestorage/' + nick + '/' + id + '/edit', function(data) {
 		$('#cloud-index-' + id).addClass('cloud-index-active');
 		$('#perms-panel-' + id).html(data).show();
-		$('#file-edit-' + id).spin(false);
+		$('#file-edit-' + id).hide();
 		last_filestorage_id = id;
 	});
 }

@@ -86,6 +86,11 @@
 				{{/if}}
 				<div class="p-2 clearfix wall-item-tools">
 					<div class="float-right wall-item-tools-right">
+						<div class="btn-group">
+							<div id="like-rotator-{{$item.id}}" class="spinner-wrapper">
+								<div class="spinner s"></div>
+							</div>
+						</div>
 						{{if $item.toplevel && $item.emojis && $item.reactions}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-react-{{$item.id}}">
@@ -195,7 +200,6 @@
 							</div>
 						</div>
 					</div>
-					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 
 					{{if $item.responses || $item.attachments}}
 					<div class="wall-item-tools-left{{if ($item.responses.count > 1) || ($item.responses.count &&  $item.attachments)}} btn-group{{/if}}">

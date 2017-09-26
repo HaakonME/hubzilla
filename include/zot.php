@@ -124,7 +124,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 			'sitekey' => get_config('system','pubkey')
 		],
 		'callback' => '/post',
-		'version' => ZOT_REVISION,
+		'version' => Zotlabs\Lib\System::get_zot_revision(),
 		'encryption' => crypto_methods(),
 		'signing' => signing_methods()
 	];
@@ -2894,8 +2894,9 @@ function import_site($arr, $pubkey) {
 
 	$site_flags = $site_directory;
 
-	if(array_key_exists('zot',$arr) && ((float) $arr['zot']) >= 6.0)
-		$site_flags = ($site_flags & ZOT6_COMPLIANT); 
+	if(array_key_exists('zot',$arr)) {
+		set_sconfig($arr['url'],'system','zot_version',$arr['zot']);
+	} 
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_flags)
@@ -4225,12 +4226,7 @@ function zot_site_info() {
 
 	$ret['site']['encryption'] = crypto_methods();
 	$ret['site']['signing'] = signing_methods();
-	if(function_exists('zotvi_load')) {
-		$ret['site']['zot'] = '6.0';
-	}
-	else {
-		$ret['site']['zot'] = ZOT_REVISION;
-	}
+	$ret['site']['zot'] = Zotlabs\Lib\System::get_zot_revision();
 
 	// hide detailed site information if you're off the grid
 

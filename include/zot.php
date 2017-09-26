@@ -124,7 +124,7 @@ function zot_build_packet($channel, $type = 'notify', $recipients = null, $remot
 			'sitekey' => get_config('system','pubkey')
 		],
 		'callback' => '/post',
-		'version' => ZOT_REVISION,
+		'version' => Zotlabs\Lib\System::get_zot_revision(),
 		'encryption' => crypto_methods(),
 		'signing' => signing_methods()
 	];
@@ -2894,8 +2894,9 @@ function import_site($arr, $pubkey) {
 
 	$site_flags = $site_directory;
 
-	if(array_key_exists('zot',$arr) && ((float) $arr['zot']) >= 6.0)
-		$site_flags = ($site_flags & ZOT6_COMPLIANT); 
+	if(array_key_exists('zot',$arr)) {
+		set_sconfig($arr['url'],'system','zot_version',$arr['zot']);
+	} 
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_flags)
@@ -4183,7 +4184,7 @@ function zotinfo($arr) {
 	if($x)
 		$ret['locations'] = $x;
 
-	$ret['site'] = zot_site_info($e);
+	$ret['site'] = zot_site_info();
 
 
 	check_zotinfo($e,$x,$ret);
@@ -4195,10 +4196,10 @@ function zotinfo($arr) {
 }
 
 
-function zot_site_info($channel = null) {
+function zot_site_info() {
 
-	$signing_key = (($channel) ? $channel['channel_prvkey'] : get_config('system','prvkey'));
-	$sig_method = get_config('system','signature_algorithm','sha256');
+	$signing_key = get_config('system','prvkey');
+	$sig_method  = get_config('system','signature_algorithm','sha256');
 
 	$ret = [];
 	$ret['site'] = [];
@@ -4225,12 +4226,7 @@ function zot_site_info($channel = null) {
 
 	$ret['site']['encryption'] = crypto_methods();
 	$ret['site']['signing'] = signing_methods();
-	if(function_exists('zotvi_load')) {
-		$ret['site']['zot'] = '6.0';
-	}
-	else {
-		$ret['site']['zot'] = ZOT_REVISION;
-	}
+	$ret['site']['zot'] = Zotlabs\Lib\System::get_zot_revision();
 
 	// hide detailed site information if you're off the grid
 

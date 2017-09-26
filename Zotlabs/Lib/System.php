@@ -61,6 +61,13 @@ class System {
 		return 'pro';
 	}
 
+
+	static public function get_zot_revision() {
+		$x = [ 'revision' => ZOT_REVISION ]; 
+		call_hooks('zot_revision',$x);
+		return $x['revision'];
+	}
+
 	static public function get_std_version() {
 		if(defined('STD_VERSION'))
 			return STD_VERSION;

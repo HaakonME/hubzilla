@@ -107,6 +107,34 @@ class WebServer {
 
 		$Router = new Router($a);
 
+		/* Initialise the Link: response header if this is a channel page. 
+		 * This cannot be done inside the channel module because some protocol
+		 * addons over-ride the module functions and these links are common 
+		 * to all protocol drivers; thus doing it here avoids duplication.
+		 */
+
+		if (( \App::$module === 'channel' ) && argc() > 1) {
+			\App::$channel_links = [
+				[
+					'rel'  => 'lrdd',
+					'type' => 'application/xrd+xml',
+					'url'  => z_root() . '/xrd?f=&uri=acct%3A' . argv(1) . '%40' . \App::get_hostname()
+				],
+				[
+					'rel'  => 'jrd',
+					'type' => 'application/jrd+json',
+					'url'  => z_root() . '/.well-known/webfinger?f=&resource=acct%3A' . argv(1) . '%40' . \App::get_hostname()
+				],
+			];
+			$x = [ 'channel_address' => argv(1), 'channel_links' => \App::$channel_links ]; 
+			call_hooks('channel_links', $x );
+			\App::$channel_links = $x['channel_links'];
+			header('Link: ' . \App::get_channel_links());
+		}
+
+
+
+
 		/* initialise content region */
 
 		if(! x(\App::$page, 'content'))

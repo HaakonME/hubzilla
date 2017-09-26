@@ -72,8 +72,6 @@ define ( 'DIRECTORY_MODE_PRIMARY',     0x0001); // There can only be *one* prima
 define ( 'DIRECTORY_MODE_SECONDARY',   0x0002); // All other mirror directory servers
 define ( 'DIRECTORY_MODE_STANDALONE',  0x0100); // A detached (off the grid) hub with itself as directory server.
 
-define ( 'ZOT6_COMPLIANT',             0x1000);
-
 // We will look for upstream directories whenever me make contact
 // with other sites, but if this is a new installation and isn't
 // a standalone hub, we need to seed the service with a starting
@@ -923,6 +921,9 @@ class App {
 		 *
 		 * There will always be one argument. If provided a naked domain
 		 * URL, self::$argv[0] is set to "home".
+		 * 
+		 * If $argv[0] has a period in it, for example foo.json; rewrite
+		 * to module = 'foo' and set $_REQUEST['module_format'] = 'json';
 		 */
 
 		self::$argv = explode('/', self::$cmd);

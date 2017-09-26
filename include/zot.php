@@ -4183,7 +4183,7 @@ function zotinfo($arr) {
 	if($x)
 		$ret['locations'] = $x;
 
-	$ret['site'] = zot_site_info($e);
+	$ret['site'] = zot_site_info();
 
 
 	check_zotinfo($e,$x,$ret);
@@ -4195,10 +4195,10 @@ function zotinfo($arr) {
 }
 
 
-function zot_site_info($channel = null) {
+function zot_site_info() {
 
-	$signing_key = (($channel) ? $channel['channel_prvkey'] : get_config('system','prvkey'));
-	$sig_method = get_config('system','signature_algorithm','sha256');
+	$signing_key = get_config('system','prvkey');
+	$sig_method  = get_config('system','signature_algorithm','sha256');
 
 	$ret = [];
 	$ret['site'] = [];

@@ -27,13 +27,13 @@
 		</div>
 	</div>
 </div>
+<div class="photos-end"></div>
+<div id="page-spinner" class="spinner-wrapper">
+	<div class="spinner m"></div>
+</div>
 <script>
 $(document).ready(function() {
 	loadingPage = false;
 	justifyPhotos('photo-album-contents-{{$album_id}}');
 });
 </script>
-<div class="photos-end"></div>
-<div id="page-spinner" class="spinner-wrapper">
-	<div class="spinner m"></div>
-</div>

@@ -10,4 +10,6 @@
 	</div>
 </div>
 <script>$(document).ready(function() { loadingPage = false;});</script>
-<div id="page-spinner"></div>
+<div id="page-spinner" class="spinner-wrapper">
+	<div class="spinner m"></div>
+</div>

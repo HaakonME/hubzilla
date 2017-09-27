@@ -250,7 +250,9 @@ nav {
 	width: 3rem;
 }
 
-.spinner {
+.spinner.s,
+.spinner.m,
+.spinner.l {
 	margin: 0 auto;
 	position: relative;
 	-webkit-animation: rotation 1s infinite linear;

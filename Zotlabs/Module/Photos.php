@@ -770,7 +770,7 @@ class Photos extends \Zotlabs\Web\Controller {
 				if($photos) {
 					$o = replace_macros(get_markup_template('photosajax.tpl'),array(
 						'$photos' => $photos,
-						'$album_id' => bin2hex($album)
+						'$album_id' => $datum
 					));
 				}
 				else {

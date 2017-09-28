@@ -497,6 +497,7 @@ define ( 'ACTIVITY_TAG',         NAMESPACE_ACTIVITY_SCHEMA . 'tag' );
 define ( 'ACTIVITY_SHARE',       NAMESPACE_ACTIVITY_SCHEMA . 'share' );
 define ( 'ACTIVITY_FAVORITE',    NAMESPACE_ACTIVITY_SCHEMA . 'favorite' );
 define ( 'ACTIVITY_CREATE',      NAMESPACE_ACTIVITY_SCHEMA . 'create' );
+define ( 'ACTIVITY_DELETE',      NAMESPACE_ACTIVITY_SCHEMA . 'delete' );
 define ( 'ACTIVITY_WIN',         NAMESPACE_ACTIVITY_SCHEMA . 'win' );
 define ( 'ACTIVITY_LOSE',        NAMESPACE_ACTIVITY_SCHEMA . 'lose' );
 define ( 'ACTIVITY_TIE',         NAMESPACE_ACTIVITY_SCHEMA . 'tie' );

@@ -1637,6 +1637,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false, $logi
 		'$login_page'   => $login_page,
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
+		'$remote_login' => t('Remote Authentication'),
 		'$form_id'      => $form_id,
 		'$lname'        => array('username', t('Login/Email') , '', ''),
 		'$lpassword'    => array('password', t('Password'), '', ''),

@@ -9,7 +9,6 @@
 			<div class="modal-body">
 				<div class="form-group">
 					{{$nav.login}}
-					{{$nav.remote_login}}
 				</div>
 			</div>
 		</div>

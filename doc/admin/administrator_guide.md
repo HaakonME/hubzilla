@@ -246,7 +246,7 @@ a _standard_ and _premium_ class using the following lines:
     
     App::$config['system']['default_service_class']='standard'; // this is the default service class that is attached to every new account
     
-    // configuration for parent service class
+    // configuration for standard service class
     App::$config['service_class']['standard'] =
     array('photo_upload_limit'=>2097152, // total photo storage limit per channel (here 2MB)
     'total_identities' =>1, // number of channels an account can create
@@ -256,7 +256,7 @@ a _standard_ and _premium_ class using the following lines:
     'attach_upload_limit' =>2097152, // total attachment storage limit per channel (here 2MB)
     'chatters_inroom' =>20);
     
-    // configuration for teacher service class
+    // configuration for premium service class
     App::$config['service_class']['premium'] =
     array('photo_upload_limit'=>20000000000, // total photo storage limit per channel (here 20GB)
     'total_identities' =>20, // number of channels an account can create

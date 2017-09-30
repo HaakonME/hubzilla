@@ -66,7 +66,19 @@ function photo_upload($channel, $observer, $args) {
 	$os_storage = 0;
 
 	if($args['os_syspath'] && $args['getimagesize']) {
-		$imagedata = @file_get_contents($args['os_syspath']);
+		if($args['getimagesize'][0] > 1600 || $args['getimagesize'][1] > 1600) {
+			$imagick_path = get_config('system','imagick_convert_path');
+			if($imagick_path && @file_exists($imagick_path)) {
+				$tmp_name = $args['os_syspath'] . '-001';
+				$newsize = photo_calculate_1600_scale($args['getimagesize']);
+				exec($imagick_path . ' ' . $args['os_syspath'] . ' -resize ' . $newsize . '^ ' . $tmp_name);
+				$imagedata = @file_get_contents($tmp_name);
+				@unlink($tmp_name);
+			}
+		}
+		else {
+			$imagedata = @file_get_contents($args['os_syspath']);
+		}
 		$filename = $args['filename'];
 		$filesize = strlen($imagedata);
 		// this is going to be deleted if it exists
@@ -122,7 +134,6 @@ function photo_upload($channel, $observer, $args) {
 		}
 
 		logger('photo_upload: loading the contents of ' . $src , LOGGER_DEBUG);
-
 		$imagedata = @file_get_contents($src);
 	}
 
@@ -427,6 +438,70 @@ function photo_upload($channel, $observer, $args) {
 
 	return $ret;
 }
+
+
+function photo_calculate_1600_scale($arr) {
+
+	$max = 1600;
+	$width = $arr[0];
+	$height = $arr[1];
+
+	$dest_width = $dest_height = 0;
+
+	if((! $width)|| (! $height))
+		return FALSE;
+
+	if($width > $max && $height > $max) {
+
+		// very tall image (greater than 16:9)
+		// constrain the width - let the height float.
+
+		if((($height * 9) / 16) > $width) {
+			$dest_width = $max;
+ 			$dest_height = intval(( $height * $max ) / $width);
+		}
+
+		// else constrain both dimensions
+
+		elseif($width > $height) {
+			$dest_width = $max;
+			$dest_height = intval(( $height * $max ) / $width);
+		}
+		else {
+			$dest_width = intval(( $width * $max ) / $height);
+			$dest_height = $max;
+		}
+	}
+	else {
+		if( $width > $max ) {
+			$dest_width = $max;
+			$dest_height = intval(( $height * $max ) / $width);
+		}
+		else {
+			if( $height > $max ) {
+				// very tall image (greater than 16:9)
+				// but width is OK - don't do anything
+
+				if((($height * 9) / 16) > $width) {
+					$dest_width = $width;
+ 					$dest_height = $height;
+				}
+				else {
+					$dest_width = intval(( $width * $max ) / $height);
+					$dest_height = $max;
+				}
+			}
+			else {
+				$dest_width = $width;
+				$dest_height = $height;
+			}
+		}
+	}
+
+	return $dest_width . 'x' . $dest_height;
+
+}
+
 
 /**
  * @brief Returns a list with all photo albums observer is allowed to see.

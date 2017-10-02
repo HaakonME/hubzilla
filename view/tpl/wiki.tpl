@@ -218,9 +218,9 @@
 			} else {
 				window.console.log('Error getting page history.');
 			}
-			}, 'json');
-			ev.preventDefault();
-		});
+		}, 'json');
+		ev.preventDefault();
+	});
 
 	function wiki_refresh_page_list() {
 		if (window.wiki_resource_id === '') {

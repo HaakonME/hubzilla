@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-01 12:13+0200\n"
-"PO-Revision-Date: 2017-08-02 06:49+0000\n"
+"PO-Revision-Date: 2017-10-01 10:52+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -2662,7 +2662,7 @@ msgstr "Experto: puedo escribir código informático"
 
 #: ../../Zotlabs/Module/Admin/Site.php:261
 msgid "Wizard - I probably know more than you do"
-msgstr "Asistente: probablemente sé más que tú"
+msgstr "Colaborador: probablemente sé más que tú"
 
 #: ../../Zotlabs/Module/Admin/Site.php:270 ../../Zotlabs/Widget/Admin.php:22
 msgid "Site"
@@ -3238,7 +3238,7 @@ msgstr "Utilice este formulario para crear reglas de permiso para varias clases 
 
 #: ../../Zotlabs/Module/Settings/Permcats.php:94
 msgid "Permission Categories"
-msgstr "Categorías de autorización"
+msgstr "Tipos de permisos"
 
 #: ../../Zotlabs/Module/Settings/Permcats.php:102
 msgid "Permission Name"
@@ -3485,7 +3485,7 @@ msgstr "Categoría de los permisos del canal:"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:522
 msgid "Default Permissions Group"
-msgstr "Grupo de permisos predeterminado"
+msgstr "Grupo de permisos predeterminados"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:528
 msgid "Maximum private messages per day from unknown people:"
@@ -4316,7 +4316,7 @@ msgstr "Ocultas"
 #: ../../Zotlabs/Module/Connections.php:69
 #: ../../Zotlabs/Module/Connections.php:170
 msgid "Archived/Unreachable"
-msgstr "Archivada o inaccesible"
+msgstr "Archivado o inaccesible"
 
 #: ../../Zotlabs/Module/Connections.php:74
 #: ../../Zotlabs/Module/Connections.php:83 ../../Zotlabs/Module/Menu.php:116
@@ -4352,7 +4352,7 @@ msgstr "Mostrar solo conexiones ignoradas"
 
 #: ../../Zotlabs/Module/Connections.php:173
 msgid "Only show archived/unreachable connections"
-msgstr "Mostrar solo las conexiones archivadas o inaccesibles"
+msgstr "Mostrar solo las conexiones archivadas o no localizables"
 
 #: ../../Zotlabs/Module/Connections.php:180
 msgid "Only show hidden connections"

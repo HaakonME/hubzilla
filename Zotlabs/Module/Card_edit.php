@@ -105,6 +105,8 @@ class Card_edit extends \Zotlabs\Web\Controller {
 			'hide_expire' => false,
 			'showacl' => true,
 			'acl' => populate_acl($itm[0],false,\Zotlabs\Lib\PermissionDescription::fromGlobalPermission('view_pages')),
+			'permissions' => $itm[0],
+			'lockstate' => (($itm[0]['allow_cid'] || $itm[0]['allow_gid'] || $itm[0]['deny_cid'] || $itm[0]['deny_gid']) ? 'lock' : 'unlock'),
 			'ptyp' => $itm[0]['type'],
 			'mimeselect' => false,
 			'mimetype' => $itm[0]['mimetype'],

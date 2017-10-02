@@ -158,6 +158,9 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 							intval(local_channel())
 						);
 	
+
+
+
 						send_profile_photo_activity($channel,$base_image,$profile);
 	
 					}
@@ -174,12 +177,17 @@ class Profile_photo extends \Zotlabs\Web\Controller {
 	
 					// We'll set the updated profile-photo timestamp even if it isn't the default profile,
 					// so that browsers will do a cache update unconditionally
+					// Also set links back to site-specific profile photo url in case it was
+					// changed to a generic URL by a clone operation. Otherwise the new photo may 
+					// not get pushed to other sites correctly.
 	
-	
-					$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s' 
+					$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s'  
 						where xchan_hash = '%s'",
 						dbesc($im->getType()),
 						dbesc(datetime_convert()),
+						dbesc(z_root() . '/photo/profile/l/' . $channel['channel_id']),
+						dbesc(z_root() . '/photo/profile/m/' . $channel['channel_id']),
+						dbesc(z_root() . '/photo/profile/s/' . $channel['channel_id']),
 						dbesc($channel['xchan_hash'])
 					);
 

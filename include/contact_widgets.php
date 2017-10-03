@@ -143,7 +143,7 @@ function cardcategories_widget($baseurl,$selected = '') {
 
 
 
-function common_friends_visitor_widget($profile_uid,$cnt = 10) {
+function common_friends_visitor_widget($profile_uid,$cnt = 25) {
 
 	if(local_channel() == $profile_uid)
 		return;
@@ -161,14 +161,14 @@ function common_friends_visitor_widget($profile_uid,$cnt = 10) {
 		return;
 
 	$r = common_friends($profile_uid,$observer_hash,0,$cnt,true);
-
+	
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
-		'$desc'     => sprintf( t('Common connections: %d'), $t),
+		'$desc'     => t('Common Connections'),
 		'$base'     => z_root(),
 		'$uid'      => $profile_uid,
 		'$cid'      => $observer,
 		'$linkmore' => (($t > $cnt) ? 'true' : ''),
-		'$more'     => t('show more'),
+		'$more'     => sprintf( t('View all %d common connections'), $t),
 		'$items'    => $r
 	)); 
 

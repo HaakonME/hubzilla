@@ -2412,7 +2412,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag, $d
 		}
 		if(! $replaced) {
 
-			//base tag has the tags name only
+			// base tag has the tags name only
 
 			if((substr($tag,0,7) === '#&quot;') && (substr($tag,-6,6) === '&quot;')) {
 				$basetag = substr($tag,7);

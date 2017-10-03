@@ -7,14 +7,14 @@ such as XAMPP and WAMP are not officially supported at this time - however
 we welcome patches if you manage to get it working. 
 
 Be aware that this software is more than a simple web application. It is a 
-complex communications system which more closely resembles an email server 
-than a web server. For reliability and performance, messages are delivered in
-the background and are queued for later delivery when sites are down. This
-kind of functionality requires a bit more of the host system than the typical
-blog. Not every PHP/MySQL hosting provider will be able to support the 
-Hubzilla. Many will - but please review the requirements and confirm these 
-with your hosting provider prior to installation. (And preferably before 
-entering into a long-term contract.)
+complex communications and content management system which more closely 
+resembles an email server than a web server. For reliability and performance, 
+messages are delivered in the background and are queued for later delivery 
+when sites are down. This kind of functionality requires a bit more of the
+host system than the typical blog. Not every PHP/MySQL hosting provider will
+be able to support Hubzilla. Many will - but please review the requirements
+and confirm these with your hosting provider prior to installation. (And 
+preferably before entering into a long-term contract.)
 
 If you encounter installation issues, please let us know via the Github issue 
 tracker where you downloaded the software. Please be as clear as
@@ -74,27 +74,6 @@ certificate is generated. The software will provide its own handler for
 location may prevent some of these services from working correctly. This
 should not be a problem with Apache, but may be an issue with nginx or other
 web server platforms.
-
-**Server Roles**
-
-During installation you will be asked to choose a server role. Your choices are
-1. Basic
-2. Standard
-3. Pro
-
-Basic is highly simplified, with almost all the advanced functionality and 
-complexity removed or permanently disabled.
-
-Standard is typically used for federated network use, when you wish to interact
-with other networks using other protocols. Not all the built in features and
-functionality work correctly when other networks are involved. All advanced
-and complex features are available to all members by default.  
-
-Pro is for sites that wish to make full use of the built-in abilities and
-features, but **not** to interact with other networks. Advanced features are
-enabled according to a per-account 'techlevel' which reduces complexity
-initially and allows members to adjust the software complexity to match their
-technical abilities.   
 
 **Installation**
 
@@ -173,7 +152,8 @@ technical abilities.
             cd mywebsite
             util/update_addon_repo hzaddons
 
-	- Create searchable representations of the online documentation. You may do this any time
+	- Once the software is configured and the database installed, create searchable
+		representations of the online documentation. You may do this any time
 		that the documentation is updated.
 
 			cd mywebsite

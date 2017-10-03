@@ -25,7 +25,7 @@ class Common extends \Zotlabs\Web\Controller {
 	
 	}
 	
-		function get() {
+	function get() {
 	
 		$o = '';
 	
@@ -34,38 +34,37 @@ class Common extends \Zotlabs\Web\Controller {
 	
 		$observer_hash = get_observer_hash();
 	
-	
 		if(! perm_is_allowed(\App::$profile['profile_uid'],$observer_hash,'view_contacts')) {
 			notice( t('Permission denied.') . EOL);
 			return;
 		}
 	
-		$o .= '<h2>' . t('Common connections') . '</h2>';
-	
 		$t = count_common_friends(\App::$profile['profile_uid'],$observer_hash);
 	
 		if(! $t) {
 			notice( t('No connections in common.') . EOL);
-			return $o;
+			return;
 		}
 	
 		$r = common_friends(\App::$profile['profile_uid'],$observer_hash);
 	
 		if($r) {
-	
-			$tpl = get_markup_template('common_friends.tpl');
-	
 			foreach($r as $rr) {
-				$o .= replace_macros($tpl,array(
-					'$url'   => $rr['xchan_url'],
-					'$name'  => $rr['xchan_name'],
-					'$photo' => $rr['xchan_photo_m'],
-					'$tags'  => ''
-				));
+				$items[] = [
+					'url'   => $rr['xchan_url'],
+					'name'  => $rr['xchan_name'],
+					'photo' => $rr['xchan_photo_m'],
+					'tags'  => ''
+				];
 			}
-	
-			$o .= cleardiv();
 		}
+
+		$tpl = get_markup_template('common_friends.tpl');
+
+		$o = replace_macros($tpl, [
+			'$title' => t('View Common Connections'),
+			'$items' => $items
+		]);
 	
 		return $o;
 	}

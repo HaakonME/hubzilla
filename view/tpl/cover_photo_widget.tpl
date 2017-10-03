@@ -8,7 +8,8 @@
 		aside_padding_top = parseInt($('aside').css('padding-top'));
 		section_padding_top = parseInt($('section').css('padding-top'));
 
-		$(document).on('click', slideUpCover);
+		$('#cover-photo').on('click', slideUpCover);
+		$('#cover-photo').on('keyup', slideUpCover);
 
 		if($('#cover-photo').length && $(window).width() > 755) {
 			if($(window).scrollTop() < $('#cover-photo').height()) {

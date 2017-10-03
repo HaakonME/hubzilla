@@ -1105,21 +1105,28 @@ class Item extends \Zotlabs\Web\Controller {
 	
 				// if this is a different page type or it's just a local delete
 				// but not by the item author or owner, do a simple deletion
-	
+
+				$complex = false;	
+
 				if(intval($i[0]['item_type']) || ($local_delete && (! $can_delete))) {
 					drop_item($i[0]['id']);
 				}
 				else {
 					// complex deletion that needs to propagate and be performed in phases
 					drop_item($i[0]['id'],true,DROPITEM_PHASE1);
-					$r = q("select * from item where id = %d",
-						intval($i[0]['id'])
-					);
-					if($r) {
-						xchan_query($r);
-						$sync_item = fetch_post_tags($r);
-						build_sync_packet($i[0]['uid'],array('item' => array(encode_item($sync_item[0],true))));
-					}
+					$complex = true;
+				}
+
+				$r = q("select * from item where id = %d",
+					intval($i[0]['id'])
+				);
+				if($r) {
+					xchan_query($r);
+					$sync_item = fetch_post_tags($r);
+					build_sync_packet($i[0]['uid'],array('item' => array(encode_item($sync_item[0],true))));
+				}
+
+				if($complex) {
 					tag_deliver($i[0]['uid'],$i[0]['id']);
 				}
 			}

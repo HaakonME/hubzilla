@@ -278,20 +278,31 @@ class Import extends \Zotlabs\Web\Controller {
 				create_table_from_array('xchan',$xchan);
 
 				require_once('include/photo/photo_driver.php');
-				$photos = import_xchan_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
-				if($photos[4])
-					$photodate = NULL_DATE;
-				else
-					$photodate = $xchan['xchan_photo_date'];
 
-				$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s' where xchan_hash = '%s'",
-					dbesc($photos[0]),
-					dbesc($photos[1]),
-					dbesc($photos[2]),
-					dbesc($photos[3]),
-					dbesc($photodate),
-					dbesc($xchan['xchan_hash'])
-				);
+				if($xchan['xchan_hash'] === $channel['channel_hash']) {
+					$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s'",
+						dbesc(z_root() . '/photo/profile/l/' . $channel['channel_id']),
+						dbesc(z_root() . '/photo/profile/m/' . $channel['channel_id']),
+						dbesc(z_root() . '/photo/profile/s/' . $channel['channel_id']),
+						dbesc($xchan['xchan_hash'])
+					);
+				}
+				else {
+					$photos = import_xchan_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
+					if($photos[4])
+						$photodate = NULL_DATE;
+					else
+						$photodate = $xchan['xchan_photo_date'];
+
+					$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s' where xchan_hash = '%s'",
+						dbesc($photos[0]),
+						dbesc($photos[1]),
+						dbesc($photos[2]),
+						dbesc($photos[3]),
+						dbesc($photodate),
+						dbesc($xchan['xchan_hash'])
+					);
+				}
 			}
 
 			logger('import step 7');

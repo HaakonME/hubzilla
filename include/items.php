@@ -4133,7 +4133,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 			//$third = dba_timer();
 
-			$items = fetch_post_tags($items,true);
+			$items = fetch_post_tags($items,false);
 
 			//$fourth = dba_timer();
 

@@ -401,6 +401,39 @@ class Ping extends \Zotlabs\Web\Controller {
 			killme();
 		}
 
+		if(argc() > 1 && (argv(1) === 'files')) {
+			$result = array();
+
+			$r = q("SELECT item.created, xchan.xchan_name, xchan.xchan_url, xchan.xchan_photo_s FROM item 
+				LEFT JOIN xchan on author_xchan = xchan_hash
+				WHERE item.verb = '%s'
+				AND item.obj_type = '%s'
+				AND item.uid = %d
+				AND item.owner_xchan != '%s'
+				AND item.item_unseen = 1",
+				dbesc(ACTIVITY_POST),
+				dbesc(ACTIVITY_OBJ_FILE),
+				intval(local_channel()),
+				dbesc($ob_hash)
+			);
+			if($r) {
+				foreach($r as $rr) {
+					$result[] = array(
+						'notify_link' => z_root() . '/sharedwithme',
+						'name' => $rr['xchan_name'],
+						'url' => $rr['xchan_url'],
+						'photo' => $rr['xchan_photo_s'],
+						'when' => relative_date($rr['created']),
+						'hclass' => ('notify-unseen'),
+						'message' => t('shared a file with you')
+					);
+				}
+			}
+			logger('ping (files): ' . print_r($result, true), LOGGER_DATA);
+			echo json_encode(array('notify' => $result));
+			killme();
+		}
+
 		/**
 		 * Normal ping - just the counts, no detail
 		 */
@@ -430,7 +463,7 @@ class Ping extends \Zotlabs\Web\Controller {
 				$result['files'] = intval($files[0]['total']);
 		}
 
-		$t2 = dba_timer();
+		$t3 = dba_timer();
 
 		if($vnotify & (VNOTIFY_NETWORK|VNOTIFY_CHANNEL)) {
 			$r = q("SELECT id, item_wall FROM item

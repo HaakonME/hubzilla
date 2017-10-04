@@ -162,6 +162,17 @@
 			</div>
 		</li>
 		{{/if}}
+		{{if $nav.files}}
+		<li class="nav-item dropdown files-button" style="display: none;">
+			<a class="nav-link" href="#" title="{{$nav.files.3}}" id="{{$nav.files.4}}" data-toggle="dropdown" rel="#nav-files-menu">
+				<i class="fa fa-fw fa-folder"></i>
+				<span class="badge badge-pill badge-danger files-update"></span>
+			</a>
+			<div id="nav-files-menu" class="dropdown-menu" rel="files">
+				{{$emptynotifications}}
+			</div>
+		</li>
+		{{/if}}
 		{{if $nav.login && !$userinfo}}
 		<li class="nav-item d-none d-md-flex">
 			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
@@ -177,14 +188,7 @@
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
-		{{if $nav.files}}
-		<li class="nav-item dropdown files-button" style="display: none;">
-			<a class="nav-link" href="{{$nav.files.0}}" title="{{$nav.files.3}}" id="{{$nav.files.4}}" rel="#nav-files-menu">
-				<i class="fa fa-fw fa-folder"></i>
-				<span class="badge badge-pill badge-primary files-update"></span>
-			</a>
-		</li>
-		{{/if}}
+
 		{{if $nav.pubs}}
 		<li class="nav-item dropdown pubs-button" style="display: none;">
 			<a class="nav-link" href="{{$nav.pubs.0}}" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" rel="#nav-pubs-menu">

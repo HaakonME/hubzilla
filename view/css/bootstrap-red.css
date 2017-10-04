@@ -7,6 +7,10 @@ nav .badge {
 	font-size: 0.75rem;
 }
 
+nav .dropdown-menu {
+	min-width: 16rem;
+}
+
 @media screen and (min-width: 767px) {
 	nav .badge {
 		top: 0px;

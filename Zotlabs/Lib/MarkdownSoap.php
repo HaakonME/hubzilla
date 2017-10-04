@@ -94,7 +94,7 @@ class MarkdownSoap {
 	}
 
 	function escape($s) {
-		return htmlspecialchars($s,ENT_QUOTES);
+		return htmlspecialchars($s,ENT_QUOTES,'UTF-8',false);
 	}
 
 	static public function unescape($s) {

@@ -526,7 +526,7 @@ function delete_thing_photo($url,$ob_hash) {
 
 	// hashes should be 32 bytes. 
 
-	if(strlen($hash) < 16)
+	if((! $ob_hash) || (strlen($hash) < 16))
 		return;	
 
 	$r = q("delete from photo where xchan = '%s' and photo_usage = %d and resource_id = '%s'",

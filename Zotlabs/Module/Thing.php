@@ -91,6 +91,7 @@ class Thing extends \Zotlabs\Web\Controller {
 			}
 			$orig_record = $t[0];
 			if($photo != $orig_record['obj_imgurl']) {
+				delete_thing_photo($orig_record['obj_imgurl'],get_observer_hash());
 				$arr = import_xchan_photo($photo,get_observer_hash(),true);
 				$local_photo = $arr[0];
 				$local_photo_type = $arr[3];
@@ -335,6 +336,9 @@ class Thing extends \Zotlabs\Web\Controller {
 				notice( t('Permission denied.') . EOL);
 				return '';
 			}
+
+
+			delete_thing_photo($r[0]['obj_imgurl'],get_observer_hash());
 
 			$x = q("delete from obj where obj_obj = '%s' and obj_type = %d and obj_channel = %d",
 				dbesc($thing_hash),

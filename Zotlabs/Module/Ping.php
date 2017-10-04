@@ -340,6 +340,30 @@ class Ping extends \Zotlabs\Web\Controller {
 			killme();
 		}
 
+		if((argc() > 1 && (argv(1) === 'register')) && is_site_admin()) {
+			$result = array();
+
+			$r = q("SELECT account_email, account_created from account where (account_flags & %d) > 0",
+				intval(ACCOUNT_PENDING)
+			);
+			if($r) {
+				foreach($r as $rr) {
+					$result[] = array(
+						'notify_link' => z_root() . '/admin/accounts',
+						'name' => $rr['account_email'],
+						'url' => '',
+						'photo' => get_default_profile_photo(48),
+						'when' => relative_date($rr['account_created']),
+						'hclass' => ('notify-unseen'),
+						'message' => t('requires approval')
+					);
+				}
+			}
+			logger('ping (register): ' . print_r($result, true), LOGGER_DATA);
+			echo json_encode(array('notify' => $result));
+			killme();
+		}
+
 		if(argc() > 1 && (argv(1) === 'all_events')) {
 			$bd_format = t('g A l F d') ; // 8 AM Friday January 18
 

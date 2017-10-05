@@ -1,15 +1,17 @@
 <div class="generic-content-wrapper">
-	<div class="profile-match-photo">
-		<a href="{{$url}}">
-			<img src="{{$photo}}" alt="{{$name}}" width="80" height="80" title="{{$name}} [{{$url}}]" />
-		</a>
+	<div class="section-title-wrapper">
+		<h2>{{$title}}</h2>
 	</div>
-	<div class="profile-match-break"></div>
-	<div class="profile-match-name">
-		<a href="{{$url}}" title="{{$name}}[{{$tags}}]">{{$name}}</a>
+	<div class="section-content-wrapper clearfix">
+		{{foreach $items as $item}}
+		<div class="float-left mr-4">
+			<a href="{{$item.url}}">
+				<img class="contact-block-img" src="{{$item.photo}}" alt="{{$item.name}}" title="{{$item.name}} [{{$item.url}}]" />
+			</a>
+			<div>
+				{{$item.name}}
+			</div>
+		</div>
+		{{/foreach}}
 	</div>
-	{{if $note}}
-	<div class="profile-match-note">{{$note}}</div>
-	{{/if}}	
-	<div class="profile-match-end"></div>
 </div>

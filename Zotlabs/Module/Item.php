@@ -694,7 +694,7 @@ class Item extends \Zotlabs\Web\Controller {
 				foreach($t as $t1) {
 					$post_tags[] = array(
 						'uid'   => $profile_uid, 
-						'ttype' => $t1['type'],
+						'ttype' => $t1['ttype'],
 						'otype' => TERM_OBJ_POST,
 						'term'  => $t1['term'],
 						'url'   => $t1['url'],

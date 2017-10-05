@@ -444,7 +444,7 @@ function NavUpdate() {
 
 			updateCountsOnly = false;
 
-			if(data.network || data.home || data.intros || data.mail || data.all_events || data.notify || data.files || data.pubs) {
+			if(data.network || data.home || data.intros || data.register || data.mail || data.all_events || data.notify || data.files || data.pubs) {
 				$('#notifications-btn').css('opacity', 1);
 			}
 			else {
@@ -490,7 +490,7 @@ function NavUpdate() {
 			if(data.notify == 0) { data.notify = ''; $('.notify-update, .notify-button').hide(); } else { $('.notify-update, .notify-button').show(); }
 			$('.notify-update').html(data.notify);
 
-			if(data.register == 0) { data.register = ''; $('.register-update').removeClass('show'); } else { $('.register-update').addClass('show'); }
+			if(data.register == 0) { data.register = ''; $('.register-update, .register-button').hide(); } else { $('.register-update, .register-button').show(); }
 			$('.register-update').html(data.register);
 
 			if(data.events == 0) { data.events = ''; $('.events-update, .events-button').hide(); } else { $('.events-update, .events-button').show(); }

@@ -1,7 +1,7 @@
-<div class="generic-content-wrapper" {{if $hideEditor}}style="display: none;"{{/if}}>
+<div class="generic-content-wrapper">
 	<div class="section-title-wrapper">
 		<div class="pull-right">
-			<span class="wiki-typename">[{{$typename}}]&nbsp;</span>
+			<span class="text-muted wiki-typename">[{{$typename}}]&nbsp;</span>
 			{{if $showPageControls}}
 			<div id="page-tools" class="btn-group" style="display: none;">
 				<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -53,18 +53,6 @@
 					<textarea id="editor">{{$content}}</textarea>
 				</div>
 				{{/if}}
-				{{if $showPageControls}}
-				<div>
-					<div id="id_{{$commitMsg.0}}_wrapper" class="field input">
-						<div class="input-group">
-							<input class="form-control form-control-sm" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
-							<div class="input-group-btn">
-								<button id="save-page" type="button" class="btn btn-primary disabled">Save</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				{{/if}}
 			</div>
 			<div id="preview-pane" class="tab-pane active">
 				<div id="wiki-preview">
@@ -74,6 +62,16 @@
 			<div id="page-history-pane" class="tab-pane">
 				<div id="page-history-list"></div>
 			</div>
+			{{if $showPageControls}}
+			<div id="id_{{$commitMsg.0}}_wrapper" class="field input" style="display: none">
+				<div class="input-group">
+					<input class="form-control form-control-sm" name="{{$commitMsg.0}}" id="id_{{$commitMsg.0}}" type="text" value="{{$commitMsg.2}}"{{if $commitMsg.5}} {{$commitMsg.5}}{{/if}}>
+					<div class="input-group-btn">
+						<button id="save-page" type="button" class="btn btn-primary disabled">Save</button>
+					</div>
+				</div>
+			</div>
+			{{/if}}
 		</div>
 	</div>
 </div>
@@ -106,6 +104,7 @@
 	window.wiki_page_name = '{{$page}}';
 	window.wiki_page_content = '{{$content|escape:'javascript'}}';
 	window.wiki_page_commit = '{{$commit}}';
+	window.saved = true;
 
 	$("#generic-modal-ok-{{$wikiModalID}}").removeClass('btn-primary');
 	$("#generic-modal-ok-{{$wikiModalID}}").addClass('btn-danger');
@@ -174,10 +173,16 @@
 				adjustInlineEditorHeight();
 			}
 		}, 500); // Return the focus to the editor allowing immediate text entry
-		$('#page-tools').show();
+		$('#page-tools, #id_{{$commitMsg.0}}_wrapper').show();
 	});
 
 	$('#wiki-get-preview').click(function (ev) {
+		if(window.saved) {
+			$('#page-tools, #id_{{$commitMsg.0}}_wrapper').hide();
+		}
+		else {
+			$('#page-tools').hide();
+		}
 		$.post("wiki/{{$channel_address}}/preview", {
 			{{if !$mimeType || $mimeType == 'text/markdown'}}
 			content: editor.getValue(),
@@ -188,30 +193,34 @@
 			mimetype: '{{$mimeType}}'
 		},
 		function (data) {
-		if (data.success) {
-			$('#wiki-preview').html(data.html);
-			{{if !$mimeType || $mimeType == 'text/markdown'}}
-			$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
-			{{/if}}
-			$('#page-tools').hide();
-		} else {
-			window.console.log('Error previewing page.');
-		}
+			if (data.success) {
+				$('#wiki-preview').html(data.html);
+				{{if !$mimeType || $mimeType == 'text/markdown'}}
+				$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
+				{{/if}}
+			} else {
+				window.console.log('Error previewing page.');
+			}
 		}, 'json');
 		ev.preventDefault();
 	});
 
 	$('#wiki-get-history').click(function (ev) {
+		if(window.saved) {
+			$('#page-tools, #id_{{$commitMsg.0}}_wrapper').hide();
+		}
+		else {
+			$('#page-tools').hide();
+		}
 		$.post("wiki/{{$channel_address}}/history/page", {name: window.wiki_page_name, resource_id: window.wiki_resource_id}, function (data) {
 			if (data.success) {
 				$('#page-history-list').html(data.historyHTML);
-				$('#page-tools').hide();
 			} else {
 				window.console.log('Error getting page history.');
 			}
-			}, 'json');
-			ev.preventDefault();
-		});
+		}, 'json');
+		ev.preventDefault();
+	});
 
 	function wiki_refresh_page_list() {
 		if (window.wiki_resource_id === '') {
@@ -254,6 +263,7 @@
 		}, 
 		function (data) {
 			if (data.success) {
+				window.saved = true;
 				window.console.log('Page saved successfully.');
 				window.wiki_page_content = currentContent;
 				$('#id_commitMsg').val(''); // Clear the commit message box
@@ -446,6 +456,7 @@
 		{{if !$mimeType || $mimeType == 'text/markdown'}}
 		$("#wiki-toc").toc({content: "#wiki-preview", headings: "h1,h2,h3,h4"});
 		window.editor.on("input", function() {
+			window.saved = false;
 			if(window.editor.getSession().getUndoManager().isClean()) {
 				$('#save-page').addClass('disabled');
 			} else {
@@ -454,6 +465,7 @@
 		});
 		{{else}}
 		window.editor.on("input", function() {
+			window.saved = false;
 			$('#save-page').removeClass('disabled');
 		});
 		{{if $mimeType == 'text/bbcode'}}

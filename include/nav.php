@@ -180,6 +180,8 @@ EOT;
 
 
 		$nav['intros'] = array('connections/ifpending',	t('Connections'), "", t('Connections'),'connections_nav_btn');
+		if(is_site_admin())
+			$nav['registrations'] = array('admin/accounts',	t('Registrations'), "", t('Registrations'),'registrations_nav_btn');
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'),'notifications_nav_btn');

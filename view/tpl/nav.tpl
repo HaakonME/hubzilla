@@ -128,7 +128,7 @@
 		{{/if}}
 		{{if $nav.intros}}
 		<li class="nav-item dropdown intro-button" style="display: none;">
-			<a class="nav-link" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
+			<a class="nav-link" href="#" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
 				<i class="fa fa-fw fa-users"></i>
 				<span class="badge badge-pill badge-danger intro-update"></span>
 			</a>
@@ -138,15 +138,37 @@
 			</div>
 		</li>
 		{{/if}}
+		{{if $nav.registrations}}
+		<li class="nav-item dropdown register-button" style="display: none;">
+			<a class="nav-link" href="#" title="{{$nav.registrations.3}}" id="{{$nav.registrations.4}}" data-toggle="dropdown" rel="#nav-register-menu">
+				<i class="fa fa-fw fa-user-o"></i>
+				<span class="badge badge-pill badge-danger register-update"></span>
+			</a>
+			<div id="nav-register-menu" class="dropdown-menu" rel="register">
+				{{$emptynotifications}}
+			</div>
+		</li>
+		{{/if}}
 		{{if $nav.notifications}}
 		<li class="nav-item dropdown notify-button" style="display: none;">
-			<a class="nav-link" href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
+			<a class="nav-link" href="#" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
 				<i class="fa fa-fw fa-exclamation"></i>
 				<span class="badge badge-pill badge-danger notify-update"></span>
 			</a>
 			<div id="nav-notify-menu" class="dropdown-menu" rel="notify">
 				<a class="dropdown-item" id="nav-notify-see-all" href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a>
 				<a class="dropdown-item" id="nav-notify-mark-all" href="#" onclick="markRead('notify'); return false;">{{$nav.notifications.mark.1}}</a>
+				{{$emptynotifications}}
+			</div>
+		</li>
+		{{/if}}
+		{{if $nav.files}}
+		<li class="nav-item dropdown files-button" style="display: none;">
+			<a class="nav-link" href="#" title="{{$nav.files.3}}" id="{{$nav.files.4}}" data-toggle="dropdown" rel="#nav-files-menu">
+				<i class="fa fa-fw fa-folder"></i>
+				<span class="badge badge-pill badge-danger files-update"></span>
+			</a>
+			<div id="nav-files-menu" class="dropdown-menu" rel="files">
 				{{$emptynotifications}}
 			</div>
 		</li>
@@ -166,14 +188,7 @@
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
-		{{if $nav.files}}
-		<li class="nav-item dropdown files-button" style="display: none;">
-			<a class="nav-link" href="{{$nav.files.0}}" title="{{$nav.files.3}}" id="{{$nav.files.4}}" rel="#nav-files-menu">
-				<i class="fa fa-fw fa-folder"></i>
-				<span class="badge badge-pill badge-primary files-update"></span>
-			</a>
-		</li>
-		{{/if}}
+
 		{{if $nav.pubs}}
 		<li class="nav-item dropdown pubs-button" style="display: none;">
 			<a class="nav-link" href="{{$nav.pubs.0}}" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" rel="#nav-pubs-menu">

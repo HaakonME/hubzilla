@@ -149,6 +149,7 @@ class Magic extends \Zotlabs\Web\Controller {
 					if($j['success'] && $j['token']) {
 						$x = strpbrk($dest,'?&');
 						$args = (($x) ? '&owt=' . $j['token'] : '?f=&owt=' . $j['token']) . (($delegate) ? '&delegate=1' : '');
+						
 						goaway($dest . $args);
 					}
 				}

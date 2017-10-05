@@ -518,6 +518,27 @@ function guess_image_type($filename, $headers = '') {
 
 }
 
+
+function delete_thing_photo($url,$ob_hash) {
+
+	$hash = basename($url);
+	$hash = substr($hash,0,strpos($hash,'-'));
+
+	// hashes should be 32 bytes. 
+
+	if((! $ob_hash) || (strlen($hash) < 16))
+		return;	
+
+	$r = q("delete from photo where xchan = '%s' and photo_usage = %d and resource_id = '%s'",
+		dbesc($ob_hash),
+		intval(PHOTO_THING),
+		dbesc($hash)
+	);
+	
+}
+
+
+
 function import_xchan_photo($photo,$xchan,$thing = false) {
 
 	$flags = (($thing) ? PHOTO_THING : PHOTO_XCHAN);

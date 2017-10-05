@@ -17,7 +17,7 @@ class Rmagic extends \Zotlabs\Web\Controller {
 			if($r) {	
 				if($r[0]['hubloc_url'] === z_root())
 					goaway(z_root() . '/login');
-				$dest = z_root() . '/' . str_replace('zid=','zid_=',\App::$query_string);
+				$dest = z_root() . '/' . str_replace(['rmagic','zid='],['','zid_='],\App::$query_string);
 				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&owa=1&dest=' . $dest);
 			}
 		}
@@ -61,7 +61,7 @@ class Rmagic extends \Zotlabs\Web\Controller {
 				if($_SESSION['return_url']) 
 					$dest = urlencode(z_root() . '/' . str_replace('zid=','zid_=',$_SESSION['return_url']));
 				else
-					$dest = urlencode(z_root() . '/' . str_replace('zid=','zid_=',\App::$query_string));
+					$dest = urlencode(z_root() . '/' . str_replace([ 'rmagic', 'zid=' ] ,[ '', 'zid_='],\App::$query_string));
 	
 				goaway($url . '/magic' . '?f=&owa=1&dest=' . $dest);
 			}

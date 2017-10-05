@@ -168,6 +168,8 @@ class Comanche {
 						return $y['xchan_addr'];
 					elseif($x[1] == 'name')
 						return $y['xchan_name'];
+					elseif($x[1] == 'webname')
+						return substr($y['xchan_addr'],0,strpos($y['xchan_addr'],'@'));
 					return false;
 				}
 				return get_observer_hash();

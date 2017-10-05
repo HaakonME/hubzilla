@@ -280,6 +280,8 @@ EOT;
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
 		'$nav_apps' => $nav_apps,
+		'$channel_menu' => get_config('system','channel_menu'),
+		'$channel_thumb' => ((App::$profile) ? App::$profile['thumb'] : ''),
 		'$channel_apps' => $channel_apps,
 		'$addapps' => t('Add Apps'),
 		'$orderapps' => t('Arrange Apps'),
@@ -481,7 +483,8 @@ function channel_apps($is_owner = false, $nickname = null) {
 		[
 			'$tabs'  => $arr['tabs'],
 			'$name'  => App::$profile['channel_name'],
-			'$thumb' => App::$profile['thumb']
+			'$thumb' => App::$profile['thumb'],
+			'$channel_menu' => get_config('system','channel_menu')
 		]
 	);
 }

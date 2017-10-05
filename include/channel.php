@@ -1373,7 +1373,6 @@ function profile_sidebar($profile, $block = 0, $show_connect = true, $zcard = fa
 		? trim(substr($profile['channel_name'],0,strpos($profile['channel_name'],' '))) : $profile['channel_name']);
 	$lastname = (($firstname === $profile['channel_name']) ? '' : trim(substr($profile['channel_name'],strlen($firstname))));
 
-	// @fixme move this to the diaspora plugin itself
 
 	$contact_block = contact_block();
 

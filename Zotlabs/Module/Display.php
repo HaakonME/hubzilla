@@ -203,11 +203,12 @@ class Display extends \Zotlabs\Web\Controller {
 
 				if(local_channel()) {
 					$r = q("SELECT item.id as item_id from item
-						WHERE uid = %d
+						WHERE (uid = %d or uid = %d) 
 						and mid = '%s'
 						$item_normal
 						limit 1",
 						intval(local_channel()),
+						intval($sysid),
 						dbesc($target_item['parent_mid'])
 					);
 					if($r) {

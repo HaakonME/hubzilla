@@ -188,13 +188,17 @@
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
-
 		{{if $nav.pubs}}
 		<li class="nav-item dropdown pubs-button" style="display: none;">
-			<a class="nav-link" href="{{$nav.pubs.0}}" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" rel="#nav-pubs-menu">
+			<a class="nav-link" href="#" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" data-toggle="dropdown" rel="#nav-pubs-menu">
 				<i class="fa fa-fw fa-globe"></i>
-				<span class="badge badge-pill badge-primary pubs-update"></span>
+				<span class="badge badge-pill badge-secondary pubs-update"></span>
 			</a>
+			<div id="nav-pubs-menu" class="dropdown-menu" rel="pubs">
+				<a class="dropdown-item" id="nav-pubs-see-all" href="{{$nav.pubs.all.0}}">{{$nav.pubs.all.1}}</a>
+				<a class="dropdown-item" id="nav-pubs-mark-all" href="#" onclick="markRead('pubs'); return false;">{{$nav.pubs.mark.1}}</a>
+				{{$emptynotifications}}
+			</div>
 		</li>
 		{{/if}}
 	</ul>

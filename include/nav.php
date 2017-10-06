@@ -212,7 +212,7 @@ EOT;
 
 	if(! get_config('system', 'disable_discover_tab')) {
 		$nav['pubs'] = array('pubstream', t('Public stream'), "", t('Public stream activity'),'pubs_nav_btn');
-		$nav['pubs']['all'] = [ 'pubstream', t('View your public stream'), '','' ];
+		$nav['pubs']['all'] = [ 'pubstream', t('View public stream'), '','' ];
 		$nav['pubs']['mark'] = array('', t('Mark all public stream items seen'), '','');
 	}
 

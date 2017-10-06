@@ -97,7 +97,6 @@ class Enotify {
 				$title = $i['title'];
 				$body = $i['body'];
 				$private = (($i['item_private']) || intval($i['item_obscured']));
-				$moderated = (($i['item_blocked'] == ITEM_MODERATED) ? true : false);
 			}
 			else {
 				$title = $params['item']['title'];
@@ -131,7 +130,9 @@ class Enotify {
 	if ($params['type'] == NOTIFY_COMMENT) {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
-		$itemlink =  $params['link'];
+		$moderated = (($params['item']['item_blocked'] == ITEM_MODERATED) ? true : false);
+
+		$itemlink = $params['link'];
 
 		// ignore like/unlike activity on posts - they probably require a separate notification preference
 

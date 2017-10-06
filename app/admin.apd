@@ -1,0 +1,6 @@
+version: 1
+url: $baseurl/admin
+requires: admin 
+name: Admin
+photo: icon:wrench
+categories: nav_featured_app

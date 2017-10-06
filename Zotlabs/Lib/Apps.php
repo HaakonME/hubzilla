@@ -222,7 +222,7 @@ class Apps {
 		$apps = array(
 			'Apps' => t('Apps'),
 			'Cards' => t('Cards'),
-			'Site Admin' => t('Site Admin'),
+			'Admin' => t('Site Admin'),
 			'Report Bug' => t('Report Bug'),
 			'View Bookmarks' => t('View Bookmarks'),
 			'My Chatrooms' => t('My Chatrooms'),

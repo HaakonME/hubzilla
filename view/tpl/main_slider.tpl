@@ -1,5 +1,5 @@
 <div id="main-slider" class="slider" ><input id="main-range" type="text" name="cminmax" value="{{$val}}" /></div>
-<div id="profile-jot-text-loading" style="display:none;"></div>
+<div id="profile-jot-text-loading" class="spinner-wrapper"><div class="spinner m"></div></div>
 <script>
 $(document).ready(function() {
 	var old_cmin = 0;
@@ -27,7 +27,7 @@ $(document).ready(function() {
 			return;
 		if((bParam_cmin == old_cmin) && (bParam_cmax == old_cmax))
 			return;
-		setTimeout(function() { $("#profile-jot-text-loading").spin('small'); }, 1000 );
+
 		slideTimer = setTimeout(networkTimerRefresh,2000);
 	}
 

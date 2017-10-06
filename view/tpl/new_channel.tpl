@@ -19,10 +19,10 @@
 			{{/if}}
 
 			{{include file="field_input.tpl" field=$name}}
-			<div id="name-spinner"></div>
+			<div id="name-spinner" class="spinner-wrapper"><div class="spinner m"></div></div>
 
 			{{include file="field_input.tpl" field=$nickname}}
-			<div id="nick-spinner"></div>
+			<div id="nick-spinner" class="spinner-wrapper"><div class="spinner m"></div></div>
 
 			<button class="btn btn-primary" type="submit" name="submit" id="newchannel-submit-button" value="{{$submit}}">{{$submit}}</button>
 			<div id="newchannel-submit-end" class="clear"></div>

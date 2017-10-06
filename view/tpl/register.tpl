@@ -39,10 +39,10 @@
 				{{/if}}
 
 				{{include file="field_input.tpl" field=$name}}
-				<div id="name-spinner"></div>
+				<div id="name-spinner" class="spinner-wrapper"><div class="spinner m"></div></div>
 
 				{{include file="field_input.tpl" field=$nickname}}
-				<div id="nick-spinner"></div>
+				<div id="nick-spinner" class="spinner-wrapper"><div class="spinner m"></div></div>
 			{{/if}}
 
 			{{if $enable_tos}}

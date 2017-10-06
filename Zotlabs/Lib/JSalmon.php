@@ -29,7 +29,7 @@ class JSalmon {
 			'encoding'  => $encoding,
 			'alg'       => $algorithm,
 			'sigs'      => [
-				'value'  => $signature
+				'value'  => $signature,
 				'key_id' => base64url_encode($key_id)
 			]
 		]);

@@ -97,6 +97,7 @@ class Enotify {
 				$title = $i['title'];
 				$body = $i['body'];
 				$private = (($i['item_private']) || intval($i['item_obscured']));
+				$moderated = (($i['item_blocked'] == ITEM_MODERATED) ? true : false);
 			}
 			else {
 				$title = $params['item']['title'];
@@ -169,8 +170,6 @@ class Enotify {
 		}
 
 		xchan_query($p);
-
-		$moderated = (($p[0]['item_blocked'] == ITEM_MODERATED) ? true : false);
 
 		$item_post_type = item_post_type($p[0]);
 //		$private = $p[0]['item_private'];

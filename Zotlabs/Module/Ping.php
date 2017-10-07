@@ -183,6 +183,7 @@ class Ping extends \Zotlabs\Web\Controller {
 			if($r) {
 				xchan_query($r);
 				foreach($r as $rr) {
+					$rr['llink'] = str_replace('display/', 'pubstream/?f=&mid=', $rr['llink']);
 					$result[] = \Zotlabs\Lib\Enotify::format($rr);
 				}
 			}

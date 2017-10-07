@@ -25,7 +25,7 @@
 			<td><a href="{{$item.fullPath}}">{{$item.displayName}}</a></td>
 	{{if $item.is_owner}}
 			<td class="cloud-index-tool">{{$item.attachIcon}}</td>
-			<td id="file-edit-{{$item.attachId}}" class="cloud-index-tool"></td>
+			<td class="cloud-index-tool"><div id="file-edit-{{$item.attachId}}" class="spinner-wrapper"><div class="spinner s"></div></div></td>
 			<td class="cloud-index-tool"><i class="fakelink fa fa-pencil" onclick="filestorage(event, '{{$nick}}', {{$item.attachId}});"></i></td>
 			<td class="cloud-index-tool"><a href="#" title="{{$delete}}" onclick="dropItem('{{$item.fileStorageUrl}}/{{$item.attachId}}/delete', '#cloud-index-{{$item.attachId}},#cloud-tools-{{$item.attachId}}'); return false;"><i class="fa fa-trash-o drop-icons"></i></a></td>
 

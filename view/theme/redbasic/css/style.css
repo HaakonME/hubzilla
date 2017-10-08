@@ -1454,6 +1454,10 @@ blockquote {
 	background-color: $nav_bg !important;
 }
 
+.navbar {
+	z-index:1030;
+}
+
 .navbar-dark .navbar-nav .nav-link,
 .usermenu i {
 	color: $nav_icon_colour;

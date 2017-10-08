@@ -16,8 +16,8 @@ class Notifications {
 				'type' => 'network',
 				'icon' => 'th',
 				'severity' => 'secondary',
-				'label' => t('New Activity'),
-				'title' => t('New Activity Notifications'),
+				'label' => t('New Network Activity'),
+				'title' => t('New Network Activity Notifications'),
 				'viewall' => [
 					'url' => 'network',
 					'label' => t('View your network activity')

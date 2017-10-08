@@ -1,12 +1,18 @@
 <style>
 	#notifications {
-		width: 100%;
+		position: fixed;
+		top: 4.5rem;
+		width: 266px;
+		padding: 0 .5rem;
 	}
 
 	.notification-content {
 		max-height: 50vh;
 		overflow: auto;
-		border-left: 0.2rem solid #eee;
+	}
+
+	.notification-content.collapsing {
+		overflow: hidden;
 	}
 
 	.fs {
@@ -22,9 +28,9 @@
 	}
 
 	.fs #notifications {
-		position: relative !important;
-		width: 100% !important;
-		top: 0px !important;
+		position: relative;
+		width: 100%;
+		top: 0px;
 	}
 </style>
 
@@ -36,10 +42,10 @@
 	</a>
 </div>
 
-<ul id="notifications" class="navbar-nav" style="position: fixed; width: 280px; top: 64px;" data-children=".nav-item">
+<div id="notifications" class="navbar-nav" data-children=".nav-item">
 	{{foreach $notifications as $notification}}
-	<li class="nav-item {{$notification.type}}-button" style="display: none;">
-		<a class="nav-link" href="#nav-{{$notification.type}}-menu" title="{{$notification.title}}" data-toggle="collapse" data-parent="#notifications" rel="#nav-{{$notification.type}}-menu">
+	<div class="collapse {{$notification.type}}-button">
+		<a class="list-group-item" href="#nav-{{$notification.type}}-menu" title="{{$notification.title}}" data-toggle="collapse" data-parent="#notifications" rel="#nav-{{$notification.type}}-menu">
 			<i class="fa fa-fw fa-{{$notification.icon}}"></i> {{$notification.label}}
 			<span class="float-right badge badge-{{$notification.severity}} {{$notification.type}}-update"></span>
 		</a>
@@ -52,6 +58,6 @@
 			{{/if}}
 			{{$loading}}
 		</div>
-	</li>
+	</div>
 	{{/foreach}}
-</ul>
+</div>

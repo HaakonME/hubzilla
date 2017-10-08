@@ -1,5 +1,5 @@
 {{if $nav.login && !$userinfo}}
-<div class="d-md-none pt-1 pb-1">
+<div class="d-xl-none pt-1 pb-1">
 	<a class="btn btn-primary btn-sm text-white" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}_collapse" data-toggle="modal" data-target="#nav-login">
 		{{$nav.loginmenu.1.1}}
 	</a>
@@ -111,11 +111,11 @@
 		{{/if}}
 		{{if $nav.messages}}
 		<li class="nav-item dropdown mail-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-messages-menu">
+			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-mail-menu">
 				<i class="fa fa-fw fa-envelope"></i>
 				<span class="badge badge-pill badge-danger mail-update"></span>
 			</a>
-			<div id="nav-messages-menu" class="dropdown-menu" rel="messages">
+			<div id="nav-mail-menu" class="dropdown-menu" rel="messages">
 				<a class="dropdown-item" id="nav-messages-see-all" href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a>
 				<a class="dropdown-item" id="nav-messages-mark-all" href="#" onclick="markRead('messages'); return false;">{{$nav.messages.mark.1}}</a>
 				{{$emptynotifications}}
@@ -136,10 +136,10 @@
 		</li>
 		{{/if}}
 		{{if $nav.intros}}
-		<li class="nav-item dropdown intro-button" style="display: none;">
+		<li class="nav-item dropdown intros-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
 				<i class="fa fa-fw fa-users"></i>
-				<span class="badge badge-pill badge-danger intro-update"></span>
+				<span class="badge badge-pill badge-danger intros-update"></span>
 			</a>
 			<div id="nav-intros-menu" class="dropdown-menu" rel="intros">
 				<a class="dropdown-item" id="nav-intros-see-all" href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a>
@@ -183,17 +183,17 @@
 		</li>
 		{{/if}}
 		{{if $nav.login && !$userinfo}}
-		<li class="nav-item d-none d-md-flex">
+		<li class="nav-item d-none d-xl-flex">
 			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
 		</li>
 		{{/if}}
 		{{if $nav.register}}
-		<li class="nav-item {{$nav.register.2}} d-none d-md-flex">
+		<li class="nav-item {{$nav.register.2}} d-none d-xl-flex">
 			<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
 		</li>
 		{{/if}}
 		{{if $nav.alogout}}
-		<li class="nav-item {{$nav.alogout.2}} d-none d-md-flex">
+		<li class="nav-item {{$nav.alogout.2}} d-none d-xl-flex">
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
@@ -216,9 +216,9 @@
 		<div class="text-white">{{$sel.active}}</div>
 	</div>
 	{{/if}}
-	<div id="banner" class="navbar-text d-none d-md-flex">{{$banner}}</div>
+	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
 
-	<ul id="nav-right" class="navbar-nav ml-auto d-none d-md-flex">
+	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>
@@ -272,7 +272,7 @@
 		</li>
 	</ul>
 </div>
-<div class="collapse d-md-none" id="navbar-collapse-2">
+<div class="collapse d-xl-none" id="navbar-collapse-2">
 	<div class="navbar-nav mr-auto">
 		{{if $channel_apps.0}}
 		{{foreach $channel_apps as $channel_app}}

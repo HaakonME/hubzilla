@@ -297,7 +297,7 @@ class Ping extends \Zotlabs\Web\Controller {
 			killme();
 		}
 
-		if(argc() > 1 && argv(1) === 'messages') {
+		if(argc() > 1 && argv(1) === 'mail') {
 			$channel = \App::get_channel();
 			$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan
 				where channel_id = %d and mail_seen = 0 and mail_deleted = 0

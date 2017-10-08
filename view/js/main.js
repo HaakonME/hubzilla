@@ -481,8 +481,8 @@ function NavUpdate() {
 			if(data.home == 0) { data.home = ''; $('.home-update, .home-button').hide(); } else { $('.home-update, .home-button').show(); }
 			$('.home-update').html(data.home);
 
-			if(data.intros == 0) { data.intros = ''; $('.intro-update, .intro-button').hide(); } else { $('.intro-update, .intro-button').show(); }
-			$('.intro-update').html(data.intros);
+			if(data.intros == 0) { data.intros = ''; $('.intros-update, .intros-button').hide(); } else { $('.intros-update, .intros-button').show(); }
+			$('.intros-update').html(data.intros);
 
 			if(data.mail == 0) { data.mail = ''; $('.mail-update, .mail-button').hide(); } else { $('.mail-update, .mail-button').show(); }
 			$('.mail-update').html(data.mail);

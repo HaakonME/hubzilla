@@ -121,6 +121,11 @@ class Comanche {
 		if($cnt)
 			\App::$layout['theme'] = trim($matches[1]);
 
+		$cnt = preg_match("/\[navbar\](.*?)\[\/navbar\]/ism", $s, $matches);
+		if($cnt)
+			\App::$layout['navbar'] = trim($matches[1]);
+
+
 		$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
 		if($cnt) {
 			// only the last webpage definition is used if there is more than one

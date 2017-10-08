@@ -6,7 +6,7 @@ require_once('include/security.php');
 require_once('include/menu.php');
 
 
-function nav() {
+function nav($template = 'nav') {
 
 	/**
 	 *
@@ -267,7 +267,16 @@ EOT;
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
 	}
 
-	$tpl = get_markup_template('nav.tpl');
+	$c = theme_include('navbar_' . $template . '.css');
+	$tpl = get_markup_template('navbar_' . $template . '.tpl');
+
+	if($c && $tpl) {
+		head_add_css('navbar_' . $template . '.css');
+	}
+
+	if(! $tpl) {
+		$tpl = get_markup_template('nav.tpl');
+	}
 
 	App::$page['nav'] .= replace_macros($tpl, array(
 		'$baseurl' => z_root(),
@@ -490,7 +499,6 @@ function channel_apps($is_owner = false, $nickname = null) {
 			'$tabs'  => $arr['tabs'],
 			'$name'  => App::$profile['channel_name'],
 			'$thumb' => App::$profile['thumb'],
-			'$channel_menu' => get_config('system','channel_menu')
 		]
 	);
 }

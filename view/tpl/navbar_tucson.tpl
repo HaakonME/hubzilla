@@ -36,10 +36,6 @@
 		<div class="dropdown-divider"></div>
 		<a class="dropdown-item{{if $sel.active == Settings}} active{{/if}}" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a>
 		{{/if}}
-		{{if $nav.admin}}
-		<div class="dropdown-divider"></div>
-		<a class="dropdown-item{{if $sel.active == Admin}} active{{/if}}" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a>
-		{{/if}}
 		{{if $nav.logout}}
 		<div class="dropdown-divider"></div>
 		<a class="dropdown-item" href="{{$nav.logout.0}}" title="{{$nav.logout.3}}" role="menuitem" id="{{$nav.logout.4}}">{{$nav.logout.1}}</a>
@@ -211,12 +207,10 @@
 		</li>
 		{{/if}}
 	</ul>
-	{{else}}
-	<div class="navbar-nav mr-auto">
-		<div class="text-white">{{$sel.active}}</div>
-	</div>
 	{{/if}}
+
 	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
+
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">
 		<li class="nav-item collapse clearfix" id="nav-search">
@@ -235,7 +229,7 @@
 			<a class="nav-link {{$nav.help.2}}" target="hubzilla-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" id="{{$nav.help.4}}" onclick="contextualHelp(); return false;"><i class="fa fa-fw fa-question-circle"></i></a>
 		</li>
 		{{/if}}
-		{{if $channel_menu && $channel_apps.0}}
+		{{if $channel_apps.0}}
 		<li class="nav-item dropdown" id="channel-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><img src="{{$channel_thumb}}" style="height:14px; width:14px;position:relative; top:-2px;" /></a>
 			<div id="dropdown-menu" class="dropdown-menu dropdown-menu-right">
@@ -248,22 +242,9 @@
 		<li class="nav-item dropdown" id="app-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-bars"></i></a>
 			<div id="dropdown-menu" class="dropdown-menu dropdown-menu-right">
-				{{if $channel_apps.0 && ! $channel_menu}}
-				{{foreach $channel_apps as $channel_app}}
-				{{$channel_app}}
-				{{/foreach}}
-				<div class="dropdown-divider"></div>
-				<div class="dropdown-header sys-apps-toggle" onclick="$('#dropdown-menu').click(function(e) { e.stopPropagation(); }); openClose('sys_apps');">
-					{{$sysapps_toggle}}
-				</div>
-				<div id="sys_apps" style="display:none;">
-				{{/if}}
 				{{foreach $nav_apps as $nav_app}}
 				{{$nav_app}}
 				{{/foreach}}
-				{{if $channel_apps.0 && ! $channel_menu}}
-				</div>
-				{{/if}}
 				{{if $is_owner}}
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="/apps"><i class="generic-icons-nav fa fa-fw fa-plus-circle"></i>{{$addapps}}</a>

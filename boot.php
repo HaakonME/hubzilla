@@ -2090,17 +2090,21 @@ function construct_page() {
 
 	$installing = false;
 
+	$navbar = get_config('system','navbar','nav');
+	if(App::$profile_uid) {
+		$navbar = get_pconfig(App::$profile_uid,'system','navbar',$navbar);
+	}
+	
+	if($comanche && App::$layout['navbar']) {
+		$navbar = App::$layout['navbar'];
+	}
+
 	if (App::$module == 'setup') {
 		$installing = true;
 	} else {
-		nav($a);
+		nav($navbar);
 	}
 
-	if ($comanche) {
-		if (App::$layout['nav']) {
-			App::$page['nav'] = get_custom_nav(App::$layout['nav']);
-		}
-	}
 
 	$current_theme = Zotlabs\Render\Theme::current();
 

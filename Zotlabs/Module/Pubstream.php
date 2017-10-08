@@ -19,18 +19,26 @@ class Pubstream extends \Zotlabs\Web\Controller {
 		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
 		if($disable_discover_tab)
 			return;
-	
+
+		$mid = ((x($_REQUEST,'mid')) ? $_REQUEST['mid'] : '');
+
+		if(strpos($mid,'b64.') === 0)
+			$decoded = @base64url_decode(substr($mid,4));
+		if($decoded)
+			$mid = $decoded;
+
 		$item_normal = item_normal();
 		$item_normal_update = item_normal_update();
 
 		$static = ((array_key_exists('static',$_REQUEST)) ? intval($_REQUEST['static']) : 0);
 
 	
-		if(! $update) {
+		if(! $update && !$load) {
 
 			nav_set_selected(t('Public Stream'));
 
-			$_SESSION['static_loadtime'] = datetime_convert();
+			if(!$mid)
+				$_SESSION['static_loadtime'] = datetime_convert();
 
 			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
 	
@@ -43,6 +51,10 @@ class Pubstream extends \Zotlabs\Web\Controller {
 				. "; var profile_page = " . \App::$pager['page'] 
 				. "; divmore_height = " . intval($maxheight) . "; </script>\r\n";
 	
+			//if we got a decoded hash we must encode it again before handing to javascript 
+			if($decoded)
+				$mid = 'b64.' . base64url_encode($mid);
+
 			\App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 				'$baseurl' => z_root(),
 				'$pgtype'  => 'pubstream',
@@ -68,7 +80,7 @@ class Pubstream extends \Zotlabs\Web\Controller {
 				'$cats'    => '',
 				'$tags'    => '',
 				'$dend'    => '',
-				'$mid'     => '',
+				'$mid'     => $mid,
 				'$verb'     => '',
 				'$dbegin'  => ''
 			));
@@ -119,29 +131,46 @@ class Pubstream extends \Zotlabs\Web\Controller {
 			$ordering = "commented";
 	
 			if($load) {
-	
-				// Fetch a page full of parent items for this page
-	
-				$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
-					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE true $uids $item_normal
-					AND item.parent = item.id
-					and (abook.abook_blocked = 0 or abook.abook_flags is null)
-					$sql_extra3 $sql_extra $sql_nets
-					ORDER BY $ordering DESC $pager_sql "
-				);
-	
-	
+				if($mid) {
+					$r = q("SELECT parent AS item_id FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE mid like '%s' $uids $item_normal
+						and (abook.abook_blocked = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets LIMIT 1",
+						dbesc($mid . '%')
+					);
+				}
+				else {
+					// Fetch a page full of parent items for this page
+					$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE true $uids $item_normal
+						AND item.parent = item.id
+						and (abook.abook_blocked = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets
+						ORDER BY $ordering DESC $pager_sql "
+					);
+				}
 			}
 			elseif($update) {
-	
-				$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
-					left join abook on item.author_xchan = abook.abook_xchan
-					WHERE true $uids $item_normal_update
-					AND item.parent = item.id $simple_update
-					and (abook.abook_blocked = 0 or abook.abook_flags is null)
-					$sql_extra3 $sql_extra $sql_nets"
-				);
+				if($mid) {
+					$r = q("SELECT parent AS item_id FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE mid like '%s' $uids $item_normal_update $simple_update
+						and (abook.abook_blocked = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets LIMIT 1",
+						dbesc($mid . '%')
+					);
+				}
+				else {
+					$r = q("SELECT distinct item.id AS item_id, $ordering FROM item
+						left join abook on item.author_xchan = abook.abook_xchan
+						WHERE true $uids $item_normal_update
+						AND item.parent = item.id $simple_update
+						and (abook.abook_blocked = 0 or abook.abook_flags is null)
+						$sql_extra3 $sql_extra $sql_nets"
+					);
+				}
 				$_SESSION['loadtime'] = datetime_convert();
 			}
 			// Then fetch all the children of the parents that are on this page
@@ -173,6 +202,9 @@ class Pubstream extends \Zotlabs\Web\Controller {
 		$mode = ('network');
 	
 		$o .= conversation($items,$mode,$update,$page_mode);
+
+		if($mid)
+			$o .= '<div id="content-complete"></div>';
 	
 		if(($items) && (! $update))
 			$o .= alt_pager($a,count($items));

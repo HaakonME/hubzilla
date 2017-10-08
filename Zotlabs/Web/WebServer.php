@@ -107,7 +107,7 @@ class WebServer {
 			check_config();
 		}
 
-		nav_set_selected('nothing');
+		//nav_set_selected('nothing');
 
 		$Router = new Router($a);
 

@@ -19,6 +19,7 @@ class Ping extends \Zotlabs\Web\Controller {
 	 * @result JSON
 	 */
 	function init() {
+
 		$result = array();
 		$notifs = array();
 
@@ -139,8 +140,8 @@ class Ping extends \Zotlabs\Web\Controller {
 			db_utcnow(), db_quoteinterval('3 MINUTE')
 		);
 
-		$disable_discover_tab = get_config('system','disable_discover_tab') || get_config('system','disable_discover_tab') === false;
-		$notify_pubs = ((local_channel()) ? ($vnotify & VNOTIFY_PUBS) && !$disable_discover_tab : !$disable_discover_tab);
+		$discover_tab_on = ((get_config('system','disable_discover_tab') != 1) ? true : false);
+		$notify_pubs = ((local_channel()) ? ($vnotify & VNOTIFY_PUBS) && $discover_tab_on : $discover_tab_on);
 
 		if($notify_pubs) {
 			$sys = get_sys_channel();
@@ -159,6 +160,37 @@ class Ping extends \Zotlabs\Web\Controller {
 
 			if($pubs)
 				$result['pubs'] = intval($pubs[0]['total']);
+		}
+
+		if((argc() > 1) && (argv(1) === 'pubs') && ($notify_pubs)) {
+			$sys = get_sys_channel();
+			$result = array();
+
+			$r = q("SELECT * FROM item
+				WHERE uid = %d
+				AND author_xchan != '%s'
+				AND obj_type != '%s'
+				AND item_unseen = 1
+				AND created > '" . datetime_convert('UTC','UTC',$_SESSION['static_loadtime']) . "'
+				$item_normal
+				ORDER BY created DESC
+				LIMIT 300",
+				intval($sys['channel_id']),
+				dbesc(get_observer_hash()),
+				dbesc(ACTIVITY_OBJ_FILE)
+			);
+
+			if($r) {
+				xchan_query($r);
+				foreach($r as $rr) {
+					$rr['llink'] = str_replace('display/', 'pubstream/?f=&mid=', $rr['llink']);
+					$result[] = \Zotlabs\Lib\Enotify::format($rr);
+				}
+			}
+
+//			logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);
+			echo json_encode(array('notify' => $result));
+			killme();
 		}
 
 		$t1 = dba_timer();
@@ -205,6 +237,9 @@ class Ping extends \Zotlabs\Web\Controller {
 					$r = q("update notify set seen = 1 where uid = %d",
 						intval(local_channel())
 					);
+					break;
+				case 'pubs':
+					unset($_SESSION['static_loadtime']);
 					break;
 				default:
 					break;

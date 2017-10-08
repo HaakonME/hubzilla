@@ -62,10 +62,12 @@ EOT;
 	if($banner === false) 
 		$banner = get_config('system','sitename');
 
-	//the notifications template is in hdr.tpl
-	App::$page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
-		//we could additionally use this to display important system notifications e.g. for updates
-	));
+	if(! get_pconfig(local_channel(), 'system', 'experimental_notif')) {
+		//the notifications template is in hdr.tpl
+		App::$page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
+			//we could additionally use this to display important system notifications e.g. for updates
+		));
+	}
 
 	$techlevel = get_account_techlevel();
 
@@ -211,7 +213,9 @@ EOT;
 	}
 
 	if(! get_config('system', 'disable_discover_tab')) {
-		$nav['pubs'] = array('pubstream', t('Public stream'), "", t('Public stream activities'),'pubs_nav_btn');
+		$nav['pubs'] = array('pubstream', t('Public stream'), "", t('Public stream activity'),'pubs_nav_btn');
+		$nav['pubs']['all'] = [ 'pubstream', t('View public stream'), '','' ];
+		$nav['pubs']['mark'] = array('', t('Mark all public stream items seen'), '','');
 	}
 
 	/**
@@ -267,6 +271,7 @@ EOT;
 
 	App::$page['nav'] .= replace_macros($tpl, array(
 		'$baseurl' => z_root(),
+		'$experimental_notif' => get_pconfig(local_channel(), 'system', 'experimental_notif'),
 		'$fulldocs' => t('Help'),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $x['nav'],
@@ -285,7 +290,8 @@ EOT;
 		'$channel_apps' => $channel_apps,
 		'$addapps' => t('Add Apps'),
 		'$orderapps' => t('Arrange Apps'),
-		'$sysapps_toggle' => t('Toggle System Apps')
+		'$sysapps_toggle' => t('Toggle System Apps'),
+		'$loc' => $myident
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {

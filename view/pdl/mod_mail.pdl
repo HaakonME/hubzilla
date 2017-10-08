@@ -2,3 +2,6 @@
 [widget=mailmenu][/widget]
 [widget=conversations][/widget]
 [/region]
+[region=right_aside]
+[widget=notifications][/widget]
+[/region]

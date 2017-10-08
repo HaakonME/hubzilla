@@ -1,3 +1,6 @@
 [region=aside]
 [widget=design_tools][/widget]
 [/region]
+[region=right_aside]
+[widget=notifications][/widget]
+[/region]

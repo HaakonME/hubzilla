@@ -5,3 +5,6 @@
 [widget=suggestedchats][/widget]
 [widget=chatroom_members][/widget]
 [/region]
+[region=right_aside]
+[widget=notifications][/widget]
+[/region]

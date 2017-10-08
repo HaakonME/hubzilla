@@ -130,7 +130,9 @@ class Enotify {
 	if ($params['type'] == NOTIFY_COMMENT) {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
-		$itemlink =  $params['link'];
+		$moderated = (($params['item']['item_blocked'] == ITEM_MODERATED) ? true : false);
+
+		$itemlink = $params['link'];
 
 		// ignore like/unlike activity on posts - they probably require a separate notification preference
 
@@ -169,8 +171,6 @@ class Enotify {
 		}
 
 		xchan_query($p);
-
-		$moderated = (($p[0]['item_blocked'] == ITEM_MODERATED) ? true : false);
 
 		$item_post_type = item_post_type($p[0]);
 //		$private = $p[0]['item_private'];

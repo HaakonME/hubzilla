@@ -3,3 +3,6 @@
 [widget=tasklist][/widget]
 [widget=notes][/widget]
 [/region]
+[region=right_aside]
+[widget=notifications][/widget]
+[/region]

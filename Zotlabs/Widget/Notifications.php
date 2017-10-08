@@ -16,15 +16,15 @@ class Notifications {
 				'type' => 'network',
 				'icon' => 'th',
 				'severity' => 'secondary',
-				'label' => t('Activity'),
-				'title' => t('Network Activity Notifications'),
+				'label' => t('New Network Activity'),
+				'title' => t('New Network Activity Notifications'),
 				'viewall' => [
 					'url' => 'network',
 					'label' => t('View your network activity')
 				],
 				'markall' => [
 					'url' => '#',
-					'label' => t('Mark all notifications seen')
+					'label' => t('Mark all notifications read')
 				]
 			];
 
@@ -32,8 +32,8 @@ class Notifications {
 				'type' => 'home',
 				'icon' => 'home',
 				'severity' => 'danger',
-				'label' => t('Home'),
-				'title' => t('Channel Home Notifications'),
+				'label' => t('New Home Activity'),
+				'title' => t('New Home Activity Notifications'),
 				'viewall' => [
 					'url' => 'channel/' . $channel['channel_address'],
 					'label' => t('View your home activity')
@@ -45,11 +45,11 @@ class Notifications {
 			];
 
 			$notifications[] = [
-				'type' => 'messages',
+				'type' => 'mail',
 				'icon' => 'envelope',
 				'severity' => 'danger',
-				'label' => t('Mail'),
-				'title' => t('Private mail'),
+				'label' => t('New Mails'),
+				'title' => t('New Mails Notifications'),
 				'viewall' => [
 					'url' => 'mail/combined',
 					'label' => t('View your private mails')
@@ -64,8 +64,8 @@ class Notifications {
 				'type' => 'all_events',
 				'icon' => 'calendar',
 				'severity' => 'secondary',
-				'label' => t('Events'),
-				'title' => t('Event Calendar'),
+				'label' => t('New Events'),
+				'title' => t('New Events Notifications'),
 				'viewall' => [
 					'url' => 'mail/combined',
 					'label' => t('View events')
@@ -81,7 +81,7 @@ class Notifications {
 				'icon' => 'users',
 				'severity' => 'danger',
 				'label' => t('New Connections'),
-				'title' => t('New Connections'),
+				'title' => t('New Connections Notifications'),
 				'viewall' => [
 					'url' => 'connections',
 					'label' => t('View all connections')
@@ -93,7 +93,7 @@ class Notifications {
 				'icon' => 'folder',
 				'severity' => 'danger',
 				'label' => t('New Files'),
-				'title' => t('New files shared with me'),
+				'title' => t('New Files Notifications'),
 			];
 
 			$notifications[] = [
@@ -119,7 +119,7 @@ class Notifications {
 				'icon' => 'user-o',
 				'severity' => 'danger',
 				'label' => t('New Registrations'),
-				'title' => t('New Registrations'),
+				'title' => t('New Registrations Notifications'),
 			];
 		}
 

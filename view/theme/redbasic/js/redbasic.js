@@ -64,6 +64,13 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#notifications-btn-1').click(function() {
+		$('#region_3').toggleClass('fs');
+		if($('#navbar-collapse-2').hasClass('show')){
+			$('#navbar-collapse-2').removeClass('show');
+		}
+	});
+
 	$("input[data-role=cat-tagsinput]").tagsinput({
 		tagClass: 'badge badge-pill badge-warning text-dark'
 	});

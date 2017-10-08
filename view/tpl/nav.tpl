@@ -63,16 +63,25 @@
 	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
+	{{if ! $experimental_notif}}
 	{{if $localuser || $nav.pubs}}
 	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
+	{{/if}}
+	{{else}}
+	{{if $localuser || $nav.pubs}}
+	<button id="notifications-btn-1" type="button" class="navbar-toggler border-0 text-white">
+		<i class="fa fa-exclamation-circle"></i>
+	</button>
+	{{/if}}
 	{{/if}}
 	<button id="menu-btn" class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
 		<i class="fa fa-bars"></i>
 	</button>
 </div>
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
+	{{if ! $experimental_notif}}
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
 		<li class="nav-item dropdown network-button" style="display: none;">
@@ -202,7 +211,11 @@
 		</li>
 		{{/if}}
 	</ul>
-
+	{{else}}
+	<div class="navbar-nav mr-auto">
+		<div class="text-white">{{$sel.active}}</div>
+	</div>
+	{{/if}}
 	<div id="banner" class="navbar-text d-none d-md-flex">{{$banner}}</div>
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-md-flex">

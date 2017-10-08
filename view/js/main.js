@@ -992,7 +992,7 @@ function notify_popup_loader(notifyType) {
 				html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
 				$("#nav-" + notifyType + "-menu").append(html);
 			});
-			$(".dropdown-menu img[data-src]").each(function(i, el){
+			$(".dropdown-menu img[data-src], .dropdown-item img[data-src]").each(function(i, el){
 				// Replace data-src attribute with src attribute for every image
 				$(el).attr('src', $(el).data("src"));
 				$(el).removeAttr("data-src");

@@ -1,13 +1,6 @@
 <style>
-	#notifications {
-		position: fixed;
-		top: 4.5rem;
-		width: 266px;
-		padding: 0 .5rem;
-	}
-
 	.notification-content {
-		max-height: 50vh;
+		max-height: 70vh;
 		overflow: auto;
 	}
 
@@ -16,11 +9,12 @@
 	}
 
 	.fs {
-		top: 0px !important;
+		position: fixed;
+		top: 0px;
 		left: 0px;
-		padding-top: 4.5rem !important;
+		padding: 4.5rem .5rem 0 .5rem;
 		background-color: white;
-		width: 100% !important;
+		width: 100%;
 		max-width: 100%;
 		height: 100vh;
 		z-index: 1030;

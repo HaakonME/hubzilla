@@ -161,6 +161,10 @@ nav {
 	filter:alpha(opacity=$nav_percent_min_opacity);
 }
 
+#nav-app-link {
+	white-space: nowrap;
+}
+
 #powered-by {
 	font-size: 0.5rem;
 	position: absolute;

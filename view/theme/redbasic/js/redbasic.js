@@ -22,6 +22,11 @@ $(document).ready(function() {
 			parent: 'main',
 			spacer: '#left_aside_spacer'
 		});
+		$('#right_aside_wrapper').stick_in_parent({
+			offset_top: parseInt($('#region_3').css('padding-top')),
+			parent: 'main',
+			spacer: '#right_aside_spacer'
+		});
 	}
 
 	$('#expand-aside').on('click', toggleAside);

@@ -261,10 +261,18 @@ EOT;
 		if(\App::$nav_sel['active'] == $app['name'])
 			$app['active'] = true;
 
-		if($is_owner)
+		if($is_owner) {
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
-		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false)
+			if(strpos($app['categories'],'navbar_' . $template)) {
+				$navbar_apps[] = Zlib\Apps::app_render($app,'navbar');
+			}
+		}
+		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false) {
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
+			if(strpos($app['categories'],'navbar_' . $template)) {
+				$navbar_apps[] = Zlib\Apps::app_render($app,'navbar');
+			}
+		}
 	}
 
 	$c = theme_include('navbar_' . $template . '.css');
@@ -294,6 +302,7 @@ EOT;
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
 		'$nav_apps' => $nav_apps,
+		'$navbar_apps' => $navbar_apps,
 		'$channel_menu' => get_config('system','channel_menu'),
 		'$channel_thumb' => ((App::$profile) ? App::$profile['thumb'] : ''),
 		'$channel_apps' => $channel_apps,

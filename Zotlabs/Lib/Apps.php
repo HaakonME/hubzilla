@@ -383,6 +383,13 @@ class Apps {
 		$install_action = (($installed) ? t('Update') : t('Install'));
 		$icon = ((strpos($papp['photo'],'icon:') === 0) ? substr($papp['photo'],5) : '');
 
+		if($mode === 'navbar') {
+			return replace_macros(get_markup_template('app_nav.tpl'),array(
+				'$app' => $papp,
+				'$icon' => $icon,
+			));
+		}
+
 		return replace_macros(get_markup_template('app.tpl'),array(
 			'$app' => $papp,
 			'$icon' => $icon,

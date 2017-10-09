@@ -213,6 +213,13 @@
 
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">
+		{{if $navbar_apps}}
+		{{foreach $navbar_apps as $navbar_app}}
+		<li class="nav-navbar-apps">
+		{{$navbar_app}}
+		</li>
+		{{/foreach}}
+		{{/if}}
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>

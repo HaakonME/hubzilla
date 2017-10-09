@@ -68,7 +68,7 @@ class ThreadStream {
 				// pull some trickery which allows us to re-invoke this function afterward
 				// it's an ugly hack so @FIXME
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
-				$this->uploadable = false;
+				$this->uploadable = perm_is_allowed($this->profile_owner,$ob_hash,'write_storage');
 				break;
 			case 'page':
 				$this->profile_owner = \App::$profile['uid'];

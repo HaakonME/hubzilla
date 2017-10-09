@@ -6,7 +6,7 @@ require_once('include/security.php');
 require_once('include/menu.php');
 
 
-function nav() {
+function nav($template = 'nav') {
 
 	/**
 	 *
@@ -261,13 +261,30 @@ EOT;
 		if(\App::$nav_sel['name'] == $app['name'])
 			$app['active'] = true;
 
-		if($is_owner)
+		if($is_owner) {
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
-		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false)
+			if(strpos($app['categories'],'navbar_' . $template)) {
+				$navbar_apps[] = Zlib\Apps::app_render($app,'navbar');
+			}
+		}
+		elseif(! $is_owner && strpos($app['requires'], 'local_channel') === false) {
 			$nav_apps[] = Zlib\Apps::app_render($app,'nav');
+			if(strpos($app['categories'],'navbar_' . $template)) {
+				$navbar_apps[] = Zlib\Apps::app_render($app,'navbar');
+			}
+		}
 	}
 
-	$tpl = get_markup_template('nav.tpl');
+	$c = theme_include('navbar_' . $template . '.css');
+	$tpl = get_markup_template('navbar_' . $template . '.tpl');
+
+	if($c && $tpl) {
+		head_add_css('navbar_' . $template . '.css');
+	}
+
+	if(! $tpl) {
+		$tpl = get_markup_template('nav.tpl');
+	}
 
 	App::$page['nav'] .= replace_macros($tpl, array(
 		'$baseurl' => z_root(),
@@ -285,6 +302,7 @@ EOT;
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
 		'$nav_apps' => $nav_apps,
+		'$navbar_apps' => $navbar_apps,
 		'$channel_menu' => get_config('system','channel_menu'),
 		'$channel_thumb' => ((App::$profile) ? App::$profile['thumb'] : ''),
 		'$channel_apps' => $channel_apps,
@@ -497,7 +515,6 @@ function channel_apps($is_owner = false, $nickname = null) {
 			'$tabs'  => $arr['tabs'],
 			'$name'  => App::$profile['channel_name'],
 			'$thumb' => App::$profile['thumb'],
-			'$channel_menu' => get_config('system','channel_menu')
 		]
 	);
 }

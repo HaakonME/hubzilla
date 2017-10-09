@@ -272,7 +272,7 @@ class Events extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		nav_set_selected(t('Events'));
+		nav_set_selected('Events');
 	
 		if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
 			$r = q("update event set dismissed = 1 where id = %d and uid = %d",

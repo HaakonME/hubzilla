@@ -69,17 +69,14 @@ class Wiki extends \Zotlabs\Web\Controller {
 			goaway('/' . argv(0));
 		}
 
-		nav_set_selected([
-			'name' => t('Wiki'),
-			'url'  =>'/wiki/' . $nick
-		]);
-
 		$observer_hash = get_observer_hash();
 
 		// Determine if the observer is the channel owner so the ACL dialog can be populated
 		if (local_channel() === intval($owner['channel_id'])) {
 
 			$wiki_owner = true;
+
+			nav_set_selected('Wiki');
 
 			// Obtain the default permission settings of the channel
 			$owner_acl = array(

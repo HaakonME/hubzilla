@@ -233,6 +233,15 @@ EOT;
 	// turned off until somebody discovers this and figures out a good location for it. 
 	$powered_by = '';
 
+	$active_app = q("SELECT app_url FROM app WHERE app_channel = %d AND app_name = '%s' LIMIT 1",
+		intval($channel['channel_id']),
+		dbesc(\App::$nav_sel['raw_name'])
+	);
+
+	if($active_app) {
+		$url = $active_app[0]['app_url'];
+	}
+
 	//app bin
 	if($is_owner) {
 		if(get_pconfig(local_channel(), 'system','initial_import_system_apps') === false) {
@@ -297,7 +306,7 @@ EOT;
 		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_channel(),
 		'$is_owner' => $is_owner,
-		'$sel' => 	App::$nav_sel,
+		'$sel' => App::$nav_sel,
 		'$powered_by' => $powered_by,
 		'$help' => t('@name, #tag, ?doc, content'),
 		'$pleasewait' => t('Please wait...'),
@@ -309,8 +318,7 @@ EOT;
 		'$addapps' => t('Add Apps'),
 		'$orderapps' => t('Arrange Apps'),
 		'$sysapps_toggle' => t('Toggle System Apps'),
-		'$loc' => $myident,
-		'$url' => ((App::$nav_sel['url']) ? App::$nav_sel['url'] : App::$cmd)
+		'$url' => $url
 	));
 
 	if(x($_SESSION, 'reload_avatar') && $observer) {
@@ -333,13 +341,10 @@ EOT;
  * 
  */
 function nav_set_selected($item){
-	if(is_array($item)) {
-		App::$nav_sel['name'] = $item['name'];
-		App::$nav_sel['url']  = $item['url'];
-	}
-	else {
-		App::$nav_sel['name'] = $item;
-	}
+	App::$nav_sel['raw_name'] = $item;
+	$item = ['name' => $item];
+	Zlib\Apps::translate_system_apps($item);
+	App::$nav_sel['name'] = $item['name'];
 }
 
 

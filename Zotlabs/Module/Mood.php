@@ -117,7 +117,7 @@ class Mood extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		nav_set_selected(t('Mood'));
+		nav_set_selected('Mood');
 
 		$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : '0');
 	

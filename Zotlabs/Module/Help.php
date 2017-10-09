@@ -15,7 +15,7 @@ require_once('include/help.php');
 class Help extends \Zotlabs\Web\Controller {
 
 	function get() {
-		nav_set_selected(t('Help'));
+		nav_set_selected('Help');
 
 		if($_REQUEST['search']) {
 			$o .= '<div id="help-content" class="generic-content-wrapper">';

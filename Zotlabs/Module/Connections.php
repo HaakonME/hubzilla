@@ -30,7 +30,7 @@ class Connections extends \Zotlabs\Web\Controller {
 			return login();
 		}
 
-		nav_set_selected(t('Connections'));
+		nav_set_selected('Connections');
 	
 		$blocked     = false;
 		$hidden      = false;

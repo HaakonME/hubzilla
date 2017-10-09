@@ -35,7 +35,7 @@ class Webpages extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		nav_set_selected(t('Webpages'));
+		nav_set_selected('Webpages');
 
 		$which = argv(1);
 		

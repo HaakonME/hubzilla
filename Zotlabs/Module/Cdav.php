@@ -824,7 +824,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 		}
 
 		if(argv(1) === 'calendar') {
-			nav_set_selected(t('CalDAV'));
+			nav_set_selected('CalDAV');
 			$caldavBackend = new \Sabre\CalDAV\Backend\PDO($pdo);
 			$calendars = $caldavBackend->getCalendarsForUser($principalUri);
 		}
@@ -1025,7 +1025,7 @@ class Cdav extends \Zotlabs\Web\Controller {
 
 
 		if(argv(1) === 'addressbook') {
-			nav_set_selected(t('CardDAV'));
+			nav_set_selected('CardDAV');
 			$carddavBackend = new \Sabre\CardDAV\Backend\PDO($pdo);
 			$addressbooks = $carddavBackend->getAddressBooksForUser($principalUri);
 		}

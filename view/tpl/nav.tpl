@@ -53,6 +53,9 @@
 	</div>
 	{{/if}}
 </div>
+<div class="navbar-nav mr-auto">
+	<div class="text-white">{{$sel.active}}</div>
+</div>
 {{/if}}
 <div class="navbar-toggler-right">
 	{{if $nav.help.6}}
@@ -60,7 +63,7 @@
 		<i class="fa fa-question-circle"></i>
 	</button>
 	{{/if}}
-	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
+	<button id="expand-aside" type="button" class="d-md-none navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
 	{{if ! $experimental_notif}}
@@ -212,9 +215,7 @@
 		{{/if}}
 	</ul>
 	{{else}}
-	<div class="navbar-nav mr-auto">
-		<div class="text-white">{{$sel.active}}</div>
-	</div>
+	<div class="navbar-text mr-auto d-none d-xl-flex"></div>
 	{{/if}}
 	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
 

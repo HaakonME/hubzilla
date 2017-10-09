@@ -150,7 +150,7 @@ class Poke extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		nav_set_selected(t('Poke'));
+		nav_set_selected('Poke');
 	
 		$name = '';
 		$id = '';

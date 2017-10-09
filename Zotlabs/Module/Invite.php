@@ -95,7 +95,7 @@ class Invite extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		nav_set_selected(t('Invite'));
+		nav_set_selected('Invite');
 	
 		$tpl = get_markup_template('invite.tpl');
 		$invonly = false;

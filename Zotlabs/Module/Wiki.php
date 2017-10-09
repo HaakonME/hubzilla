@@ -76,7 +76,7 @@ class Wiki extends \Zotlabs\Web\Controller {
 
 			$wiki_owner = true;
 
-			nav_set_selected(t('Wiki'));
+			nav_set_selected('Wiki');
 
 			// Obtain the default permission settings of the channel
 			$owner_acl = array(

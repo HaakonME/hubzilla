@@ -154,7 +154,7 @@ class Network extends \Zotlabs\Web\Controller {
 				));
 			}
 	
-			nav_set_selected(t('Activity'));
+			nav_set_selected('Grid');
 
 			$channel_acl = array(
 				'allow_cid' => $channel['channel_allow_cid'], 

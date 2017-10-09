@@ -15,7 +15,7 @@
 					<div id="page-footer"></div>
 			<div id="pause"></div>
 		</section>
-		<aside id="region_3" class="d-none d-xl-table-cell"><?php if(x($page,'right_aside')) echo $page['right_aside']; ?></aside>
+		<aside id="region_3" class="d-none d-xl-table-cell"><div id="right_aside_spacer"><div id="right_aside_wrapper"><?php if(x($page,'right_aside')) echo $page['right_aside']; ?></div></div></aside>
 	</main>
 	<footer><?php if(x($page,'footer')) echo $page['footer']; ?></footer>
 </body>

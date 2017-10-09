@@ -445,10 +445,10 @@ function NavUpdate() {
 			updateCountsOnly = false;
 
 			if(data.network || data.home || data.intros || data.register || data.mail || data.all_events || data.notify || data.files || data.pubs) {
-				$('#notifications-btn').css('opacity', 1);
+				$('#notifications-btn, #notifications-btn-1').css('opacity', 1);
 			}
 			else {
-				$('#notifications-btn').css('opacity', 0.5);
+				$('#notifications-btn, #notifications-btn-1').css('opacity', 0.5);
 				$('#navbar-collapse-1').removeClass('show');
 			}
 

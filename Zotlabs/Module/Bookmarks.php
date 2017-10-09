@@ -8,7 +8,7 @@ class Bookmarks extends \Zotlabs\Web\Controller {
 		if(! local_channel())
 			return;
 
-		nav_set_selected(t('View Bookmarks'));
+		nav_set_selected('View Bookmarks');
 
 		$item_id = intval($_REQUEST['item']);
 		$burl = trim($_REQUEST['burl']);

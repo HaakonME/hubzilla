@@ -22,7 +22,7 @@
 		<a class="dropdown-item{{if $usermenu.2}} active{{/if}}"  href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem" id="{{$usermenu.4}}">{{$usermenu.1}}</a>
 		{{/foreach}}
 		{{if $nav.manage}}
-		<a class="dropdown-item{{if $sel.active == Manage}} active{{/if}}" href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem" id="{{$nav.manage.4}}">{{$nav.manage.1}}</a>
+		<a class="dropdown-item{{if $sel.name == Manage}} active{{/if}}" href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem" id="{{$nav.manage.4}}">{{$nav.manage.1}}</a>
 		{{/if}}	
 		{{if $nav.channels}}
 		{{foreach $nav.channels as $chan}}
@@ -34,11 +34,11 @@
 		{{/if}}
 		{{if $nav.settings}}
 		<div class="dropdown-divider"></div>
-		<a class="dropdown-item{{if $sel.active == Settings}} active{{/if}}" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a>
+		<a class="dropdown-item{{if $sel.name == Settings}} active{{/if}}" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem" id="{{$nav.settings.4}}">{{$nav.settings.1}}</a>
 		{{/if}}
 		{{if $nav.admin}}
 		<div class="dropdown-divider"></div>
-		<a class="dropdown-item{{if $sel.active == Admin}} active{{/if}}" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a>
+		<a class="dropdown-item{{if $sel.name == Admin}} active{{/if}}" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem" id="{{$nav.admin.4}}">{{$nav.admin.1}}</a>
 		{{/if}}
 		{{if $nav.logout}}
 		<div class="dropdown-divider"></div>
@@ -53,6 +53,9 @@
 	</div>
 	{{/if}}
 </div>
+<div class="navbar-nav mr-auto">
+	<div><a id="nav-app-link" href="{{$url}}" class="nav-link">{{$sel.name}}</a></div>
+</div>
 {{/if}}
 <div class="navbar-toggler-right">
 	{{if $nav.help.6}}
@@ -60,7 +63,7 @@
 		<i class="fa fa-question-circle"></i>
 	</button>
 	{{/if}}
-	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
+	<button id="expand-aside" type="button" class="d-md-none navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
 	{{if ! $experimental_notif}}
@@ -212,9 +215,7 @@
 		{{/if}}
 	</ul>
 	{{else}}
-	<div class="navbar-nav mr-auto">
-		<div class="text-white">{{$sel.active}}</div>
-	</div>
+	<div class="navbar-text mr-auto d-none d-xl-flex"></div>
 	{{/if}}
 	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
 

@@ -8,7 +8,7 @@ class Probe extends \Zotlabs\Web\Controller {
 
 	function get() {
 
-		nav_set_selected(t('Remote Diagnostics'));
+		nav_set_selected('Remote Diagnostics');
 
 		$o .= '<h3>Probe Diagnostic</h3>';
 	

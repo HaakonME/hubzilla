@@ -22,7 +22,7 @@ class Search extends \Zotlabs\Web\Controller {
 		if($load)
 			$_SESSION['loadtime'] = datetime_convert();
 	
-		nav_set_selected(t('Search'));
+		nav_set_selected('Search');
 	
 		require_once("include/bbcode.php");
 		require_once('include/security.php');

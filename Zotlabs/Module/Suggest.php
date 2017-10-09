@@ -29,7 +29,7 @@ class Suggest extends \Zotlabs\Web\Controller {
 			return;
 		}
 
-		nav_set_selected(t('Suggest Channels'));
+		nav_set_selected('Suggest Channels');
 	
 		$_SESSION['return_url'] = z_root() . '/' . \App::$cmd;
 	

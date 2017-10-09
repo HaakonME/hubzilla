@@ -1,13 +1,6 @@
 <style>
-	#notifications {
-		position: fixed;
-		top: 4.5rem;
-		width: 266px;
-		padding: 0 .5rem;
-	}
-
 	.notification-content {
-		max-height: 50vh;
+		max-height: 70vh;
 		overflow: auto;
 	}
 
@@ -19,30 +12,25 @@
 		position: fixed;
 		top: 0px;
 		left: 0px;
-		display: block !important;
+		padding: 4.5rem .5rem 0 .5rem;
 		background-color: white;
 		width: 100%;
 		max-width: 100%;
 		height: 100vh;
-		z-index: 1020;
-	}
-
-	.fs #notifications {
-		position: relative;
-		width: 100%;
-		top: 0px;
+		z-index: 1030;
 	}
 </style>
 
-<div id="nav-notifications-template" rel="template">
-	<a class="dropdown-item clearfix dropdown-notification {5}" href="{0}" title="{2} {3}">
-		<img class="menu-img-3" data-src="{1}">
-		<span class="contactname">{2}</span>
-		<span class="dropdown-sub-text">{3}<br>{4}</span>
-	</a>
-</div>
+
 
 <div id="notifications" class="navbar-nav" data-children=".nav-item">
+	<div id="nav-notifications-template" rel="template">
+		<a class="dropdown-item clearfix dropdown-notification {5}" href="{0}" title="{2} {3}">
+			<img class="menu-img-3" data-src="{1}">
+			<span class="contactname">{2}</span>
+			<span class="dropdown-sub-text">{3}<br>{4}</span>
+		</a>
+	</div>
 	{{foreach $notifications as $notification}}
 	<div class="collapse {{$notification.type}}-button">
 		<a class="list-group-item" href="#nav-{{$notification.type}}-menu" title="{{$notification.title}}" data-toggle="collapse" data-parent="#notifications" rel="#nav-{{$notification.type}}-menu">

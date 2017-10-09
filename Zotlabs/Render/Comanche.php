@@ -457,6 +457,9 @@ class Comanche {
 			}
 		}
 
+		if(! purify_filename($name))
+			return ''
+
 		$clsname = ucfirst($name);
 		$nsname = "\\Zotlabs\\Widget\\" . $clsname;
 

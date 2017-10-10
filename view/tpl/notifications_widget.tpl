@@ -17,7 +17,7 @@
 		width: 100%;
 		max-width: 100%;
 		height: 100%;
-		z-index: 1020;
+		z-index: 1025;
 		overflow: auto;
 	}
 

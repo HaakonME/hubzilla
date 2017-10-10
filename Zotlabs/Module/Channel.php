@@ -92,11 +92,6 @@ class Channel extends \Zotlabs\Web\Controller {
 			// Ensure we've got a profile owner if updating.
 			\App::$profile['profile_uid'] = \App::$profile_uid = $update;
 		}
-		else {
-			if(\App::$profile['profile_uid'] == local_channel()) {
-				nav_set_selected('Channel Home');
-			}
-		}
 
 		$is_owner = (((local_channel()) && (\App::$profile['profile_uid'] == local_channel())) ? true : false);
 
@@ -118,6 +113,8 @@ class Channel extends \Zotlabs\Web\Controller {
 
 
 		if(! $update) {
+
+			nav_set_selected('Channel Home');
 
 			$static = channel_manual_conv_update(\App::$profile['profile_uid']);
 

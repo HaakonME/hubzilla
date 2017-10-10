@@ -52,7 +52,6 @@ class RedbasicConfig {
 		$arr['radius'] = get_pconfig(local_channel(),'redbasic', 'radius' );
 		$arr['shadow'] = get_pconfig(local_channel(),'redbasic', 'photo_shadow' );
 		$arr['converse_width']=get_pconfig(local_channel(),"redbasic","converse_width");
-		$arr['align_left']=get_pconfig(local_channel(),"redbasic","align_left");
 		$arr['top_photo']=get_pconfig(local_channel(),"redbasic","top_photo");
 		$arr['reply_photo']=get_pconfig(local_channel(),"redbasic","reply_photo");
 		return $this->form($arr);
@@ -79,7 +78,6 @@ class RedbasicConfig {
 			set_pconfig(local_channel(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 			set_pconfig(local_channel(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
 			set_pconfig(local_channel(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
-			set_pconfig(local_channel(), 'redbasic', 'align_left', $_POST['redbasic_align_left']);
 			set_pconfig(local_channel(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
 			set_pconfig(local_channel(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
 		}
@@ -112,7 +110,6 @@ class RedbasicConfig {
 			'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius'], t('Example: 4px')),
 			'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 			'$converse_width' => array('redbasic_converse_width',t('Set maximum width of content region in pixel'),$arr['converse_width'], t('Leave empty for default width')),
-			'$align_left' => array('redbasic_align_left',t('Left align page content'),$arr['align_left'], '', array(t('No'),t('Yes'))),
 			'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),
 			'$reply_photo' => array('redbasic_reply_photo', t('Set size of followup author photos'), $arr['reply_photo']),
 			));

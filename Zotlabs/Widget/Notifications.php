@@ -6,9 +6,6 @@ class Notifications {
 
 	function widget($arr) {
 
- 		if(! get_pconfig(local_channel(), 'system', 'experimental_notif'))
-			return;
-
 		$channel = \App::get_channel();
 
 		if(local_channel()) {
@@ -138,7 +135,6 @@ class Notifications {
 				'label' => t('Mark all notifications seen')
 			]
 		];
-
 
 		$o = replace_macros(get_markup_template('notifications_widget.tpl'), array(
 			'$notifications' => $notifications,

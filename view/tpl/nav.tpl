@@ -66,157 +66,18 @@
 	<button id="expand-aside" type="button" class="d-md-none navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
-	{{if ! $experimental_notif}}
-	{{if $localuser || $nav.pubs}}
-	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
-		<i class="fa fa-exclamation-circle"></i>
-	</button>
-	{{/if}}
-	{{else}}
 	{{if $localuser || $nav.pubs}}
 	<button id="notifications-btn-1" type="button" class="navbar-toggler border-0 text-white">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
-	{{/if}}
 	{{/if}}
 	<button id="menu-btn" class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
 		<i class="fa fa-bars"></i>
 	</button>
 </div>
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
-	{{if ! $experimental_notif}}
-	<ul class="navbar-nav mr-auto">
-		{{if $nav.network}}
-		<li class="nav-item dropdown network-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
-				<i class="fa fa-fw fa-th"></i>
-				<span class="badge badge-pill badge-secondary network-update"></span>
-			</a>
-			<div id="nav-network-menu" class="dropdown-menu" rel="network">
-				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>
-				<a class="dropdown-item" id="nav-network-mark-all" href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.home}}
-		<li class="nav-item dropdown home-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.home.3}}" id="{{$nav.home.4}}" data-toggle="dropdown" rel="#nav-home-menu">
-				<i class="fa fa-fw fa-home"></i>
-				<span class="badge badge-pill badge-danger home-update"></span>
-			</a>
-			<div id="nav-home-menu" class="dropdown-menu" rel="home">
-				<a class="dropdown-item" id="nav-home-see-all" href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a>
-				<a class="dropdown-item" id="nav-home-mark-all" href="#" onclick="markRead('home'); return false;">{{$nav.home.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.messages}}
-		<li class="nav-item dropdown mail-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-mail-menu">
-				<i class="fa fa-fw fa-envelope"></i>
-				<span class="badge badge-pill badge-danger mail-update"></span>
-			</a>
-			<div id="nav-mail-menu" class="dropdown-menu" rel="messages">
-				<a class="dropdown-item" id="nav-messages-see-all" href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a>
-				<a class="dropdown-item" id="nav-messages-mark-all" href="#" onclick="markRead('messages'); return false;">{{$nav.messages.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.all_events}}
-		<li class="nav-item dropdown all_events-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#nav-all_events-menu">
-				<i class="fa fa-fw fa-calendar"></i>
-				<span class="badge badge-pill badge-secondary all_events-update"></span>
-			</a>
-			<div id="nav-all_events-menu" class="dropdown-menu" rel="all_events">
-				<a class="dropdown-item" id="nav-all_events-see-all" href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a>
-				<a class="dropdown-item" id="nav-all_events-mark-all" href="#" onclick="markRead('all_events'); return false;">{{$nav.all_events.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.intros}}
-		<li class="nav-item dropdown intros-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
-				<i class="fa fa-fw fa-users"></i>
-				<span class="badge badge-pill badge-danger intros-update"></span>
-			</a>
-			<div id="nav-intros-menu" class="dropdown-menu" rel="intros">
-				<a class="dropdown-item" id="nav-intros-see-all" href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.registrations}}
-		<li class="nav-item dropdown register-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.registrations.3}}" id="{{$nav.registrations.4}}" data-toggle="dropdown" rel="#nav-register-menu">
-				<i class="fa fa-fw fa-user-o"></i>
-				<span class="badge badge-pill badge-danger register-update"></span>
-			</a>
-			<div id="nav-register-menu" class="dropdown-menu" rel="register">
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.notifications}}
-		<li class="nav-item dropdown notify-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
-				<i class="fa fa-fw fa-exclamation"></i>
-				<span class="badge badge-pill badge-danger notify-update"></span>
-			</a>
-			<div id="nav-notify-menu" class="dropdown-menu" rel="notify">
-				<a class="dropdown-item" id="nav-notify-see-all" href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a>
-				<a class="dropdown-item" id="nav-notify-mark-all" href="#" onclick="markRead('notify'); return false;">{{$nav.notifications.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.files}}
-		<li class="nav-item dropdown files-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.files.3}}" id="{{$nav.files.4}}" data-toggle="dropdown" rel="#nav-files-menu">
-				<i class="fa fa-fw fa-folder"></i>
-				<span class="badge badge-pill badge-danger files-update"></span>
-			</a>
-			<div id="nav-files-menu" class="dropdown-menu" rel="files">
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-		{{if $nav.login && !$userinfo}}
-		<li class="nav-item d-none d-xl-flex">
-			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
-		</li>
-		{{/if}}
-		{{if $nav.register}}
-		<li class="nav-item {{$nav.register.2}} d-none d-xl-flex">
-			<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
-		</li>
-		{{/if}}
-		{{if $nav.alogout}}
-		<li class="nav-item {{$nav.alogout.2}} d-none d-xl-flex">
-			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
-		</li>
-		{{/if}}
-		{{if $nav.pubs}}
-		<li class="nav-item dropdown pubs-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" data-toggle="dropdown" rel="#nav-pubs-menu">
-				<i class="fa fa-fw fa-globe"></i>
-				<span class="badge badge-pill badge-secondary pubs-update"></span>
-			</a>
-			<div id="nav-pubs-menu" class="dropdown-menu" rel="pubs">
-				<a class="dropdown-item" id="nav-pubs-see-all" href="{{$nav.pubs.all.0}}">{{$nav.pubs.all.1}}</a>
-				<a class="dropdown-item" id="nav-pubs-mark-all" href="#" onclick="markRead('pubs'); return false;">{{$nav.pubs.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
-	</ul>
-	{{else}}
-	<div class="navbar-text mr-auto d-none d-xl-flex"></div>
-	{{/if}}
+	<div class="mr-auto d-none d-xl-flex"></div>
+
 	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">

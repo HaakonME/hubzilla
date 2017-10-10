@@ -26,7 +26,6 @@ if(! App::$install) {
 	$radius = get_pconfig($uid, 'redbasic', 'radius');
 	$shadow = get_pconfig($uid,'redbasic','photo_shadow');
 	$converse_width=get_pconfig($uid,'redbasic','converse_width');
-	$align_left=get_pconfig($uid,'redbasic','align_left');
 	$top_photo=get_pconfig($uid,'redbasic','top_photo');
 	$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
 }
@@ -117,10 +116,6 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x .= file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 	}
 
-	if($align_left && file_exists('view/theme/redbasic/css/align_left.css')) {
-		$x .= file_get_contents('view/theme/redbasic/css/align_left.css');
-	}
-
 	if($schemecss) {
 		$x .= $schemecss;
 	}
@@ -128,12 +123,8 @@ if(file_exists('view/theme/redbasic/css/style.css')) {
 	$aside_width = 288;
 
 	// left aside and right aside are 285px + converse width
-	if($align_left) {
-		$main_width = (($aside_width) + intval($converse_width));
-	}
-	else {
-		$main_width = (($aside_width * 2) + intval($converse_width));
-	}
+	$main_width = (($aside_width * 2) + intval($converse_width));
+
 	// prevent main_width smaller than 768px
 	$main_width = (($main_width < 768) ? 768 : $main_width);
 

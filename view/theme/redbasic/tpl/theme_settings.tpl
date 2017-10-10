@@ -1,4 +1,3 @@
-{{include file="field_checkbox.tpl" field=$align_left}}
 {{include file="field_checkbox.tpl" field=$narrow_navbar}}
 {{include file="field_input.tpl" field=$converse_width}}
 {{include file="field_input.tpl" field=$font_size}}

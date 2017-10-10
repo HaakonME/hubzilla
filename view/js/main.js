@@ -365,11 +365,6 @@ $(function() {
 		return;
 	});
 
-	$('span[rel^="#"]').click(function(e){
-		manage_popup_menu(this, e);
-		return;
-	});
-
 	function manage_popup_menu(w,e) {
 		menu = $( $(w).attr('rel') );
 

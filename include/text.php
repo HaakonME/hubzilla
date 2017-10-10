@@ -3156,3 +3156,9 @@ function ellipsify($s,$maxlen) {
 
 	return mb_substr($s,0,$maxlen / 2) . '...' . mb_substr($s,mb_strlen($s) - ($maxlen / 2));
 }
+
+function purify_filename($s) {
+	if(($s[0] === '.') || strpos($s,'/') !== false)
+		return '';
+	return $s;
+}

@@ -284,8 +284,8 @@ EOT;
 		}
 	}
 
-	$c = theme_include('navbar_' . $template . '.css');
-	$tpl = get_markup_template('navbar_' . $template . '.tpl');
+	$c = theme_include('navbar_' . purify_filename($template) . '.css');
+	$tpl = get_markup_template('navbar_' . purify_filename($template) . '.tpl');
 
 	if($c && $tpl) {
 		head_add_css('navbar_' . $template . '.css');

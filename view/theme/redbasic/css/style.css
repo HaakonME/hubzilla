@@ -787,18 +787,21 @@ div.jGrowl div.jGrowl-notification {
 
 .contactname {
 	font-weight: bold;
+	color: $font_colour;
 	display: block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
 .dropdown-notification,
+.notification,
 .member-item {
 	line-height: 1.1em;
 	font-size: 0.75rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
+	white-space: nowrap;
 }
 
 #acl-search::-webkit-input-placeholder {

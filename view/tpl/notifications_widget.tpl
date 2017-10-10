@@ -29,7 +29,7 @@
 <div id="notifications_wrapper">
 	<div id="notifications" class="navbar-nav" data-children=".nav-item">
 		<div id="nav-notifications-template" rel="template">
-			<a class="dropdown-item clearfix dropdown-notification {5}" href="{0}" title="{2} {3}">
+			<a class="list-group-item clearfix notification {5}" href="{0}" title="{2} {3}">
 				<img class="menu-img-3" data-src="{1}">
 				<span class="contactname">{2}</span>
 				<span class="dropdown-sub-text">{3}<br>{4}</span>
@@ -43,10 +43,10 @@
 			</a>
 			<div id="nav-{{$notification.type}}-menu" class="collapse notification-content" rel="{{$notification.type}}">
 				{{if $notification.viewall}}
-				<a class="dropdown-item" id="nav-{{$notification.type}}-see-all" href="{{$notification.viewall.url}}">{{$notification.viewall.label}}</a>
+				<a class="list-group-item" id="nav-{{$notification.type}}-see-all" href="{{$notification.viewall.url}}">{{$notification.viewall.label}}</a>
 				{{/if}}
 				{{if $notification.markall}}
-				<a class="dropdown-item" id="nav-{{$notification.type}}-mark-all" href="{{$notification.markall.url}}" onclick="markRead('{{$notification.type}}'); return false;">{{$notification.markall.label}}</a>
+				<a class="list-group-item" id="nav-{{$notification.type}}-mark-all" href="{{$notification.markall.url}}" onclick="markRead('{{$notification.type}}'); return false;">{{$notification.markall.label}}</a>
 				{{/if}}
 				{{$loading}}
 			</div>

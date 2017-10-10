@@ -5,6 +5,9 @@
 
 <br />
 <a href="help/comanche" target="hubzilla-help">{{$help}}</a>
+<br>
+<br>
+<a href="pdledit">{{$another}}</a>
 <br />
 <br />
 

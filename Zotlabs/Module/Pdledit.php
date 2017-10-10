@@ -14,7 +14,7 @@ class Pdledit extends \Zotlabs\Web\Controller {
 
 		if(! trim($_REQUEST['content'])) {
 			del_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl');
-			goaway(z_root() . '/pdledit/' . $_REQUEST['module']);
+			goaway(z_root() . '/pdledit');
 		}
 		set_pconfig(local_channel(),'system','mod_' . $_REQUEST['module'] . '.pdl',escape_tags($_REQUEST['content']));
 		build_sync_packet();
@@ -34,19 +34,38 @@ class Pdledit extends \Zotlabs\Web\Controller {
 			notice( t('Feature disabled.') . EOL);
 			return;
 		}
-	
+
+		if(argc() > 2 && argv(2) === 'reset') {
+			del_pconfig(local_channel(),'system','mod_' . argv(1) . '.pdl');
+			goaway(z_root() . '/pdledit');
+ 		}
+
 		if(argc() > 1)
 			$module = 'mod_' . argv(1) . '.pdl';
 		else {
 			$o .= '<div class="generic-content-wrapper-styled">';
 			$o .= '<h1>' . t('Edit System Page Description') . '</h1>';
+
+			$edited = [];
+
+			$r = q("select k from pconfig where uid = %d and cat = 'system' and k like '%s' ",
+				intval(local_channel()),
+				dbesc('mod_%.pdl')
+			);
+
+			if($r) {
+				foreach($r as $rv) {
+					$edited[] = substr(str_replace('.pdl','',$rv['k']),4);
+				}
+			}
+			
 			$files = glob('Zotlabs/Module/*.php');
 			if($files) {
 				foreach($files as $f) {
 					$name = lcfirst(basename($f,'.php'));
 					$x = theme_include('mod_' . $name . '.pdl');
 					if($x) {
-						$o .= '<a href="pdledit/' . $name . '" >' . $name . '</a><br />';
+						$o .= '<a href="pdledit/' . $name . '" >' . $name . '</a>' . ((in_array($name,$edited)) ? ' ' . t('(modified)') . ' <a href="pdledit/' . $name . '/reset" >' . t('Reset') . '</a>': '' ) . '<br />';
 					}
 				}
 			}
@@ -69,6 +88,7 @@ class Pdledit extends \Zotlabs\Web\Controller {
 			'$header' => t('Edit System Page Description'),
 			'$mname' => t('Module Name:'),
 			'$help' => t('Layout Help'),
+			'$another' => t('Edit another layout'),
 			'$module' => argv(1),
 			'$content' => htmlspecialchars($t,ENT_COMPAT,'UTF-8'),
 			'$submit' => t('Submit')

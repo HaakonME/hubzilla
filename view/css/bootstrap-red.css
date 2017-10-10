@@ -19,6 +19,7 @@ nav .dropdown-menu {
 	}
 }
 
+
 @media screen and (max-width: 767px) {
 	.navbar {
 		padding: .5rem 7px;

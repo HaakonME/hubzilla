@@ -10,6 +10,9 @@
 	{{/if}}
 </div>
 {{/if}}
+
+
+
 {{if $userinfo}}
 <div class="dropdown usermenu">
 	<div class="fakelink" data-toggle="dropdown">
@@ -42,6 +45,7 @@
 		{{/if}}
 	</div>
 	{{/if}}
+
 	{{if ! $is_owner}}
 	<div class="dropdown-menu" role="menu" aria-labelledby="avatar">
 		<a class="dropdown-item" href="{{$nav.rusermenu.0}}" role="menuitem">{{$nav.rusermenu.1}}</a>
@@ -50,34 +54,49 @@
 	{{/if}}
 </div>
 {{/if}}
+
+
+
+{{if $navbar_apps}}
+<ul class="navbar-nav mr-auto d-none d-xl-flex">
+{{foreach $navbar_apps as $navbar_app}}
+<li>
+{{$navbar_app}}
+</li>
+{{/foreach}}
+</ul>
+{{/if}}
+
+
 <div class="navbar-toggler-right">
+
 	{{if $nav.help.6}}
 	<button id="context-help-btn" class="navbar-toggler border-0" type="button" onclick="contextualHelp(); return false;">
 		<i class="fa fa-question-circle"></i>
 	</button>
 	{{/if}}
+
 	<button id="expand-aside" type="button" class="navbar-toggler border-0" data-toggle="offcanvas" data-target="#region_1">
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
-	{{if ! $experimental_notif}}
+
 	{{if $localuser || $nav.pubs}}
 	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white" data-toggle="collapse" data-target="#navbar-collapse-1">
-		<i class="fa fa-exclamation-circle"></i>
+		<i class="fa fa-exclamation"></i>
 	</button>
 	{{/if}}
-	{{else}}
-	{{if $localuser || $nav.pubs}}
-	<button id="notifications-btn-1" type="button" class="navbar-toggler border-0 text-white">
-		<i class="fa fa-exclamation-circle"></i>
-	</button>
-	{{/if}}
-	{{/if}}
+
 	<button id="menu-btn" class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">
 		<i class="fa fa-bars"></i>
 	</button>
 </div>
+
+
+
+
+
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
-	{{if ! $experimental_notif}}
+
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
 		<li class="nav-item dropdown network-button" style="display: none;">
@@ -143,17 +162,6 @@
 			</div>
 		</li>
 		{{/if}}
-		{{if $nav.registrations}}
-		<li class="nav-item dropdown register-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.registrations.3}}" id="{{$nav.registrations.4}}" data-toggle="dropdown" rel="#nav-register-menu">
-				<i class="fa fa-fw fa-user-o"></i>
-				<span class="badge badge-pill badge-danger register-update"></span>
-			</a>
-			<div id="nav-register-menu" class="dropdown-menu" rel="register">
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
 		{{if $nav.notifications}}
 		<li class="nav-item dropdown notify-button" style="display: none;">
 			<a class="nav-link" href="#" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
@@ -167,17 +175,7 @@
 			</div>
 		</li>
 		{{/if}}
-		{{if $nav.files}}
-		<li class="nav-item dropdown files-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.files.3}}" id="{{$nav.files.4}}" data-toggle="dropdown" rel="#nav-files-menu">
-				<i class="fa fa-fw fa-folder"></i>
-				<span class="badge badge-pill badge-danger files-update"></span>
-			</a>
-			<div id="nav-files-menu" class="dropdown-menu" rel="files">
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
+
 		{{if $nav.login && !$userinfo}}
 		<li class="nav-item d-none d-xl-flex">
 			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
@@ -193,33 +191,16 @@
 			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
 		</li>
 		{{/if}}
-		{{if $nav.pubs}}
-		<li class="nav-item dropdown pubs-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.pubs.3}}" id="{{$nav.pubs.4}}" data-toggle="dropdown" rel="#nav-pubs-menu">
-				<i class="fa fa-fw fa-globe"></i>
-				<span class="badge badge-pill badge-secondary pubs-update"></span>
-			</a>
-			<div id="nav-pubs-menu" class="dropdown-menu" rel="pubs">
-				<a class="dropdown-item" id="nav-pubs-see-all" href="{{$nav.pubs.all.0}}">{{$nav.pubs.all.1}}</a>
-				<a class="dropdown-item" id="nav-pubs-mark-all" href="#" onclick="markRead('pubs'); return false;">{{$nav.pubs.mark.1}}</a>
-				{{$emptynotifications}}
-			</div>
-		</li>
-		{{/if}}
+
 	</ul>
-	{{/if}}
+
+
+
 
 	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
 
 
 	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">
-		{{if $navbar_apps}}
-		{{foreach $navbar_apps as $navbar_app}}
-		<li class="nav-navbar-apps">
-		{{$navbar_app}}
-		</li>
-		{{/foreach}}
-		{{/if}}
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>
@@ -261,6 +242,8 @@
 		</li>
 	</ul>
 </div>
+
+
 <div class="collapse d-xl-none" id="navbar-collapse-2">
 	<div class="navbar-nav mr-auto">
 		{{if $channel_apps.0}}

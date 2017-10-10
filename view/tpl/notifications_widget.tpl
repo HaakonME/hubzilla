@@ -1,6 +1,6 @@
 <style>
 	.notification-content {
-		max-height: 60vh;
+		max-height: 70vh;
 		overflow: auto;
 	}
 

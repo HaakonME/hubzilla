@@ -1,5 +1,3 @@
-[region=nav]$nav[/region]
-
 [region=aside]
 [widget=collections][/widget]
 [widget=forums][/widget]

@@ -120,21 +120,23 @@ class Notifications {
 			];
 		}
 
-		$notifications[] = [
-			'type' => 'pubs',
-			'icon' => 'globe',
-			'severity' => 'secondary',
-			'label' => t('Public Stream'),
-			'title' => t('Public Stream Notifications'),
-			'viewall' => [
-				'url' => 'pubstream',
-				'label' => t('View the public stream')
-			],
-			'markall' => [
-				'url' => '#',
-				'label' => t('Mark all notifications seen')
-			]
-		];
+		if(get_config('system', 'disable_discover_tab') != 1) {
+			$notifications[] = [
+				'type' => 'pubs',
+				'icon' => 'globe',
+				'severity' => 'secondary',
+				'label' => t('Public Stream'),
+				'title' => t('Public Stream Notifications'),
+				'viewall' => [
+					'url' => 'pubstream',
+					'label' => t('View the public stream')
+				],
+				'markall' => [
+					'url' => '#',
+					'label' => t('Mark all notifications seen')
+				]
+			];
+		}
 
 		$o = replace_macros(get_markup_template('notifications_widget.tpl'), array(
 			'$notifications' => $notifications,

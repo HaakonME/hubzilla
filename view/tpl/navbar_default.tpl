@@ -67,7 +67,7 @@
 		<i class="fa fa-arrow-circle-right" id="expand-aside-icon"></i>
 	</button>
 	{{if $localuser || $nav.pubs}}
-	<button id="notifications-btn-1" type="button" class="navbar-toggler border-0 text-white">
+	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white">
 		<i class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
@@ -106,6 +106,13 @@
 				{{/foreach}}
 			</div>
 		</li>
+		{{/if}}
+		{{if $navbar_apps}}
+		{{foreach $navbar_apps as $navbar_app}}
+		<li>
+		{{$navbar_app}}
+		</li>
+		{{/foreach}}
 		{{/if}}
 		<li class="nav-item dropdown" id="app-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-bars"></i></a>

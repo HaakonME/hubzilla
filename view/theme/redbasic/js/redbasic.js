@@ -83,7 +83,7 @@ $(document).ready(function() {
 	});
 
 	var notifications_parent = $('#notifications_wrapper')[0].parentElement.id;
-	$('#notifications-btn-1').click(function() {
+	$('#notifications-btn').click(function() {
 		if($('#notifications_wrapper').hasClass('fs'))
 			$('#notifications_wrapper').prependTo('#' + notifications_parent);
 		else

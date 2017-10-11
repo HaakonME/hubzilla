@@ -57,7 +57,13 @@ li:hover .widget-nav-pills-icons {
 
 /*  affinity slider */
 #main-slider {
-	margin: 10px 7px 45px 7px;
+	margin: 10px 7px 4rem 7px;
+}
+
+@media screen and (max-width: 767px) {
+	#main-slider {
+		margin: 4rem 7px 4rem 7px;
+	}
 }
 
 /* posted date */

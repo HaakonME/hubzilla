@@ -1,5 +1,9 @@
-<div id="main-slider" class="slider" ><input id="main-range" type="text" name="cminmax" value="{{$val}}" /></div>
-<div id="profile-jot-text-loading" class="spinner-wrapper"><div class="spinner m"></div></div>
+<div id="main-slider" class="slider" >
+	<input id="main-range" type="text" name="cminmax" value="{{$val}}" />
+	<div id="profile-jot-text-loading" class="spinner-wrapper">
+		<div class="spinner m"></div>
+	</div>
+</div>
 <script>
 $(document).ready(function() {
 	var old_cmin = 0;

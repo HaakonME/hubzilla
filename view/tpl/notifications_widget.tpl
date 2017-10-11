@@ -17,7 +17,7 @@
 		width: 100%;
 		max-width: 100%;
 		height: 100%;
-		z-index: 1025;
+		z-index: 1029;
 		overflow: auto;
 	}
 
@@ -26,6 +26,7 @@
 	}
 </style>
 
+{{if $notifications}}
 <div id="notifications_wrapper">
 	<div id="notifications" class="navbar-nav" data-children=".nav-item">
 		<div id="nav-notifications-template" rel="template">
@@ -43,10 +44,14 @@
 			</a>
 			<div id="nav-{{$notification.type}}-menu" class="collapse notification-content" rel="{{$notification.type}}">
 				{{if $notification.viewall}}
-				<a class="list-group-item" id="nav-{{$notification.type}}-see-all" href="{{$notification.viewall.url}}">{{$notification.viewall.label}}</a>
+				<a class="list-group-item text-dark" id="nav-{{$notification.type}}-see-all" href="{{$notification.viewall.url}}">
+					<i class="fa fa-fw fa-external-link"></i> {{$notification.viewall.label}}
+				</a>
 				{{/if}}
 				{{if $notification.markall}}
-				<a class="list-group-item" id="nav-{{$notification.type}}-mark-all" href="{{$notification.markall.url}}" onclick="markRead('{{$notification.type}}'); return false;">{{$notification.markall.label}}</a>
+				<a class="list-group-item text-dark" id="nav-{{$notification.type}}-mark-all" href="{{$notification.markall.url}}" onclick="markRead('{{$notification.type}}'); return false;">
+					<i class="fa fa-fw fa-check"></i> {{$notification.markall.label}}
+				</a>
 				{{/if}}
 				{{$loading}}
 			</div>
@@ -54,3 +59,4 @@
 		{{/foreach}}
 	</div>
 </div>
+{{/if}}

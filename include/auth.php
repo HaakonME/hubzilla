@@ -83,7 +83,7 @@ function account_verify_password($login, $pass) {
 
 	if(($email_verify) && ($register_policy == REGISTER_OPEN) && ($account['account_flags'] & ACCOUNT_UNVERIFIED)) {
 		logger('email verification required for ' . $login);
-		return null;
+		return ( [ 'reason' => 'unvalidated' ] );
 	}
 
 	if(($account['account_flags'] == ACCOUNT_OK) 
@@ -259,7 +259,10 @@ else {
 		}
 		else {
 			$verify = account_verify_password($_POST['username'], $_POST['password']);
-			if($verify) {
+			if($verify && array_key_exists('reason',$verify) && $verify['reason'] === 'unvalidated') {
+				notice( t('Email validation is incomplete. Please check your email.'));
+			}
+			elseif($verify) {
 				$atoken  = $verify['xchan'];
 				$channel = $verify['channel'];
 				$account = App::$account = $verify['account'];

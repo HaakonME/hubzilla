@@ -92,6 +92,46 @@ EOT;
 	}
 
 	if(local_channel()) {
+
+
+
+		$nav['network'] = array('network', t('Activity'), "", t('Network Activity'),'network_nav_btn');
+		$nav['network']['all'] = [ 'network', t('View your network activity'), '','' ];
+		$nav['network']['mark'] = array('', t('Mark all activity notifications seen'), '','');
+
+		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'),'home_nav_btn');
+		$nav['home']['all'] = [ 'channel/' . $channel['channel_address'], t('View your channel home'), '' , '' ];
+		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
+
+
+		$nav['intros'] = array('connections/ifpending',	t('Connections'), "", t('Connections'),'connections_nav_btn');
+		if(is_site_admin())
+			$nav['registrations'] = array('admin/accounts',	t('Registrations'), "", t('Registrations'),'registrations_nav_btn');
+
+
+		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'),'notifications_nav_btn');
+		$nav['notifications']['all']=array('notifications/system', t('View all notifications'), "", "");
+		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
+
+		$nav['messages'] = array('mail/combined', t('Mail'), "", t('Private mail'),'mail_nav_btn');
+		$nav['messages']['all']=array('mail/combined', t('View your private messages'), "", "");
+		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
+		$nav['messages']['inbox'] = array('mail/inbox', t('Inbox'), "", t('Inbox'));
+		$nav['messages']['outbox']= array('mail/outbox', t('Outbox'), "", t('Outbox'));
+		$nav['messages']['new'] = array('mail/new', t('New Message'), "", t('New Message'));
+
+
+		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'),'events_nav_btn');
+		$nav['all_events']['all']=array('events', t('View events'), "", "");
+		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
+
+ 		if(! $_SESSION['delegate']) {
+ 			$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'),'manage_nav_btn');
+ 		}
+
+ 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'),'settings_nav_btn');
+
+	
 		if($chans && count($chans) > 1 && feature_enabled(local_channel(),'nav_channel_select'))
 			$nav['channels'] = $chans;
 

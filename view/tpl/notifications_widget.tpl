@@ -26,6 +26,7 @@
 	}
 </style>
 
+{{if $notifications}}
 <div id="notifications_wrapper">
 	<div id="notifications" class="navbar-nav" data-children=".nav-item">
 		<div id="nav-notifications-template" rel="template">
@@ -54,3 +55,4 @@
 		{{/foreach}}
 	</div>
 </div>
+{{/if}}

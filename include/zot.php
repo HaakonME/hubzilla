@@ -718,6 +718,16 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 		if(intval($r[0]['xchan_pubforum']) != intval($arr['public_forum']))
 			$pubforum_changed = 1;
 
+		if($arr['protocols']) {
+			$protocols = implode(',',$arr['protocols']);
+			if($protocols !== 'zot') {
+				set_xconfig($xchan_hash,'system','protocols',$protocols);
+			}
+			else {
+				del_xconfig($xchan_hash,'system','protocols');
+			}
+		}
+
 		if(($r[0]['xchan_name_date'] != $arr['name_updated'])
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url'])
 			|| ($r[0]['xchan_addr'] != $arr['address'])
@@ -4035,6 +4045,11 @@ function zotinfo($arr) {
 
 	$id = $e['channel_id'];
 
+	$x = [ 'channel_id' => $id, 'protocols' => 'zot' ];
+	call_hooks('channel_protocols',$x);
+	$protocols = $x['protocols'];
+
+
 	$sys_channel     = (intval($e['channel_system'])   ? true : false);
 	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
 	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
@@ -4135,6 +4150,7 @@ function zotinfo($arr) {
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
+	$ret['protocols']      = $protocols;
 	$ret['adult_content']  = $adult_channel;
 	$ret['public_forum']   = $public_forum;
 	if($deleted)

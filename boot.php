@@ -2090,9 +2090,11 @@ function construct_page() {
 
 	$installing = false;
 
+	$uid = ((App::$profile_uid) ? App::$profile_uid : local_channel());
+
 	$navbar = get_config('system','navbar','default');
-	if(App::$profile_uid) {
-		$navbar = get_pconfig(App::$profile_uid,'system','navbar',$navbar);
+	if($uid) {
+		$navbar = get_pconfig($uid,'system','navbar',$navbar);
 	}
 	
 	if($comanche && App::$layout['navbar']) {

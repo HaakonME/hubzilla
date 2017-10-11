@@ -7,6 +7,8 @@ use \Zotlabs\Lib as Zlib;
 class Apps extends \Zotlabs\Web\Controller {
 
 	function get() {
+
+		nav_set_selected('Apps');
 	
 		if(argc() == 2 && argv(1) == 'edit')
 			$mode = 'edit';

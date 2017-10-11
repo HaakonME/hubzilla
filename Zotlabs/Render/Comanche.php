@@ -153,6 +153,7 @@ class Comanche {
 	 * $observer.address - xchan_addr or false
 	 * $observer.name - xchan_name or false
 	 * $observer - xchan_hash of observer or empty string
+	 * $local_channel - logged in channel_id or false
 	 */
 
 	function get_condition_var($v) {
@@ -162,6 +163,9 @@ class Comanche {
 				return get_config($x[1],$x[2]);
 			elseif($x[0] === 'request')
 				return $_SERVER['REQUEST_URI'];
+			elseif($x[0] === 'local_channel') {
+				return local_channel();
+			}
 			elseif($x[0] === 'observer') {
 				if(count($x) > 1) {
 					if($x[1] == 'language')

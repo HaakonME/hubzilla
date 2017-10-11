@@ -107,6 +107,13 @@
 			</div>
 		</li>
 		{{/if}}
+		{{if $navbar_apps}}
+		{{foreach $navbar_apps as $navbar_app}}
+		<li>
+		{{$navbar_app}}
+		</li>
+		{{/foreach}}
+		{{/if}}
 		<li class="nav-item dropdown" id="app-menu">
 			<a class="nav-link" href="#" data-toggle="dropdown"><i class="fa fa-fw fa-bars"></i></a>
 			<div id="dropdown-menu" class="dropdown-menu dropdown-menu-right">

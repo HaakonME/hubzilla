@@ -644,6 +644,12 @@ function import_items($channel, $items, $sync = false, $relocate = null) {
 
 			fix_attached_file_permissions($channel,$item['author_xchan'],$item['body'],$item['allow_cid'],$item['allow_gid'],$item['deny_cid'],$item['deny_gid']);
 
+			if($sync && $item['item_wall']) {
+				// deliver singletons if we have any
+				if($item_result && $item_result['success']) {
+					Zotlabs\Daemon\Master::Summon( [ 'Notifier','single_activity',$item_result['item_id'] ]);
+				}
+			}
 		}
 	}
 }
@@ -1017,6 +1023,9 @@ function import_mail($channel, $mails, $sync = false) {
 			$m['aid'] = $channel['channel_account_id'];
 			$m['uid'] = $channel['channel_id'];
 			$mail_id = mail_store($m);
+			if($sync && $mail_id) {
+				Zotlabs\Daemon\Master::Summon(array('Notifier','single_mail',$mail_id));
+			}
  		}
 	}
 }

@@ -640,7 +640,7 @@ The condensed notation isn't part of Comanche itself but is recognised by $Proje
 	[navbar]tucson[/navbar]
 [/code]
 
-Use the 'tucson' navbar template and CSS rules. By default the 'nav' navbar template will be used.
+Use the 'tucson' navbar template and CSS rules. By default the 'default' navbar template will be used.
 
 
 [h4]Regions[/h4]

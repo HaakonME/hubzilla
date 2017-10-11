@@ -2090,7 +2090,7 @@ function construct_page() {
 
 	$installing = false;
 
-	$navbar = get_config('system','navbar','nav');
+	$navbar = get_config('system','navbar','default');
 	if(App::$profile_uid) {
 		$navbar = get_pconfig(App::$profile_uid,'system','navbar',$navbar);
 	}

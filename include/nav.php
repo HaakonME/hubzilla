@@ -6,7 +6,7 @@ require_once('include/security.php');
 require_once('include/menu.php');
 
 
-function nav($template = 'nav') {
+function nav($template = 'default') {
 
 	/**
 	 *
@@ -248,7 +248,7 @@ EOT;
 	}
 
 	if(! $tpl) {
-		$tpl = get_markup_template('nav.tpl');
+		$tpl = get_markup_template('navbar_default.tpl');
 	}
 
 	App::$page['nav'] .= replace_macros($tpl, array(

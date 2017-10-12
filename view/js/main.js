@@ -963,7 +963,8 @@ function justifyPhotosAjax(id) {
 
 function notify_popup_loader(notifyType) {
 
-	/* notifications template */
+	/* notifications template - different for navbar and notifications widget */
+	var navbar_notifications_tpl= unescape($("#navbar-notifications-template[rel=template]").html());
 	var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
 	var notifications_all = unescape($('<div>').append( $("#nav-" + notifyType + "-see-all").clone() ).html()); //outerHtml hack
 	var notifications_mark = unescape($('<div>').append( $("#nav-" + notifyType + "-mark-all").clone() ).html()); //outerHtml hack
@@ -979,11 +980,16 @@ function notify_popup_loader(notifyType) {
 		}
 
 		if(data.notify.length == 0){
+			$("#navbar-" + notifyType + "-menu").html(aStr[nothingnew]);
 			$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
 		} else {
+			$("#navbar-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 			$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
 			$(data.notify).each(function() {
+				html = navbar_notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
+				$("#navbar-" + notifyType + "-menu").append(html);
+
 				html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
 				$("#nav-" + notifyType + "-menu").append(html);
 			});

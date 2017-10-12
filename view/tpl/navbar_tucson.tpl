@@ -100,11 +100,11 @@
 	<ul class="navbar-nav mr-auto">
 		{{if $nav.network}}
 		<li class="nav-item dropdown network-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#nav-network-menu">
+			<a class="nav-link" href="#" title="{{$nav.network.3}}" id="{{$nav.network.4}}" data-toggle="dropdown" rel="#navbar-network-menu">
 				<i class="fa fa-fw fa-th"></i>
 				<span class="badge badge-pill badge-secondary network-update"></span>
 			</a>
-			<div id="nav-network-menu" class="dropdown-menu" rel="network">
+			<div id="navbar-network-menu" class="dropdown-menu" rel="network">
 				<a class="dropdown-item" id="nav-network-see-all" href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a>
 				<a class="dropdown-item" id="nav-network-mark-all" href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a>
 				{{$emptynotifications}}
@@ -113,11 +113,11 @@
 		{{/if}}
 		{{if $nav.home}}
 		<li class="nav-item dropdown home-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.home.3}}" id="{{$nav.home.4}}" data-toggle="dropdown" rel="#nav-home-menu">
+			<a class="nav-link" href="#" title="{{$nav.home.3}}" id="{{$nav.home.4}}" data-toggle="dropdown" rel="#navbar-home-menu">
 				<i class="fa fa-fw fa-home"></i>
 				<span class="badge badge-pill badge-danger home-update"></span>
 			</a>
-			<div id="nav-home-menu" class="dropdown-menu" rel="home">
+			<div id="navbar-home-menu" class="dropdown-menu" rel="home">
 				<a class="dropdown-item" id="nav-home-see-all" href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a>
 				<a class="dropdown-item" id="nav-home-mark-all" href="#" onclick="markRead('home'); return false;">{{$nav.home.mark.1}}</a>
 				{{$emptynotifications}}
@@ -126,11 +126,11 @@
 		{{/if}}
 		{{if $nav.messages}}
 		<li class="nav-item dropdown mail-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#nav-mail-menu">
+			<a class="nav-link" href="#" title="{{$nav.messages.3}}" id="{{$nav.messages.4}}" data-toggle="dropdown" rel="#navbar-mail-menu">
 				<i class="fa fa-fw fa-envelope"></i>
 				<span class="badge badge-pill badge-danger mail-update"></span>
 			</a>
-			<div id="nav-mail-menu" class="dropdown-menu" rel="messages">
+			<div id="navbar-mail-menu" class="dropdown-menu" rel="messages">
 				<a class="dropdown-item" id="nav-messages-see-all" href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a>
 				<a class="dropdown-item" id="nav-messages-mark-all" href="#" onclick="markRead('messages'); return false;">{{$nav.messages.mark.1}}</a>
 				{{$emptynotifications}}
@@ -139,11 +139,11 @@
 		{{/if}}
 		{{if $nav.all_events}}
 		<li class="nav-item dropdown all_events-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#nav-all_events-menu">
+			<a class="nav-link" href="#" title="{{$nav.all_events.3}}" id="{{$nav.all_events.4}}" data-toggle="dropdown" rel="#navbar-all_events-menu">
 				<i class="fa fa-fw fa-calendar"></i>
 				<span class="badge badge-pill badge-secondary all_events-update"></span>
 			</a>
-			<div id="nav-all_events-menu" class="dropdown-menu" rel="all_events">
+			<div id="navbar-all_events-menu" class="dropdown-menu" rel="all_events">
 				<a class="dropdown-item" id="nav-all_events-see-all" href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a>
 				<a class="dropdown-item" id="nav-all_events-mark-all" href="#" onclick="markRead('all_events'); return false;">{{$nav.all_events.mark.1}}</a>
 				{{$emptynotifications}}
@@ -152,11 +152,11 @@
 		{{/if}}
 		{{if $nav.intros}}
 		<li class="nav-item dropdown intros-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#nav-intros-menu">
+			<a class="nav-link" href="#" title="{{$nav.intros.3}}" id="{{$nav.intros.4}}" data-toggle="dropdown" rel="#navbar-intros-menu">
 				<i class="fa fa-fw fa-users"></i>
 				<span class="badge badge-pill badge-danger intros-update"></span>
 			</a>
-			<div id="nav-intros-menu" class="dropdown-menu" rel="intros">
+			<div id="navbar-intros-menu" class="dropdown-menu" rel="intros">
 				<a class="dropdown-item" id="nav-intros-see-all" href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a>
 				{{$emptynotifications}}
 			</div>
@@ -164,11 +164,11 @@
 		{{/if}}
 		{{if $nav.notifications}}
 		<li class="nav-item dropdown notify-button" style="display: none;">
-			<a class="nav-link" href="#" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#nav-notify-menu">
+			<a class="nav-link" href="#" title="{{$nav.notifications.1}}" id="{{$nav.notifications.4}}" data-toggle="dropdown" rel="#navbar-notify-menu">
 				<i class="fa fa-fw fa-exclamation"></i>
 				<span class="badge badge-pill badge-danger notify-update"></span>
 			</a>
-			<div id="nav-notify-menu" class="dropdown-menu" rel="notify">
+			<div id="navbar-notify-menu" class="dropdown-menu" rel="notify">
 				<a class="dropdown-item" id="nav-notify-see-all" href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a>
 				<a class="dropdown-item" id="nav-notify-mark-all" href="#" onclick="markRead('notify'); return false;">{{$nav.notifications.mark.1}}</a>
 				{{$emptynotifications}}

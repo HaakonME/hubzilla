@@ -72,7 +72,8 @@ class HTTPSig {
 			return $result;
 		}
 
-		logger('sig_block: ' . print_r($sig_block,true), LOGGER_DATA);
+		// Warning: This log statement includes binary data
+		// logger('sig_block: ' . print_r($sig_block,true), LOGGER_DATA);
 
 		$result['header_signed'] = true;
 

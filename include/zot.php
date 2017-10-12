@@ -312,6 +312,7 @@ function zot_refresh($them, $channel = null, $force = false) {
 
 	logger('zot_refresh: ' . $url, LOGGER_DATA, LOG_INFO);
 
+
 	$result = z_post_url($url . $rhs,$postvars);
 
 	if ($result['success']) {
@@ -4045,7 +4046,7 @@ function zotinfo($arr) {
 
 	$id = $e['channel_id'];
 
-	$x = [ 'channel_id' => $id, 'protocols' => 'zot' ];
+	$x = [ 'channel_id' => $id, 'protocols' => ['zot'] ];
 	call_hooks('channel_protocols',$x);
 	$protocols = $x['protocols'];
 

@@ -76,11 +76,27 @@
 	</button>
 </div>
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
-	<div class="mr-auto d-none d-xl-flex"></div>
+	<ul class="navbar-nav mr-auto">
+		{{if $nav.login && !$userinfo}}
+		<li class="nav-item d-none d-xl-flex">
+			<a class="nav-link" href="#" title="{{$nav.loginmenu.1.3}}" id="{{$nav.loginmenu.1.4}}" data-toggle="modal" data-target="#nav-login">{{$nav.loginmenu.1.1}}</a>
+		</li>
+		{{/if}}
+		{{if $nav.register}}
+		<li class="nav-item {{$nav.register.2}} d-none d-xl-flex">
+			<a class="nav-link" href="{{$nav.register.0}}" title="{{$nav.register.3}}" id="{{$nav.register.4}}">{{$nav.register.1}}</a>
+		</li>
+		{{/if}}
+		{{if $nav.alogout}}
+		<li class="nav-item {{$nav.alogout.2}} d-none d-xl-flex">
+			<a class="nav-link" href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" id="{{$nav.alogout.4}}">{{$nav.alogout.1}}</a>
+		</li>
+		{{/if}}
+	</ul>
 
-	<div id="banner" class="navbar-text d-none d-xl-flex">{{$banner}}</div>
+	<div id="banner" class="navbar-text">{{$banner}}</div>
 
-	<ul id="nav-right" class="navbar-nav ml-auto d-none d-xl-flex">
+	<ul id="nav-right" class="navbar-nav ml-auto">
 		<li class="nav-item collapse clearfix" id="nav-search">
 			<form class="form-inline" method="get" action="search" role="search">
 				<input class="form-control form-control-sm mt-1 mr-2" id="nav-search-text" type="text" value="" placeholder="&#xf002; {{$help}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" onblur="closeMenu('nav-search'); openMenu('nav-search-btn');"/>

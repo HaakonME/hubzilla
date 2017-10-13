@@ -2308,7 +2308,7 @@ function profile_store_lowlevel($arr) {
 // It is the caller's responsibility to confirm the requestor's intent and
 // authorisation to do this.
 
-function account_remove($account_id,$local = true,$unset_session=true) {
+function account_remove($account_id,$local = true,$unset_session = true) {
 
 	logger('account_remove: ' . $account_id);
 
@@ -2353,13 +2353,12 @@ function account_remove($account_id,$local = true,$unset_session=true) {
 
 
 	if ($unset_session) {
-		unset($_SESSION['authenticated']);
-		unset($_SESSION['uid']);
-		notice( sprintf(t("User '%s' deleted"),$account_email) . EOL);
+		App::$session->nuke();
+		notice( sprintf(t('Account \'%s\' deleted'),$account_email) . EOL);
 		goaway(z_root());
 	}
-	return $r;
 
+	return $r;
 }
 
 /**

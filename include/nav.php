@@ -148,15 +148,20 @@ EOT;
 	}
 	else {
 		if(! get_account_id())  {
-			$nav['login'] = login(true,'main-login',false,false);
-			$nav['loginmenu'][] = ['login',t('Login'),'',t('Sign in'),'login_nav_btn'];
-			App::$page['content'] .= replace_macros(get_markup_template('nav_login.tpl'),
-				[ 
-					'$nav' => $nav,
-					'userinfo' => $userinfo
-				]
-			);
-
+			if(App::$module === 'channel') {
+				$nav['login'] = login(true,'main-login',false,false);
+				$nav['loginmenu'][] = ['login',t('Login'),'',t('Sign in'),''];
+			}
+			else {
+				$nav['login'] = login(true,'main-login',false,false);
+				$nav['loginmenu'][] = ['login',t('Login'),'',t('Sign in'),'login_nav_btn'];
+				App::$page['content'] .= replace_macros(get_markup_template('nav_login.tpl'),
+					[ 
+						'$nav' => $nav,
+						'userinfo' => $userinfo
+					]
+				);
+			}
 		}
 		else
 			$nav['alogout'] = ['logout',t('Logout'), "", t('End this session'),'logout_nav_btn'];

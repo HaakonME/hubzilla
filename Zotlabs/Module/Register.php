@@ -27,7 +27,7 @@ class Register extends \Zotlabs\Web\Controller {
 				$result = check_account_email($_REQUEST['email']);
 				break;
 			case 'password_check.json':
-				$result = check_account_password($_REQUEST['password']);
+				$result = check_account_password($_REQUEST['password1']);
 				break;
 			default: 
 				break;
@@ -231,8 +231,8 @@ class Register extends \Zotlabs\Web\Controller {
 		$enable_tos = 1 - intval(get_config('system','no_termsofservice'));
 	
 		$email        = array('email', t('Your email address'), ((x($_REQUEST,'email')) ? strip_tags(trim($_REQUEST['email'])) : ""));
-		$password     = array('password', t('Choose a password'), ((x($_REQUEST,'password')) ? trim($_REQUEST['password']) : ""));
-		$password2    = array('password2', t('Please re-enter your password'), ((x($_REQUEST,'password2')) ? trim($_REQUEST['password2']) : ""));
+		$password     = array('password', t('Choose a password'), ''); 
+		$password2    = array('password2', t('Please re-enter your password'), ''); 
 		$invite_code  = array('invite_code', t('Please enter your invitation code'), ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) : ""));
 		$name = array('name', t('Name or caption'), ((x($_REQUEST,'name')) ? $_REQUEST['name'] : ''), t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group"'));
 		$nickhub = '@' . str_replace(array('http://','https://','/'), '', get_config('system','baseurl'));

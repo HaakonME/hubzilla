@@ -190,7 +190,18 @@ You may also connect with any channel by visiting the &quot;Connections&quot; pa
 
 To connect with channels on other networks:
 
-The process for connecting to channels on other networks (such as GNU-Social, Mastodon, and Diaspora) is similar - type their &quot;webbie&quot; into the &quot;Add New Connections&quot; box on the &quot;Connections&quot; page. Before you do this however, please visit your Settings page (Feature/Addon Settings) and ensure that the relevant protocol (Diaspora or GNU-Social) is provided on your hub and [b][i]activated[/i] for your channel[/b]. These networks/protocols do not support account migration and location independence so if you move location or clone your channel elsewhere, communications with these connections may fail. For this reason these protocols are not activated by default, but only through your consent. Activating these protocols involves an important decision between communicating with friends on these networks or providing fail-safe account resilience if your server fails.    
+The process for connecting to channels on other networks (such as GNU-Social, Mastodon, and Diaspora) is similar - type their &quot;webbie&quot; into the &quot;Add New Connections&quot; box on the &quot;Connections&quot; page. Before you do this however, please visit your Settings page (Feature/Addon Settings) and ensure that the relevant protocol (Diaspora, GNU-Social/OStatus, or ActivityPub) is provided on your hub and [b][i]activated[/i] for your channel[/b]. These networks/protocols do not support account migration and location independence so if you move location or clone your channel elsewhere, communications with these connections may fail. For this reason these protocols are not activated by default, but only through your consent. Activating these protocols involves an important decision between communicating with friends on these networks or providing fail-safe account resilience if your server fails.    
+
+Some communications offer more than one protocol. If you wish to connect with somebody on Mastodon (for instance) they can use either the 'ostatus' or the 'activitypub' protocol for communication. Generally the 'activitypub' protocol will provide a better experience than 'ostatus', but $Projectname will often choose the first protocol it discovers and this may not be the one you want. You may connect with somebody over a specific protocol by prepending the protocol name in square brackets to their &quot;webbie&quot;. For example
+
+[code]
+[activitypub]foobar@foo.bar
+[ostatus]foobar@foo.bar
+[diaspora]foobar@foo.bar
+[zot]foobar@foo.bar
+[rss]https://foo.bar/foobar
+[/code]
+
 
 To connect with RSS feeds:
 

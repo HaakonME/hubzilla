@@ -61,6 +61,7 @@
 [*] piwik - open source website analytics
 [*] planets - set location field to a random planet from Star Wars
 [*] pong - classic pong game
+[*] pubcrawl - ActivityPub protocol emulator 
 [*] pubsubhubbub - PuSH protocol for optimised delivery to feed subscribers (required by GNU-Social protocol)
 [*] pumpio - crosspost to Pump.io
 [*] qrator - generate QR code images

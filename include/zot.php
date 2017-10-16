@@ -4201,8 +4201,7 @@ function zotinfo($arr) {
 	if($x)
 		$ret['locations'] = $x;
 
-	$ret['site'] = zot_site_info();
-
+	$ret['site'] = zot_site_info($e['xchan_pubkey']);
 
 	check_zotinfo($e,$x,$ret);
 
@@ -4213,7 +4212,7 @@ function zotinfo($arr) {
 }
 
 
-function zot_site_info() {
+function zot_site_info($channel_key = '') {
 
 	$signing_key = get_config('system','prvkey');
 	$sig_method  = get_config('system','signature_algorithm','sha256');
@@ -4221,7 +4220,10 @@ function zot_site_info() {
 	$ret = [];
 	$ret['site'] = [];
 	$ret['site']['url'] = z_root();
-	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$signing_key,$sig_method));
+	if($channel_key) {
+		$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$channel_key,$sig_method));
+	}
+	$ret['site']['url_site_sig'] = base64url_encode(rsa_sign(z_root(),$signing_key,$sig_method));
 	$ret['site']['post'] = z_root() . '/post';
 	$ret['site']['openWebAuth']  = z_root() . '/owa';
 	$ret['site']['authRedirect'] = z_root() . '/magic';

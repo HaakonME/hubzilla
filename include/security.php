@@ -114,7 +114,7 @@ function atoken_xchan($atoken) {
 			'atoken_id' => $atoken['atoken_id'],
 			'xchan_hash' =>  substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
 			'xchan_name' => $atoken['atoken_name'],
-			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
+			'xchan_addr' => 'guest:' . $atoken['atoken_name'] . '@' . \App::get_hostname(),
 			'xchan_network' => 'unknown',
 			'xchan_url' => z_root() . '/guest/' . substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
 			'xchan_hidden' => 1,

@@ -1000,6 +1000,13 @@ function notify_popup_loader(notifyType) {
 			});
 		}
 	});
+
+	setTimeout(function() {
+		if(notify_menu.hasClass('show')) {
+			console.log('updating ' + notifyType + ' notifications...');
+			setTimeout(notify_popup_loader, updateInterval, notifyType);
+		}
+	}, 1000);
 }
 
 

@@ -116,7 +116,7 @@ function atoken_xchan($atoken) {
 			'xchan_name' => $atoken['atoken_name'],
 			'xchan_addr' => t('guest:') . $atoken['atoken_name'] . '@' . \App::get_hostname(),
 			'xchan_network' => 'unknown',
-			'xchan_url' => z_root(),
+			'xchan_url' => z_root() . '/guest/' . substr($c['channel_hash'],0,16) . '.' . $atoken['atoken_name'],
 			'xchan_hidden' => 1,
 			'xchan_photo_mimetype' => 'image/jpeg',
 			'xchan_photo_l' => get_default_profile_photo(300),

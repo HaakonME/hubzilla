@@ -38,7 +38,7 @@ class Setup extends \Zotlabs\Web\Controller {
 		ini_set('log_errors', '0');
 		ini_set('display_errors', '1');
 
-		// $baseurl/setup/testrwrite to test if rewite in .htaccess is working
+		// $baseurl/setup/testrewrite to test if rewrite in .htaccess is working
 		if (argc() == 2 && argv(1) == "testrewrite") {
 			echo 'ok';
 			killme();

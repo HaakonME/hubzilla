@@ -74,7 +74,7 @@
 	</button>
 	{{if $localuser || $nav.pubs}}
 	<button id="notifications-btn" type="button" class="navbar-toggler border-0 text-white">
-		<i class="fa fa-exclamation-circle"></i>
+		<i id="notifications-btn-icon" class="fa fa-exclamation-circle"></i>
 	</button>
 	{{/if}}
 	<button id="menu-btn" class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbar-collapse-2">

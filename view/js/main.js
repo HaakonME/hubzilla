@@ -415,6 +415,7 @@ function NavUpdate() {
 		var pingCmd = 'ping' + ((localUser != 0) ? '?f=&uid=' + localUser : '');
 
 		$.get(pingCmd,function(data) {
+
 			if(data.invalid == 1) { 
 				window.location.href=window.location.href;
 			}
@@ -440,71 +441,33 @@ function NavUpdate() {
 			updateCountsOnly = false;
 
 			if(data.network || data.home || data.intros || data.register || data.mail || data.all_events || data.notify || data.files || data.pubs) {
-				$('#notifications-btn, #notifications-btn-1').css('opacity', 1);
+				$('#notifications-btn').css('opacity', 1);
 			}
 			else {
-				$('#notifications-btn, #notifications-btn-1').css('opacity', 0.5);
+				$('#notifications-btn').css('opacity', 0.5);
 				$('#navbar-collapse-1').removeClass('show');
 			}
 
-			if(data.network == 0) {
-				data.network = '';
-				$('.network-update, .network-button').hide();
-				document.title = savedTitle;
-			} else {
-				$('.network-update, .network-button').show();
-				document.title = '(' + data.network + ') ' + savedTitle;
+			if(data.home || data.intros || data.register || data.mail || data.notify || data.files) {
+				$('#notifications-btn-icon').removeClass('fa-exclamation-circle');
+				$('#notifications-btn-icon').addClass('fa-exclamation-triangle');
 			}
-			$('.network-update').html(data.network);
-			
-			if(data.pubs == 0) {
-				data.pubs = '';
-				$('.pubs-update, .pubs-button').hide();
-			} else {
-				$('.pubs-update, .pubs-button').show();
+			if(!data.home && !data.intros && !data.register && !data.mail && !data.notify && !data.files) {
+				$('#notifications-btn-icon').removeClass('fa-exclamation-triangle');
+				$('#notifications-btn-icon').addClass('fa-exclamation-circle');
 			}
-			$('.pubs-update').html(data.pubs);
 
-			if(data.files == 0) {
-				data.files = '';
-				$('.files-update, .files-button').hide();
-			} else {
-				$('.files-update, .files-button').show();
-			}
-			$('.files-update').html(data.files);
+			$.each(data, function(index, item) {
+				if(index == 'notice' || index == 'info')
+					return;
 
-			if(data.home == 0) { data.home = ''; $('.home-update, .home-button').hide(); } else { $('.home-update, .home-button').show(); }
-			$('.home-update').html(data.home);
-
-			if(data.intros == 0) { data.intros = ''; $('.intros-update, .intros-button').hide(); } else { $('.intros-update, .intros-button').show(); }
-			$('.intros-update').html(data.intros);
-
-			if(data.mail == 0) { data.mail = ''; $('.mail-update, .mail-button').hide(); } else { $('.mail-update, .mail-button').show(); }
-			$('.mail-update').html(data.mail);
-
-			if(data.notify == 0) { data.notify = ''; $('.notify-update, .notify-button').hide(); } else { $('.notify-update, .notify-button').show(); }
-			$('.notify-update').html(data.notify);
-
-			if(data.register == 0) { data.register = ''; $('.register-update, .register-button').hide(); } else { $('.register-update, .register-button').show(); }
-			$('.register-update').html(data.register);
-
-			if(data.events == 0) { data.events = ''; $('.events-update, .events-button').hide(); } else { $('.events-update, .events-button').show(); }
-			$('.events-update').html(data.events);
-
-			if(data.events_today == 0) { data.events_today = ''; $('.events-today-update').removeClass('show'); } else { $('.events-today-update').addClass('show'); $('.events-update').html(data.events + '*'); }
-			$('.events-today-update').html(data.events_today);
-
-			if(data.birthdays == 0) { data.birthdays = ''; $('.birthdays-update').removeClass('show'); } else { $('.birthdays-update').addClass('show'); }
-			$('.birthdays-update').html(data.birthdays);
-
-			if(data.birthdays_today == 0) { data.birthdays_today = ''; $('.birthdays-today-update').removeClass('show'); } else { $('.birthdays-today-update').addClass('show'); $('.birthdays-update').html(data.birthdays + '*'); }
-			$('.birthdays-today-update').html(data.birthdays_today);
-
-			if(data.all_events == 0) { data.all_events = ''; $('.all_events-update, .all_events-button').hide(); } else { $('.all_events-update, .all_events-button').show(); }
-			$('.all_events-update').html(data.all_events);
-
-			if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show'); } else { $('.all_events-today-update').addClass('show'); $('.all_events-update').html(data.all_events + '*'); }
-			$('.all_events-today-update').html(data.all_events_today);
+				if(item == 0) {
+					$('.' + index + '-button').hide();
+				} else {
+					$('.' + index + '-button').show();
+					$('.' + index + '-update').html(item);
+				}
+			});
 
 			$.jGrowl.defaults.closerTemplate = '<div>[ ' + aStr.closeAll + ']</div>';
 

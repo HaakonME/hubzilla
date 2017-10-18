@@ -458,7 +458,9 @@ function NavUpdate() {
 			}
 
 			$.each(data, function(index, item) {
-				if(index == 'notice' || index == 'info')
+				//do not process those
+				var arr = ['notice', 'info', 'invalid'];
+				if(arr.indexOf(index) !== -1)
 					return;
 
 				if(item == 0) {
@@ -942,26 +944,21 @@ function notify_popup_loader(notifyType) {
 			window.location.href=window.location.href;
 		}
 
-		if(data.notify.length == 0){
-			$("#navbar-" + notifyType + "-menu").html(aStr[nothingnew]);
-			$("#nav-" + notifyType + "-menu").html(aStr[nothingnew]);
-		} else {
-			$("#navbar-" + notifyType + "-menu").html(notifications_all + notifications_mark);
-			$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
+		$("#navbar-" + notifyType + "-menu").html(notifications_all + notifications_mark);
+		$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
-			$(data.notify).each(function() {
-				html = navbar_notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
-				$("#navbar-" + notifyType + "-menu").append(html);
+		$(data.notify).each(function() {
+			html = navbar_notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
+			$("#navbar-" + notifyType + "-menu").append(html);
+			html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
+			$("#nav-" + notifyType + "-menu").append(html);
+		});
 
-				html = notifications_tpl.format(this.notify_link,this.photo,this.name,this.message,this.when,this.hclass);
-				$("#nav-" + notifyType + "-menu").append(html);
-			});
-			$(".dropdown-menu img[data-src], .notification img[data-src]").each(function(i, el){
-				// Replace data-src attribute with src attribute for every image
-				$(el).attr('src', $(el).data("src"));
-				$(el).removeAttr("data-src");
-			});
-		}
+		$(".dropdown-menu img[data-src], .notification img[data-src]").each(function(i, el){
+			// Replace data-src attribute with src attribute for every image
+			$(el).attr('src', $(el).data("src"));
+			$(el).removeAttr("data-src");
+		});
 	});
 
 	setTimeout(function() {

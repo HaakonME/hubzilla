@@ -1,3 +1,114 @@
+Hubzilla 2.8 (????-??-??)
+	- Redirect to be moderated items to /moderate
+	- Update notifications if notifications area remains open
+	- Create an actual logout module instead of relying on internal variables
+	- Add local_channel as a comanche condition variable
+	- Implement possibility to pin app-tray apps in the navbar via app category navbar_default
+	- Introduce custom navbars
+	- Re-implement single delivery
+	- Pdledit usability improvements
+	- Implement next generation notifications in right aside
+	- Implement single post view for /pubstream
+	- Make anonymous comments work in mod display
+	- Introduce notifications for unseen public stream posts (off by default)
+	- Preperatory work on Zot VI
+	- Add app for site admin
+	- Introduce experimental alternate channel_menu navigation (off by default)
+	- Introduce notifications for shared files
+	- Bring back notifications for account approvals
+	- Urlencode hashes from mod_acl
+	- Don't use chanlink_url() for feed mentions
+	- Design common friends widget to fit better in the app and move it to left aside
+	- Allow navbar to be used when cover photo is displayed in mod channel
+	- Implement admin setting to use imagick converter for large photos
+	- Process activity deletes from OStatus which for whatever reason do not use the industry standard tombstone mechanism
+	- Implement new css based spinner
+	- Move the link header initialisation from Router to Webserver
+	⁻ Extend activity_match() to work with arrays
+	- Updated the trusted CA cert database
+	- Ostatus - support likes of comments
+	- Provide ability to mention a forum by using !forumname as well as the traditional red style (@forumname+)
+	- Encrypt delivery reports (not backward compatible)
+	- Provide a space between link header params (draft-cavage-http-signatures-08)
+	- Turn common_friends into a widget
+	- Update to jquery-3.2.1
+	- Wiki pages sorted by name
+	- Create new hooks for permissions_accept and permissions_reject
+	- Provide rel=alternate link if no reshare content in post
+	- Add remote login button to login page
+	- DB update to add index to item.resource_id
+	- Implement wiki editing (name and acl)
+	- Provide a hook for importing a channel photo at channel creation time
+	- Implement wiki mimetype lock
+	- Bring back wiki downloads
+	- Add text/plain mimetype to wiki
+	- Implement per page mimetype selection for wikis
+	- Added english context help for apps and appman
+	- Implement owa (open web auth)
+	- Ignore diaspora_meta column on item import
+	- Check code permissions on cloud files
+	- Remove period from characters allowed in username
+	- Make comment highlighting more reliable
+	- Sign zot-info packets with httpsignatures
+	- Implement server to server magic auth
+	- Provide support for json-ld signatures
+	- Rewrite comment form open/close handling to be more reliable
+	- Radically reduce code duplication in updateConvItems()
+	- Remove discover tab in favour of the public stream app
+	- Apply autotime to all autotime classed elements when static loading a page
+	- Implement cards feature
+	- Extended support for help page translations including table of contents files at the top level
+	- Introduce util/dmkdir - a mkdir tool for DAV
+	- Various doco improvements
+	- Introduce util/dcp (DAV-copy) - copy file or directory from local system to Hubzilla
+	- Provide support for HTTPsig
+	- Implement mechanism for selective network following in protocol connectors (diaspora, ostatus, activitypub, zot, rss)
+
+	Bugfixes
+	- Fix w2w posts not removed in contact_remove() - github issue #837
+	- Fix guests not having a unique (non-existent) url
+	- Fix mod register re-using the password
+	- Fix write_storage permission not checked in /display
+	- Fix discovery of moderated items in enotify
+	- Fix profile thing image not deleted when thing deleted - github issue #868
+	- Fix deletions to comments not synced on wall posts
+	- Fix community tags not preserved on post edit - github issue #865
+	- Fix profile photo propagation issue if the local xchan_photo_[l|m|s] fields were changed from the /photo/profile/l/n form to photo/[hash] form by a clone operation
+	- Fix lockstate and current permissions not handed over to editor in mod card_edit
+	- Fix profile edit dropdown for multiple profiles
+	- Fix affinity slider spinner
+	- Fix mod pubsites broken
+	- Fix directory server admin selection includes known dead sites
+	- Fix sticky-kit issue where the bottom of left aside was not visible when section content was short
+	- Fix possibility to set bogus my_address
+	- Fix deleting of wiki pages
+	- Fix selected theme not appearing selected after change - github issue #855
+	- Fix an issue where some encoded mids were not found in /display
+	- Fix issue with mentions and xchans with @ or /
+	- Fix webfinger returns invalid XML - github issue #851
+	- Fix last remaining task in tasklist was not removed from view when completed
+
+	Plugins/Addon
+	Hubwall: Remove errant $1 string in sender name
+	Map federation protocols for zotinfo
+	Gnusoc: force ostatus profile photos to get refreshed monthly
+	Gnusoc: fix ostatus mention notifications
+	Gnusoc: unsubscribe to gnusoc feeds if connector is disabled
+	Phpmailer: not using load/unload
+	Gnusoc: don't provide some information if gnusoc is disabled by the channel
+	Diaspora: add a predelivery interval
+	Diaspora: support for likes on comments
+	Introduce the pubcrawl plugin - an unapologetically non-compliant ActivityPub Protocol implemention
+	Introduce gravatar plugin
+	Pubsubhubbub: produce much more compact PuSH feeds
+	Diaspora: support text comments on reshare posts
+	Diaspora: changes to delivery scenarios for the special handling of profile messages
+	Diaspora: put diaspora seed_location in json webfinger
+	Gnusoc: fix mis-attributed comments from mastodon
+	Gnusoc: allow discovery by url (not just reddress) and permit upgrade from 'unknown' network to gnusoc
+	Implement mechanism for selective network following in protocol connectors
+
+
 Hubzilla 2.6.3 (2017-09-18)
 	- Fix anonymous comments/likes on photos - this is not yet implemented
 	- Fix favicon not displayed on certain pages

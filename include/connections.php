@@ -369,7 +369,8 @@ function contact_remove($channel_id, $abook_id) {
 		return false;
 
 
-	$r = q("select * from item where author_xchan = '%s' and uid = %d",
+	$r = q("select * from item where (owner_xchan = '%s' or author_xchan = '%s') and uid = %d",
+		dbesc($abook['abook_xchan']),
 		dbesc($abook['abook_xchan']),
 		intval($channel_id)
 	);

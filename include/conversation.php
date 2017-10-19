@@ -703,7 +703,9 @@ function conversation($items, $mode, $update, $page_mode = 'traditional', $prepa
 				if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 					$is_new = true;
 
-				$conv_link = (($item['item_type'] == ITEM_TYPE_CARD) ? $item['plink'] : z_root() . '/display/' . gen_link_id($item['mid']));
+				$conv_link_mid = (($mode == 'moderate') ? $item['parent_mid'] : $item['mid']);
+
+				$conv_link = (($item['item_type'] == ITEM_TYPE_CARD) ? $item['plink'] : z_root() . '/display/' . gen_link_id($conv_link_mid));
 
 
 				$tmp_item = array(

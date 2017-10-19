@@ -89,12 +89,17 @@ class Display extends \Zotlabs\Web\Controller {
 		if($decoded)
 			$item_hash = $decoded;
 
-		$r = q("select id, uid, mid, parent_mid, thr_parent, verb, item_type, item_deleted from item where mid like '%s' limit 1",
+		$r = q("select id, uid, mid, parent_mid, thr_parent, verb, item_type, item_deleted, item_blocked from item where mid like '%s' limit 1",
 			dbesc($item_hash . '%')
 		);
 	
 		if($r) {
 			$target_item = $r[0];
+		}
+
+		//if the item is to be moderated redirect to /moderate
+		if($target_item['item_blocked'] == ITEM_MODERATED) {
+			goaway(z_root() . '/moderate/' . $target_item['id']);
 		}
 	
 		$r = null;

@@ -14,6 +14,24 @@ class Moderate extends \Zotlabs\Web\Controller {
 			return;
 		}
 
+		//show all items
+		if(argc() == 1) {
+			$r = q("select item.id as item_id, item.* from item where item.uid = %d and item_blocked = %d and item_deleted = 0 order by created desc limit 60",
+				intval(local_channel()),
+				intval(ITEM_MODERATED)
+			);
+		}
+
+		//show a single item
+		if(argc() == 2) {
+			$post_id = intval(argv(1));
+
+			$r = q("select item.id as item_id, item.* from item where item.id = %d and item.uid = %d and item_blocked = %d and item_deleted = 0 order by created desc limit 60",
+				intval($post_id),
+				intval(local_channel()),
+				intval(ITEM_MODERATED)
+			);
+		}
 
 		if(argc() > 2) {
 			$post_id = intval(argv(1));
@@ -55,10 +73,6 @@ class Moderate extends \Zotlabs\Web\Controller {
 				goaway(z_root() . '/moderate');
 			}
 		}
-		$r = q("select item.id as item_id, item.* from item where item.uid = %d and item_blocked = %d and item_deleted = 0 order by created desc limit 60",
-			intval(local_channel()),
-			intval(ITEM_MODERATED)
-		);
 
 		if($r) {
 			xchan_query($r);

@@ -123,12 +123,12 @@ class Register extends \Zotlabs\Web\Controller {
 		if($policy == REGISTER_OPEN ) {
 			if($email_verify) {
 				$res = verify_email_address($result);
+				if($res) {
+					info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
+				}
 			}
 			else {
 				$res = send_register_success_email($result['email'],$result['password']);
-			}
-			if($res) {
-				info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
 			}
 		}
 		elseif($policy == REGISTER_APPROVE) {
@@ -167,7 +167,8 @@ class Register extends \Zotlabs\Web\Controller {
 			$next_page = $x;
 			$_SESSION['workflow'] = true;
 		}
-	
+
+		unset($_SESSION['login_return_url']);
 		goaway(z_root() . '/' . $next_page);
 	
 	}

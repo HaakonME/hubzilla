@@ -9,7 +9,7 @@ require_once('include/permissions.php');
 class New_channel extends \Zotlabs\Web\Controller {
 
 	function init() {
-	
+
 		$cmd = ((argc() > 1) ? argv(1) : '');
 	
 		if($cmd === 'autofill.json') {

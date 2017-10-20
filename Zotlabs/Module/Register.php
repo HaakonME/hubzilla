@@ -128,7 +128,11 @@ class Register extends \Zotlabs\Web\Controller {
 				$res = send_register_success_email($result['email'],$result['password']);
 			}
 			if($res) {
-				info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
+				if($invite_code) {
+					info( t('Registration successful. Continue to create your first channel...') . EOL ) ;
+				} else {
+					info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
+				}
 			}
 		}
 		elseif($policy == REGISTER_APPROVE) {

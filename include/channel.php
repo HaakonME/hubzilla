@@ -2604,3 +2604,12 @@ function anon_identity_init($reqvars) {
 }
 
 
+function pchan_to_chan($pchan) {
+	$chan = $pchan;
+	$chan['channel_address'] = $pchan['pchan_guid'];
+	$chan['channel_hash']    = $pchan['pchan_hash'];
+	$chan['channel_pubkey']  = $pchan['pchan_pubkey'];
+	$chan['channel_prvkey']  = $pchan['pchan_prvkey'];
+	$chan['channel_name']    = $pchan['xchan_name'];
+	return $chan;
+}

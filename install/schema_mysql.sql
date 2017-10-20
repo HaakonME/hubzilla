@@ -900,6 +900,19 @@ CREATE TABLE IF NOT EXISTS `outq` (
   KEY `outq_priority` (`outq_priority`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+CREATE TABLE IF NOT EXISTS pchan (
+  `pchan_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pchan_guid` char(191) NOT NULL DEFAULT '',
+  `pchan_hash` char(191) NOT NULL DEFAULT '',
+  `pchan_pubkey` text NOT NULL,
+  `pchan_prvkey` text NOT NULL,
+  PRIMARY KEY (`pchan_id`),
+  KEY `pchan_guid` (`pchan_guid`),
+  KEY `pchan_hash` (`pchan_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT 0 ,

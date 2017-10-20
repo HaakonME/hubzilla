@@ -872,6 +872,19 @@ create index "outq_async" on outq ("outq_async");
 create index "outq_delivered" on outq ("outq_delivered");
 create index "outq_priority" on outq ("outq_priority");
 
+
+CREATE TABLE "pchan" (
+  "pchan_id" serial NOT NULL,
+  "pchan_guid" text NOT NULL,
+  "pchan_hash" text NOT NULL,
+  "pchan_pubkey" text NOT NULL,
+  "pchan_prvkey" text NOT NULL,
+  PRIMARY KEY ("pchan_id")
+);
+
+create index "pchan_guid" on pchan ("pchan_guid");
+create index "pchan_hash" on pchan ("pchan_hash");
+
 CREATE TABLE "pconfig" (
   "id" serial NOT NULL,
   "uid" bigint NOT NULL DEFAULT '0',

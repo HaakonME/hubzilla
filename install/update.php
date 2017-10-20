@@ -3036,7 +3036,7 @@ function update_r1196() {
 )");
 
 		$r2 = q("create index \"pchan_guid\" on pchan (\"pchan_guid\")");
-		$r3 = q("create index \"pchan_hash\" on pchan (\"pchan_hash\");
+		$r3 = q("create index \"pchan_hash\" on pchan (\"pchan_hash\")");
 
 		if($r1 && $r2 && $r3) {
 			return UPDATE_SUCCESS;

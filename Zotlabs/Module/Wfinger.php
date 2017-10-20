@@ -32,6 +32,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 	
 
 		$root_resource  = false;
+		$pchan = false;
 
 		if(strcasecmp(rtrim($resource,'/'),z_root()) === 0)
 			$root_resource = true;
@@ -57,11 +58,24 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				$channel = str_replace('~','',basename($resource));
 			}
 	
-			$r = q("select * from channel left join xchan on channel_hash = xchan_hash 
-				where channel_address = '%s' limit 1",
-				dbesc($channel)
-			);
-	
+			if(substr($channel,0,1) === '[' ) {
+				$channel = substr($channel,1);
+				$channel = substr($channel,0,-1);
+				$pchan = true;
+				$r = q("select * from pchan left join xchan on pchan_hash = xchan_hash 
+					where pchan_guid = '%s' limit 1",
+					dbesc($channel)
+				);
+				if($r) {
+					$r[0] = pchan_to_chan($r[0]);
+				}
+			}
+			else {	
+				$r = q("select * from channel left join xchan on channel_hash = xchan_hash 
+					where channel_address = '%s' limit 1",
+					dbesc($channel)
+				);
+			}
 		}
 	
 		header('Access-Control-Allow-Origin: *');
@@ -94,7 +108,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 			$result['subject'] = $resource;
 	
 			$aliases = array(
-				z_root() . '/channel/' . $r[0]['channel_address'],
+				z_root() . (($pchan) ? '/pchan/' : '/channel/') . $r[0]['channel_address'],
 				z_root() . '/~' . $r[0]['channel_address']
 			);
 	
@@ -116,53 +130,80 @@ class Wfinger extends \Zotlabs\Web\Controller {
 				if($alias != $resource)
 					$result['aliases'][] = $alias;
 	
-			$result['links'] = [
-	
-				[
-					'rel'  => 'http://webfinger.net/rel/avatar',
-					'type' => $r[0]['xchan_photo_mimetype'],
-					'href' => $r[0]['xchan_photo_l']	
-				],
-	
-				[
-					'rel'  => 'http://webfinger.net/rel/profile-page',
-					'href' => z_root() . '/profile/' . $r[0]['channel_address'],
-				],
-	
-				[
-					'rel'  => 'http://schemas.google.com/g/2010#updates-from', 
-					'type' => 'application/atom+xml', 
-					'href' => z_root() . '/ofeed/'  . $r[0]['channel_address']
-				],
 
-				[
-					'rel'  => 'http://webfinger.net/rel/blog',
-					'href' => z_root() . '/channel/' . $r[0]['channel_address'],
-				],
+			if($pchan) {
+				$result['links'] = [
 	
-				[
-					'rel'      => 'http://ostatus.org/schema/1.0/subscribe',
-					'template' => z_root() . '/follow?f=&url={uri}',
-				],
+					[
+						'rel'  => 'http://webfinger.net/rel/avatar',
+						'type' => $r[0]['xchan_photo_mimetype'],
+						'href' => $r[0]['xchan_photo_l']	
+					],
 	
-				[
-					'rel'  => 'http://purl.org/zot/protocol',
-					'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
-				],
+					[
+						'rel'  => 'http://webfinger.net/rel/profile-page',
+						'href' => $r[0]['xchan_url'],
+					],
 
-				[
-					'rel'  => 'http://purl.org/openwebauth/v1',
-					'type' => 'application/x-zot+json',
-					'href' => z_root() . '/owa',
-				],
+					[
+						'rel'  => 'magic-public-key',
+						'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
+					]
+
+				];
+
+
+			}
+			else {
+
+				$result['links'] = [
+	
+					[
+						'rel'  => 'http://webfinger.net/rel/avatar',
+						'type' => $r[0]['xchan_photo_mimetype'],
+						'href' => $r[0]['xchan_photo_l']	
+					],
+	
+					[
+						'rel'  => 'http://webfinger.net/rel/profile-page',
+						'href' => z_root() . '/profile/' . $r[0]['channel_address'],
+					],
+	
+					[
+						'rel'  => 'http://schemas.google.com/g/2010#updates-from', 
+						'type' => 'application/atom+xml', 
+						'href' => z_root() . '/ofeed/'  . $r[0]['channel_address']
+					],
+
+					[
+						'rel'  => 'http://webfinger.net/rel/blog',
+						'href' => z_root() . '/channel/' . $r[0]['channel_address'],
+					],
+	
+					[
+						'rel'      => 'http://ostatus.org/schema/1.0/subscribe',
+						'template' => z_root() . '/follow?f=&url={uri}',
+					],
+	
+					[
+						'rel'  => 'http://purl.org/zot/protocol',
+						'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
+					],
+
+					[
+						'rel'  => 'http://purl.org/openwebauth/v1',
+						'type' => 'application/x-zot+json',
+						'href' => z_root() . '/owa',
+					],
 
 	
-				[
-					'rel'  => 'magic-public-key',
-					'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
-				]
-			];
-	
+					[
+						'rel'  => 'magic-public-key',
+						'href' => 'data:application/magic-public-key,' . salmon_key($r[0]['channel_pubkey']),
+					]
+				];
+			}
+
 			if($zot) {
 				// get a zotinfo packet and return it with webfinger
 				$result['zot'] = zotinfo( [ 'address' => $r[0]['xchan_addr'] ]);
@@ -174,7 +215,7 @@ class Wfinger extends \Zotlabs\Web\Controller {
 			killme();
 		}
 	
-		$arr = [ 'channel' => $r[0], 'request' => $_REQUEST, 'result' => $result ];
+		$arr = [ 'channel' => $r[0], 'pchan' => $pchan, 'request' => $_REQUEST, 'result' => $result ];
 		call_hooks('webfinger',$arr);
 
 

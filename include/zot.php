@@ -361,8 +361,6 @@ function zot_refresh($them, $channel = null, $force = false) {
 			else
 				$permissions = $j['permissions'];
 
-			$connected_set = false;
-
 			if($permissions && is_array($permissions)) {
 				$old_read_stream_perm = get_abconfig($channel['channel_id'],$x['hash'],'their_perms','view_stream');
 
@@ -4177,7 +4175,7 @@ function zotinfo($arr) {
 
 	if($ztarget_hash) {
 		$permissions['connected'] = false;
-		$b = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+		$b = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and abook_pending = 0 limit 1",
 			dbesc($ztarget_hash),
 			intval($e['channel_id'])
 		);
@@ -4201,7 +4199,7 @@ function zotinfo($arr) {
 	if($x)
 		$ret['locations'] = $x;
 
-	$ret['site'] = zot_site_info($e['xchan_pubkey']);
+	$ret['site'] = zot_site_info($e['channel_prvkey']);
 
 	check_zotinfo($e,$x,$ret);
 

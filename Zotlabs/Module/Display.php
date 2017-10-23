@@ -12,6 +12,12 @@ class Display extends \Zotlabs\Web\Controller {
 
 	function get($update = 0, $load = false) {
 
+		if(argc() > 1) {
+			$module_format = substr(argv(1),strrpos(argv(1),'.') + 1);
+			if(! in_array($module_format,['atom','zot','json']))
+				$module_format = 'html';			
+		}
+
 		$checkjs = new \Zotlabs\Web\CheckJS(1);
 	
 		if($load)
@@ -22,8 +28,12 @@ class Display extends \Zotlabs\Web\Controller {
 			return;
 		}
 	
-		if(argc() > 1 && argv(1) !== 'load')
+		if(argc() > 1 && argv(1) !== 'load') {
 			$item_hash = argv(1);
+			if($module_format !== 'html') {
+				$item_hash = substr($item_hash,0,strrpos($item_hash,'.'));
+			}
+		}
 	
 		if($_REQUEST['mid'])
 			$item_hash = $_REQUEST['mid'];
@@ -44,28 +54,28 @@ class Display extends \Zotlabs\Web\Controller {
 			$channel_acl = array(
 				'allow_cid' => $channel['channel_allow_cid'], 
 				'allow_gid' => $channel['channel_allow_gid'], 
-				'deny_cid' => $channel['channel_deny_cid'], 
-				'deny_gid' => $channel['channel_deny_gid']
+				'deny_cid'  => $channel['channel_deny_cid'], 
+				'deny_gid'  => $channel['channel_deny_gid']
 			); 
 
 			$x = array(
-				'is_owner' => true,
-				'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
-				'default_location' => $channel['channel_location'],
-				'nickname' => $channel['channel_address'],
-				'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+				'is_owner'            => true,
+				'allow_location'      => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
+				'default_location'    => $channel['channel_location'],
+				'nickname'            => $channel['channel_address'],
+				'lockstate'           => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 	
-				'acl' => populate_acl($channel_acl),
-				'permissions' => $channel_acl,
-				'bang' => '',
-				'visitor' => true,
-				'profile_uid' => local_channel(),
-				'return_path' => 'channel/' . $channel['channel_address'],
-				'expanded' => true,
+				'acl'                 => populate_acl($channel_acl),
+				'permissions'         => $channel_acl,
+				'bang'                => '',
+				'visitor'             => true,
+				'profile_uid'         => local_channel(),
+				'return_path'         => 'channel/' . $channel['channel_address'],
+				'expanded'            => true,
 				'editor_autocomplete' => true,
-				'bbco_autocomplete' => 'bbcode',
-				'bbcode' => true,
-				'jotnets' => true
+				'bbco_autocomplete'   => 'bbcode',
+				'bbcode'              => true,
+				'jotnets'             => true
 			);
 	
 			$o = '<div id="jot-popup">';
@@ -139,10 +149,11 @@ class Display extends \Zotlabs\Web\Controller {
 
 			$static  = ((local_channel()) ? channel_manual_conv_update(local_channel()) : 1);
 
-			//if the target item is not a post (eg a like) we want to address its thread parent
+			// if the target item is not a post (eg a like) we want to address its thread parent
+
 			$mid = ((($target_item['verb'] == ACTIVITY_LIKE) || ($target_item['verb'] == ACTIVITY_DISLIKE)) ? $target_item['thr_parent'] : $target_item['mid']);
 
-			//if we got a decoded hash we must encode it again before handing to javascript 
+			// if we got a decoded hash we must encode it again before handing to javascript 
 			if($decoded)
 				$mid = 'b64.' . base64url_encode($mid);
 
@@ -152,32 +163,32 @@ class Display extends \Zotlabs\Web\Controller {
 	
 			\App::$page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 				'$baseurl' => z_root(),
-				'$pgtype' => 'display',
-				'$uid' => '0',
-				'$gid' => '0',
-				'$cid' => '0',
-				'$cmin' => '0',
-				'$cmax' => '99',
-				'$star' => '0',
-				'$liked' => '0',
-				'$conv' => '0',
-				'$spam' => '0',
-				'$fh' => '0',
+				'$pgtype'  => 'display',
+				'$uid'     => '0',
+				'$gid'     => '0',
+				'$cid'     => '0',
+				'$cmin'    => '0',
+				'$cmax'    => '99',
+				'$star'    => '0',
+				'$liked'   => '0',
+				'$conv'    => '0',
+				'$spam'    => '0',
+				'$fh'      => '0',
 				'$nouveau' => '0',
-				'$wall' => '0',
-				'$static' => $static,
-				'$page' => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
-				'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
-				'$search' => '',
-				'$xchan' => '',
-				'$order' => '',
-				'$file' => '',
-				'$cats' => '',
-				'$tags' => '',
-				'$dend' => '',
-				'$dbegin' => '',
-				'$verb' => '',
-				'$mid' => $mid
+				'$wall'    => '0',
+				'$static'  => $static,
+				'$page'    => ((\App::$pager['page'] != 1) ? \App::$pager['page'] : 1),
+				'$list'    => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
+				'$search'  => '',
+				'$xchan'   => '',
+				'$order'   => '',
+				'$file'    => '',
+				'$cats'    => '',
+				'$tags'    => '',
+				'$dend'    => '',
+				'$dbegin'  => '',
+				'$verb'    => '',
+				'$mid'     => $mid
 			));
 
 			head_add_link([ 
@@ -195,11 +206,11 @@ class Display extends \Zotlabs\Web\Controller {
 
 		$sql_extra = public_permissions_sql($observer_hash);
 
-		if(($update && $load) || ($checkjs->disabled())) {
+		if(($update && $load) || ($checkjs->disabled()) || ($module_format !== 'html')) {
 
 			$pager_sql = sprintf(" LIMIT %d OFFSET %d ", intval(\App::$pager['itemspage']),intval(\App::$pager['start']));
 
-			if($load || ($checkjs->disabled())) {
+			if($load || ($checkjs->disabled()) || ($module_format !== 'html')) {
 				$r = null;
 
 				require_once('include/channel.php');
@@ -311,13 +322,61 @@ class Display extends \Zotlabs\Web\Controller {
 			$items = array();
 		}
 	
-		if ($checkjs->disabled()) {
-			$o .= conversation($items, 'display', $update, 'traditional');
-			if ($items[0]['title'])
-				\App::$page['title'] = $items[0]['title'] . " - " . \App::$page['title'];
-		} 
-		else {
-			$o .= conversation($items, 'display', $update, 'client');
+
+		switch($module_format) {
+			
+		case 'html':
+
+			if ($checkjs->disabled()) {
+				$o .= conversation($items, 'display', $update, 'traditional');
+				if ($items[0]['title'])
+					\App::$page['title'] = $items[0]['title'] . " - " . \App::$page['title'];
+			} 
+			else {
+				$o .= conversation($items, 'display', $update, 'client');
+			}
+
+			break;
+
+		case 'atom':
+
+			$atom = replace_macros(get_markup_template('atom_feed.tpl'), array(
+				'$version'      => xmlify(\Zotlabs\Lib\System::get_project_version()),
+				'$red'          => xmlify(\Zotlabs\Lib\System::get_platform_name()),
+				'$feed_id'      => xmlify(\App::$cmd),
+				'$feed_title'   => xmlify(t('Article')),
+				'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now', ATOM_TIME)),
+				'$author'       => '',
+				'$owner'        => '',
+				'$profile_page' => xmlify(z_root() . '/display/' . $target_item['mid']),
+			));
+				
+			$x = [ 'xml' => $atom, 'channel' => $channel, 'observer_hash' => $observer_hash, 'params' => $params ];
+			call_hooks('atom_feed_top',$x);
+
+			$atom = $x['xml'];
+
+			// a much simpler interface
+			call_hooks('atom_feed', $atom);
+
+
+			if($items) {
+				$type = 'html';
+				foreach($items as $item) {
+					if($item['item_private'])
+						continue;
+					$atom .= atom_entry($item, $type, null, '', true, '', false);
+				}
+			}
+
+			call_hooks('atom_feed_end', $atom);
+
+			$atom .= '</feed>' . "\r\n";
+
+			header('Content-type: application/atom+xml');
+			echo $atom;
+			killme();
+			
 		}
 	
 		if($updateable) {

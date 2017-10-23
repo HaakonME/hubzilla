@@ -716,6 +716,10 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[3]);
 			else
 				$scaled = $mtch[3];
+
+			if(! strpbrk(substr($scaled,0,1),'zhfmt'))
+				continue;
+
 			$i = z_fetch_url($scaled,true);
 
 

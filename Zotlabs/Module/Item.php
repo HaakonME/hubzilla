@@ -511,48 +511,20 @@ class Item extends \Zotlabs\Web\Controller {
 	
 			require_once('include/text.php');			
 	
-			// Markdown doesn't work correctly. Do not re-enable unless you're willing to fix it and support it.
-	
-			// Sample that will probably give you grief - you must preserve the linebreaks
-			// and provide the correct markdown interpretation and you cannot allow unfiltered HTML
-	
-			// Markdown
-			// ========
-			//
-			// **bold** abcde
-			// fghijkl
-			// *italic*
-			// <img src="javascript:alert('hacked');" />
-	
-	//		if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
-	//			require_once('include/markdown.php');
-	//			$body = escape_tags(trim($body));
-	//			$body = str_replace("\n",'<br />', $body);
-	//			$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_shield',$body);			
-	//			$body = markdown_to_bb($body,true);
-	//			$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_unshield',$body);
-	//		}
+			if($uid && $uid == $profile_uid && feature_enabled($uid,'markdown')) {
+				require_once('include/markdown.php');
+				$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_shield',$body);			
+				$body = markdown_to_bb($body,true,['preserve_lf' => true]);
+				$body = preg_replace_callback('/\[share(.*?)\]/ism','\share_unshield',$body);
+
+			}
 	
 			// BBCODE alert: the following functions assume bbcode input
 			// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
 			// we may need virtual or template classes to implement the possible alternatives
-	
-			// Work around doubled linefeeds in Tinymce 3.5b2
-			// First figure out if it's a status post that would've been
-			// created using tinymce. Otherwise leave it alone. 
-	
-			$plaintext = true;
-	
-	//		$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
-	//		if((! $parent) && (! $api_source) && (! $plaintext)) {
-	//			$body = fix_mce_lf($body);
-	//		}
-	
-	
-	
+			
 			// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it, if our pconfig is set.
-	
-	
+		
 			if((! $parent) && (get_pconfig($profile_uid,'system','tagifonlyrecip')) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
 				$x = q("select abook_id, abconfig.v from abook left join abconfig on abook_xchan = abconfig.xchan and abook_channel = abconfig.chan and cat= 'their_perms' and abconfig.k = 'tag_deliver' and abconfig.v = 1 and abook_xchan = '%s' and abook_channel = %d limit 1",
 					dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),

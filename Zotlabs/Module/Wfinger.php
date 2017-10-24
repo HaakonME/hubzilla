@@ -165,6 +165,13 @@ class Wfinger extends \Zotlabs\Web\Controller {
 					],
 	
 					[
+						'rel'  => 'http://microformats.org/profile/hcard',
+						'type' => 'text/html',
+						'href' => z_root() . '/hcard/' . $r[0]['channel_address']	
+					],
+
+
+					[
 						'rel'  => 'http://webfinger.net/rel/profile-page',
 						'href' => z_root() . '/profile/' . $r[0]['channel_address'],
 					],

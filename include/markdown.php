@@ -49,14 +49,17 @@ function markdown_to_bb($s, $use_zrl = false, $options = []) {
 
 	$s = $x['text'];
 
-	// Escaping the hash tags - doesn't always seem to work
-	// $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);
-	// This seems to work
+	// Escaping the hash tags
 	$s = preg_replace('/\#([^\s\#])/','&#35;$1',$s);
 
 	$s = MarkdownExtra::defaultTransform($s);
 
-	$s = str_replace("\r","",$s);
+	if($options && $options['preserve_lf']) {
+		$s = str_replace(["\r","\n"],["",'<br>'],$s);
+	}
+	else {
+		$s = str_replace("\r","",$s);
+	}
 
 	$s = str_replace('&#35;','#',$s);
 

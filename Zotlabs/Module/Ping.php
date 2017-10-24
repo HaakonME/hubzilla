@@ -258,37 +258,20 @@ class Ping extends \Zotlabs\Web\Controller {
 		 * dropdown menu.
 		 */
 		if(argc() > 1 && argv(1) === 'notify') {
-			$t = q("select count(*) as total from notify where uid = %d and seen = 0",
+			$t = q("select * from notify where uid = %d and seen = 0 order by created desc",
 				intval(local_channel())
 			);
-			if($t && intval($t[0]['total']) > 49) {
-				$z = q("select * from notify where uid = %d
-					and seen = 0 order by created desc limit 50",
-					intval(local_channel())
-				);
-			} else {
-				$z1 = q("select * from notify where uid = %d
-					and seen = 0 order by created desc limit 50",
-					intval(local_channel())
-				);
-				$z2 = q("select * from notify where uid = %d
-					and seen = 1 order by created desc limit %d",
-					intval(local_channel()),
-					intval(50 - intval($t[0]['total']))
-				);
-				$z = array_merge($z1,$z2);
-			}
 
-			if(count($z)) {
-				foreach($z as $zz) {
+			if($t) {
+				foreach($t as $tt) {
 					$notifs[] = array(
-						'notify_link' => z_root() . '/notify/view/' . $zz['id'],
-						'name' => $zz['xname'],
-						'url' => $zz['url'],
-						'photo' => $zz['photo'],
-						'when' => relative_date($zz['created']),
-						'hclass' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'),
-						'message' => strip_tags(bbcode($zz['msg']))
+						'notify_link' => z_root() . '/notify/view/' . $tt['id'],
+						'name' => $tt['xname'],
+						'url' => $tt['url'],
+						'photo' => $tt['photo'],
+						'when' => relative_date($tt['created']),
+						'hclass' => (($tt['seen']) ? 'notify-seen' : 'notify-unseen'),
+						'message' => strip_tags(bbcode($tt['msg']))
 					);
 				}
 			}

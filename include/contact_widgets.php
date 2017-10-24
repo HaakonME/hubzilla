@@ -65,6 +65,10 @@ function categories_widget($baseurl,$selected = '') {
 	if(! feature_enabled(App::$profile['profile_uid'],'categories'))
 		return '';
 
+	require_once('include/security.php');
+
+	$sql_extra = item_permissions_sql(App::$profile['profile_uid']);
+
 	$item_normal = item_normal();
 
 	$terms = array();
@@ -77,6 +81,7 @@ function categories_widget($baseurl,$selected = '') {
                 and item.owner_xchan = '%s'
 				and item.item_wall = 1
 				$item_normal
+				$sql_extra
                 order by term.term asc",
 		intval(App::$profile['profile_uid']),
 	        intval(TERM_CATEGORY),
@@ -105,6 +110,8 @@ function cardcategories_widget($baseurl,$selected = '') {
 	if(! feature_enabled(App::$profile['profile_uid'],'categories'))
 		return '';
 
+	$sql_extra = item_permissions_sql(App::$profile['profile_uid']);
+
 	$item_normal = "and item.item_hidden = 0 and item.item_type = 6 and item.item_deleted = 0
 		and item.item_unpublished = 0 and item.item_delayed = 0 and item.item_pending_remove = 0
 		and item.item_blocked = 0 ";
@@ -118,6 +125,7 @@ function cardcategories_widget($baseurl,$selected = '') {
 				and term.otype = %d
                 and item.owner_xchan = '%s'
 				$item_normal
+				$sql_extra
                 order by term.term asc",
 		intval(App::$profile['profile_uid']),
 	        intval(TERM_CATEGORY),

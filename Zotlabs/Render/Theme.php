@@ -2,6 +2,8 @@
 
 namespace Zotlabs\Render;
 
+use App;
+
 
 class Theme {
 
@@ -11,17 +13,28 @@ class Theme {
 	static $session_theme = null;
 	static $session_mobile_theme = null;
 
-	static $base_themes = array('redbasic');	
+	/**
+	 * @brief Array with base or fallback themes.
+	 */
+	static $base_themes = array('redbasic');
 
+
+	/**
+	 * @brief Figure out the best matching theme and return it.
+	 *
+	 * The theme will depend on channel settings, mobile, session, core compatibility, etc.
+	 *
+	 * @return array
+	 */
 	static public function current(){
 
-		self::$system_theme = ((isset(\App::$config['system']['theme'])) 
+		self::$system_theme = ((isset(\App::$config['system']['theme']))
 			? \App::$config['system']['theme'] : '');
-		self::$session_theme = ((isset($_SESSION) && x($_SESSION,'theme')) 
+		self::$session_theme = ((isset($_SESSION) && x($_SESSION, 'theme'))
 			? $_SESSION['theme'] : self::$system_theme);
-		self::$system_mobile_theme = ((isset(\App::$config['system']['mobile_theme'])) 
+		self::$system_mobile_theme = ((isset(\App::$config['system']['mobile_theme']))
 			? \App::$config['system']['mobile_theme'] : '');
-		self::$session_mobile_theme = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) 
+		self::$session_mobile_theme = ((isset($_SESSION) && x($_SESSION, 'mobile_theme'))
 			? $_SESSION['mobile_theme'] : self::$system_mobile_theme);
 
 		$page_theme = null;
@@ -66,7 +79,7 @@ class Theme {
 				$chosen_theme = $page_theme;
 			}
 		}
-		if(array_key_exists('theme_preview',$_GET))
+		if(array_key_exists('theme_preview', $_GET))
 			$chosen_theme = $_GET['theme_preview'];
 
 		// Allow theme selection of the form 'theme_name:schema_name'
@@ -91,14 +104,12 @@ class Theme {
 		}
 
 		// Worst case scenario, the default base theme or themes don't exist; perhaps somebody renamed it/them.
- 
-		// Find any theme at all and use it. 
 
-		$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
+		// Find any theme at all and use it.
+
+		$fallback = array_merge(glob('view/theme/*/css/style.css'), glob('view/theme/*/php/style.php'));
 		if(count($fallback))
-			return(array(str_replace('view/theme/','', substr($fallback[0],0,-14))));
-
-
+			return(array(str_replace('view/theme/', '', substr($fallback[0], 0, -14))));
 	}
 
 
@@ -107,12 +118,11 @@ class Theme {
 	 *
 	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
 	 *
-	 * @param bool $installing default false
+	 * @param bool $installing (optional) default false, if true return the name of the first base theme
 	 *
 	 * @return string
 	 */
-
-	function url($installing = false) {
+	static public function url($installing = false) {
 
 		if($installing)
 			return self::$base_themes[0];
@@ -125,9 +135,10 @@ class Theme {
 		$opts = '';
 		$opts = ((\App::$profile_uid) ? '?f=&puid=' . \App::$profile_uid : '');
 
-		$schema_str = ((x(\App::$layout,'schema')) ? '&schema=' . App::$layout['schema'] : ''); 
+		$schema_str = ((x(\App::$layout,'schema')) ? '&schema=' . App::$layout['schema'] : '');
 		if(($s) && (! $schema_str))
 			$schema_str = '&schema=' . $s;
+
 		$opts .= $schema_str;
 
 		if(file_exists('view/theme/' . $t . '/php/style.php'))
@@ -139,7 +150,6 @@ class Theme {
 	function debug() {
 		logger('system_theme: ' . self::$system_theme);
 		logger('session_theme: ' . self::$session_theme);
-
 	}
 
 }

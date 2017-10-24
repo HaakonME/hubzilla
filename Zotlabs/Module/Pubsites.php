@@ -30,7 +30,7 @@ class Pubsites extends \Zotlabs\Web\Controller {
 		if($ret['success']) {
 			$j = json_decode($ret['body'],true);
 			if($j) {
-				$o .= '<table class="table table-striped table-hover"><tr><td>' . t('Hub URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td><td>' . t('Stats') . '</td><td>' . t('Software') . '</td>';
+				$o .= '<table class="table table-striped table-hover"><tr><td>' . t('Hub URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td><!--td>' . t('Stats') . '</td--><td>' . t('Software') . '</td>';
 				if($rating_enabled)
 					$o .= '<td colspan="2">' . t('Ratings') . '</td>';
 				$o .= '</tr>';
@@ -55,7 +55,7 @@ class Pubsites extends \Zotlabs\Web\Controller {
 							$location = '<br />&nbsp;';
 							}
 						$urltext = str_replace(array('https://'), '', $jj['url']);
-						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="fa fa-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td>' . '<a target="stats" href="https://hubchart-tarine.rhcloud.com/hub.jsp?hubFqdn=' . $m['host'] . '"><i class="fa fa-area-chart"></i></a></td><td>' . ucwords($jj['project']) . (($jj['version']) ? ' ' . $jj['version'] : '') . '</td>';
+						$o .= '<tr><td><a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url'] . '/register' ) . '" ><i class="fa fa-link"></i> ' . $urltext . '</a>' . $location . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><!--td>' . '<a target="stats" href="https://hubchart-tarine.rhcloud.com/hub.jsp?hubFqdn=' . $m['host'] . '"><i class="fa fa-area-chart"></i></a></td--><td>' . ucwords($jj['project']) . (($jj['version']) ? ' ' . $jj['version'] : '') . '</td>';
 						if($rating_enabled)
 							$o .= '<td><a href="ratings/' . $host . '" class="btn-btn-default"><i class="fa fa-eye"></i> ' . t('View') . '</a></td>' . $rate_links ;
 						$o .=  '</tr>';

@@ -2846,7 +2846,7 @@ function item_url_replace($channel,&$item,$old,$new,$oldnick = '') {
  */
 function sanitise_acl(&$item) {
 	if (strlen($item))
-		$item = '<' . notags(trim($item)) . '>';
+		$item = '<' . notags(trim(urldecode($item))) . '>';
 	else
 		unset($item);
 }

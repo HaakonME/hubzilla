@@ -20,6 +20,15 @@ class Portfolio {
 			$album = $args['album'];
 		if($args['title'])
 			$title = $args['title'];
+                if(array_key_exists('mode', $args) && isset($args['mode']))
+                        $mode = $args['mode'];
+                else
+                        $mode = '';
+                if(array_key_exists('count', $args) && isset($args['count']))
+                        $count = $args['count'];
+                else
+                        $count = '';
+
 
 		/**
 		 * This may return incorrect permissions if you have multiple directories of the same name.
@@ -92,6 +101,8 @@ class Portfolio {
 		$tpl = get_markup_template('photo_album_portfolio.tpl');
 		$o .= replace_macros($tpl, array(
 			'$photos' => $photos,
+			'$mode' => $mode,
+			'$count' => $count,
 			'$album' => (($title) ? $title : $album),
 			'$album_id' => rand(),
 			'$album_edit' => array(t('Edit Album'), $album_edit),
@@ -105,4 +116,5 @@ class Portfolio {
 		return $o;
 	}
 }
+
 

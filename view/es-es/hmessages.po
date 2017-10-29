@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Redmatrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-19 12:01+0200\n"
-"PO-Revision-Date: 2017-10-20 10:42+0000\n"
+"PO-Revision-Date: 2017-10-28 10:20+0000\n"
 "Last-Translator: Manuel Jiménez Friaza <mjfriaza@openmailbox.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/Friendica/red-matrix/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -3476,7 +3476,7 @@ msgstr "Podría reducir la actividad de spam"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:512
 msgid "Default Privacy Group"
-msgstr "Grupo de canales por defecto"
+msgstr "Grupo de canales predeterminado"
 
 #: ../../Zotlabs/Module/Settings/Channel.php:514
 msgid "Use my default audience setting for the type of object published"
@@ -4803,7 +4803,7 @@ msgstr "Tipo"
 
 #: ../../Zotlabs/Module/Wiki.php:211
 msgid "Any&nbsp;type"
-msgstr "Cualquier tipo"
+msgstr "Cualquier&nbsp;tipo"
 
 #: ../../Zotlabs/Module/Wiki.php:218
 msgid "Lock content type"
@@ -7294,7 +7294,7 @@ msgstr "0. Principiante/Básico"
 
 #: ../../Zotlabs/Lib/Techlevels.php:11
 msgid "1. Novice - not skilled but willing to learn"
-msgstr "1. Novicio - no está preparado pero está dispuestos a aprender"
+msgstr "1. Novato: no cualificado, pero dispuesto a aprender"
 
 #: ../../Zotlabs/Lib/Techlevels.php:12
 msgid "2. Intermediate - somewhat comfortable"
@@ -7310,7 +7310,7 @@ msgstr "4. Experto - Puedo escribir código informático"
 
 #: ../../Zotlabs/Lib/Techlevels.php:15
 msgid "5. Wizard - I probably know more than you do"
-msgstr "5. Asistente - probablemente sé más que tú"
+msgstr "5. Colaborador - probablemente sé más que tú"
 
 #: ../../Zotlabs/Lib/Apps.php:225
 msgid "Site Admin"
